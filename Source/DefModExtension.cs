@@ -101,7 +101,6 @@ namespace BetterRomance
         public float minMaleAgeToHaveChildren = 14f;
         public float usualMaleAgeToHaveChildren = 30f;
         public float maxMaleAgeToHaveChildren = 50f;
-        public float chanceForChildToHaveNameOfAnyParent = 0.99f;
         public int maxChildrenDesired = 3;
         public float minOpinionRomance = 5f;
 
@@ -150,10 +149,6 @@ namespace BetterRomance
             if (maxMaleAgeToHaveChildren < 0)
             {
                 yield return "maxMaleAgeToHaveChildren must be a positive number";
-            }
-            if (chanceForChildToHaveNameOfAnyParent < 0 || chanceForChildToHaveNameOfAnyParent > 1)
-            {
-                yield return "chanceForChildToHaveNameOfAnyParent must be between 0 and 1";
             }
             if (maxChildrenDesired < 0)
             {
