@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <FeelingHarassed.stages.0.label>Je ne peux pas avoir un instant de paix!</FeelingHarassed.stages.0.label>
+  <FeelingHarassed.stages.0.description>Puis-je juste passer une journée sans avoir à envoyer bouler quelqu'un?</FeelingHarassed.stages.0.description>
+  <RebuffedMyHookupAttempt.stages.0.label>m'a refusé</RebuffedMyHookupAttempt.stages.0.label>
+  <RebuffedMyHookupAttemptMood.stages.0.label>refusé par {0}</RebuffedMyHookupAttemptMood.stages.0.label>
+  <RebuffedMyHookupAttemptMood.stages.0.description>Quoi, je ne suis pas assez jolie??</RebuffedMyHookupAttemptMood.stages.0.description>
+  <FailedHookupAttemptOnMe.stages.0.label>a dû les refuser</FailedHookupAttemptOnMe.stages.0.label>
+</LanguageData>

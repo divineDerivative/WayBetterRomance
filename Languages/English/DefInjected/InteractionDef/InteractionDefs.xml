@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <TriedHookupWith.label>hookup attempt</TriedHookupWith.label>
+  <TriedHookupWith.logRulesInitiator.rulesStrings.0>r_logentry-&gt;[INITIATOR_nameDef] tried to chat up [RECIPIENT_nameDef].</TriedHookupWith.logRulesInitiator.rulesStrings.0>
+  <TriedHookupWith.logRulesRecipient.rulesStrings.0>r_logentry-&gt;[RECIPIENT_nameDef] was chatted up by [INITIATOR_nameDef].</TriedHookupWith.logRulesRecipient.rulesStrings.0>
+</LanguageData>

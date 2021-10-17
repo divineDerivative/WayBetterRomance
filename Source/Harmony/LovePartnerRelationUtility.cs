@@ -1,0 +1,275 @@
+﻿using HarmonyLib;
+using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using Verse;
+
+namespace BetterRomance
+{
+    //This determines the chance of generating a love relation, it is called by most relation workers
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "LovePartnerRelationGenerationChance")]
+    public static class LovePartnerRelationUtility_LovePartnerRelationGenerationChance
+    {
+        //Changes From Vanilla:
+        //Updated with new orientation options
+        //Accounts for age settings
+        public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, bool ex,
+            ref float __result)
+        {
+            //Do not allow if either pawn is not old enough for sex
+            if (generated.ageTracker.AgeBiologicalYearsFloat < generated.MinAgeForSex() || other.ageTracker.AgeBiologicalYearsFloat < other.MinAgeForSex())
+            {
+                __result = 0f;
+                return false;
+            }
+            //Leaving this in for cases where the request specifically states gay is not allowed
+            if (generated.gender == other.gender && !request.AllowGay)
+            {
+                __result = 0f;
+                return false;
+            }
+            //Not reducing chances to 0, but significantly lowering if gender and sexuality do not match
+            float sexualityFactor = 1f;
+            if (generated.RaceProps.Humanlike && generated.story.traits.HasTrait(TraitDefOf.Asexual))
+            {
+                sexualityFactor = Mathf.Min(generated.AsexualRating() + 0.01f, 1f);
+            }
+            else if (generated.RaceProps.Humanlike && generated.story.traits.HasTrait(TraitDefOf.Gay))
+            {
+                if (other.gender != generated.gender)
+                {
+                    sexualityFactor = 0.01f;
+                }
+            }
+            else if (generated.RaceProps.Humanlike && generated.story.traits.HasTrait(RomanceDefOf.Straight))
+            {
+                if (other.gender == generated.gender)
+                {
+                    sexualityFactor = 0.01f;
+                }
+            }
+
+            float exFactor = 1f;
+            //Reduce chances of generating an ex relation for each existing ex relation
+            if (ex)
+            {
+                int num = 0;
+                List<DirectPawnRelation> directRelations = other.relations.DirectRelations;
+                foreach (DirectPawnRelation directPawnRelation in directRelations)
+                {
+                    if (LovePartnerRelationUtility.IsExLovePartnerRelation(directPawnRelation.def))
+                    {
+                        num++;
+                    }
+                }
+                exFactor = Mathf.Pow(0.2f, num);
+            }
+            //If we're not generating an ex relation, and other already has a partner, do not allow
+            else if (LovePartnerRelationUtility.HasAnyLovePartner(other))
+            {
+                __result = 0f;
+                return false;
+            }
+            //Bunch of age calculations
+            float generatedAgeFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor").Invoke(null, new object[] { generated });
+            float otherAgeFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor").Invoke(null, new object[] { other });
+            float ageGapFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeGapFactor").Invoke(null, new object[] { generated, other, ex });
+            float existingFamilyFactor = 1f;
+            //This reduces changes if they're already related by blood
+            if (generated.GetRelations(other).Any(x => x.familyByBloodRelation))
+            {
+                existingFamilyFactor = 0.01f;
+            }
+            //I think this looks at skin tone
+            float melaninCommonalityFactor = (!request.FixedMelanin.HasValue) ? PawnSkinColors.GetMelaninCommonalityFactor(other.story.melanin) : ChildRelationUtility.GetMelaninSimilarityFactor(request.FixedMelanin.Value, other.story.melanin);
+
+            __result = exFactor * generatedAgeFactor * otherAgeFactor * ageGapFactor * melaninCommonalityFactor * existingFamilyFactor * sexualityFactor;
+            return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor")]
+    public static class LovePartnerRelationUtility_GetGenerationChanceAgeFactor
+    {
+        /// <summary>
+        /// Determines chances to generate a love relation based on age.
+        /// </summary>
+        /// <param name="p">The pawn to check</param>
+        /// <returns>A float between 0 and 1</returns>
+        public static bool Prefix(Pawn p, ref float __result)
+        {
+            float minAgeForSex = p.MinAgeForSex();
+            float usualAge = p.UsualAgeToHaveChildren();
+            float num = GenMath.LerpDouble(minAgeForSex - 2f, usualAge, 0f, 1f, p.ageTracker.AgeBiologicalYearsFloat);
+            __result = Mathf.Clamp(num, 0f, 1f);
+            return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeGapFactor")]
+    public static class LovePartnerRelationUtility_GetGenerationChanceAgeGapFactor
+    {
+        /// <summary>
+        /// Determines chances to generate a love relation based on age gap
+        /// </summary>
+        /// <param name="p1">First pawn</param>
+        /// <param name="p2">Second pawn</param>
+        /// <param name="ex">Is it an ex relation</param>
+        /// <returns>A float between 0.001 and 1</returns>
+        public static bool Prefix(Pawn p1, Pawn p2, bool ex, ref float __result)
+        {
+            float gap = Mathf.Abs(p1.ageTracker.AgeBiologicalYearsFloat - p2.ageTracker.AgeBiologicalYearsFloat);
+            if (ex)
+            {
+                float minGapAtMinAge1 = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers").Invoke(null, new object[] { p1, p2 });
+                if (minGapAtMinAge1 >= 0f)
+                {
+                    gap = Mathf.Min(gap, minGapAtMinAge1);
+                }
+
+                float minGapAtMinAge2 = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers").Invoke(null, new object[] { p2, p1 });
+                if (minGapAtMinAge2 >= 0f)
+                {
+                    gap = Mathf.Min(gap, minGapAtMinAge2);
+                }
+            }
+            float maxAgeGap = p1.MaxAgeGap();
+            if (gap > maxAgeGap)
+            {
+                __result = 0f;
+                return false;
+            }
+            //This lowers chance to 0.01 if age gap is larger than half the max
+            float num = GenMath.LerpDouble(0f, maxAgeGap / 2, 1f, 0.01f, gap);
+            __result = Mathf.Clamp(num, 0.01f, 1f);
+            return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers")]
+    public static class LovePartnerRelationUtility_MinPossibleAgeGapAtMinAgeToGenerateAsLovers
+    {
+        //I don't really understand what this does, but it's updated to use proper ages
+        public static bool Prefix(Pawn p1, Pawn p2, ref float __result)
+        {
+            float p1AdjustedAge = p1.ageTracker.AgeChronologicalYearsFloat - p1.MinAgeForSex();
+            if (p1AdjustedAge < 0f)
+            {
+                Log.Warning("at < 0");
+                __result = 0f;
+                return false;
+            }
+            float p2MinAgeForSex = p2.MinAgeForSex();
+            float p2MaxPossibleAge = PawnRelationUtility.MaxPossibleBioAgeAt(p2.ageTracker.AgeBiologicalYearsFloat,
+                p2.ageTracker.AgeChronologicalYearsFloat, p1AdjustedAge);
+            float p2MinPossibleAge = PawnRelationUtility.MinPossibleBioAgeAt(p2.ageTracker.AgeBiologicalYearsFloat, p1AdjustedAge);
+            if (p2MaxPossibleAge < 0f || p2MaxPossibleAge < p2MinAgeForSex)
+            {
+                __result = -1f;
+                return false;
+            }
+
+            if (p2MinPossibleAge <= p2MinAgeForSex)
+            {
+                __result = 0f;
+                return false;
+            }
+            __result = p2MinPossibleAge - p2MinAgeForSex;
+            return false;
+        }
+    }
+
+    //Determines how often a pawn in a love relation wants to have sex with the other pawn
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "LovinMtbSinglePawnFactor")]
+    public static class LovePartnerRelationUtility_LovinMtbSinglePawnFactor
+    {
+        public static bool Prefix(Pawn pawn, ref float __result)
+        {
+            float baseMtb = 1f;
+            baseMtb /= 1f - pawn.health.hediffSet.PainTotal;
+            float level = pawn.health.capacities.GetLevel(PawnCapacityDefOf.Consciousness);
+            if (level < 0.5f)
+            {
+                baseMtb /= level * 2f;
+            }
+            __result = baseMtb / GenMath.FlatHill(0f, pawn.MinAgeForSex() - 2f, pawn.MinAgeForSex(), pawn.DeclineAtAge(), pawn.MaxAgeForSex(), 0.2f, pawn.ageTracker.AgeBiologicalYearsFloat);
+            return false;
+        }
+    }
+
+    //If no vanilla love relations were found, checks custom ones
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "IsLovePartnerRelation")]
+    public static class LovePartnerRelationUtility_IsLovePartnerRelation
+    {
+        public static void Postfix(PawnRelationDef relation, ref bool __result)
+        {
+            if (!__result)
+            {
+                if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
+                {
+                    foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
+                    {
+                        if (relation == rel)
+                        {
+                            __result = true;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //If no vanilla ex love relations were found, checks custom ones
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "IsExLovePartnerRelation")]
+    public static class LovePartnerRelationUtility_IsExLovePartnerRelation
+    {
+        public static void Postfix(PawnRelationDef relation, ref bool __result)
+        {
+            if (!__result)
+            {
+                if (!SettingsUtilities.ExLoveRelations.EnumerableNullOrEmpty())
+                {
+                    foreach (PawnRelationDef rel in SettingsUtilities.ExLoveRelations)
+                    {
+                        if (relation == rel)
+                        {
+                            __result = true;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //Removes possibility of ex spouse relation if settings do not allow spouses for either pawn
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "GiveRandomExLoverOrExSpouseRelation")]
+    public static class LovePartnerRelationUtility_GiveRandomExLoverOrExSpouseRelation
+    {
+        public static bool Prefix(Pawn first, Pawn second)
+        {
+            if (!first.SpouseAllowed() || !second.SpouseAllowed())
+            {
+                first.relations.AddDirectRelation(PawnRelationDefOf.ExLover, second);
+                return false;
+            }
+            return true;
+        }
+    }
+
+    //Simply skips this method entirely if children are not allowed for the generated pawn
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "TryToShareChildrenForGeneratedLovePartner")]
+    public static class LovePartnerRelationUtility_TryToShareChildrenForGeneratedLovePartner
+    {
+        public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, float extraChanceFactor)
+        {
+            if (!generated.ChildAllowed())
+            {
+                return false;
+            }
+            return true;
+        }
+    }
+}

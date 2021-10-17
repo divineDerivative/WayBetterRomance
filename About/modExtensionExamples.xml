@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<modExtensions>
+  <li Class="BetterRomance.SexualityChances">
+    <asexualChance>10</asexualChance>
+    <bisexualChance>50</bisexualChance>
+    <gayChance>20</gayChance>
+    <straightChance>20</straightChance>
+  </li>
+  <li Class="BetterRomance.CasualSexSettings">
+    <caresAboutCheating>True</caresAboutCheating>
+    <willDoHookup>True</willDoHookup>
+    <hookupRate>100</hookupRate>
+    <alienLoveChance>33</alienLoveChance>
+    <hookupTriggers>
+      <minOpinion>-5</minOpinion>
+      <hasTrait>defName</hasTrait>
+      <mustBeFertile>False</mustBeFertile>
+    </hookupTriggers>
+    <orderedHookupTriggers>
+      <minOpinion>5</minOpinion>
+      <hasTrait>defName</hasTrait>
+      <mustBeFertile>False</mustBeFertile>
+    </orderedHookupTriggers>
+  </li>
+  <li Class="BetterRomance.RegularSexSettings">
+    <minAgeForSex>16</minAgeForSex>
+    <maxAgeForSex>80</maxAgeForSex>
+    <maxAgeGap>40</maxAgeGap>
+  </li>
+  <li Class="BetterRomance.RelationSettings">
+    <spousesAllowed>True</spousesAllowed>
+    <childrenAllowed>True</childrenAllowed>
+    <minFemaleAgeToHaveChildren>16</minFemaleAgeToHaveChildren>
+    <maxFemaleAgeToHaveChildren>45</maxFemaleAgeToHaveChildren>
+    <usualFemaleAgeToHaveChildren>27</usualFemaleAgeToHaveChildren>
+    <minMaleAgeToHaveChildren>14</minMaleAgeToHaveChildren>
+    <maxMaleAgeToHaveChildren>50</maxMaleAgeToHaveChildren>
+    <usualMaleAgeToHaveChildren>30</usualMaleAgeToHaveChildren>
+    <chanceForChildToHaveNameOfAnyParent>0.99</chanceForChildToHaveNameOfAnyParent>
+    <maxChildrenDesired>3</maxChildrenDesired>
+  </li>
+  <li Class="BetterRomance.LoveRelations">
+    <isLoveRelation>True</isLoveRelation>
+    <shouldBreakForNewLover>True</shouldBreakForNewLover>
+    <exLoveRelation>defName</exLoveRelation>
+  </li>
+</modExtensions>

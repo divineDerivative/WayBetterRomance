@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <InteractionDef>
+    <defName>TriedHookupWith</defName>
+    <label>hookup attempt</label>
+    <symbol>Things/Mote/SpeechSymbols/Romance</symbol>
+    <initiatorXpGainSkill>Social</initiatorXpGainSkill>
+    <initiatorXpGainAmount>10</initiatorXpGainAmount>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry-&gt;[INITIATOR_nameDef] tried to chat up [RECIPIENT_nameDef].</li>
+      </rulesStrings>
+    </logRulesInitiator>
+    <logRulesRecipient>
+      <rulesStrings>
+        <li>r_logentry-&gt;[RECIPIENT_nameDef] was chatted up by [INITIATOR_nameDef].</li>
+      </rulesStrings>
+    </logRulesRecipient>
+  </InteractionDef>
+  <RulePackDef>
+    <defName>HookupSucceeded</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>sent-&gt; [RECIPIENT_nameDef] agreed to the hookup.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+  <RulePackDef>
+    <defName>HookupFailed</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>sent-&gt; [RECIPIENT_nameDef] did not agree to the hookup.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+
+  <InteractionDef>
+    <defName>AskedForDate</defName>
+    <label>date attempt</label>
+    <symbol>Things/Mote/SpeechSymbols/Romance</symbol>
+    <initiatorXpGainSkill>Social</initiatorXpGainSkill>
+    <initiatorXpGainAmount>10</initiatorXpGainAmount>
+    <logRulesInitiator>
+      <rulesStrings>
+        <li>r_logentry-&gt;[INITIATOR_nameDef] asked [RECIPIENT_nameDef] out on a date.</li>
+      </rulesStrings>
+    </logRulesInitiator>
+    <logRulesRecipient>
+      <rulesStrings>
+        <li>r_logentry-&gt;[RECIPIENT_nameDef] was asked out by [INITIATOR_nameDef].</li>
+      </rulesStrings>
+    </logRulesRecipient>
+  </InteractionDef>
+  <RulePackDef>
+    <defName>DateSucceeded</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>sent-&gt; [RECIPIENT_nameDef] agreed to the date.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+  <RulePackDef>
+    <defName>DateFailed</defName>
+    <rulePack>
+      <rulesStrings>
+        <li>sent-&gt; [RECIPIENT_nameDef] did not agree to the date.</li>
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
+</Defs>

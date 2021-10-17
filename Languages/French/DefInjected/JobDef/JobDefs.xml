@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <LeadHookup.reportString>demande un coup d'un soir.</LeadHookup.reportString>
+  <DoLovinCasual.reportString>amoureux.</DoLovinCasual.reportString>
+  <ProposeDate.reportString>demande un rendez-vous.</ProposeDate.reportString>
+  <JobDateLead.reportString>a un rendez-vous.</JobDateLead.reportString>
+  <JobDateFollow.reportString>a un rendez-vous.</JobDateFollow.reportString>
+</LanguageData>

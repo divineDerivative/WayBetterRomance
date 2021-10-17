@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <!-- Affair -->
+  <Operation Class="PatchOperationReplace">
+    <!--Opionion offset from -70 to -30-->
+    <xpath>Defs/ThoughtDef[defName = "Affair"]/stages/li[1]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>-30</baseOpinionOffset>
+    </value>
+  </Operation>
+  <!-- Disfigured -->
+  <!--Opinion offset from -15 to -3-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "Disfigured"]/stages/li[1]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>-3</baseOpinionOffset>
+    </value>
+  </Operation>
+  <!--Add kind to nullifying traits-->
+  <Operation Class="PatchOperationConditional">
+    <xpath>*/ThoughtDef[defName="Disfigured"]/nullifyingTraits</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>*/ThoughtDef[defName="Disfigured"]/nullifyingTraits</xpath>
+      <value>
+        <li>Kind</li>
+      </value>
+    </match>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>*/ThoughtDef[defName="Disfigured"]</xpath>
+      <value>
+        <nullifyingTraits>
+          <li>Kind</li>
+        </nullifyingTraits>
+      </value>
+    </nomatch>
+  </Operation>
+  <!-- Ugly -->
+  <!--Opinion offset from -20/-40 to -15/-30-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "Ugly"]/stages/li[1]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>-15</baseOpinionOffset>
+    </value>
+  </Operation>
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "Ugly"]/stages/li[2]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>-30</baseOpinionOffset>
+    </value>
+  </Operation>
+  <!-- AnnoyingVoice -->
+  <!--Opinion offset from -25 to -20-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "AnnoyingVoice"]/stages/li[1]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>-20</baseOpinionOffset>
+    </value>
+  </Operation>
+</Patch>

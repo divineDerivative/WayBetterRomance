@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D7D21B4A-1DA7-41D8-B202-C58CA8FA62AA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BetterRomance</RootNamespace>
+    <AssemblyName>WayBetterRomance</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>portable</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Assemblies\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\..\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AlienRace">
+      <HintPath>..\..\..\..\..\workshop\content\294100\839005762\1.3\Assemblies\AlienRace.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <None Include="..\About\**" />
+    <None Include="..\Common\Defs\**" />
+    <None Include="..\Common\Languages\**" />
+    <None Include="..\Common\Patches\**" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Comp_PartnerList.cs" />
+    <Compile Include="OnStartup.cs" />
+    <Compile Include="DefModExtension.cs" />
+    <Compile Include="ExtraTraits.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Harmony\ChildRelationUtility.cs" />
+    <Compile Include="Harmony\InteractionWorker_Breakup.cs" />
+    <Compile Include="Harmony\JobDriver_Lovin.cs" />
+    <Compile Include="Harmony\JobGiver_DoLovin.cs" />
+    <Compile Include="Harmony\MemoryThoughtHandler.cs" />
+    <Compile Include="Harmony\PawnRelationWorker_Child.cs" />
+    <Compile Include="Harmony\PawnRelationWorker_Fiance.cs" />
+    <Compile Include="Harmony\PawnRelationWorker_Parent.cs" />
+    <Compile Include="Harmony\PawnRelationWorker_Sibling.cs" />
+    <Compile Include="Harmony\InteractionWorker_MarriageProposal.cs" />
+    <Compile Include="Harmony\InteractionWorker_RomanceAttempt.cs" />
+    <Compile Include="Harmony\LovePartnerRelationUtility.cs" />
+    <Compile Include="Harmony\Pawn_AgeTracker.cs" />
+    <Compile Include="Harmony\Pawn_RelationsTracker.cs" />
+    <Compile Include="JobDriver_DoLovinCasual.cs" />
+    <Compile Include="JobDriver_JobDateFollow.cs" />
+    <Compile Include="JobDriver_JobDateLead.cs" />
+    <Compile Include="JobDriver_LeadHookup.cs" />
+    <Compile Include="JobDriver_ProposeDate.cs" />
+    <Compile Include="JoyGiver_CasualHookup.cs" />
+    <Compile Include="JoyGiver_Date.cs" />
+    <Compile Include="Harmony\PawnGenerator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RomanceDefOf.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="RomanceUtilities.cs" />
+    <Compile Include="SettingsUtilities.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>robocopy "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\Way Better Romance" "C:\RimWorld_Debug\Mods\Way Better Romance" /r:1 /s /xo /xd Source .vs .git /xf *.sln .gitattributes .gitignore *.md || set errorlist=0</PostBuildEvent>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WBR.WayBetterRomance>Way Better Romance</WBR.WayBetterRomance>
+  <WBR.Overview>Each pawn in the game will be either straight, bisexual, gay, or asexual. The sliders below allow you to determine the relative commonality of each of those orientations. Obviously, the total must, and will always, be 100%. (If a pawn has a 60% chance of being bisexual, after all, he or she can't also have a 70% chance of being straight!)</WBR.Overview>
+  <WBR.StraightChance>Chance of a Pawn Being Straight (Romantically Interested Only in Opposite-Gender Partners):</WBR.StraightChance>
+  <WBR.BisexualChance>Chance of a Pawn Being Bisexual (Romantically Interested in Partners of Either Gender):</WBR.BisexualChance>
+  <WBR.GayChance>Chance of a Pawn Being Gay (Romantically Interested Only in Same-Gender Partners):</WBR.GayChance>
+  <WBR.AsexualChance>Chance of a Pawn Being Asexual (Uninterested in Any Sexual Engagements):</WBR.AsexualChance>
+  <WBR.AlienLoveChance>Modifier for Cross-Species Romance:</WBR.AlienLoveChance>
+  <WBR.AlienLoveChanceTip>This slider determines how likely pawns are to be romantically interested in pawns of other species. (Obviously, the setting only matters if you're actually playing with alien races in your game.) If set to 100%, pawns will be just as likely to attempt to romance members of alien species as to romance members of their own species. If set to 0%, cross-species romances will never occur.</WBR.AlienLoveChanceTip>
+  <WBR.DateRate>Base Rate at Which Pawns Will Propose Dates:</WBR.DateRate>
+  <WBR.HookupRate>Base Rate at Which Pawns Will Propose Hookups:</WBR.HookupRate>
+  <WBR.MinOpinionRomance>Minimum Opinion for Romance Attempts:</WBR.MinOpinionRomance>
+  <WBR.MinOpinionRomanceTip>A pawn will never consider a romance attempt if their opinion of the other person is too low.</WBR.MinOpinionRomanceTip>
+</LanguageData>

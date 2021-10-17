@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <JobDef>
+    <defName>LeadHookup</defName>
+    <driverClass>BetterRomance.JobDriver_LeadHookup</driverClass>
+    <reportString>attempting hookup.</reportString>
+    <joyDuration>4000</joyDuration>
+    <joyMaxParticipants>1</joyMaxParticipants>
+    <joyKind>Lewd</joyKind>
+  </JobDef>
+  <JobDef>
+    <defName>DoLovinCasual</defName>
+    <driverClass>BetterRomance.JobDriver_DoLovinCasual</driverClass>
+    <reportString>lovin'.</reportString>
+    <joySkill>Social</joySkill>
+    <joyXpPerTick>0.004</joyXpPerTick>
+    <joyKind>Lewd</joyKind>
+  </JobDef>
+  <JobDef>
+    <defName>ProposeDate</defName>
+    <driverClass>BetterRomance.JobDriver_ProposeDate</driverClass>
+    <reportString>asking for a date.</reportString>
+    <joyKind>Social</joyKind>
+  </JobDef>
+  <JobDef>
+    <defName>JobDateLead</defName>
+    <driverClass>BetterRomance.JobDriver_JobDateLead</driverClass>
+    <reportString>on a date.</reportString>
+    <joySkill>Social</joySkill>
+    <joyXpPerTick>0.004</joyXpPerTick>
+    <joyKind>Social</joyKind>
+  </JobDef>
+  <JobDef>
+    <defName>JobDateFollow</defName>
+    <driverClass>BetterRomance.JobDriver_JobDateFollow</driverClass>
+    <reportString>on a date.</reportString>
+    <joySkill>Social</joySkill>
+    <joyXpPerTick>0.004</joyXpPerTick>
+    <joyKind>Social</joyKind>
+  </JobDef>
+</Defs>

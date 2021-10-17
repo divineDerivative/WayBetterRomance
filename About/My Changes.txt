@@ -1,0 +1,64 @@
+Various tweaks and additions related to romance.
+Assigns all pawns a sexuality trait, gay, straight, bisexual, or asexual.
+Also adds faithful and philanderer traits.
+Adds 'romantic fun' as a joy type: pawns will seek out casual hookups for recreation.
+Adds dates as an option for 'social' joy type: pawns will ask others out on dates for recreation.
+Changes some vanilla calculations to be a little more progressive. Gay people can be parents too!
+Mod settings allow you to change the distribution of sexuality traits, rate of hookups and dates, and rate of cross species lovin'.
+
+You might think this sounds very similar to Rainbeau's Rational Romance, and that's because it is! I started with one of Mlie's reuploads and then went over every line of code, making adjustments and comparing things to current vanilla code.
+A lot of code has been completely redone.
+Then I added a robust set of def mod extensions that other modders can use to control how their content interacts with Way Better Romance, along with a bunch of new Harmony Patches to apply those settings.
+Mostly intended for race mods that use the Humanoid Alien Races Framework, all settings can also be added to pawnkinds and HAR is not required for this mod to work.
+Please check out the wiki on github for instructions on using these features.
+
+Minor Changes from Rational Romance:
+Cleaned up patches.
+Adjusted mood/opinion stacking for lovin' memory.
+Sexuality will not be assigned until after HAR has generated traits.
+Changed assigning orientation to existing pawns that are already in relationships to take settings into account more instead of just defaulting to bisexual if the chosen orientation doesn't match.
+Code optimization.
+Added jobs to stop hookup attempts.
+Pawns will not accept marriage proposals if their race/pawnkind does not allow spouses.
+Pawns will not make marriage proposals if their race/pawnkind does not allow spouses.
+(I do not change spouse relation generation chances, since that can be done with HAR)
+Additional spouses/lovers are possible if ideoligion allows.
+Does not reduce secondary lovin chance factor to 0 if partner is the wrong gender for the initiator's orientation, just makes it very low.
+Updated a lot of code to reflect improvements/changes in the base game.
+Changed romance attempt selection weight to only check the initiator's current love relations, and not the recipient's.
+Alien love chance will not apply to races that are marked as not xenophobic towards each other with HAR.
+Pawns with existing partners can still initiate hookups, and will consider asking partners they don't share a bed with.
+Dates are no longer limited to existing relationships.
+Asexual pawns will participate in dates.
+Made it more likely for underage pawns to be attracted to other underage pawns. (In human terms, this is 14-21)
+
+Minor Changes from Vanilla:
+Default minimum age for pawns to generate as lovers changed from 14 to 16.
+Changed default age for sex drive to start declining from 25 to 30.
+Made age gap factor in relation generation chance more forgiving.
+Removed anti-gay bias in LovePartnerRelationGenerationChance.
+Some places that just grabbed the first love partner have been changed to grab the most liked partner, where that makes sense.
+Removed a calculation that seemed designed to keep humans under age 18 from having lovers.
+With changes mentioned above, young pawns should only be considering other young pawns, so I don't think this additional check is necessary anymore.
+
+Major Changes:
+Added def mod extensions so race authors can define their own sexuality settings per race; if not defined user settings apply.
+Def mod extension added to disallow hookups and to disregard cheating considerations.
+(Make sure you disable the cheating thoughts with HAR as well!)
+Def mod extension added to define age related sex preferences; min/max age for sex, max age gap, etc.
+Extensions can also be added to a pawnkind, which will override settings from the race.
+Most hard coded calculations related to age have been redone to use race/pawnkind settings, if those are present.
+Adult age calculations now look for a life stage either called "HumanlikeAdult" or with "adult" in the defName.
+This will mostly only be noticeable when trying to put a pawn in a biosculpter for age reversal.
+Vanilla calculation just looks at the minimum age for the last life stage in the list, so races that define elder life stages are unable to use age reversal until they're old.
+Made code to check if pawns consider an interaction cheating easier to use. Now checks all of a pawn's love partners and uses the partner's ideo and settings
+to determine if they think its cheating. The initiator will still only consider their ideo and settings when deciding to do the action,
+but partners from a different ideo can get upset about it.
+Took out the polyamorous trait from Rational Romance. This functionality is currently provided by ideoligions, and trying to get that to work with the trait is proving to be too cumbersome.
+I may add it back later but will start from scratch and not use Rational Romance as a base for that.
+Removed the gender variations based on culture from Rational Romance. I think the implementation is at odds with the current state of the game.
+I'll probably add a similar feature later, but I have to think about how to handle it.
+
+Planned Features:
+Separating asexuality and aromanticism. I'd like for asexual pawns to still be capable of forming love relations. I'd also like to add a spectrum aspect to their feelings towards lovin'.
+Functionality for long distance relationships. When a caravan randomly contains a lover or spouse that your colonist didn't tell you about until they showed up, there should be some way to either ask them to join the colony, or use the comms console to communicate and continue the relationship.

@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+  <!-- RebuffedMyRomanceAttempt -->
+  <!--Stacked multiplier from .9 to .5-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "RebuffedMyRomanceAttempt"]/stackedEffectMultiplier</xpath>
+    <value>
+      <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+    </value>
+  </Operation>
+  <!-- RebuffedMyRomanceAttemptMood -->
+  <!--Duration from 3 to 5 days-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "RebuffedMyRomanceAttemptMood"]/durationDays</xpath>
+    <value>
+      <durationDays>5.0</durationDays>
+    </value>
+  </Operation>
+  <!--Stack amount from 5 to 1-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "RebuffedMyRomanceAttemptMood"]/stackLimit</xpath>
+    <value>
+      <stackLimit>1</stackLimit>
+    </value>
+  </Operation>
+  <!--Mood effect from -5 to -1-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "RebuffedMyRomanceAttemptMood"]/stages/li[1]/baseMoodEffect</xpath>
+    <value>
+      <baseMoodEffect>-1</baseMoodEffect>
+    </value>
+  </Operation>
+  <!-- FailedRomanceAttemptOnMe -->
+  <!--Stacked multiplier from .9 to .5-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "FailedRomanceAttemptOnMe"]/stackedEffectMultiplier</xpath>
+    <value>
+      <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+    </value>
+  </Operation>
+  <!--Opinion offset from -15 to -5-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "FailedRomanceAttemptOnMe"]/stages/li[1]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>-5</baseOpinionOffset>
+    </value>
+  </Operation>
+  <!-- FailedRomanceAttemptOnMeLowOpinionMood -->
+  <!--Duration from 3 to 1 day-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "FailedRomanceAttemptOnMeLowOpinionMood"]/durationDays</xpath>
+    <value>
+      <durationDays>1</durationDays>
+    </value>
+  </Operation>
+  <!--Stack limit from 5 to 1-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "FailedRomanceAttemptOnMeLowOpinionMood"]/stackLimit</xpath>
+    <value>
+      <stackLimit>1</stackLimit>
+    </value>
+  </Operation>
+  <!--Mood effect from -3 to -2-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "FailedRomanceAttemptOnMeLowOpinionMood"]/stages/li[1]/baseMoodEffect</xpath>
+    <value>
+      <baseMoodEffect>-2</baseMoodEffect>
+    </value>
+  </Operation>
+  <!-- BrokeUpWithMe -->
+  <!--Duration from 60 to 30 days-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "BrokeUpWithMe"]/durationDays</xpath>
+    <value>
+      <durationDays>30</durationDays>
+    </value>
+  </Operation>
+  <!--Opinion offset from -50 to -30-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "BrokeUpWithMe"]/stages/li[1]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>-30</baseOpinionOffset>
+    </value>
+  </Operation>
+  <!-- BrokeUpWithMeMood -->
+  <!--Duration from 25 to 5 days-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "BrokeUpWithMeMood"]/durationDays</xpath>
+    <value>
+      <durationDays>5</durationDays>
+    </value>
+  </Operation>
+  <!--Stack limit from 2 to 1-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "BrokeUpWithMeMood"]/stackLimit</xpath>
+    <value>
+      <stackLimit>1</stackLimit>
+    </value>
+  </Operation>
+  <!--Mood offset from -15 to -10-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "BrokeUpWithMeMood"]/stages/li[1]/baseMoodEffect</xpath>
+    <value>
+      <baseMoodEffect>-10</baseMoodEffect>
+    </value>
+  </Operation>
+  <!-- CheatedOnMe -->
+  <!--Duration from 120 to 70-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "CheatedOnMe"]/durationDays</xpath>
+    <value>
+      <durationDays>70</durationDays>
+    </value>
+  </Operation>
+  <!--Opinion offset from -70 to -30-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "CheatedOnMe"]/stages/li[1]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>-30</baseOpinionOffset>
+    </value>
+  </Operation>
+  <!-- CheatedOnMeMood -->
+  <!--Duration from 25 to 10 days-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "CheatedOnMeMood"]/durationDays</xpath>
+    <value>
+      <durationDays>10</durationDays>
+    </value>
+  </Operation>
+  <!--Stack limit from 2 to 6-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "CheatedOnMeMood"]/stackLimit</xpath>
+    <value>
+      <stackLimit>6</stackLimit>
+    </value>
+  </Operation>
+  <!--Mood offset from -20 to -10-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "CheatedOnMeMood"]/stages/li[1]/baseMoodEffect</xpath>
+    <value>
+      <baseMoodEffect>-10</baseMoodEffect>
+    </value>
+  </Operation>
+  <!-- DivorcedMe -->
+  <!--Duration from 180 to 80-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "DivorcedMe"]/durationDays</xpath>
+    <value>
+      <durationDays>80</durationDays>
+    </value>
+  </Operation>
+  <!--Opinion offset from -70 to -50-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "DivorcedMe"]/stages/li[1]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>-50</baseOpinionOffset>
+    </value>
+  </Operation>
+  <!-- DivorcedMeMood -->
+  <!--Duration from 30 to 20-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "DivorcedMeMood"]/durationDays</xpath>
+    <value>
+      <durationDays>20</durationDays>
+    </value>
+  </Operation>
+  <!--Stack limit from 2 to 1-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "DivorcedMeMood"]/stackLimit</xpath>
+    <value>
+      <stackLimit>1</stackLimit>
+    </value>
+  </Operation>
+  <!-- RejectedMyProposal -->
+  <!--Duration from 60 to 30-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "RejectedMyProposal"]/durationDays</xpath>
+    <value>
+      <durationDays>30</durationDays>
+    </value>
+  </Operation>
+  <!--Stacked effect multiplier from .5 to .95-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "RejectedMyProposal"]/stackedEffectMultiplier</xpath>
+    <value>
+      <stackedEffectMultiplier>0.95</stackedEffectMultiplier>
+    </value>
+  </Operation>
+  <!-- RejectedMyProposalMood -->
+  <!--Duration from 25 to 10-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "RejectedMyProposalMood"]/durationDays</xpath>
+    <value>
+      <durationDays>10</durationDays>
+    </value>
+  </Operation>
+  <!--Stacked effect multiplier from .5 to .95-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "RejectedMyProposalMood"]/stackedEffectMultiplier</xpath>
+    <value>
+      <stackedEffectMultiplier>0.95</stackedEffectMultiplier>
+    </value>
+  </Operation>
+  <!--Mood offset from -18 to -20-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "RejectedMyProposalMood"]/stages/li[1]/baseMoodEffect</xpath>
+    <value>
+      <baseMoodEffect>-20</baseMoodEffect>
+    </value>
+  </Operation>
+  <!-- IRejectedTheirProposal -->
+  <!--Duration from 60 to 30-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "IRejectedTheirProposal"]/durationDays</xpath>
+    <value>
+      <durationDays>30</durationDays>
+    </value>
+  </Operation>
+  <!--Stacked effect multiplier from .9 to .95-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "IRejectedTheirProposal"]/stackedEffectMultiplier</xpath>
+    <value>
+      <stackedEffectMultiplier>0.95</stackedEffectMultiplier>
+    </value>
+  </Operation>
+  <!--Opinion offset from -15 to -10-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "IRejectedTheirProposal"]/stages/li[1]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>-10</baseOpinionOffset>
+    </value>
+  </Operation>
+  <!-- HoneymoonPhase -->
+  <!--Add mood offset of 15-->
+  <Operation Class="PatchOperationSequence">
+    <success>Always</success>
+    <operations>
+      <li Class="PatchOperationTest">
+        <xpath>Defs/ThoughtDef[defName = "HoneymoonPhase"]/stages/li[1]/baseMoodEffect</xpath>
+        <success>Invert</success>
+      </li>
+      <li Class="PatchOperationAdd">
+        <xpath>Defs/ThoughtDef[defName = "HoneymoonPhase"]/stages/li[1]</xpath>
+        <value>
+          <baseMoodEffect>15</baseMoodEffect>
+        </value>
+      </li>
+    </operations>
+  </Operation>
+  <!--Add description for modd offset-->
+  <Operation Class="PatchOperationSequence">
+    <success>Always</success>
+    <operations>
+      <li Class="PatchOperationTest">
+        <xpath>Defs/ThoughtDef[defName = "HoneymoonPhase"]/stages/li[1]/description</xpath>
+        <success>Invert</success>
+      </li>
+      <li Class="PatchOperationAdd">
+        <xpath>Defs/ThoughtDef[defName = "HoneymoonPhase"]/stages/li[1]</xpath>
+        <value>
+          <description>I've married the love of my life! This is the happiest I've ever been!</description>
+        </value>
+      </li>
+    </operations>
+  </Operation>
+  <!-- GotSomeLovin -->
+  <!--Duration from 3 to 2 days-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "GotSomeLovin"]/durationDays</xpath>
+    <value>
+      <durationDays>2</durationDays>
+    </value>
+  </Operation>
+  <!--Stack limit from 10 to 5-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "GotSomeLovin"]/stackLimit</xpath>
+    <value>
+      <stackLimit>5</stackLimit>
+    </value>
+  </Operation>
+  <!--Stacked effect multiplier left at .75-->
+
+  <!--Mood offset from 8 to 10-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "GotSomeLovin"]/stages/li[1]/baseMoodEffect</xpath>
+    <value>
+      <baseMoodEffect>10</baseMoodEffect>
+    </value>
+  </Operation>
+  <!--Opinion offset from 6 to 10-->
+  <Operation Class="PatchOperationReplace">
+    <xpath>Defs/ThoughtDef[defName = "GotSomeLovin"]/stages/li[1]/baseOpinionOffset</xpath>
+    <value>
+      <baseOpinionOffset>10</baseOpinionOffset>
+    </value>
+  </Operation>
+  <!--Remove from asexual pawns-->
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThoughtDef[defName = "GotSomeLovin"]/nullifyingTraits</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/ThoughtDef[defName = "GotSomeLovin"]/nullifyingTraits</xpath>
+      <value>
+        <li>Asexual</li>
+      </value>
+    </match>
+    <nomatch Class="PatchOperationAdd">
+      <xpath>Defs/ThoughtDef[defName = "GotSomeLovin"]</xpath>
+      <value>
+        <nullifyingTraits>
+          <li>Asexual</li>
+        </nullifyingTraits>
+      </value>
+    </nomatch>
+  </Operation>
+</Patch>

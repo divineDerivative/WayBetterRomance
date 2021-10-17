@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <LeadHookup.reportString>attempting hookup.</LeadHookup.reportString>
+  <DoLovinCasual.reportString>lovin'.</DoLovinCasual.reportString>
+  <ProposeDate.reportString>asking for a date.</ProposeDate.reportString>
+  <JobDateLead.reportString>on a date.</JobDateLead.reportString>
+  <JobDateFollow.reportString>on a date.</JobDateFollow.reportString>
+</LanguageData>

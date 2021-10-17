@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <Asexual.degreeDatas.0.label>asexual</Asexual.degreeDatas.0.label>
+  <Asexual.degreeDatas.0.description>{PAWN_nameDef} is uninterested in sexual engagements.</Asexual.degreeDatas.0.description>
+  <Bisexual.degreeDatas.0.label>bisexual</Bisexual.degreeDatas.0.label>
+  <Bisexual.degreeDatas.0.description>{PAWN_nameDef} is romantically attracted to people regardless of gender.</Bisexual.degreeDatas.0.description>
+  <Gay.degreeDatas.0.label>gay</Gay.degreeDatas.0.label>
+  <Gay.degreeDatas.0.description>{PAWN_nameDef} is romantically attracted to people of {PAWN_possessive} own gender.</Gay.degreeDatas.0.description>
+  <Straight.degreeDatas.0.label>straight</Straight.degreeDatas.0.label>
+  <Straight.degreeDatas.0.description>{PAWN_nameDef} is romantically attracted to people of the opposite gender.</Straight.degreeDatas.0.description>
+  <Faithful.degreeDatas.0.label>faithful</Faithful.degreeDatas.0.label>
+  <Faithful.degreeDatas.0.description>{PAWN_nameDef} will never cheat on a partner, no matter how bad the relationship gets.</Faithful.degreeDatas.0.description>
+  <Philanderer.degreeDatas.0.label>philanderer</Philanderer.degreeDatas.0.label>
+  <Philanderer.degreeDatas.0.description>{PAWN_nameDef} just cannot be trusted to stay faithful to a partner.</Philanderer.degreeDatas.0.description>
+</LanguageData>

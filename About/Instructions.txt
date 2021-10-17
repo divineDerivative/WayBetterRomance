@@ -1,0 +1,64 @@
+Instructions for race modders
+
+There are a few sets of mod extensions that can be used to customize how your race interacts with the various features of this mod.
+I will list them here how they should appear in your xml, with the default values. You can simply not include a tag if you want the default value.
+If there's not a default value shown below, then that setting is not used without being set explicitly.
+
+Sexuality chances:
+Custom percentages for distribution of sexuality traits. These must add up to 100, so if you use this setting you must provide values for all four sexualities.
+These settings are all available in the mod settings, so if a player has changed them, their settings will apply instead of the defaults shown below.
+
+Casual sex settings:
+Set whether your race cares about cheating, if they'll participate in hookups at all, the rate of hookups and cross species lovin'.
+Hookup rate and alien love chance are available as mod settings, so if you don't use those the user's settings will apply.
+Otherwise the default value shown below will be used.
+Hookup triggers is for the regular casual hookups. Ordered hookup triggers are used for ordering pawns to initiate a hookup.
+These triggers are not fully implemented yet.
+
+Regular sex settings:
+These are intended for races that do not have lifespans similar to humans. Vanilla pawns practically stop having sex at age 80, which doesn't make sense if your race lives 300 years.
+It also doesn't make sense that they'll never have sex before age 14 if they only live ten years.
+In some places min age is used as an absolute, like the chance that an NPC pawn will randomly generate a love relatiion with a colonist, and others where it's more of a soft cap.
+When calculating lovin' mtb, for instance, it will never happen at min age - 2, becomes most frequent at min age, stays there until decline age, then becomes less frequent as max age is approached.
+The min age - 2 thing is me trying to keep the calculations for humans the same as vanilla while removing static numbers as much as possible.
+Anyways, all that is to say that if don't like my calculations, it's fairly easy to prempt them. Check the Harmony Patches part of the wiki for help with that.
+
+Relation settings:
+Set whether spouses or children are allowed. There's also settings for childbearing ages for each gender, which is mostly used in the random generation of parent/child relations.
+Max children desired is the number after which a female will never get a random new child. Does not effect births at all, if a pregnancy mod is used.
+Minimum opinion for romance attempts is also in this section.
+
+Love relations:
+These settings go on a PawnRelationDef instead of a race/pawnkind and are really only useful if you have race specific relations.
+Set isLoveRelation to true if you want the relation to be considered a love relation. This will automatically make pawns in those relations want to sleep in the same bed, be eligible for breakups, and care about who the other is having sex with, ideo and settings permitting.
+When a pawn gets a new lover, they will break up with lovers and fiances, but not spouses, assuming a new lover is not allowed by their ideoligion.
+So set shouldBreakForNewLover to true to have your relation treated like lover/fiance, or false to be treated like spouse.
+If there is an ex version of this relation, include the defName. If none is provided, ex-lover will be used when they break up.
+
+Important note!
+If a pawn has settings on both its race and its pawnkind, settings left blank on the pawnkind WILL NOT default to the race settings; the regular default value will be used.
+So you'll have to make sure any settings on the race that you want to be used are also present on the pawnkind.
+
+Tips for custom love relations
+If your race does not have spouses, but has a custom relation that takes the place of spouses, or simply adds lover type relations:
+You will need to write a custom relation worker.
+Here's vanilla's worker for the lover relation:
+(paste that here)
+In order to restrict the relation to your race only, you'll need to replace 
+LovePartnerRelationUtility.LovePartnerRelationGenerationChance() with a method that returns 0f if the race doesn't match.
+You can look through the Harmony patch for that method to see how it should be structrued, but really, it's your mod, you can calculate it however you want.
+GetGenerationChanceAgeFactor, GetGenerationChanceAgeGapFactor, and MinPossibleAgeGapAtMinAgeToGenerateAsLovers are patched to use the race/pawnkind age settings, but if you want more control over the calculations you can replace them with your own methods.
+Add the correct mod extension to the PawnRelationDef.
+
+Notes on spouse/child allowed usage:
+HAR allows you to set relation chance modifiers for certain relations, but it only patches the generation chance.
+For children and spouses specifically, there are places the base game will genearate those relations without checking generation chances, so HAR's patches do nothing to prevent them.
+So, if you have a race or pawnkind that should never have spouses or children, simply add the appropriate def mod extension and Another Romance Mod will patch those edge cases.
+Additionally, certain places where vanilla looks for a spouse relation, like trying to find another parent for a generated child, are patched to look at other love relations if spouses are not allowed.
+
+For any of the prefix Harmony patches, you can write your own version and choose wether yours or mine is used. Especially for age related changes, I would recommend that you include your own so your race will behave correctly even if Another Romance Mod is not installed.
+If you're fine with my calculations, add [HarmonyAfter(new string[] { "rimworld.divineDerivative.romance" })] before your patch, and make sure it returns true if it doesn't apply to your race.
+This will cause your patch to never run if Another Romance Mod is installed, and if its not, it won't interfere with other race's patches.
+If you want to do your own calculations, add [HarmonyBefore(new string[] { "rimworld.divineDerivative.romance" })] before your patch, and again make sure it returns true if it doesn't apply to your race.
+
+For postfix patches, if you don't like what I've done, you'll just have to recalculate the whole thing. Most age related patches are prefixes though.

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <TriedHookupWith.label>tentative de coup d'un soir</TriedHookupWith.label>
+  <TriedHookupWith.logRulesInitiator.rulesStrings.0>r_logentry-&gt;[INITIATOR_nameDef] a essayé de discuter [RECIPIENT_nameDef].</TriedHookupWith.logRulesInitiator.rulesStrings.0>
+  <TriedHookupWith.logRulesRecipient.rulesStrings.0>r_logentry-&gt;[RECIPIENT_nameDef] a bavardé avec [INITIATOR_nameDef].</TriedHookupWith.logRulesRecipient.rulesStrings.0>
+</LanguageData>

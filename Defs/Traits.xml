@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <TraitDef>
+    <defName>Straight</defName>
+    <commonality>0.001</commonality>
+    <degreeDatas>
+      <li>
+        <label>straight</label>
+        <description>{PAWN_nameDef} is romantically attracted to people of the opposite gender.</description>
+      </li>
+    </degreeDatas>
+    <exclusionTags>
+      <li>SexualOrientation</li>
+    </exclusionTags>
+  </TraitDef>
+  <TraitDef>
+    <defName>Faithful</defName>
+    <commonality>0.05</commonality>
+    <degreeDatas>
+      <li>
+        <label>faithful</label>
+        <description>{PAWN_nameDef} will never cheat on a partner, no matter how bad the relationship gets.</description>
+      </li>
+    </degreeDatas>
+    <conflictingTraits>
+      <li>Philanderer</li>
+    </conflictingTraits>
+  </TraitDef>
+  <TraitDef>
+    <defName>Philanderer</defName>
+    <commonality>0.05</commonality>
+    <degreeDatas>
+      <li>
+        <label>philanderer</label>
+        <description>{PAWN_nameDef} just cannot be trusted to stay faithful to a partner.</description>
+      </li>
+    </degreeDatas>
+    <conflictingTraits>
+      <li>Faithful</li>
+    </conflictingTraits>
+  </TraitDef>
+</Defs>

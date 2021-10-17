@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <WBR.RationalRomance>Bien Meilleure Romance</WBR.RationalRomance>
+  <WBR.Overview>Chaque pion du jeu sera hétéro, bisexuel, gay ou asexué. Les curseurs ci-dessous vous permettent de déterminer la similitude relative de chacune de ces orientations. De toute évidence, le total doit être et sera toujours de 100%. (Si un pion a 60% de chances d'être bisexuel, après tout, il ou elle ne peut pas aussi avoir 70% de chances d'être hétéro!)</WBR.Overview>
+  <WBR.StraightChance>Risque pour un pion d'être hétéro (intéressé uniquement par des partenaires de sexe opposé):</WBR.StraightChance>
+  <WBR.BisexualChance>Risque qu'un pion soit bisexuel (intéressé par des partenaires de l'un ou l'autre sexe):</WBR.BisexualChance>
+  <WBR.GayChance>Risque qu'un pion soit gay (intéressé uniquement par des partenaires de même sexe):</WBR.GayChance>
+  <WBR.AsexualChance>Risque qu'un pion soit asexué (indifférent aux engagements sexuels):</WBR.AsexualChance>
+  <WBR.PolyamoryChance>Chance qu'un pion soit polyamoureux:</WBR.PolyamoryChance>
+  <WBR.PolyamoryChanceTip>Ce curseur détermine la probabilité que les pions aient le trait Polyamour. (Le polyamour, comme les traits d'orientation, est un trait "supplémentaire" et n'interférera pas réellement avec l'attribution de trait normal. Il est défini sur 0% par défaut, car le système polyamour n'est pas entièrement testé, et même si tout fonctionne comme prévu, il peut introduire des complications inattendues dans la gestion des colonies.</WBR.PolyamoryChanceTip>
+  <WBR.AlienLoveChance>Modificateur de romance inter-espèces:</WBR.AlienLoveChance>
+  <WBR.AlienLoveChanceTip>Ce curseur détermine la probabilité que les pions soient intéressés de manière romantique par les pions d'autres espèces. (De toute évidence, le réglage n'a d'importance que si vous jouez réellement avec des races extraterrestres dans votre jeu.) S'il est réglé à 100%, les pions seront tout aussi susceptibles d'essayer de romancer des membres d'espèces extraterrestres que de romancer des membres de leur propre espèce. S'il est défini sur 0%, les romances inter-espèces ne se produiront jamais.</WBR.AlienLoveChanceTip>
+  <WBR.DateRate>Taux de base auquel les pions proposeront des rendez-vous:</WBR.DateRate>
+  <WBR.HookupRate>Taux de base auquel les pions proposeront des coups d'un soir:</WBR.HookupRate>
+</LanguageData>

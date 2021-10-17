@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <Asexual.degreeDatas.0.label>asexué</Asexual.degreeDatas.0.label>
+  <Asexual.degreeDatas.0.description>{PAWN_nameDef} ne s'intéresse pas aux engagements sexuels.</Asexual.degreeDatas.0.description>
+  <Bisexual.degreeDatas.0.label>bisexuel</Bisexual.degreeDatas.0.label>
+  <Bisexual.degreeDatas.0.description>{PAWN_nameDef} est attiré de façon romantique par les gens quel que soit leur sexe.</Bisexual.degreeDatas.0.description>
+  <Gay.degreeDatas.0.label>homosexuel</Gay.degreeDatas.0.label>
+  <Gay.degreeDatas.0.description>{PAWN_nameDef} est attiré de façon romantique par les personnes de {PAWN_possessive} de son propre sexe.</Gay.degreeDatas.0.description>
+  <Straight.degreeDatas.0.label>hétérosexuel</Straight.degreeDatas.0.label>
+  <Straight.degreeDatas.0.description>{PAWN_nameDef} est attiré de façon romantique par des personnes du sexe opposé.</Straight.degreeDatas.0.description>
+  <Faithful.degreeDatas.0.label>fidèle</Faithful.degreeDatas.0.label>
+  <Faithful.degreeDatas.0.description>{PAWN_nameDef} ne trompera jamais un partenaire, quelle que soit les problèmes dans la relation.</Faithful.degreeDatas.0.description>
+  <Philanderer.degreeDatas.0.label>coureur de jupons</Philanderer.degreeDatas.0.label>
+  <Philanderer.degreeDatas.0.description>{PAWN_nameDef} ne peut tout simplement pas rester fidèle à un partenaire.</Philanderer.degreeDatas.0.description>
+</LanguageData>
