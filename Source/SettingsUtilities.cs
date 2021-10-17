@@ -294,11 +294,6 @@ namespace BetterRomance
             throw new ArgumentException("No gender provided");
         }
 
-        public static float ChildNameChance(this Pawn pawn)
-        {
-            return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).chanceForChildToHaveNameOfAnyParent : 0.99f;
-        }
-
         public static int MaxChildren(this Pawn pawn)
         {
             return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).maxChildrenDesired : 3;
