@@ -13,10 +13,9 @@ namespace BetterRomance
     public static class Pawn_AgeTracker_AdultMinAge
     {
         internal static FieldInfo _pawn;
-        public static bool Prefix(ref float __result, ref Pawn_AgeTracker __instance)
+        public static bool Prefix(ref float __result, Pawn ___pawn)
         {
-            Pawn pawn = __instance.GetPawn();
-            foreach (LifeStageAge stage in pawn.RaceProps.lifeStageAges)
+            foreach (LifeStageAge stage in ___pawn.RaceProps.lifeStageAges)
             {
                 if (stage.def.defName == "HumanlikeAdult")
                 {
@@ -24,7 +23,7 @@ namespace BetterRomance
                     return false;
                 }
             }
-            foreach (LifeStageAge stage in pawn.RaceProps.lifeStageAges)
+            foreach (LifeStageAge stage in ___pawn.RaceProps.lifeStageAges)
             {
                 if (stage.def.defName.ToLower().Contains("adult"))
                 {
@@ -33,24 +32,6 @@ namespace BetterRomance
                 }
             }
             return true;
-        }
-
-        private static Pawn GetPawn(this Pawn_AgeTracker _this)
-        {
-            bool flag = _pawn == null;
-            if (!flag)
-            {
-                return (Pawn)_pawn.GetValue(_this);
-            }
-
-            _pawn = typeof(Pawn_AgeTracker).GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic);
-            bool flag2 = _pawn == null;
-            if (flag2)
-            {
-                Log.Error("Unable to reflect Pawn_RelationsTracker.pawn!");
-            }
-
-            return (Pawn)_pawn?.GetValue(_this);
         }
     }
 }

@@ -22,17 +22,16 @@ namespace BetterRomance
         //Pawns with Ugly trait are less uninterested romantically in other ugly pawns.
         internal static FieldInfo _pawn;
 
-        public static bool Prefix(Pawn otherPawn, ref float __result, Pawn_RelationsTracker __instance)
+        public static bool Prefix(Pawn otherPawn, ref float __result, Pawn ___pawn)
         {
-            Pawn pawn = __instance.GetPawn();
-            if (pawn == otherPawn)
+            if (___pawn == otherPawn)
             {
                 __result = 0f;
                 return false;
             }
             //If at least one of the pawns is not humanlike, don't allow if they're not the same "race"
             //I think this is to weed out animals/mechs while still allowing for different alien races
-            if ((!pawn.RaceProps.Humanlike || !otherPawn.RaceProps.Humanlike) && pawn.def != otherPawn.def)
+            if ((!___pawn.RaceProps.Humanlike || !otherPawn.RaceProps.Humanlike) && ___pawn.def != otherPawn.def)
             {
                 __result = 0f;
                 return false;
@@ -42,32 +41,32 @@ namespace BetterRomance
             float crossSpecies = 1f;
             if (Settings.HARActive)
             {
-                if (SettingsUtilities.AreRacesConsideredXeno(pawn, otherPawn))
+                if (SettingsUtilities.AreRacesConsideredXeno(___pawn, otherPawn))
                 {
-                    crossSpecies = pawn.AlienLoveChance() / 100;
+                    crossSpecies = ___pawn.AlienLoveChance() / 100;
                 }
             }
-            else if (pawn.def != otherPawn.def)
+            else if (___pawn.def != otherPawn.def)
             {
-                crossSpecies = pawn.AlienLoveChance() / 100;
+                crossSpecies = ___pawn.AlienLoveChance() / 100;
             }
             //Not reducing chances to 0, but lowering if gender and sexuality do not match
             //Changing this to what's in romance attempt success chance and then removing it from there
             float sexualityFactor = 1f;
-            if (pawn.RaceProps.Humanlike && pawn.story.traits.HasTrait(TraitDefOf.Asexual))
+            if (___pawn.RaceProps.Humanlike && ___pawn.story.traits.HasTrait(TraitDefOf.Asexual))
             {
-                sexualityFactor = Mathf.Min(pawn.AsexualRating() + 0.15f, 1f);
+                sexualityFactor = Mathf.Min(___pawn.AsexualRating() + 0.15f, 1f);
             }
-            if (pawn.RaceProps.Humanlike && pawn.story.traits.HasTrait(TraitDefOf.Gay))
+            if (___pawn.RaceProps.Humanlike && ___pawn.story.traits.HasTrait(TraitDefOf.Gay))
             {
-                if (otherPawn.gender != pawn.gender)
+                if (otherPawn.gender != ___pawn.gender)
                 {
                     sexualityFactor = 0.15f;
                 }
             }
-            if (pawn.RaceProps.Humanlike && pawn.story.traits.HasTrait(RomanceDefOf.Straight))
+            if (___pawn.RaceProps.Humanlike && ___pawn.story.traits.HasTrait(RomanceDefOf.Straight))
             {
-                if (otherPawn.gender == pawn.gender)
+                if (otherPawn.gender == ___pawn.gender)
                 {
                     sexualityFactor = 0.15f;
                 }
@@ -75,9 +74,9 @@ namespace BetterRomance
 
             //Calculations based on age of both parties
             float targetMinAgeForSex = otherPawn.MinAgeForSex();
-            float pawnMinAgeForSex = pawn.MinAgeForSex();
-            float pawnMaxAgeGap = pawn.MaxAgeGap();
-            float pawnAge = pawn.ageTracker.AgeBiologicalYearsFloat;
+            float pawnMinAgeForSex = ___pawn.MinAgeForSex();
+            float pawnMaxAgeGap = ___pawn.MaxAgeGap();
+            float pawnAge = ___pawn.ageTracker.AgeBiologicalYearsFloat;
             float targetAge = otherPawn.ageTracker.AgeBiologicalYearsFloat;
             //If either one is too young for sex, do not allow
             if (targetAge < targetMinAgeForSex || pawnAge < pawnMinAgeForSex)
@@ -104,7 +103,7 @@ namespace BetterRomance
             //Decide if beauty stat should be used instead, which is effected by apparel
             if (otherPawn.RaceProps.Humanlike)
             {
-                initiatorBeauty = pawn.story.traits.DegreeOfTrait(TraitDefOf.Beauty);
+                initiatorBeauty = ___pawn.story.traits.DegreeOfTrait(TraitDefOf.Beauty);
             }
 
             if (otherPawn.RaceProps.Humanlike)
@@ -136,24 +135,6 @@ namespace BetterRomance
                 * crossSpecies * sexualityFactor;
             return false;
         }
-        //Not sure how this works, but it supplies the pawn argument from the Pawn_RelationsTracker, which is used in SecondaryLovinChanceFactor
-        private static Pawn GetPawn(this Pawn_RelationsTracker _this)
-        {
-            bool flag = _pawn == null;
-            if (!flag)
-            {
-                return (Pawn)_pawn.GetValue(_this);
-            }
-
-            _pawn = typeof(Pawn_RelationsTracker).GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic);
-            bool flag2 = _pawn == null;
-            if (flag2)
-            {
-                Log.Error("Unable to reflect Pawn_RelationsTracker.pawn!");
-            }
-
-            return (Pawn)_pawn?.GetValue(_this);
-        }
     }
     //This is used to determine chances of deep talk, slight, and insult interaction
     [HarmonyPatch(typeof(Pawn_RelationsTracker), "CompatibilityWith")]
@@ -162,37 +143,18 @@ namespace BetterRomance
         //Change from Vanilla:
         //Age adjustments
         internal static FieldInfo _pawn;
-        public static bool Prefix(Pawn otherPawn, ref float __result, ref Pawn_RelationsTracker __instance)
+        public static bool Prefix(Pawn otherPawn, ref float __result, ref Pawn_RelationsTracker __instance, Pawn ___pawn)
         {
-            Pawn pawn = __instance.GetPawn();
-            if (pawn.def != otherPawn.def || pawn == otherPawn)
+            if (___pawn.def != otherPawn.def || ___pawn == otherPawn)
             {
                 __result = 0f;
                 return false;
             }
-            float ageGap = Mathf.Abs(pawn.ageTracker.AgeBiologicalYearsFloat - otherPawn.ageTracker.AgeBiologicalYearsFloat);
-            float num = Mathf.Clamp(GenMath.LerpDouble(0f, pawn.MaxAgeGap() /2, 0.45f, -0.45f, ageGap), -0.45f, 0.45f);
+            float ageGap = Mathf.Abs(___pawn.ageTracker.AgeBiologicalYearsFloat - otherPawn.ageTracker.AgeBiologicalYearsFloat);
+            float num = Mathf.Clamp(GenMath.LerpDouble(0f, ___pawn.MaxAgeGap() /2, 0.45f, -0.45f, ageGap), -0.45f, 0.45f);
             float num2 = __instance.ConstantPerPawnsPairCompatibilityOffset(otherPawn.thingIDNumber);
             __result = num + num2;
             return false;
-        }
-
-        private static Pawn GetPawn(this Pawn_RelationsTracker _this)
-        {
-            bool flag = _pawn == null;
-            if (!flag)
-            {
-                return (Pawn)_pawn.GetValue(_this);
-            }
-
-            _pawn = typeof(Pawn_RelationsTracker).GetField("pawn", BindingFlags.Instance | BindingFlags.NonPublic);
-            bool flag2 = _pawn == null;
-            if (flag2)
-            {
-                Log.Error("Unable to reflect Pawn_RelationsTracker.pawn!");
-            }
-
-            return (Pawn)_pawn?.GetValue(_this);
         }
     }
 }
