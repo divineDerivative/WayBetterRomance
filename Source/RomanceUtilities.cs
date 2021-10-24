@@ -276,6 +276,10 @@ namespace BetterRomance
         /// <returns>True or false</returns>
         public static bool IsDateAppealing(Pawn target, Pawn asker)
         {
+            if (LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
+            {
+                return true;
+            }
             if (WillPawnContinue(target, asker))
             {
                 //Definitely not cheating, or they decided to cheat

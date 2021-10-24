@@ -29,7 +29,7 @@ namespace BetterRomance
             {
                 __result *= 2f;
             }
-            if (initiator.story.traits.HasTrait(TraitDefOf.Asexual))
+            if (initiator.story.traits.HasTrait(TraitDefOf.Asexual) && !recipient.story.traits.HasTrait(TraitDefOf.Asexual))
             {
                 __result *= 1.5f;
             }
