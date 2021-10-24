@@ -12,7 +12,6 @@ namespace BetterRomance
     [HarmonyPatch(typeof(Pawn_AgeTracker), "AdultMinAge", MethodType.Getter)]
     public static class Pawn_AgeTracker_AdultMinAge
     {
-        internal static FieldInfo _pawn;
         public static bool Prefix(ref float __result, Pawn ___pawn)
         {
             foreach (LifeStageAge stage in ___pawn.RaceProps.lifeStageAges)

@@ -20,8 +20,6 @@ namespace BetterRomance
         //Consideration of target's capabilities
         //Gender age preferences are now the same, except for mild cultural variation.
         //Pawns with Ugly trait are less uninterested romantically in other ugly pawns.
-        internal static FieldInfo _pawn;
-
         public static bool Prefix(Pawn otherPawn, ref float __result, Pawn ___pawn)
         {
             if (___pawn == otherPawn)
@@ -142,7 +140,6 @@ namespace BetterRomance
     {
         //Change from Vanilla:
         //Age adjustments
-        internal static FieldInfo _pawn;
         public static bool Prefix(Pawn otherPawn, ref float __result, ref Pawn_RelationsTracker __instance, Pawn ___pawn)
         {
             if (___pawn.def != otherPawn.def || ___pawn == otherPawn)
