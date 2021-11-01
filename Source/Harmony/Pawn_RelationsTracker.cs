@@ -18,7 +18,7 @@ namespace BetterRomance
         //Allows cross species attraction
         //Adjusted age calculations to be more realistic with regards to young pawns
         //Consideration of target's capabilities
-        //Gender age preferences are now the same, except for mild cultural variation.
+        //Gender age preferences are now the same
         //Pawns with Ugly trait are less uninterested romantically in other ugly pawns.
         public static bool Prefix(Pawn otherPawn, ref float __result, Pawn ___pawn)
         {

@@ -45,7 +45,7 @@ namespace BetterRomance
                 foreach (Pawn p in pawn.Map.mapPawns.FreeColonistsSpawned)
                 {
                     //Skip them if they're already in the list
-                    if (result.Contains(p))
+                    if (result.Contains(p) || pawn == p)
                     {
                         continue;
                     }
@@ -62,7 +62,7 @@ namespace BetterRomance
                             return false;
                         });
                         //Need to also check opinion against setting for a hookup
-                        if (memory == null && (pawn.relations.OpinionOf(p) > pawn.MinOpinionForHookup() && hookup))
+                        if (memory == null && (pawn.relations.OpinionOf(p) > pawn.MinOpinionForHookup() || !hookup))
                         {
                             num = pawn.relations.SecondaryRomanceChanceFactor(p);
                             tempPawn = p;
@@ -248,21 +248,29 @@ namespace BetterRomance
             {
                 return false;
             }
+            //Asexual pawns below a certain rating will only agree to sex with existing partners
+            if (target.story.traits.HasTrait(TraitDefOf.Asexual) && target.AsexualRating() < 0.5f)
+            {
+                if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
+                {
+                    return false;
+                }
+                //Otherwise their rating is already factored in via secondary romance chance factor
+            }
             if (WillPawnContinue(target, asker))
             {
                 //It's either not cheating or they have decided to cheat
-                float num = 0f;
-                num += target.relations.SecondaryRomanceChanceFactor(asker) / 1.5f;
-                num *= Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
-                //Asexual pawns below a certain rating will only agree to sex with existing partners
-                if (target.story.traits.HasTrait(TraitDefOf.Asexual) && target.AsexualRating() < 0.5f)
+                float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
+                if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
                 {
-                    if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
-                    {
-                        return false;
-                    }
-                    //Otherwise their rating is already factored in via secondary romance chance factor
+                    romanceFactor /= 1.5f;
                 }
+                float opinionFactor = 1f;
+                //Decrease if opinion is negative
+                opinionFactor *= Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
+                //Increase if opinion is positive, but on a lesser scale to above
+                opinionFactor *= GenMath.LerpDouble(0, 100f, 1f, 1.5f, target.relations.OpinionOf(asker));
+                float num = romanceFactor * opinionFactor;
                 return Rand.Range(0.05f, 1f) < num;
             }
             return false;
@@ -276,6 +284,7 @@ namespace BetterRomance
         /// <returns>True or false</returns>
         public static bool IsDateAppealing(Pawn target, Pawn asker)
         {
+            //Always agree with an existing partner
             if (LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
             {
                 return true;

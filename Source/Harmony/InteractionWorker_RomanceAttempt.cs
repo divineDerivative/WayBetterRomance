@@ -15,7 +15,6 @@ namespace BetterRomance
         //Updated with new orientation options and traits.
         //Pawn can't perform romance attempt if recently rebuffed.
         //Pawn in mental break can't be targeted.
-        //Adjustments based on culture
         //Uses my catch all method for cheating considerations
         public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
         {

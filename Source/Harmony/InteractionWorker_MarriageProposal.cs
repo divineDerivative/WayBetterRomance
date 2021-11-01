@@ -14,7 +14,6 @@ namespace BetterRomance
         //Changes from Vanilla:
         //Checks if spouses are allowed for the race/pawnkind
         //Do not allow if recipient's gender does not match initiator's orientation
-        //Gender aggressiveness adjusted based on culture
         public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
         {
             //If initiator doesn't have a sexuality trait, assign one

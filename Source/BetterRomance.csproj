@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Comp_PartnerList.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Harmony\JoyKindDef.cs" />
     <Compile Include="OnStartup.cs" />
     <Compile Include="DefModExtension.cs" />
     <Compile Include="ExtraTraits.cs" />
