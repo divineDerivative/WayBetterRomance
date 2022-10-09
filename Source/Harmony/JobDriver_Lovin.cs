@@ -5,9 +5,10 @@ using Verse;
 
 namespace BetterRomance
 {
+    //Uses age settings to generate the lovin curve, then calculates it as normal
     [HarmonyPatch(typeof(JobDriver_Lovin), "GenerateRandomMinTicksToNextLovin")]
     public static class JobDriver_Lovin_GenerateRandomMinTicksToNextLovin
-    {  //Uses age settings to generate the lovin curve, then calculates it as normal
+    {
         public static bool Prefix(Pawn pawn, ref int __result)
         {
             SimpleCurve LovinIntervalHoursFromAgeCurve = new SimpleCurve(GetCurve(pawn));

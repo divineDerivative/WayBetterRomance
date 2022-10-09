@@ -76,15 +76,13 @@ namespace BetterRomance
             float otherAgeFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor").Invoke(null, new object[] { other });
             float ageGapFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeGapFactor").Invoke(null, new object[] { generated, other, ex });
             float existingFamilyFactor = 1f;
-            //This reduces changes if they're already related by blood
+            //This reduces chances if they're already related by blood
             if (generated.GetRelations(other).Any(x => x.familyByBloodRelation))
             {
                 existingFamilyFactor = 0.01f;
             }
-            //I think this looks at skin tone
-            float melaninCommonalityFactor = (!request.FixedMelanin.HasValue) ? PawnSkinColors.GetMelaninCommonalityFactor(other.story.melanin) : ChildRelationUtility.GetMelaninSimilarityFactor(request.FixedMelanin.Value, other.story.melanin);
 
-            __result = exFactor * generatedAgeFactor * otherAgeFactor * ageGapFactor * melaninCommonalityFactor * existingFamilyFactor * sexualityFactor;
+            __result = exFactor * generatedAgeFactor * otherAgeFactor * ageGapFactor * existingFamilyFactor * sexualityFactor;
             return false;
         }
     }

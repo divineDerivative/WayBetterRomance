@@ -58,8 +58,8 @@ namespace BetterRomance
             AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParentParams").Invoke(__instance, arguments);
             float biologicalAge = (float)arguments[7];
             float chronologicalAge = (float)arguments[8];
-            float melanin = (float)arguments[9];
-            string lastName = (string)arguments[10];
+            string lastName = (string)arguments[9];
+            XenotypeDef xenotype = (XenotypeDef)arguments[10];
             Faction faction = existingChild.Faction;
             if (faction == null || faction.IsPlayer)
             {
@@ -73,11 +73,11 @@ namespace BetterRomance
             //If children are not allowed, use the pawnkind provided in settings
             if (!existingChild.ChildAllowed())
             {
-                pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(existingChild.ParentPawnkind(genderToGenerate), faction: faction, forceGenerateNewPawn: true, allowDead: true, allowDowned: true, canGeneratePawnRelations: false, colonistRelationChanceFactor: 1f, fixedBiologicalAge: biologicalAge, fixedChronologicalAge: chronologicalAge, fixedGender: genderToGenerate, fixedMelanin: melanin, fixedLastName: lastName));
+                pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(existingChild.ParentPawnkind(genderToGenerate), faction: faction, forceGenerateNewPawn: true, allowDead: true, allowDowned: true, canGeneratePawnRelations: false, colonistRelationChanceFactor: 1f, fixedBiologicalAge: biologicalAge, fixedChronologicalAge: chronologicalAge, fixedGender: genderToGenerate, fixedLastName: lastName, forcedXenotype: xenotype));
             }
             else
             {
-                pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(existingChild.kindDef, faction: faction, forceGenerateNewPawn: true, allowDead: true, allowDowned: true, canGeneratePawnRelations: false, colonistRelationChanceFactor: 1f, fixedBiologicalAge: biologicalAge, fixedChronologicalAge: chronologicalAge, fixedGender: genderToGenerate, fixedMelanin: melanin, fixedLastName: lastName));
+                pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(existingChild.kindDef, faction: faction, forceGenerateNewPawn: true, allowDead: true, allowDowned: true, canGeneratePawnRelations: false, colonistRelationChanceFactor: 1f, fixedBiologicalAge: biologicalAge, fixedChronologicalAge: chronologicalAge, fixedGender: genderToGenerate, fixedLastName: lastName, forcedXenotype: xenotype));
             }
             if (!Find.WorldPawns.Contains(pawn))
             {
