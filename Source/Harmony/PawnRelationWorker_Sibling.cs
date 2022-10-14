@@ -32,7 +32,6 @@ namespace BetterRomance
                     other.GetFather().relations.AddDirectRelation(PawnRelationDefOf.ExLover, other.GetMother());
                 }
                 AccessTools.Method(typeof(PawnRelationWorker_Sibling), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
-                AccessTools.Method(typeof(PawnRelationWorker_Sibling), "ResolveMySkinColor").Invoke(__instance, new object[] { request, generated });
                 return false;
             }
             return true;

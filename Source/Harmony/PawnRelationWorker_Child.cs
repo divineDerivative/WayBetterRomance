@@ -17,7 +17,6 @@ namespace BetterRomance
                 {
                     other.SetFather(generated);
                     AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, new object[] { request, other, other.GetMother() });
-                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMySkinColor").Invoke(__instance, new object[] { request, other, other.GetMother() });
                     if (other.GetMother() != null)
                     {
                         if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && !other.GetMother().story.traits.HasTrait(TraitDefOf.Gay))
@@ -34,7 +33,6 @@ namespace BetterRomance
                 {
                     other.SetMother(generated);
                     AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, new object[] { request, other, other.GetFather() });
-                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMySkinColor").Invoke(__instance, new object[] { request, other, other.GetFather() });
                     if (other.GetFather() != null)
                     {
                         if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && !other.GetFather().story.traits.HasTrait(TraitDefOf.Gay))

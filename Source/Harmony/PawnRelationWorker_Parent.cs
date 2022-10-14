@@ -21,7 +21,6 @@ namespace BetterRomance
 						generated.SetMother(firstLoverOfOppositeGender);
 					}
 					AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
-					AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMySkinColor").Invoke(__instance, new object[] { request, generated });
 				}
 				else if (other.gender == Gender.Female)
 				{
@@ -32,7 +31,11 @@ namespace BetterRomance
 						generated.SetFather(firstLoverOfOppositeGender);
 					}
 					AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
-					AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMySkinColor").Invoke(__instance, new object[] { request, generated });
+				}
+				//Just in case another mod has patches to run for genderless pawns
+				else
+				{
+					return true;
 				}
 				return false;
 			}

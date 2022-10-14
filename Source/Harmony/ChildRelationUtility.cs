@@ -51,14 +51,12 @@ namespace BetterRomance
                 __result = 0f;
                 return false;
             }
-            //Stuff based on skin color
-            float? melanin = (float?)AccessTools.Method(typeof(ChildRelationUtility), "GetMelanin").Invoke(null, new object[] { child, childGenerationRequest });
-            float? melanin1 = (float?)AccessTools.Method(typeof(ChildRelationUtility), "GetMelanin").Invoke(null, new object[] { father, fatherGenerationRequest });
-            float? melanin2 = (float?)AccessTools.Method(typeof(ChildRelationUtility), "GetMelanin").Invoke(null, new object[] { mother, motherGenerationRequest });
-            bool fatherIsNew = father != null && child.GetFather() != father;
-            bool motherIsNew = mother != null && child.GetMother() != mother;
-            float skinColorFactor = (float)AccessTools.Method(typeof(ChildRelationUtility), "GetSkinColorFactor").Invoke(null, new object[] { melanin, melanin1, melanin2, fatherIsNew, motherIsNew });
-            if (skinColorFactor <= 0f)
+            if (mother != null && !ChildRelationUtility.XenotypesCompatible(child, mother))
+            {
+                __result = 0f;
+                return false;
+            }
+            if (father != null && !ChildRelationUtility.XenotypesCompatible(child, father))
             {
                 __result = 0f;
                 return false;
@@ -66,7 +64,7 @@ namespace BetterRomance
             //Calculations based on age of parents compared to child
             float fatherAgeFactor = 1f;
             float motherAgeFactor = 1f;
-            float childrenCount = 1f;
+            float childrenCountFactor = 1f;
             if (father != null && child.GetFather() == null)
             {
                 fatherAgeFactor = (float)AccessTools.Method(typeof(ChildRelationUtility), "GetParentAgeFactor").Invoke(null, new object[] { father, child, father.MinAgeToHaveChildren(), father.UsualAgeToHaveChildren(), father.MaxAgeToHaveChildren() });
@@ -92,7 +90,7 @@ namespace BetterRomance
                     return false;
                 }
 
-                childrenCount = 1f - (mother.relations.ChildrenCount / (float)maxChildren);
+                childrenCountFactor = 1f - mother.relations.ChildrenCount / (float)maxChildren;
             }
             //Lower chances if one parent already has a spouse that is not the other parent
             float curRelationFactor = 1f;
@@ -107,7 +105,7 @@ namespace BetterRomance
                 curRelationFactor *= 0.15f;
             }
 
-            __result = skinColorFactor * fatherAgeFactor * motherAgeFactor * childrenCount * curRelationFactor;
+            __result = fatherAgeFactor * motherAgeFactor * childrenCountFactor * curRelationFactor;
             return false;
         }
 
@@ -121,9 +119,9 @@ namespace BetterRomance
         {
             Rand.PushState();
             Rand.Seed = female.thingIDNumber * 3;
-            int num = Rand.RangeInclusive(0, female.MaxChildren());
+            int result = Rand.RangeInclusive(0, female.MaxChildren());
             Rand.PopState();
-            return num;
+            return result;
         }
     }
 }
