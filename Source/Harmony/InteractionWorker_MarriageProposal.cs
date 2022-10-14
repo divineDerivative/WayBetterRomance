@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using Verse;
@@ -89,7 +91,7 @@ namespace BetterRomance
             float lengthFactor = Mathf.InverseLerp(0f, 60f, relLength);
             //Adjust chance based on opinion
             float opinionFactor = Mathf.InverseLerp(0f, 60f, initiator.relations.OpinionOf(recipient));
-            //Lower chance they're currently mad at you
+            //Lower chance if they're currently mad at you
             if (recipient.relations.OpinionOf(initiator) < 0)
             {
                 baseChance *= 0.3f;
@@ -99,6 +101,19 @@ namespace BetterRomance
             if (hediffWithTarget != null && hediffWithTarget.target == recipient)
             {
                 baseChance *= 10f;
+            }
+            //Added from vanilla to account for pregnancy
+            if (initiator.health.hediffSet.HasPregnancyHediff() || recipient.health.hediffSet.HasPregnancyHediff())
+            {
+                baseChance *= 3f;
+            }
+            //Added from vanilla, increase chance if they already have a baby together
+            foreach (Pawn child in initiator.relations.Children)
+            {
+                if (child.DevelopmentalStage.Baby() && !child.Dead && recipient.relations.Children.Contains(child))
+                {
+                    baseChance *= 2f;
+                }
             }
             //Add everything together
             __result = baseChance * lengthFactor * opinionFactor;
@@ -154,6 +169,7 @@ namespace BetterRomance
         //If a custom love relation exists, this will remove that relation instead of vanilla lover
         public static bool Prefix(Pawn initiator, Pawn recipient, List<RulePackDef> extraSentencePacks, out string letterText, out string letterLabel, out LetterDef letterDef, out LookTargets lookTargets, InteractionWorker_MarriageProposal __instance)
         {
+            //First check for a custom relation
             PawnRelationDef relation = null;
             foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
             {
@@ -172,6 +188,7 @@ namespace BetterRomance
                 {
                     initiator.relations.RemoveDirectRelation(relation, recipient);
                     initiator.relations.AddDirectRelation(PawnRelationDefOf.Fiance, recipient);
+                    //Remove any thoughts related to a previous rejected proposal
                     if (recipient.needs.mood != null)
                     {
                         recipient.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.RejectedMyProposal, initiator);
@@ -197,9 +214,11 @@ namespace BetterRomance
                         recipient.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.IRejectedTheirProposal, initiator);
                     }
                     extraSentencePacks.Add(RulePackDefOf.Sentence_MarriageProposalRejected);
+                    //Determine if they break up due to the rejection
                     if (Rand.Value < 0.4f)
                     {
                         initiator.relations.RemoveDirectRelation(relation, recipient);
+                        //Add custom ex relation if it exists, otherwise add ex lover
                         PawnRelationDef exRel = relation.GetModExtension<LoveRelations>().exLoveRelation;
                         if (exRel == null)
                         {

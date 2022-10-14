@@ -16,11 +16,8 @@ namespace BetterRomance
         //Changes from Vanilla:
         //Allows for non-ideal orientation match ups, at a low rate
         //Allows cross species attraction
-        //Adjusted age calculations to be more realistic with regards to young pawns
         //Consideration of target's capabilities
-        //Gender age preferences are now the same
-        //Pawns with Ugly trait are less uninterested romantically in other ugly pawns.
-        public static bool Prefix(Pawn otherPawn, ref float __result, Pawn ___pawn)
+        public static bool Prefix(Pawn otherPawn, ref float __result, ref Pawn_RelationsTracker __instance, Pawn ___pawn)
         {
             if (___pawn == otherPawn)
             {
@@ -70,12 +67,12 @@ namespace BetterRomance
                 }
             }
 
-            //Calculations based on age of both parties
+            //Calculations based on age of both parties; most have been moved to a separate method in 1.4
             float targetMinAgeForSex = otherPawn.MinAgeForSex();
             float pawnMinAgeForSex = ___pawn.MinAgeForSex();
-            float pawnMaxAgeGap = ___pawn.MaxAgeGap();
             float pawnAge = ___pawn.ageTracker.AgeBiologicalYearsFloat;
             float targetAge = otherPawn.ageTracker.AgeBiologicalYearsFloat;
+
             //If either one is too young for sex, do not allow
             if (targetAge < targetMinAgeForSex || pawnAge < pawnMinAgeForSex)
             {
@@ -83,57 +80,44 @@ namespace BetterRomance
                 return false;
             }
             
-            float youngestTargetAge = Mathf.Max(pawnMinAgeForSex, pawnAge - (pawnMaxAgeGap * .75f));
-            //For humans, this works out to either min of(21 or age-3), or age-8
-            //This allows a 16 year old to be attracted to another 16 year old, while still keeping 20 year olds out
-            float youngestReasonableTargetAge = Mathf.Max(Mathf.Min(pawnMinAgeForSex + (pawnMaxAgeGap / 8), pawnAge-3), pawnAge - (pawnMaxAgeGap / 5));
-            //For humans, this returns 1 if the target's age is within 8 years of the pawn
-            //The exception is when the pawn is between 16-21, in which case it returns 1 if the target's age is 8 years above or 3 years below their age
-            float targetAgeLikelihood = GenMath.FlatHill(0.15f, youngestTargetAge, youngestReasonableTargetAge, pawnAge + (pawnMaxAgeGap / 5), pawnAge + (pawnMaxAgeGap * .75f), 0.15f, targetAge);
             //This changes chances based on talking/manipulation/moving stats
             float targetBaseCapabilities = 1f;
             targetBaseCapabilities *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Talking));
             targetBaseCapabilities *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Manipulation));
             targetBaseCapabilities *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Moving));
-            //Beauty calculations
-            int initiatorBeauty = 0;
-            int targetBeauty = 0;
-            //Decide if beauty stat should be used instead, which is effected by apparel
-            if (otherPawn.RaceProps.Humanlike)
-            {
-                initiatorBeauty = ___pawn.story.traits.DegreeOfTrait(TraitDefOf.Beauty);
-            }
 
-            if (otherPawn.RaceProps.Humanlike)
-            {
-                targetBeauty = otherPawn.story.traits.DegreeOfTrait(TraitDefOf.Beauty);
-            }
-            //Maybe change this to check the difference between the two beauty scores?
-            //If target is ugly, reduce chances, less if initiator is also ugly
-            float targetBeautyMod = 1f;
-            if (targetBeauty == -2)
-            {
-                targetBeautyMod = initiatorBeauty >= 0 ? 0.3f : 0.8f;
-            }
-            if (targetBeauty == -1)
-            {
-                targetBeautyMod = initiatorBeauty >= 0 ? 0.75f : 0.9f;
-            }
-            //If target is pretty/beautiful, increase chances
-            if (targetBeauty == 1)
-            {
-                targetBeautyMod = 1.7f;
-            }
-            else if (targetBeauty == 2)
-            {
-                targetBeautyMod = 2.3f;
-            }
-
-            __result = targetAgeLikelihood * targetBaseCapabilities * targetBeautyMod 
+            __result = __instance.LovinAgeFactor(otherPawn) * targetBaseCapabilities * __instance.PrettinessFactor(otherPawn)
                 * crossSpecies * sexualityFactor;
             return false;
         }
     }
+
+    //Age considerations were moved to a separate method in 1.4
+    [HarmonyPatch(typeof(Pawn_RelationsTracker), "LovinAgeFactor")]
+    public static class Pawn_RelationsTracker_LovinAgeFactor
+    {
+        //Changes from vanilla:
+        //Gender age preferences are now the same
+        //Adjusted age calculations to be more realistic with regards to young pawns
+        public static bool Prefix(Pawn otherPawn, ref float __result, Pawn ___pawn)
+        {
+            float pawnMinAgeForSex = ___pawn.MinAgeForSex();
+            float pawnMaxAgeGap = ___pawn.MaxAgeGap();
+            float pawnAge = ___pawn.ageTracker.AgeBiologicalYearsFloat;
+            float targetAge = otherPawn.ageTracker.AgeBiologicalYearsFloat;
+
+            float youngestTargetAge = Mathf.Max(pawnMinAgeForSex, pawnAge - (pawnMaxAgeGap * .75f));
+            //For humans, this works out to either min of(21 or age-3), or age-8
+            //This allows a 16 year old to be attracted to another 16 year old, while still keeping 20 year olds out
+            float youngestReasonableTargetAge = Mathf.Max(Mathf.Min(pawnMinAgeForSex + (pawnMaxAgeGap / 8), pawnAge - 3), pawnAge - (pawnMaxAgeGap / 5));
+            //For humans, this returns 1 if the target's age is within 8 years of the pawn
+            //The exception is when the pawn is between 16-21, in which case it returns 1 if the target's age is 8 years above or 3 years below their age
+            float targetAgeLikelihood = GenMath.FlatHill(0.15f, youngestTargetAge, youngestReasonableTargetAge, pawnAge + (pawnMaxAgeGap / 5), pawnAge + (pawnMaxAgeGap * .75f), 0.15f, targetAge);
+            __result = targetAgeLikelihood;
+            return false;
+        }
+    }
+
     //This is used to determine chances of deep talk, slight, and insult interaction
     [HarmonyPatch(typeof(Pawn_RelationsTracker), "CompatibilityWith")]
     public static class Pawn_RelationsTracker_CompatibilityWith
@@ -154,4 +138,26 @@ namespace BetterRomance
             return false;
         }
     }
+
+    ////Need a version of this that patches HAR's postfix 
+    //[HarmonyPatch(typeof(HarmonyPatches), "CompatibilityWithPostfix")]
+    //public static class HARPatch_CompatibilityWithPostfix
+    //{
+    //    public static bool Prefix(Pawn_RelationsTracker __instance, Pawn otherPawn, ref float __result, Pawn ___pawn)
+    //    {
+    //        //It's the same as the HAR patch but with the age adjustment made
+    //        if (___pawn.RaceProps.Humanlike != otherPawn.RaceProps.Humanlike || ___pawn == otherPawn)
+    //        {
+    //            __result = 0f;
+    //            return false;
+    //        }
+
+    //        float x = Mathf.Abs(___pawn.ageTracker.AgeBiologicalYearsFloat - otherPawn.ageTracker.AgeBiologicalYearsFloat);
+    //        float num = GenMath.LerpDouble(inFrom: 0f, inTo: ___pawn.MaxAgeGap() / 2, outFrom: 0.45f, outTo: -0.45f, x);
+    //        num = Mathf.Clamp(num, min: -0.45f, max: 0.45f);
+    //        float num2 = __instance.ConstantPerPawnsPairCompatibilityOffset(otherPawn.thingIDNumber);
+    //        __result = num + num2;
+    //        return false;
+    //    }
+    //}
 }

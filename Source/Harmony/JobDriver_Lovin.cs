@@ -17,13 +17,21 @@ namespace BetterRomance
                 __result = 100;
                 return false;
             }
-            float centerX = LovinIntervalHoursFromAgeCurve.Evaluate(pawn.ageTracker.AgeBiologicalYearsFloat);
-            centerX = Rand.Gaussian(centerX, 0.3f);
-            if (centerX < 0.5f)
+            float num = LovinIntervalHoursFromAgeCurve.Evaluate(pawn.ageTracker.AgeBiologicalYearsFloat);
+            //Added from vanilla for 1.4
+            if (ModsConfig.BiotechActive && pawn.genes != null)
             {
-                centerX = 0.5f;
+                foreach (Gene item in pawn.genes.GenesListForReading)
+                {
+                    num *= item.def.lovinMTBFactor;
+                }
             }
-            __result = (int)(centerX * 2500f);
+            num = Rand.Gaussian(num, 0.3f);
+            if (num < 0.5f)
+            {
+                num = 0.5f;
+            }
+            __result = (int)(num * 2500f);
             return false;
         }
 

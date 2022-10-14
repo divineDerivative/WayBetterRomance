@@ -18,13 +18,17 @@ namespace BetterRomance
         //Uses my catch all method for cheating considerations
         public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
         {
-            float minOpinion = initiator.MinOpinionForRomance();
-            float minRomanceChance = .15f;
             //If either party doesn't have sexuality traits, assign them
             initiator.EnsureTraits();
             recipient.EnsureTraits();
             //Skip during tutorial
             if (TutorSystem.TutorialMode)
+            {
+                __result = 0f;
+                return false;
+            }
+            //Don't allow for juveniles
+            if (initiator.DevelopmentalStage.Juvenile() || recipient.DevelopmentalStage.Juvenile())
             {
                 __result = 0f;
                 return false;
@@ -43,6 +47,7 @@ namespace BetterRomance
             }
             //Start with basic romance factor
             float romanceChance = initiator.relations.SecondaryRomanceChanceFactor(recipient);
+            float minRomanceChance = .15f;
             //If it's too low, do not allow
             if (romanceChance < minRomanceChance)
             {
@@ -50,6 +55,7 @@ namespace BetterRomance
                 return false;
             }
             //If opinion is too low, do not allow
+            float minOpinion = initiator.MinOpinionForRomance();
             int opinionOfTarget = initiator.relations.OpinionOf(recipient);
             if (opinionOfTarget < minOpinion || recipient.relations.OpinionOf(initiator) < minOpinion)
             {
@@ -80,78 +86,6 @@ namespace BetterRomance
             //Orientation match is already done in the secondary romance chance factor
             //Smash them all together for the final result
             __result = 1.15f * romanceChanceFactor * opinionFactor * cheatChance;
-            return false;
-        }
-    }
-
-    //This determines success chance of a romance attempt (not a hookup)
-    [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "SuccessChance")]
-    public class InteractionWorker_RomanceAttempt_SuccessChance
-    {
-        //Changes from Vanilla:
-        //Takes philanderer trait into account
-        //Uses my catch all method for cheating considerations
-        public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
-        {
-            //If recipient does not have a sexuality, assign one
-            recipient.EnsureTraits();
-            //Modifies secondary lovin chance factor by looking at existing relations
-            float romanceChanceFactor = recipient.relations.SecondaryRomanceChanceFactor(initiator);
-            //This is 0 at min opinion, 1 at 100 opinion
-            float opinionFactor = Mathf.InverseLerp(recipient.MinOpinionForRomance(), 100f, recipient.relations.OpinionOf(initiator));
-            float relationFactor = 1f;
-            //Check if this is cheating and whether they decide to do it anyways
-            if (!RomanceUtilities.WillPawnContinue(recipient, initiator, out Pawn partnerToConsider))
-            {
-                __result = 0f;
-                return false;
-            }
-            else
-            {
-                if (partnerToConsider != null)
-                {
-                    if (recipient.relations.DirectRelationExists(PawnRelationDefOf.Lover, partnerToConsider))
-                    {
-                        relationFactor = 0.6f;
-                    }
-                    else if (recipient.relations.DirectRelationExists(PawnRelationDefOf.Fiance, partnerToConsider))
-                    {
-                        relationFactor = 0.1f;
-                    }
-                    else if (recipient.relations.DirectRelationExists(PawnRelationDefOf.Spouse, partnerToConsider))
-                    {
-                        relationFactor = 0.3f;
-                    }
-                    else if (!SettingsUtilities.LoveRelations.NullOrEmpty())
-                    {
-                        foreach (var rel in SettingsUtilities.LoveRelations)
-                        {
-                            if (recipient.relations.DirectRelationExists(rel, partnerToConsider))
-                            {
-                                relationFactor = 0.6f;
-                                break;
-                            }
-                        }
-                    }
-                    //This checks opinion of existing relation
-                    //0 at 100 opinion, 1 at 0 opinion
-                    relationFactor *= Mathf.InverseLerp(100f, 0f, recipient.relations.OpinionOf(partnerToConsider));
-                    if (recipient.story.traits.HasTrait(RomanceDefOf.Philanderer))
-                    {
-                        //Increase for philanderer trait
-                        relationFactor *= 1.6f;
-                        //Super increase if their current partner is not on the map
-                        if (partnerToConsider.Map != recipient.Map)
-                        {
-                            relationFactor *= 2f;
-                        }
-                    }
-                    //Adjust based on romance chance factor of existing relation
-                    relationFactor *= Mathf.Clamp01(1f - recipient.relations.SecondaryRomanceChanceFactor(partnerToConsider));
-                }
-            }
-            //Orientation match is already done in the secondary romance chance factor
-            __result = Mathf.Clamp01(0.6f * relationFactor * romanceChanceFactor * opinionFactor);
             return false;
         }
     }
@@ -225,6 +159,7 @@ namespace BetterRomance
                 }
             }
             //This will attempt to add the cheater thought even if the pawn does not break up with them
+            //Need to make sure this doesn't add thought twice if they do break up with them
             if (!cheatList.NullOrEmpty())
             {
                 foreach (Pawn p in cheatList)
@@ -249,6 +184,84 @@ namespace BetterRomance
                 return false;
             }
             return true;
+        }
+    }
+
+    //Determines factors based on opinion of other pawn, used by SuccessChance
+    //Needs patched to use min romance setting instead of static 5f from vanilla
+    [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "OpinionFactor")]
+    public class InteractionWorker_RomanceAttempt_OpinionFactor
+    {
+        public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
+        {
+            __result = Mathf.InverseLerp(recipient.MinOpinionForRomance(), 100f, recipient.relations.OpinionOf(initiator));
+            return false;
+        }
+    }
+
+    //Determines factors based on relationships with other pawns, used by SuccessChance
+    //Needs patched to use my smarter methods of looking at existing partners
+    [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "PartnerFactor")]
+    public class InteractionWorker_RomanceAttempt_PartnerFactor
+    {
+        public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
+        {
+            float relationFactor = 1f;
+            //Check if this is cheating and whether they decide to do it anyways, also grabs the partner they would feel worst about cheating on
+            if (!RomanceUtilities.WillPawnContinue(recipient, initiator, out Pawn partnerToConsider))
+            {
+                __result = 0f;
+                return false;
+            }
+            else
+            {
+                //There is a partner they would be cheating on, adjustments to factor are taken from vanilla
+                if (partnerToConsider != null)
+                {
+                    if (recipient.relations.DirectRelationExists(PawnRelationDefOf.Lover, partnerToConsider))
+                    {
+                        relationFactor = 0.6f;
+                    }
+                    else if (recipient.relations.DirectRelationExists(PawnRelationDefOf.Fiance, partnerToConsider))
+                    {
+                        relationFactor = 0.1f;
+                    }
+                    else if (recipient.relations.DirectRelationExists(PawnRelationDefOf.Spouse, partnerToConsider))
+                    {
+                        relationFactor = 0.3f;
+                    }
+                    //Check for custom relations and use same adjustment as lover
+                    else if (!SettingsUtilities.LoveRelations.NullOrEmpty())
+                    {
+                        foreach (var rel in SettingsUtilities.LoveRelations)
+                        {
+                            if (recipient.relations.DirectRelationExists(rel, partnerToConsider))
+                            {
+                                relationFactor = 0.6f;
+                                break;
+                            }
+                        }
+                    }
+                    //This checks opinion of existing relation
+                    //0 at 100 opinion, 1 at 0 opinion
+                    relationFactor *= Mathf.InverseLerp(100f, 0f, recipient.relations.OpinionOf(partnerToConsider));
+                    if (recipient.story.traits.HasTrait(RomanceDefOf.Philanderer))
+                    {
+                        //Increase for philanderer trait
+                        relationFactor *= 1.6f;
+                        //Super increase if their current partner is not on the map
+                        if (partnerToConsider.Map != recipient.Map)
+                        {
+                            relationFactor *= 2f;
+                        }
+                    }
+                    //Adjust based on romance chance factor of existing relation
+                    relationFactor *= Mathf.Clamp01(1f - recipient.relations.SecondaryRomanceChanceFactor(partnerToConsider));
+                }
+                //If there's no parnter they're cheating on, then factor remains unchanged
+                __result = relationFactor;
+                return false;
+            }
         }
     }
 }

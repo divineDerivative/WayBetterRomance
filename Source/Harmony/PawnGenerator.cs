@@ -4,14 +4,16 @@ using Verse;
 
 namespace BetterRomance
 {
-    //Add orientation traits if not already present, after HAR adds traits
-    [HarmonyPatch(typeof(PawnGenerator), "GenerateTraits")]
-    [HarmonyAfter(new string[] { "rimworld.erdelf.alien_race.main" })]
-    public static class PawnGenerator_GenerateTraits
+    //Orientation traits are now added with a new method, don't allow that method to run in order to use user settings
+    [HarmonyPatch(typeof(PawnGenerator), "TryGenerateSexualityTraitFor")]
+    public static class PawnGenerator_TryGenerateSexualityTraitFor
     {
-        public static void Postfix(Pawn pawn)
+        public static bool Prefix(Pawn pawn, bool allowGay)
         {
+            //Just use my method instead
             pawn.EnsureTraits();
+            //Do anything with the allowGay bool?
+            return false;
         }
     }
 }
