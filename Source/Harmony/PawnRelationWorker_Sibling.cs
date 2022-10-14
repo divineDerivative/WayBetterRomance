@@ -15,6 +15,15 @@ namespace BetterRomance
             {
                 bool hasMother = other.GetMother() != null;
                 bool hasFather = other.GetFather() != null;
+                bool tryMakeLovers = Rand.Value < 0.85f;
+                if (hasMother && LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()))
+                {
+                    tryMakeLovers = false;
+                }
+                if (hasFather && LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()))
+                {
+                    tryMakeLovers = false;
+                }
                 if (!hasMother)
                 {
                     Pawn newMother = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, new object[] { generated, other, Gender.Female, request, false });
@@ -29,7 +38,17 @@ namespace BetterRomance
                 generated.SetFather(other.GetFather());
                 if (!hasMother || !hasFather)
                 {
-                    other.GetFather().relations.AddDirectRelation(PawnRelationDefOf.ExLover, other.GetMother());
+                    if (tryMakeLovers)
+                    {
+                        Pawn mother = other.GetMother();
+                        Pawn father = other.GetFather();
+                        father.relations.AddDirectRelation(PawnRelationDefOf.Lover, mother);
+
+                    }
+                    else
+                    {
+                        other.GetFather().relations.AddDirectRelation(PawnRelationDefOf.ExLover, other.GetMother());
+                    }
                 }
                 AccessTools.Method(typeof(PawnRelationWorker_Sibling), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
                 return false;
