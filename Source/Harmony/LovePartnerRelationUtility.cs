@@ -114,7 +114,7 @@ namespace BetterRomance
         /// <param name="p1">First pawn</param>
         /// <param name="p2">Second pawn</param>
         /// <param name="ex">Is it an ex relation</param>
-        /// <returns>A float between 0.001 and 1</returns>
+        /// <returns>A float between 0.01 and 1</returns>
         public static bool Prefix(Pawn p1, Pawn p2, bool ex, ref float __result)
         {
             float gap = Mathf.Abs(p1.ageTracker.AgeBiologicalYearsFloat - p2.ageTracker.AgeBiologicalYearsFloat);
@@ -132,7 +132,8 @@ namespace BetterRomance
                     gap = Mathf.Min(gap, minGapAtMinAge2);
                 }
             }
-            float maxAgeGap = p1.MaxAgeGap();
+            //Use the lower of the two maxes from settings
+            float maxAgeGap = Mathf.Min(p1.MaxAgeGap(), p2.MaxAgeGap());
             if (gap > maxAgeGap)
             {
                 __result = 0f;
@@ -154,7 +155,6 @@ namespace BetterRomance
             float p1AdjustedAge = p1.ageTracker.AgeChronologicalYearsFloat - p1.MinAgeForSex();
             if (p1AdjustedAge < 0f)
             {
-                Log.Warning("at < 0");
                 __result = 0f;
                 return false;
             }
@@ -178,10 +178,13 @@ namespace BetterRomance
         }
     }
 
-    //Determines how often a pawn in a love relation wants to have sex with the other pawn
+    //Determines how often a pawn would want to have sex only considering factors on them
     [HarmonyPatch(typeof(LovePartnerRelationUtility), "LovinMtbSinglePawnFactor")]
     public static class LovePartnerRelationUtility_LovinMtbSinglePawnFactor
     {
+        //Changes from vanilla:
+        //Age adjustments
+        //No adjustment made for asexual pawns as that is handled elsewhere
         public static bool Prefix(Pawn pawn, ref float __result)
         {
             float baseMtb = 1f;
@@ -239,6 +242,48 @@ namespace BetterRomance
                     }
                 }
             }
+        }
+    }
+
+    //If no vanilla love relations were found, checks custom ones
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "LovePartnerRelationExists")]
+    public static class LovePartnerRelationUtility_LovePartnerRelationExists
+    {
+        public static void Postfix(Pawn first, Pawn second, ref bool __result)
+        {
+            if (!__result)
+                if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
+                {
+                    foreach (PawnRelationDef relation in SettingsUtilities.LoveRelations)
+                    {
+                        if (first.relations.DirectRelationExists(relation, second))
+                        {
+                            __result = true;
+                            return;
+                        }
+                    }
+                }
+        }
+    }
+
+    //If no vanilla ex love relations were found, checks custom ones
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), "ExLovePartnerRelationExists")]
+    public static class LovePartnerRelationUtility_ExLovePartnerRelationExists
+    {
+        public static void Postfix(Pawn first, Pawn second, ref bool __result)
+        {
+            if (!__result)
+                if (!SettingsUtilities.ExLoveRelations.EnumerableNullOrEmpty())
+                {
+                    foreach (PawnRelationDef relation in SettingsUtilities.ExLoveRelations)
+                    {
+                        if (first.relations.DirectRelationExists(relation, second))
+                        {
+                            __result = true;
+                            return;
+                        }
+                    }
+                }
         }
     }
 
