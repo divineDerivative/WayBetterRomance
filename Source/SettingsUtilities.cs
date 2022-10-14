@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using Verse;
 using AlienRace;
+using HarmonyLib;
 
 namespace BetterRomance
 {
@@ -360,6 +361,13 @@ namespace BetterRomance
                 return !(p1.def is ThingDef_AlienRace alienDef && alienDef.alienRace.generalSettings.notXenophobistTowards.Contains(p2.def));
             }
             return false;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void RemoveHARPatches()
+        {
+            Harmony harmony = new Harmony(id: "rimworld.divineDerivative.HARinterference");
+            harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), typeof(HarmonyPatches).GetMethod("CompatibilityWithPostfix"));
         }
     }
 }

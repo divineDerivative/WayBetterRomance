@@ -5,6 +5,7 @@ using HarmonyLib;
 using UnityEngine;
 using Verse;
 using RimWorld;
+using AlienRace;
 
 namespace BetterRomance
 {
@@ -15,9 +16,11 @@ namespace BetterRomance
         {
             SettingsUtilities.LoveRelations = SettingsUtilities.AdditionalLoveRelations();
             SettingsUtilities.ExLoveRelations = SettingsUtilities.AdditionalExLoveRelations();
+
             if (ModsConfig.IsActive("erdelf.humanoidalienraces"))
             {
                 Settings.HARActive = true;
+                SettingsUtilities.RemoveHARPatches();
             }
             Harmony harmony = new Harmony(id: "rimworld.divineDerivative.romance");
             harmony.PatchAll();
