@@ -402,11 +402,11 @@ namespace BetterRomance
             List<DirectPawnRelation> relations = pawn.relations.DirectRelations;
             foreach (DirectPawnRelation rel in relations)
             {
-                if (rel.def == PawnRelationDefOf.Lover && (includeDead | !rel.otherPawn.Dead))
+                if (rel.def == PawnRelationDefOf.Lover && (includeDead || !rel.otherPawn.Dead))
                 {
                     list.Add(rel.otherPawn);
                 }
-                else if (SettingsUtilities.LoveRelations.Contains(rel.def) && (includeDead | !rel.otherPawn.Dead))
+                else if (SettingsUtilities.LoveRelations.Contains(rel.def) && (includeDead || !rel.otherPawn.Dead))
                 {
                     list.Add(rel.otherPawn);
                 }
