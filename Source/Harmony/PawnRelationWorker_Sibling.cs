@@ -105,4 +105,34 @@ namespace BetterRomance
             return false;
         }
     }
+
+    //Add use of age settings
+    [HarmonyPatch(typeof(PawnRelationWorker_Sibling), "GenerationChance")]
+    public static class PawnRelationWorker_Sibling_GenerationChance
+    {
+        public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, ref float __result, PawnRelationWorker_Sibling __instance)
+        {
+            float exsistingParentFactor = 1f;
+            if (other.GetFather() != null || other.GetMother() != null)
+            {
+                exsistingParentFactor = ChildRelationUtility.ChanceOfBecomingChildOf(generated, other.GetFather(), other.GetMother(), request, null, null);
+            }
+            if (!ChildRelationUtility.XenotypesCompatible(generated, other))
+            {
+                return true;
+            }
+            float ageGap = Mathf.Abs(generated.ageTracker.AgeChronologicalYearsFloat - other.ageTracker.AgeChronologicalYearsFloat);
+            float ageGapFactor = 1f;
+            if (ageGap > Mathf.Min(generated.MaxAgeForSex(), other.MaxAgeForSex() / 2))
+            {
+                ageGapFactor = 0.2f;
+            }
+            else if (ageGap > Mathf.Min(generated.MaxAgeForSex(), other.MaxAgeForSex() / 8))
+            {
+                ageGapFactor = 0.65f;
+            }
+            __result = exsistingParentFactor * ageGapFactor * __instance.BaseGenerationChanceFactor(generated, other, request);
+            return false;
+        }
+    }
 }
