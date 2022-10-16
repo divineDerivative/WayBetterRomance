@@ -126,7 +126,8 @@ namespace BetterRomance
         //Age adjustments
         public static bool Prefix(Pawn otherPawn, ref float __result, ref Pawn_RelationsTracker __instance, Pawn ___pawn)
         {
-            if (___pawn.def != otherPawn.def || ___pawn == otherPawn)
+            //This will allow for cross species calculations
+            if (___pawn.RaceProps.Humanlike != otherPawn.RaceProps.Humanlike || ___pawn == otherPawn)
             {
                 __result = 0f;
                 return false;

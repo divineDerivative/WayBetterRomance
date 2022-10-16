@@ -17,7 +17,7 @@ namespace BetterRomance
             SettingsUtilities.LoveRelations = SettingsUtilities.AdditionalLoveRelations();
             SettingsUtilities.ExLoveRelations = SettingsUtilities.AdditionalExLoveRelations();
 
-            if (ModsConfig.IsActive("erdelf.humanoidalienraces"))
+            if (ModsConfig.IsActive("erdelf.humanoidalienraces") || ModsConfig.IsActive("erdelf.humanoidalienraces.dev"))
             {
                 Settings.HARActive = true;
                 SettingsUtilities.RemoveHARPatches();
