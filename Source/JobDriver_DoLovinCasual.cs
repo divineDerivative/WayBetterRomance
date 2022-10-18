@@ -13,6 +13,7 @@ namespace BetterRomance
         private readonly TargetIndex SlotInd = TargetIndex.C;
         private int ticksLeft;
         private const int TicksBetweenHeartMotes = 100;
+        private static float PregnancyChance = 0.05f;
 
         private Building_Bed Bed => (Building_Bed)(Thing)job.GetTarget(BedInd);
 
@@ -130,11 +131,13 @@ namespace BetterRomance
             loveToil.AddFailCondition(() => Partner.Dead || ticksLeftThisToil > 100 && !IsInOrByBed(Bed, Partner));
             yield return loveToil;
             //If they finish, add the appropriate memory and record events
+            //Vanilla has this as a "finish action" on the previous toil, but I think it only makes sense to add this stuff if the lovin' actually... finishes
             yield return new Toil
             {
                 initAction = delegate
                 {
                     Thought_Memory thought_Memory = (Thought_Memory)ThoughtMaker.MakeThought(ThoughtDefOf.GotSomeLovin);
+                    //Increase mood power if either pawn had a love enhancer
                     if ((Actor.health != null && Actor.health.hediffSet != null && Actor.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) || (Partner.health != null && Partner.health.hediffSet != null && Partner.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)))
                     {
                         thought_Memory.moodPowerFactor = 1.5f;
@@ -144,8 +147,20 @@ namespace BetterRomance
                         Actor.needs.mood.thoughts.memories.TryGainMemory(thought_Memory, Partner);
                     }
                     Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.GotLovin, Actor.Named(HistoryEventArgsNames.Doer)));
-                    HistoryEventDef def = (Actor.relations.DirectRelationExists(PawnRelationDefOf.Spouse, Partner) ? HistoryEventDefOf.GotLovin_Spouse : HistoryEventDefOf.GotLovin_NonSpouse);
+                    HistoryEventDef def = Actor.relations.DirectRelationExists(PawnRelationDefOf.Spouse, Partner) ? HistoryEventDefOf.GotLovin_Spouse : HistoryEventDefOf.GotLovin_NonSpouse;
                     Find.HistoryEventsManager.RecordEvent(new HistoryEvent(def, Actor.Named(HistoryEventArgsNames.Doer)));
+                    //Biotech addition
+                    if (ModsConfig.BiotechActive)
+                    {
+                        Pawn male = (Actor.gender == Gender.Male) ? Actor : ((Partner.gender == Gender.Male) ? Partner : null);
+                        Pawn female = ((Actor.gender == Gender.Female) ? Actor : ((Partner.gender == Gender.Female) ? Partner : null));
+                        if (male != null && female != null && Rand.Chance(PregnancyChance * PregnancyUtility.PregnancyChanceForPartners(female, male)))
+                        {
+                            Hediff_Pregnant hediff_Pregnant = (Hediff_Pregnant)HediffMaker.MakeHediff(HediffDefOf.PregnantHuman, female);
+                            hediff_Pregnant.SetParents(null, male, PregnancyUtility.GetInheritedGeneSet(male, female));
+                            female.health.AddHediff(hediff_Pregnant);
+                        }
+                    }
                 },
                 defaultCompleteMode = ToilCompleteMode.Instant,
                 socialMode = RandomSocialMode.Off,

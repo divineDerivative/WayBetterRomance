@@ -65,6 +65,7 @@ namespace BetterRomance
                     {
                         //Make hearts and add correct string to the log
                         FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.Heart);
+                        Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.InitiatedLovin, pawn.Named(HistoryEventArgsNames.Doer)));
                         list.Add(RomanceDefOf.HookupSucceeded);
                     }
                     else
@@ -105,7 +106,6 @@ namespace BetterRomance
                         //Give casual lovin job to target, with actor and bed info
                         TargetPawn.jobs.jobQueue.EnqueueFirst(new Job(RomanceDefOf.DoLovinCasual, Actor, TargetBed, TargetBed.GetSleepingSlotPos(1)));
                         //Allow them to be interrupted
-                        // important for 1.1 that the hookup leader ends their job last. best guess is that it's related to the new garbage collection
                         TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                         Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                     }
