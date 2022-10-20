@@ -1,11 +1,8 @@
-﻿using System;
-using System.Reflection;
-using System.Collections.Generic;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
 using Verse;
 using UnityEngine;
-using AlienRace;
+
 
 namespace BetterRomance
 {
@@ -139,26 +136,4 @@ namespace BetterRomance
             return false;
         }
     }
-
-    ////Need a version of this that patches HAR's postfix 
-    //[HarmonyPatch(typeof(HarmonyPatches), "CompatibilityWithPostfix")]
-    //public static class HARPatch_CompatibilityWithPostfix
-    //{
-    //    public static bool Prefix(Pawn_RelationsTracker __instance, Pawn otherPawn, ref float __result, Pawn ___pawn)
-    //    {
-    //        //It's the same as the HAR patch but with the age adjustment made
-    //        if (___pawn.RaceProps.Humanlike != otherPawn.RaceProps.Humanlike || ___pawn == otherPawn)
-    //        {
-    //            __result = 0f;
-    //            return false;
-    //        }
-
-    //        float x = Mathf.Abs(___pawn.ageTracker.AgeBiologicalYearsFloat - otherPawn.ageTracker.AgeBiologicalYearsFloat);
-    //        float num = GenMath.LerpDouble(inFrom: 0f, inTo: ___pawn.MaxAgeGap() / 2, outFrom: 0.45f, outTo: -0.45f, x);
-    //        num = Mathf.Clamp(num, min: -0.45f, max: 0.45f);
-    //        float num2 = __instance.ConstantPerPawnsPairCompatibilityOffset(otherPawn.thingIDNumber);
-    //        __result = num + num2;
-    //        return false;
-    //    }
-    //}
 }

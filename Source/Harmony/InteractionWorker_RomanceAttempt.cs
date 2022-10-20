@@ -72,6 +72,7 @@ namespace BetterRomance
             }
             else
             {
+                //Otherwise, adjust chances based on most liked love partner
                 if (cheatOn != null)
                 {
                     cheatChance = Mathf.InverseLerp(50f, -50f, initiator.relations.OpinionOf(cheatOn));

@@ -270,8 +270,7 @@ namespace BetterRomance
                 opinionFactor *= Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
                 //Increase if opinion is positive, but on a lesser scale to above
                 opinionFactor *= GenMath.LerpDouble(0, 100f, 1f, 1.5f, target.relations.OpinionOf(asker));
-                float num = romanceFactor * opinionFactor;
-                return Rand.Range(0.05f, 1f) < num;
+                return Rand.Range(0.05f, 1f) < (romanceFactor * opinionFactor);
             }
             return false;
         }
