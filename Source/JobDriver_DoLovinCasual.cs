@@ -14,6 +14,8 @@ namespace BetterRomance
         private int ticksLeft;
         private const int TicksBetweenHeartMotes = 100;
         private static float PregnancyChance = 0.05f;
+        private const int ticksForEnhancer = 2750;
+        private const int ticksOtherwise = 1000;
 
         private Building_Bed Bed => (Building_Bed)(Thing)job.GetTarget(BedInd);
 
@@ -96,7 +98,14 @@ namespace BetterRomance
                 //This checks if actor is cheating
                 initAction = delegate
                 {
-                    ticksLeftThisToil = (int)(2500f * Mathf.Clamp(Rand.Range(0.1f, 1.1f), 0.1f, 2f));
+                    if ((Actor.health != null && Actor.health.hediffSet != null && Actor.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) || (Partner.health != null && Partner.health.hediffSet != null && Partner.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)))
+                    {
+                        ticksLeftThisToil = ticksForEnhancer;
+                    }
+                    else
+                    {
+                        ticksLeftThisToil = ticksOtherwise;
+                    }
                     
                     if (RomanceUtilities.IsThisCheating(Actor,Partner,out List<Pawn> cheatedOnList))
                     {
