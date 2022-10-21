@@ -21,7 +21,7 @@ namespace BetterRomance
         public void TryMakeList(bool hookup)
         {
             CompListVars type = hookup ? Hookup : Date;
-            if (type.list.NullOrEmpty() && !type.listMadeThisSession || type.ticksSinceMake > tickInterval)
+            if ((type.list.NullOrEmpty() && !type.listMadeThisSession) || type.ticksSinceMake > tickInterval)
             {
                 type.list = RomanceUtilities.FindAttractivePawns(Pawn, hookup);
                 type.listMadeThisSession = true;
