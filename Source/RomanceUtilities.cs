@@ -340,6 +340,10 @@ namespace BetterRomance
             {
                 return false;
             }
+            if (pawn.Drafted)
+            {
+                return false;
+            }
             return pawn.CurJob.def != JobDefOf.LayDown &&
        pawn.CurJob.def != JobDefOf.BeatFire &&
        pawn.CurJob.def != JobDefOf.Arrest &&
