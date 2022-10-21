@@ -1,31 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Patch>
-  <Operation Class="PatchOperationAdd">
-    <xpath>/Defs/PreceptDef[defName="Lovin_Horrible" or defName="Lovin_SpouseOnly_Strict"]/comps</xpath>
-    <value>
-      <li Class="PreceptComp_UnwillingToDo_Chance">
-        <eventDef>GotLovin_NonSpouse</eventDef>
-        <chance>0.8</chance>
-      </li>
-    </value>
-  </Operation>
-  <Operation Class="PatchOperationAdd">
-    <xpath>/Defs/PreceptDef[defName="Lovin_SpouseOnly_Moderate"]/comps</xpath>
-    <value>
-      <li Class="PreceptComp_UnwillingToDo_Chance">
-        <eventDef>GotLovin_NonSpouse</eventDef>
-        <chance>0.6</chance>
-      </li>
-    </value>
-  </Operation>
-  <Operation Class="PatchOperationAdd">
-    <xpath>/Defs/PreceptDef[defName="Lovin_SpouseOnly_Mild"]/comps</xpath>
-    <value>
-      <li Class="PreceptComp_UnwillingToDo_Chance">
-        <eventDef>GotLovin_NonSpouse</eventDef>
-        <chance>0.4</chance>
-      </li>
-    </value>
-  </Operation>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Ideology</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class="PatchOperationAdd">
+					<xpath>/Defs/PreceptDef[defName="Lovin_Horrible" or defName="Lovin_SpouseOnly_Strict"]/comps</xpath>
+					<value>
+						<li Class="PreceptComp_UnwillingToDo_Chance">
+							<eventDef>GotLovin_NonSpouse</eventDef>
+							<chance>0.8</chance>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>/Defs/PreceptDef[defName="Lovin_SpouseOnly_Moderate"]/comps</xpath>
+					<value>
+						<li Class="PreceptComp_UnwillingToDo_Chance">
+							<eventDef>GotLovin_NonSpouse</eventDef>
+							<chance>0.6</chance>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>/Defs/PreceptDef[defName="Lovin_SpouseOnly_Mild"]/comps</xpath>
+					<value>
+						<li Class="PreceptComp_UnwillingToDo_Chance">
+							<eventDef>GotLovin_NonSpouse</eventDef>
+							<chance>0.4</chance>
+						</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
 </Patch>
