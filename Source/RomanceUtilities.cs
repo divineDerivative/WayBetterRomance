@@ -326,21 +326,17 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Returns false if <paramref name="pawn"/> is close to needing to eat/sleep, there's enemies nearby, or they're doing a job that should not be interrupted
+        /// Returns false if <paramref name="pawn"/> is close to needing to eat/sleep, there's enemies nearby, they're drafted, or they're doing a job that should not be interrupted
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns>True or False</returns>
         public static bool IsPawnFree(Pawn pawn)
         {
-            if (PawnUtility.WillSoonHaveBasicNeed(pawn))
+            if (PawnUtility.WillSoonHaveBasicNeed(pawn) || PawnUtility.EnemiesAreNearby(pawn) || pawn.Drafted )
             {
                 return false;
             }
-            if (PawnUtility.EnemiesAreNearby(pawn))
-            {
-                return false;
-            }
-            if (pawn.Drafted)
+            if (pawn.health.hediffSet.HasHediff(HediffDefOf.PregnancyLabor) || pawn.health.hediffSet.HasHediff(HediffDefOf.PregnancyLaborPushing))
             {
                 return false;
             }
@@ -369,7 +365,9 @@ namespace BetterRomance
        pawn.CurJob.def != JobDefOf.BestowingCeremony &&
        pawn.CurJob.def != RomanceDefOf.JobDateLead &&
        pawn.CurJob.def != RomanceDefOf.JobDateFollow &&
-       pawn.CurJob.def != JobDefOf.PrepareSkylantern;
+       pawn.CurJob.def != JobDefOf.PrepareSkylantern &&
+       pawn.CurJob.def != JobDefOf.Deathrest &&
+       pawn.CurJob.def != JobDefOf.Breastfeed;
         }
 
         /// <summary>
