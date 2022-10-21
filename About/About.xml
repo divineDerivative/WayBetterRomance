@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Way Better Romance</name>
-  <packageId>divineDerivative.Romance</packageId>
+  <name>(Dev) Way Better Romance</name>
+  <packageId>divineDerivative.RomanceDev</packageId>
   <author>divineDerivative</author>
   <url>https://github.com/divineDerivative/WayBetterRomance</url>
   <supportedVersions>
@@ -26,7 +26,6 @@
     <li>Mlie.LessStupidRomanceAttempt</li>
     <li>community.psychology.unofficialupdate</li>
   </incompatibleWith>
-  <description>
-    Heavily inspired by Rational Romance, but rewritten to fit my needs better.
-</description>
+  <description>Use this for testing.
+	  Romance overhaul inspired by Rational Romance, with support for race mod authors to customise romance for their race.</description>
 </ModMetaData>

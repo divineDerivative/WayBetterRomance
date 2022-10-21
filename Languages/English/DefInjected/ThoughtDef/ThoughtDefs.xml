@@ -1,7 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <FeelingHarassed.stages.0.label>I can't get a moment's peace!</FeelingHarassed.stages.0.label>
-  <FeelingHarassed.stages.0.description>Can I just go a day without having to turn someone down?</FeelingHarassed.stages.0.description>
   <RebuffedMyHookupAttempt.stages.0.label>turned me down</RebuffedMyHookupAttempt.stages.0.label>
   <RebuffedMyHookupAttemptMood.stages.0.label>turned down by {0}</RebuffedMyHookupAttemptMood.stages.0.label>
   <RebuffedMyHookupAttemptMood.stages.0.description>What, am I not pretty enough for a tumble??</RebuffedMyHookupAttemptMood.stages.0.description>
@@ -9,5 +7,5 @@
   <RebuffedMyDateAttempt.stages.0.label>turned down my date</RebuffedMyDateAttempt.stages.0.label>
   <RebuffedMyDateAttemptMood.stages.0.label>turned down by {0}</RebuffedMyDateAttemptMood.stages.0.label>
   <RebuffedMyDateAttemptMood.stages.0.description>What, can't even give me a chance??</RebuffedMyDateAttemptMood.stages.0.description>
-  <FailedDateAttemptOnMe.stages.li.label>had to turn down for a date</FailedDateAttemptOnMe.stages.li.label>
+  <FailedDateAttemptOnMe.stages.0.label>had to turn down for a date</FailedDateAttemptOnMe.stages.0.label>
 </LanguageData>
