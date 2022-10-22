@@ -31,13 +31,6 @@ namespace BetterRomance
             }
             else
             {
-                //Find a pawn they like
-                //List<Pawn> list = RomanceUtilities.FindAttractivePawns(pawn, true);
-                //if (list.NullOrEmpty())
-                //{
-                //    return null;
-                //}
-                //Pawn partner = list.RandomElement();
                 Comp_PartnerList comp = pawn.TryGetComp<Comp_PartnerList>();
                 if (comp == null)
                 {
