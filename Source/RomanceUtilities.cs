@@ -40,7 +40,7 @@ namespace BetterRomance
             {
                 //For a hookup we need to start with a non-zero number, or pawns that they actually don't find attractive end up on the list
                 //For a date we can start at zero since we're looking at opinion instead of romance factor
-                float num = hookup ? 0.2f : 0f;
+                float num = hookup ? 0.15f : 0f;
                 Pawn tempPawn = null;
                 foreach (Pawn p in pawn.Map.mapPawns.FreeColonistsSpawned)
                 {

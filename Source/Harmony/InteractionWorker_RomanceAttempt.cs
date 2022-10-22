@@ -47,7 +47,7 @@ namespace BetterRomance
             }
             //Start with basic romance factor
             float romanceChance = initiator.relations.SecondaryRomanceChanceFactor(recipient);
-            float minRomanceChance = .15f;
+            float minRomanceChance = .2f;
             //If it's too low, do not allow
             if (romanceChance < minRomanceChance)
             {
