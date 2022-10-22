@@ -18,7 +18,7 @@ namespace BetterRomance
         private Pawn TargetPawn => TargetThingA as Pawn;
 
         private TargetIndex TargetPawnIndex => TargetIndex.A;
-        private bool IsDate => job.def == RomanceDefOf.ProposeDate ? true : false;
+        private bool IsDate => job.def == RomanceDefOf.ProposeDate;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
