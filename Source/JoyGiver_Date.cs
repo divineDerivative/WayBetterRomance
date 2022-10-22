@@ -25,22 +25,6 @@ namespace BetterRomance
             }
             else
             {
-                //Pawn partner;
-                //if (LovePartnerRelationUtility.HasAnyLovePartner(pawn))
-                //{
-                //    //Pick a random existing partner
-                //    partner = RomanceUtilities.GetAllLoveRelationPawns(pawn, false, true).RandomElement();
-                //}
-                //else
-                //{
-                //    // allow pawns to choose any attractive pawn if they don't have a lover
-                //    List<Pawn> list = RomanceUtilities.FindAttractivePawns(pawn, false);
-                //    if (list.NullOrEmpty())
-                //    {
-                //        return null;
-                //    }
-                //    partner = list.RandomElement();
-                //}
                 Comp_PartnerList comp = pawn.TryGetComp<Comp_PartnerList>();
                 if (comp == null)
                 {

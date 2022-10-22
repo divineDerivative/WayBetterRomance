@@ -140,7 +140,7 @@ namespace BetterRomance
             if (list.Count == 0)
             {
                 result = false;
-                Log.Message("No date walk destination found.");
+                //Log.Message("No date walk destination found.");
             }
             else
             {
@@ -149,9 +149,9 @@ namespace BetterRomance
                     select c).ToList();
                 best = list2.FirstOrDefault();
                 list2.Reverse();
-                Log.Message("Date walk destinations found from beauty " +
-                            BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " +
-                            BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
+                //Log.Message("Date walk destinations found from beauty " +
+                //            BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " +
+                //            BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
                 result = true;
             }
 
@@ -235,7 +235,7 @@ namespace BetterRomance
                         if (TryFindUnforbiddenDatePath(pawn, TargetPawn, root, out List<IntVec3> list))
                         {
                             //Add the path info to the job info
-                            Log.Message("Date walk path found.");
+                            //Log.Message("Date walk path found.");
                             jobDateLead.targetQueueB = new List<LocalTargetInfo>();
                             for (int i = 1; i < list.Count; i++)
                             {
@@ -260,7 +260,7 @@ namespace BetterRomance
                         }
                         else
                         {
-                            Log.Message("No date walk path found.");
+                            //Log.Message("No date walk path found.");
                         }
                     }
                 };
