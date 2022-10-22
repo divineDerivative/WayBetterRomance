@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   
+	<!--Hookups-->
   <ThoughtDef>
     <defName>RebuffedMyHookupAttempt</defName>
     <thoughtClass>Thought_MemorySocial</thoughtClass>
@@ -46,6 +47,7 @@
     </stages>
   </ThoughtDef>
 
+	<!--Dates-->
   <ThoughtDef>
     <defName>RebuffedMyDateAttempt</defName>
     <thoughtClass>Thought_MemorySocial</thoughtClass>
@@ -91,6 +93,53 @@
     </stages>
   </ThoughtDef>
 
+	<!--Hangouts-->
+	<ThoughtDef>
+		<defName>RebuffedMyHangoutAttempt</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<durationDays>2.0</durationDays>
+		<stackLimit>300</stackLimit>
+		<stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
+		<stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>didn't want to hang out with me</label>
+				<baseOpinionOffset>-2</baseOpinionOffset>
+			</li>
+		</stages>
+		<thoughtToMake>RebuffedMyDateAttemptMood</thoughtToMake>
+	</ThoughtDef>
+
+	<ThoughtDef>
+		<defName>RebuffedMyHangoutAttemptMood</defName>
+		<durationDays>1.0</durationDays>
+		<stackLimit>10</stackLimit>
+		<stackedEffectMultiplier>0.9</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>{0} didn't want to hang out with me</label>
+				<description>I just wanted some quality time</description>
+				<baseMoodEffect>-1</baseMoodEffect>
+			</li>
+		</stages>
+	</ThoughtDef>
+
+	<ThoughtDef>
+		<defName>FailedHangoutAttemptOnMe</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<durationDays>2.0</durationDays>
+		<stackLimit>300</stackLimit>
+		<stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
+		<stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>{0} wanted to hang out, how awkward</label>
+				<baseOpinionOffset>-2</baseOpinionOffset>
+			</li>
+		</stages>
+	</ThoughtDef>
+
+	<!--Lovin-->
   <ThoughtDef>
     <defName>GotSomeLovinAsexual</defName>
     <thoughtClass>Thought_MemorySocial</thoughtClass>

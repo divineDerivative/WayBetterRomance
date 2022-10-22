@@ -18,6 +18,7 @@ namespace BetterRomance
         private Pawn TargetPawn => TargetThingA as Pawn;
 
         private TargetIndex TargetPawnIndex => TargetIndex.A;
+        private bool IsDate => job.def == RomanceDefOf.ProposeDate ? true : false;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -119,7 +120,7 @@ namespace BetterRomance
 
         private bool DoesTargetPawnAcceptDate()
         {
-            return RomanceUtilities.IsPawnFree(TargetPawn) && RomanceUtilities.IsDateAppealing(TargetPawn, Actor);
+            return RomanceUtilities.IsPawnFree(TargetPawn) && ((IsDate && RomanceUtilities.IsDateAppealing(TargetPawn, Actor)) || (!IsDate && RomanceUtilities.IsHangoutAppealing(TargetPawn, Actor)));
         }
         //No idea how this works either
         private bool TryFindMostBeautifulRootInDistance(int distance, Pawn p1, Pawn p2, out IntVec3 best)
@@ -192,19 +193,19 @@ namespace BetterRomance
                     {
                         //Make hearts and add correct string to the log
                         FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.Heart);
-                        list.Add(RomanceDefOf.DateSucceeded);
+                        list.Add(IsDate ? RomanceDefOf.DateSucceeded : RomanceDefOf.HangoutSucceeded);
                     }
                     else
                     {
                         //Make ! mote, add rebuffed memories, and add correct string to the log
                         FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.IncapIcon);
-                        Actor.needs.mood.thoughts.memories.TryGainMemory(RomanceDefOf.RebuffedMyDateAttempt, TargetPawn);
-                        TargetPawn.needs.mood.thoughts.memories.TryGainMemory(RomanceDefOf.FailedDateAttemptOnMe, Actor);
-                        list.Add(RomanceDefOf.DateFailed);
+                        Actor.needs.mood.thoughts.memories.TryGainMemory(IsDate ? RomanceDefOf.RebuffedMyDateAttempt : RomanceDefOf.RebuffedMyHangoutAttempt, TargetPawn);
+                        TargetPawn.needs.mood.thoughts.memories.TryGainMemory(IsDate ? RomanceDefOf.FailedDateAttemptOnMe : RomanceDefOf.FailedHangoutAttemptOnMe, Actor);
+                        list.Add(IsDate ? RomanceDefOf.DateFailed : RomanceDefOf.HangoutFailed);
                         Actor.GetComp<Comp_PartnerList>().Date.list.Remove(TargetPawn);
                     }
                     //Add "asked on a date" to the log, with the result
-                    Find.PlayLog.Add(new PlayLogEntry_Interaction(RomanceDefOf.AskedForDate, pawn, TargetPawn, list));
+                    Find.PlayLog.Add(new PlayLogEntry_Interaction(IsDate ? RomanceDefOf.AskedForDate : RomanceDefOf.AskedForHangout, pawn, TargetPawn, list));
                 }
             };
             //Fails if target doesn't agree
@@ -225,7 +226,7 @@ namespace BetterRomance
                             return;
                         }
                         //Create date lead job
-                        Job jobDateLead = new Job(RomanceDefOf.JobDateLead);
+                        Job jobDateLead = new Job(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead);
                         //But stop if a starting tile isn't found
                         if (!TryFindMostBeautifulRootInDistance(40, pawn, TargetPawn, out IntVec3 root))
                         {
@@ -248,7 +249,7 @@ namespace BetterRomance
                             //Give the job to the pawn
                             Actor.jobs.jobQueue.EnqueueFirst(jobDateLead);
                             //Create date follow job, with wander and actor info
-                            Job jobDateFollow = new Job(RomanceDefOf.JobDateFollow)
+                            Job jobDateFollow = new Job(IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow)
                             {
                                 locomotionUrgency = LocomotionUrgency.Amble, targetA = Actor
                             };

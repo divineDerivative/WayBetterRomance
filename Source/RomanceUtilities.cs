@@ -300,6 +300,19 @@ namespace BetterRomance
             return false;
         }
 
+        public static bool IsHangoutAppealing(Pawn target, Pawn asker)
+        {
+            //Always agree with an existing partner?
+            if (LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
+            {
+                return true;
+            }
+            //Just looking at opinion
+            float num = Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
+            return Rand.Range(0.05f, 1f) < num;
+
+        }
+
         /// <summary>
         /// Will <paramref name="pawn"/> participate in a hookup. Checks settings and asexuality rating.
         /// </summary>

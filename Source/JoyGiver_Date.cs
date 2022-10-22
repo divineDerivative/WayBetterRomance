@@ -41,7 +41,7 @@ namespace BetterRomance
                     }
                 }
                 Pawn partner = comp.GetPartner(false);
-                //Checks on if a partner was found and is avilable
+                //Checks on if a partner was found and is available
                 if (partner == null || !partner.Spawned || !partner.Awake())
                 {
                     return null;
@@ -53,7 +53,14 @@ namespace BetterRomance
                 //Create the job, ProposeDate
                 else
                 {
-                    return new Job(def.jobDef, partner);
+                    if (pawn.relations.SecondaryRomanceChanceFactor(partner) > 0.2f)
+                    {
+                        return new Job(RomanceDefOf.ProposeHangout, partner);
+                    }
+                    else
+                    {
+                        return new Job(RomanceDefOf.ProposeDate, partner);
+                    }
                 }
             }
         }

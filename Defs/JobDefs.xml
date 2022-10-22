@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
+	<!--Hookups-->
   <JobDef>
     <defName>LeadHookup</defName>
     <driverClass>BetterRomance.JobDriver_LeadHookup</driverClass>
@@ -16,6 +17,8 @@
     <joyXpPerTick>0.004</joyXpPerTick>
     <joyKind>Lewd</joyKind>
   </JobDef>
+	
+	<!--Dates-->
   <JobDef>
     <defName>ProposeDate</defName>
     <driverClass>BetterRomance.JobDriver_ProposeDate</driverClass>
@@ -38,4 +41,27 @@
     <joyXpPerTick>0.004</joyXpPerTick>
     <joyKind>Social</joyKind>
   </JobDef>
+	<!--Copy of above with different labels-->
+	<JobDef>
+		<defName>ProposeHangout</defName>
+		<driverClass>BetterRomance.JobDriver_ProposeDate</driverClass>
+		<reportString>asking to hang out.</reportString>
+		<joyKind>Social</joyKind>
+	</JobDef>
+	<JobDef>
+		<defName>JobHangoutLead</defName>
+		<driverClass>BetterRomance.JobDriver_JobDateLead</driverClass>
+		<reportString>hanging out.</reportString>
+		<joySkill>Social</joySkill>
+		<joyXpPerTick>0.004</joyXpPerTick>
+		<joyKind>Social</joyKind>
+	</JobDef>
+	<JobDef>
+		<defName>JobHangoutFollow</defName>
+		<driverClass>BetterRomance.JobDriver_JobDateFollow</driverClass>
+		<reportString>hanging out.</reportString>
+		<joySkill>Social</joySkill>
+		<joyXpPerTick>0.004</joyXpPerTick>
+		<joyKind>Social</joyKind>
+	</JobDef>
 </Defs>

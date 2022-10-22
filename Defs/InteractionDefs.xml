@@ -67,4 +67,38 @@
       </rulesStrings>
     </rulePack>
   </RulePackDef>
+
+	<InteractionDef>
+		<defName>AskedForHangout</defName>
+		<label>hangout attempt</label>
+		<symbol>Things/Mote/SpeechSymbols/Romance</symbol>
+		<initiatorXpGainSkill>Social</initiatorXpGainSkill>
+		<initiatorXpGainAmount>10</initiatorXpGainAmount>
+		<logRulesInitiator>
+			<rulesStrings>
+				<li>r_logentry-&gt;[INITIATOR_nameDef] asked [RECIPIENT_nameDef] to hang out.</li>
+			</rulesStrings>
+		</logRulesInitiator>
+		<logRulesRecipient>
+			<rulesStrings>
+				<li>r_logentry-&gt;[RECIPIENT_nameDef] was asked to hang out by [INITIATOR_nameDef].</li>
+			</rulesStrings>
+		</logRulesRecipient>
+	</InteractionDef>
+	<RulePackDef>
+		<defName>HangoutSucceeded</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>sent-&gt; [RECIPIENT_nameDef] agreed to hang out.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
+	<RulePackDef>
+		<defName>HangoutFailed</defName>
+		<rulePack>
+			<rulesStrings>
+				<li>sent-&gt; [RECIPIENT_nameDef] did not agree to hang out.</li>
+			</rulesStrings>
+		</rulePack>
+	</RulePackDef>
 </Defs>
