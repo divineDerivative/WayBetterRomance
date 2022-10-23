@@ -9,10 +9,9 @@ namespace BetterRomance
     public class JobDriver_JobDateFollow : JobDriver
     {
         private readonly TargetIndex PartnerInd = TargetIndex.A;
-
         private Pawn Actor => GetActor();
-
         private Pawn Partner => (Pawn) (Thing) job.GetTarget(PartnerInd);
+        private bool IsDate => job.def == RomanceDefOf.JobDateFollow;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -44,7 +43,7 @@ namespace BetterRomance
             //Fail if partner despawns, dies, or stops the lead job
             FollowPartner.AddFailCondition(() => !Partner.Spawned);
             FollowPartner.AddFailCondition(() => Partner.Dead);
-            FollowPartner.AddFailCondition(() => Partner.CurJob.def != RomanceDefOf.JobDateLead);
+            FollowPartner.AddFailCondition(() => Partner.CurJob.def != (IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead));
             //Chase after partner
             FollowPartner.initAction = delegate
             {

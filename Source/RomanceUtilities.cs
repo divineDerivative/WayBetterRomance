@@ -378,6 +378,8 @@ namespace BetterRomance
        pawn.CurJob.def != JobDefOf.BestowingCeremony &&
        pawn.CurJob.def != RomanceDefOf.JobDateLead &&
        pawn.CurJob.def != RomanceDefOf.JobDateFollow &&
+       pawn.CurJob.def != RomanceDefOf.JobHangoutLead &&
+       pawn.CurJob.def != RomanceDefOf.JobHangoutFollow &&
        pawn.CurJob.def != JobDefOf.PrepareSkylantern &&
        pawn.CurJob.def != JobDefOf.Deathrest &&
        pawn.CurJob.def != JobDefOf.Breastfeed;

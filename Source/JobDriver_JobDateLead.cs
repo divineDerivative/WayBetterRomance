@@ -10,10 +10,9 @@ namespace BetterRomance
     {
         private readonly TargetIndex PartnerInd = TargetIndex.A;
         private int ticksLeft = 20;
-
         private Pawn Actor => GetActor();
-
         private Pawn Partner => (Pawn) (Thing) job.GetTarget(PartnerInd);
+        private bool IsDate => job.def == RomanceDefOf.JobDateLead;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -46,7 +45,7 @@ namespace BetterRomance
             //Fail if partner despawns, dies, or stops the follow job
             toil.AddFailCondition(() => !Partner.Spawned);
             toil.AddFailCondition(() => Partner.Dead);
-            toil.AddFailCondition(() => Partner.CurJob.def != RomanceDefOf.JobDateFollow);
+            toil.AddFailCondition(() => Partner.CurJob.def != (IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow));
             return toil;
         }
         //Wait for partner at each tile
@@ -65,7 +64,7 @@ namespace BetterRomance
             //Fail if partner despawns, dies, or stops the follow job
             toil.AddFailCondition(() => !Partner.Spawned);
             toil.AddFailCondition(() => Partner.Dead);
-            toil.AddFailCondition(() => Partner.CurJob.def != RomanceDefOf.JobDateFollow);
+            toil.AddFailCondition(() => Partner.CurJob.def != (IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow));
             return toil;
         }
 

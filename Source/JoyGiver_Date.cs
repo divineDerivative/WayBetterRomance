@@ -55,11 +55,11 @@ namespace BetterRomance
                 {
                     if (pawn.relations.SecondaryRomanceChanceFactor(partner) > 0.2f)
                     {
-                        return new Job(RomanceDefOf.ProposeHangout, partner);
+                        return new Job(RomanceDefOf.ProposeDate, partner);
                     }
                     else
                     {
-                        return new Job(RomanceDefOf.ProposeDate, partner);
+                        return new Job(RomanceDefOf.ProposeHangout, partner);
                     }
                 }
             }

@@ -12,11 +12,8 @@ namespace BetterRomance
     {
         public bool successfulPass = true;
         public bool WasSuccessfulPass => successfulPass;
-
         private Pawn Actor => GetActor();
-
         private Pawn TargetPawn => TargetThingA as Pawn;
-
         private TargetIndex TargetPawnIndex => TargetIndex.A;
         private bool IsDate => job.def == RomanceDefOf.ProposeDate;
 

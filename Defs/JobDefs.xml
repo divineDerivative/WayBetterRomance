@@ -41,6 +41,7 @@
     <joyXpPerTick>0.004</joyXpPerTick>
     <joyKind>Social</joyKind>
   </JobDef>
+	
 	<!--Copy of above with different labels-->
 	<JobDef>
 		<defName>ProposeHangout</defName>
