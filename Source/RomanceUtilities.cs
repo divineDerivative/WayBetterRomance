@@ -23,8 +23,8 @@ namespace BetterRomance
             {
                 foreach (Pawn p in GetAllLoveRelationPawns(pawn, false, true))
                 {
-                    //Skip if they already share a bed, unless its a date
-                    if (pawn.ownership.OwnedBed == null || !pawn.ownership.OwnedBed.OwnersForReading.Contains(p) || !hookup)
+                    //Skip pawns they share a bed with except for dates
+                    if (!DoWeShareABed(pawn, p) || !hookup)
                     {
                         result.Add(p);
                     }
@@ -44,8 +44,8 @@ namespace BetterRomance
                 Pawn tempPawn = null;
                 foreach (Pawn p in pawn.Map.mapPawns.FreeColonistsSpawned)
                 {
-                    //Skip them if they're already in the list
-                    if (result.Contains(p) || pawn == p)
+                    //Skip them if they're already in the list, or they share a bed if it's a hookup
+                    if (result.Contains(p) || pawn == p || (DoWeShareABed(pawn, p) && hookup))
                     {
                         continue;
                     }
@@ -75,7 +75,13 @@ namespace BetterRomance
                 }
                 result.Add(tempPawn);
             }
+
             return result;
+        }
+
+        public static bool DoWeShareABed(Pawn pawn, Pawn other)
+        {
+            return pawn.ownership.OwnedBed != null && pawn.ownership.OwnedBed.OwnersForReading.Contains(other);
         }
 
         /// <summary>
@@ -501,8 +507,10 @@ namespace BetterRomance
             return rating;
         }
 
-
-        //Generates points for the curve based on age settings
+        /// <summary>
+        /// Generates points for the lovin age curve based on age settings
+        /// </summary>
+        /// <returns>List<CurvePoint></returns>
         public static List<CurvePoint> GetLovinCurve(this Pawn pawn)
         {
             float minAge = pawn.MinAgeForSex();
