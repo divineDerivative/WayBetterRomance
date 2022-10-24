@@ -83,7 +83,7 @@ namespace BetterRomance
             targetBaseCapabilities *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Manipulation));
             targetBaseCapabilities *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Moving));
 
-            __result = __instance.LovinAgeFactor(otherPawn) * (float)__instance.PrettinessFactor(otherPawn) * targetBaseCapabilities  * crossSpecies * sexualityFactor;
+            __result = __instance.LovinAgeFactor(otherPawn) * __instance.PrettinessFactor(otherPawn) * targetBaseCapabilities  * crossSpecies * sexualityFactor;
             return false;
         }
     }
