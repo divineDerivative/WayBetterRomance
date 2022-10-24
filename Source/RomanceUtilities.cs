@@ -115,25 +115,6 @@ namespace BetterRomance
             }
             return true;
         }
-        /// <summary>
-        /// Determines if an interaction between <paramref name="pawn"/> and <paramref name="target"/> would be cheating from <paramref name="pawn"/>'s point of view.
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="target"></param>
-        /// <returns>True or False</returns>
-        public static bool IsThisCheating(Pawn pawn, Pawn target)
-        {
-            //Are they in a relationship?
-            if (LovePartnerRelationUtility.LovePartnerRelationExists(pawn, target))
-            {
-                return false;
-            }
-            if (new HistoryEvent(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo() || !pawn.CaresAboutCheating())
-            {
-                return false;
-            }
-            return true;
-        }
 
         /// <summary>
         /// Returns true if interaction between <paramref name="pawn"/> and <paramref name="target"/> is not cheating and is allowed by ideo. Otherwise, finds the partner they would feel the worst about cheating on and decides based on opinion.
@@ -152,6 +133,11 @@ namespace BetterRomance
                     //At this point, both the pawn and a non-zero number of partners consider this cheating
                     //If they are faithful, don't do it
                     if (pawn.story.traits.HasTrait(RomanceDefOf.Faithful))
+                    {
+                        return false;
+                    }
+                    //Don't allow if user has turned cheating off
+                    if (BetterRomanceMod.settings.cheatChance == 0f)
                     {
                         return false;
                     }
@@ -178,59 +164,7 @@ namespace BetterRomance
                             cheatOn = p;
                         }
                     }
-                    if (Rand.Range(0f, 1f) < opinionFactor)
-                    {
-                        return false;
-                    }
-                }
-                //Pawn thinks they are cheating, even though no partners will be upset
-                //This can happen with the no spouses mod, which is a bit weird
-                //Letting this continue for now, might change later
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Returns true if interaction between <paramref name="pawn"/> and <paramref name="target"/> is not cheating and is allowed by ideo. Otherwise, finds the partner they would feel the worst about cheating on and decides based on opinion.
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public static bool WillPawnContinue(Pawn pawn, Pawn target)
-        {
-            if (IsThisCheating(pawn, target, out List<Pawn> cheatedOnList))
-            {
-                if (!cheatedOnList.NullOrEmpty())
-                {
-                    //At this point, both the pawn and a non-zero number of partners consider this cheating
-                    //If they are faithful, don't do it
-                    if (pawn.story.traits.HasTrait(RomanceDefOf.Faithful))
-                    {
-                        return false;
-                    }
-                    //This should find the person they would feel the worst about cheating on
-                    //With the philanderer map differences, I think this is the best way
-                    float opinionFactor = 99999f;
-                    foreach (Pawn p in cheatedOnList)
-                    {
-                        float opinion = pawn.relations.OpinionOf(p);
-                        float tempOpinionFactor;
-                        if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
-                        {
-                            tempOpinionFactor = pawn.Map == p.Map
-                                ? Mathf.InverseLerp(70f, 15f, opinion)
-                                : Mathf.InverseLerp(100f, 50f, opinion);
-                        }
-                        else
-                        {
-                            tempOpinionFactor = Mathf.InverseLerp(30f, -80f, opinion);
-                        }
-                        if (tempOpinionFactor < opinionFactor)
-                        {
-                            opinionFactor = tempOpinionFactor;
-                        }
-                    }
-                    if (Rand.Range(0f, 1f) < opinionFactor)
+                    if (Rand.Range(0f, 1f) *(BetterRomanceMod.settings.cheatChance/100f) < opinionFactor)
                     {
                         return false;
                     }
@@ -263,7 +197,7 @@ namespace BetterRomance
                 }
                 //Otherwise their rating is already factored in via secondary romance chance factor
             }
-            if (WillPawnContinue(target, asker))
+            if (WillPawnContinue(target, asker, out _))
             {
                 //It's either not cheating or they have decided to cheat
                 float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
@@ -294,7 +228,7 @@ namespace BetterRomance
             {
                 return true;
             }
-            if (WillPawnContinue(target, asker))
+            if (WillPawnContinue(target, asker, out _))
             {
                 //Definitely not cheating, or they decided to cheat
                 //Same math as agreeing to a hookup but no asexual check

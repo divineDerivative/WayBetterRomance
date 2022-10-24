@@ -39,11 +39,19 @@ namespace BetterRomance
 
         public static float HookupRate(this Pawn pawn)
         {
+            if (BetterRomanceMod.settings.hookupRate == 0)
+            {
+                return 0f;
+            }
             return (GetCasualSexSettings(pawn) != null) ? GetCasualSexSettings(pawn).hookupRate : BetterRomanceMod.settings.hookupRate;
         }
 
         public static float AlienLoveChance(this Pawn pawn)
         {
+            if (BetterRomanceMod.settings.alienLoveChance == 0)
+            {
+                return 0f;
+            }
             return (GetCasualSexSettings(pawn) != null) ? GetCasualSexSettings(pawn).alienLoveChance : BetterRomanceMod.settings.alienLoveChance;
         }
 
