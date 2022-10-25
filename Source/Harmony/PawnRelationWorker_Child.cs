@@ -5,13 +5,14 @@ using Verse;
 namespace BetterRomance
 {
     //Do not force a spouse relation on a newly generated parent if settings do not allow spouses
+    //Actually need to have it run for parents with orientation mismatch
     [HarmonyPatch(typeof(PawnRelationWorker_Child), "CreateRelation")]
     public static class PawnRelationWorker_Child_CreateRelation
     {
         public static bool Prefix(Pawn generated, Pawn other, ref PawnGenerationRequest request, PawnRelationWorker_Child __instance)
         {
             //This patch only runs if spouses are not allowed by the new parent's race/pawnkind settings
-            if (!generated.SpouseAllowed())
+            if (!generated.SpouseAllowed() || (generated.RaceProps.Humanlike && ((generated.story.traits.HasTrait(TraitDefOf.Gay) && other.gender != generated.gender) || (generated.story.traits.HasTrait(RomanceDefOf.Straight) && other.gender == generated.gender))))
             {
                 if (generated.gender == Gender.Male)
                 {
