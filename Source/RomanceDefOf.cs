@@ -19,6 +19,8 @@ namespace BetterRomance
         public static ThoughtDef GotSomeLovinAsexual;
         [MayRequireIdeology]
         public static ThoughtDef GotLovin_Horrible;
+        [MayRequireIdeology]
+        public static PreceptDef Lovin_FreeApproved;
         public static ThoughtDef FailedDateAttemptOnMe;
         public static ThoughtDef RebuffedMyDateAttempt;
         public static ThoughtDef RebuffedMyHangoutAttempt;

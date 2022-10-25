@@ -116,6 +116,11 @@ namespace BetterRomance
                     {
                         foreach (Pawn p in cheatedOnList)
                         {
+                            //Ignore if p has the free love precept
+                            if (p.ideo.Ideo.PreceptsListForReading.Any((Precept x) => x.def == RomanceDefOf.Lovin_FreeApproved))
+                            {
+                                continue;
+                            }
                             //If p is on the map there's a 25% they notice the cheating
                             if (p.Map == Actor.Map || Rand.Value < 0.25)
                             {
