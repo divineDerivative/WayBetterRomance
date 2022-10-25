@@ -88,22 +88,16 @@ namespace BetterRomance
         {
             Building_Bed result;
             //If p1 owns a suitable bed, use that
-            if (p1.ownership.OwnedBed != null)
+            if (p1.ownership.OwnedBed != null && p1.ownership.OwnedBed.SleepingSlotsCount > 1 && !p1.ownership.OwnedBed.AnyOccupants)
             {
-                if (p1.ownership.OwnedBed.SleepingSlotsCount > 1)
-                {
-                    result = p1.ownership.OwnedBed;
-                    return result;
-                }
+                result = p1.ownership.OwnedBed;
+                return result;
             }
             //If p2 owns a suitable bed, use that
-            if (p2.ownership.OwnedBed != null)
+            if (p2.ownership.OwnedBed != null && p2.ownership.OwnedBed.SleepingSlotsCount > 1 && !p2.ownership.OwnedBed.AnyOccupants)
             {
-                if (p2.ownership.OwnedBed.SleepingSlotsCount > 1)
-                {
-                    result = p2.ownership.OwnedBed;
-                    return result;
-                }
+                result = p2.ownership.OwnedBed;
+                return result;
             }
             //Otherwise, look through all beds to see if one is usable
             foreach (ThingDef current in RestUtility.AllBedDefBestToWorst)
