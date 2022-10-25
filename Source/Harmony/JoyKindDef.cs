@@ -13,7 +13,7 @@ namespace BetterRomance
         {
             if (__result && __instance.defName == "Lewd")
             {
-                if (!pawn.HookupAllowed())
+                if (!pawn.HookupAllowed() || BetterRomanceMod.settings.hookupRate == 0f)
                 {
                     __result = false;
                     return;
