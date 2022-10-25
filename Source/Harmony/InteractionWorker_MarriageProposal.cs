@@ -123,6 +123,7 @@ namespace BetterRomance
 
     //This determines if a pawn will accept a marriage proposal
     [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), "AcceptanceChance")]
+    [HarmonyAfter(new string[] { "Telardo.RomanceOnTheRim" })]
     public static class InteractionWorker_MarriageProposal_AcceptanceChance
     {
         //Changes from Vanilla:
