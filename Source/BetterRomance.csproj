@@ -62,6 +62,7 @@
     <Compile Include="Comp_PartnerList.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Harmony\ChildRelationUtility.cs" />
+    <Compile Include="Harmony\StatPart_FertilityByGenderAge_AgeFactor.cs" />
     <Compile Include="Harmony\InteractionWorker_Breakup.cs" />
     <Compile Include="Harmony\InteractionWorker_MarriageProposal.cs" />
     <Compile Include="Harmony\InteractionWorker_RomanceAttempt.cs" />

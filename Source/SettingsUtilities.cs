@@ -371,6 +371,70 @@ namespace BetterRomance
             return false;
         }
 
+        //Biotech Settings
+        public static BiotechSettings GetBiotechSettings(Pawn pawn)
+        {
+            if (pawn.kindDef.HasModExtension<BiotechSettings>())
+            {
+                return pawn.kindDef.GetModExtension<BiotechSettings>();
+            }
+            else if (pawn.def.HasModExtension<BiotechSettings>())
+            {
+                return pawn.def.GetModExtension<BiotechSettings>();
+            }
+            return null;
+        }
+
+        public static SimpleCurve GetFertilityAgeCurve(this Pawn pawn)
+        {
+            if (pawn.gender == Gender.Male)
+            {
+                return (GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).maleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender));
+            }
+            else if (pawn.gender == Gender.Female)
+            {
+                return (GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).maleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender));
+            }
+            else
+            {
+                Log.Message("Tried to get fertility curve for pawn with no gender");
+                return null;
+            }
+        }
+
+        private static SimpleCurve GetDefaultFertilityAgeCurve(Gender gender)
+        {
+            if (gender == Gender.Male)
+            {
+                return new SimpleCurve
+                {
+                    new CurvePoint(14f, 0f),
+                    new CurvePoint(18f, 1f),
+                    new CurvePoint(50f, 1f),
+                    new CurvePoint(90f, 0f),
+                };
+            }
+            else if (gender == Gender.Female)
+            {
+                return new SimpleCurve
+                {
+                    new CurvePoint(14f, 0f),
+                    new CurvePoint(20f, 1f),
+                    new CurvePoint(28f, 1f),
+                    new CurvePoint(35f, 0.5f),
+                    new CurvePoint(40f, 0.1f),
+                    new CurvePoint(45f, 0.02f),
+                    new CurvePoint(50f, 0f),
+                };
+            }
+            else
+            {
+                Log.Message("Tried to get fertility curve for pawn with no gender");
+                return null;
+            }
+        }
+
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RemoveHARPatches()
         {

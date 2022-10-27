@@ -183,4 +183,26 @@ namespace BetterRomance
         public bool shouldBreakForNewLover = true;
         public PawnRelationDef exLoveRelation;
     }
+
+    public class BiotechSettings : DefModExtension
+    {
+        public SimpleCurve maleFertilityAgeFactor = new SimpleCurve
+        {
+            new CurvePoint(14f, 0f),
+            new CurvePoint(18f, 1f),
+            new CurvePoint(50f, 1f),
+            new CurvePoint(90f, 0f),
+        };
+        public SimpleCurve femaleFertilityAgeFactor = new SimpleCurve
+        {
+            new CurvePoint(14f, 0f),
+            new CurvePoint(20f, 1f),
+            new CurvePoint(28f, 1f),
+            new CurvePoint(35f, 0.5f),
+            new CurvePoint(40f, 0.1f),
+            new CurvePoint(45f, 0.02f),
+            new CurvePoint(50f, 0f),
+
+        };
+    }
 }
