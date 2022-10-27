@@ -135,4 +135,46 @@ namespace BetterRomance
             return false;
         }
     }
+
+    //Adjusts SecondaryLovinChanceFactor based on attractiveness
+    [HarmonyPatch(typeof(Pawn_RelationsTracker), "PrettinessFactor")]
+    public static class Pawn_RelationsTracker_PrettinessFactor
+    {
+        public static bool Prefix(Pawn otherPawn, Pawn ___pawn, ref float __result)
+        {
+            if (!otherPawn.RaceProps.Humanlike)
+            {
+                return true;
+            }
+            float pawnBeauty = ___pawn.GetStatValue(StatDefOf.PawnBeauty);
+            float otherBeauty = otherPawn.GetStatValue(StatDefOf.PawnBeauty);
+            float result = 1f;
+
+            if (otherBeauty < 0f && !___pawn.story.traits.HasTrait(TraitDefOf.Kind))
+            {
+                if (pawnBeauty < 0f)
+                {
+                    result = 0.8f;
+                }
+                else
+                {
+                    result = 0.3f;
+                }
+            }
+            if (otherBeauty > 0f)
+            {
+                if (pawnBeauty > 0f)
+                {
+                    result = 1.2f;
+                }
+                else
+                {
+                    result = 1.6f;
+                }
+            }
+            __result = result;
+            return false;
+        }
+    }
+
 }
