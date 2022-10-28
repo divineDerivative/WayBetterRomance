@@ -15,12 +15,9 @@ namespace BetterRomance
         public static bool Prefix(Pawn pawn, ref float __result)
         {
             SimpleCurve curve = new SimpleCurve(pawn.GetFertilityAgeCurve());
-            if (curve != null)
-            {
-                __result = curve.Evaluate(pawn.ageTracker.AgeBiologicalYearsFloat);
-                return false;
-            }
-            return true;
+            __result = curve.Evaluate(pawn.ageTracker.AgeBiologicalYearsFloat);
+            return false;
+
         }
     }
 }

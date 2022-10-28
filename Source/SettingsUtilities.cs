@@ -397,24 +397,13 @@ namespace BetterRomance
             }
             else
             {
-                Log.Message("Tried to get fertility curve for pawn with no gender");
-                return null;
+                return (GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).noneFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender));
             }
         }
 
         private static SimpleCurve GetDefaultFertilityAgeCurve(Gender gender)
         {
-            if (gender == Gender.Male)
-            {
-                return new SimpleCurve
-                {
-                    new CurvePoint(14f, 0f),
-                    new CurvePoint(18f, 1f),
-                    new CurvePoint(50f, 1f),
-                    new CurvePoint(90f, 0f),
-                };
-            }
-            else if (gender == Gender.Female)
+            if (gender == Gender.Female)
             {
                 return new SimpleCurve
                 {
@@ -429,8 +418,13 @@ namespace BetterRomance
             }
             else
             {
-                Log.Message("Tried to get fertility curve for pawn with no gender");
-                return null;
+                return new SimpleCurve
+                {
+                    new CurvePoint(14f, 0f),
+                    new CurvePoint(18f, 1f),
+                    new CurvePoint(50f, 1f),
+                    new CurvePoint(90f, 0f),
+                };
             }
         }
 
