@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+	<StatDef>
+		<defName>AsexualRating</defName>
+		<label>sex repulsion</label>
+		<description>How an asexual person feels about sexual activities.\n\nA pawn with repulsion above 80% will never agree to lovin' and will only accept marriage proposals from another asexual pawn. Between 50%-80%, they will only agree to lovin' with existing partners. Pawns with repulsion below 50% can accept hookups from anyone, but their chance of accepting is effected by their repulsion.\n\nIf an asexual pawn does any lovin' their thoughts about it will be effected by their repulsion, and can be negative. Asexual pawns will still never initiate lovin' no matter their repulsion.</description>
+		<category>PawnSocial</category>
+		<minValue>0</minValue>
+		<maxValue>1</maxValue>
+		<defaultBaseValue>0</defaultBaseValue>
+		<showOnDefaultValue>false</showOnDefaultValue>
+		<toStringStyle>PercentZero</toStringStyle>
+		<parts>
+			<li Class="BetterRomance.StatPart_Asexual"/>
+		</parts>
+	</StatDef>
+
+</Defs>
