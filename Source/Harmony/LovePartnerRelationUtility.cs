@@ -14,8 +14,7 @@ namespace BetterRomance
         //Changes From Vanilla:
         //Updated with new orientation options
         //Accounts for age settings
-        public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, bool ex,
-            ref float __result)
+        public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, bool ex, ref float __result)
         {
             //Do not allow if either pawn is not old enough for sex
             if (generated.ageTracker.AgeBiologicalYearsFloat < generated.MinAgeForSex() || other.ageTracker.AgeBiologicalYearsFloat < other.MinAgeForSex())
