@@ -20,7 +20,7 @@ namespace BetterRomance
             if (ModsConfig.IsActive("erdelf.humanoidalienraces") || ModsConfig.IsActive("erdelf.humanoidalienraces.dev"))
             {
                 Settings.HARActive = true;
-                SettingsUtilities.RemoveHARPatches();
+                HARPatches.PatchHAR();
             }
             Harmony harmony = new Harmony(id: "rimworld.divineDerivative.romance");
             harmony.PatchAll();

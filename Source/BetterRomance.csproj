@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Harmony\Biotech Romance\RelationsUtility.cs" />
     <Compile Include="Harmony\Biotech Romance\SocialCardUtility.cs" />
+    <Compile Include="Harmony\HARPatches.cs" />
     <Compile Include="StatPart_Asexual.cs" />
     <Compile Include="Comp_PartnerList.cs" />
     <Compile Include="GlobalSuppressions.cs" />
