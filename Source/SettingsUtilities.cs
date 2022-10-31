@@ -427,13 +427,5 @@ namespace BetterRomance
                 };
             }
         }
-
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void RemoveHARPatches()
-        {
-            Harmony harmony = new Harmony(id: "rimworld.divineDerivative.HARinterference");
-            harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), typeof(HarmonyPatches).GetMethod("CompatibilityWithPostfix"));
-        }
     }
 }

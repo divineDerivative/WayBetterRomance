@@ -1,7 +1,9 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 
@@ -86,6 +88,7 @@ namespace BetterRomance
         }
     }
 
+    //Called by LovePartnerRelationGenerationChance
     [HarmonyPatch(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor")]
     public static class LovePartnerRelationUtility_GetGenerationChanceAgeFactor
     {
@@ -114,66 +117,130 @@ namespace BetterRomance
         /// <param name="p2">Second pawn</param>
         /// <param name="ex">Is it an ex relation</param>
         /// <returns>A float between 0.01 and 1</returns>
-        public static bool Prefix(Pawn p1, Pawn p2, bool ex, ref float __result)
-        {
-            float gap = Mathf.Abs(p1.ageTracker.AgeBiologicalYearsFloat - p2.ageTracker.AgeBiologicalYearsFloat);
-            if (ex)
-            {
-                float minGapAtMinAge1 = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers").Invoke(null, new object[] { p1, p2 });
-                if (minGapAtMinAge1 >= 0f)
-                {
-                    gap = Mathf.Min(gap, minGapAtMinAge1);
-                }
+        //public static bool Prefix(Pawn p1, Pawn p2, bool ex, ref float __result)
+        //{
+        //    float gap = Mathf.Abs(p1.ageTracker.AgeBiologicalYearsFloat - p2.ageTracker.AgeBiologicalYearsFloat);
+        //    if (ex)
+        //    {
+        //        float minGapAtMinAge1 = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers").Invoke(null, new object[] { p1, p2 });
+        //        if (minGapAtMinAge1 >= 0f)
+        //        {
+        //            gap = Mathf.Min(gap, minGapAtMinAge1);
+        //        }
 
-                float minGapAtMinAge2 = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers").Invoke(null, new object[] { p2, p1 });
-                if (minGapAtMinAge2 >= 0f)
+        //        float minGapAtMinAge2 = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers").Invoke(null, new object[] { p2, p1 });
+        //        if (minGapAtMinAge2 >= 0f)
+        //        {
+        //            gap = Mathf.Min(gap, minGapAtMinAge2);
+        //        }
+        //    }
+        //    //Use the lower of the two maxes from settings
+        //    float maxAgeGap = Mathf.Min(p1.MaxAgeGap(), p2.MaxAgeGap());
+        //    if (gap > maxAgeGap)
+        //    {
+        //        __result = 0f;
+        //        return false;
+        //    }
+        //    //This lowers chance to 0.01 if age gap is larger than half the max
+        //    float num = GenMath.LerpDouble(0f, maxAgeGap / 2, 1f, 0.01f, gap);
+        //    __result = Mathf.Clamp(num, 0.01f, 1f);
+        //    return false;
+        //}
+
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
+        {
+            LocalBuilder local_maxAgeGap = ilg.DeclareLocal(typeof(float));
+            foreach (CodeInstruction instruction in instructions)
+            {
+                if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(40f))
                 {
-                    gap = Mathf.Min(gap, minGapAtMinAge2);
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
+                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), parameters: new Type[] {typeof(float), typeof(float)});
+                    //need to store this value somewhere
+                    yield return new CodeInstruction(OpCodes.Stloc, local_maxAgeGap.LocalIndex);
+                    yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
+                }
+                else if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(20f))
+                {
+                    //put the stored value on the stack
+                    yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
+                    yield return new CodeInstruction(OpCodes.Div);
+                }
+                else if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(0.001f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 0.01f);
+                }
+                else
+                {
+                    yield return instruction;
                 }
             }
-            //Use the lower of the two maxes from settings
-            float maxAgeGap = Mathf.Min(p1.MaxAgeGap(), p2.MaxAgeGap());
-            if (gap > maxAgeGap)
-            {
-                __result = 0f;
-                return false;
-            }
-            //This lowers chance to 0.01 if age gap is larger than half the max
-            float num = GenMath.LerpDouble(0f, maxAgeGap / 2, 1f, 0.01f, gap);
-            __result = Mathf.Clamp(num, 0.01f, 1f);
-            return false;
         }
     }
 
+    //This will be a little trickier to turn into a transpilier but should be possible
     [HarmonyPatch(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers")]
     public static class LovePartnerRelationUtility_MinPossibleAgeGapAtMinAgeToGenerateAsLovers
     {
         //I don't really understand what this does, but it's updated to use proper ages
-        public static bool Prefix(Pawn p1, Pawn p2, ref float __result)
-        {
-            float p1AdjustedAge = p1.ageTracker.AgeChronologicalYearsFloat - p1.MinAgeForSex();
-            if (p1AdjustedAge < 0f)
-            {
-                __result = 0f;
-                return false;
-            }
-            float p2MinAgeForSex = p2.MinAgeForSex();
-            float p2MaxPossibleAge = PawnRelationUtility.MaxPossibleBioAgeAt(p2.ageTracker.AgeBiologicalYearsFloat,
-                p2.ageTracker.AgeChronologicalYearsFloat, p1AdjustedAge);
-            float p2MinPossibleAge = PawnRelationUtility.MinPossibleBioAgeAt(p2.ageTracker.AgeBiologicalYearsFloat, p1AdjustedAge);
-            if (p2MaxPossibleAge < 0f || p2MaxPossibleAge < p2MinAgeForSex)
-            {
-                __result = -1f;
-                return false;
-            }
+        //public static bool Prefix(Pawn p1, Pawn p2, ref float __result)
+        //{
+        //    float p1AdjustedAge = p1.ageTracker.AgeChronologicalYearsFloat - p1.MinAgeForSex();
+        //    if (p1AdjustedAge < 0f)
+        //    {
+        //        __result = 0f;
+        //        return false;
+        //    }
+        //    float p2MinAgeForSex = p2.MinAgeForSex();
+        //    float p2MaxPossibleAge = PawnRelationUtility.MaxPossibleBioAgeAt(p2.ageTracker.AgeBiologicalYearsFloat, p2.ageTracker.AgeChronologicalYearsFloat, p1AdjustedAge);
+        //    float p2MinPossibleAge = PawnRelationUtility.MinPossibleBioAgeAt(p2.ageTracker.AgeBiologicalYearsFloat, p1AdjustedAge);
+        //    if (p2MaxPossibleAge < 0f || p2MaxPossibleAge < p2MinAgeForSex)
+        //    {
+        //        __result = -1f;
+        //        return false;
+        //    }
 
-            if (p2MinPossibleAge <= p2MinAgeForSex)
+        //    if (p2MinPossibleAge <= p2MinAgeForSex)
+        //    {
+        //        __result = 0f;
+        //        return false;
+        //    }
+        //    __result = p2MinPossibleAge - p2MinAgeForSex;
+        //    return false;
+        //}
+
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
+        {
+            bool firstFound = false;
+            LocalBuilder local_p2MinAgeForSex = ilg.DeclareLocal(typeof(float));
+
+            //Calculate and store p2MinAgeForSex first so we can call it easier later
+            yield return new CodeInstruction(OpCodes.Ldarg_1);
+            yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+            yield return new CodeInstruction(OpCodes.Stloc, local_p2MinAgeForSex.LocalIndex);
+
+            foreach (CodeInstruction instruction in instructions)
             {
-                __result = 0f;
-                return false;
+                if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(14f) && !firstFound)
+                {
+                    firstFound = true;
+                    
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                }
+                else if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(14f))
+                {                    
+                    yield return new CodeInstruction(OpCodes.Ldloc, local_p2MinAgeForSex.LocalIndex);
+                }
+                else
+                {
+                    yield return instruction;
+                }
             }
-            __result = p2MinPossibleAge - p2MinAgeForSex;
-            return false;
         }
     }
 
@@ -184,17 +251,57 @@ namespace BetterRomance
         //Changes from vanilla:
         //Age adjustments
         //No adjustment made for asexual pawns as that is handled elsewhere
-        public static bool Prefix(Pawn pawn, ref float __result)
-        {
-            float baseMtb = 1f;
-            baseMtb /= 1f - pawn.health.hediffSet.PainTotal;
-            float level = pawn.health.capacities.GetLevel(PawnCapacityDefOf.Consciousness);
-            if (level < 0.5f)
+        //public static bool Prefix(Pawn pawn, ref float __result)
+        //{
+        //    float baseMtb = 1f;
+        //    baseMtb /= 1f - pawn.health.hediffSet.PainTotal;
+        //    float level = pawn.health.capacities.GetLevel(PawnCapacityDefOf.Consciousness);
+        //    if (level < 0.5f)
+        //    {
+        //        baseMtb /= level * 2f;
+        //    }
+        //    __result = baseMtb / GenMath.FlatHill(0f, pawn.MinAgeForSex() - 2f, pawn.MinAgeForSex(), pawn.DeclineAtAge(), pawn.MaxAgeForSex(), 0.2f, pawn.ageTracker.AgeBiologicalYearsFloat);
+        //    return false;
+        //}
+
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        { 
+            foreach (CodeInstruction instruction in instructions)
             {
-                baseMtb /= level * 2f;
+                if (instruction.opcode == OpCodes.Ldc_R4)
+                {
+                    if (instruction.OperandIs(14f))
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                        yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
+                        yield return new CodeInstruction(OpCodes.Sub);
+                    }
+                    else if (instruction.OperandIs(16f))
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                    }
+                    else if (instruction.OperandIs(25f))
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.DeclineAtAge));
+                    }
+                    else if (instruction.OperandIs(80f))
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
+                    }
+                    else
+                    {
+                        yield return instruction;
+                    }
+                }
+                else
+                {
+                    yield return instruction;
+                }
             }
-            __result = baseMtb / GenMath.FlatHill(0f, pawn.MinAgeForSex() - 2f, pawn.MinAgeForSex(), pawn.DeclineAtAge(), pawn.MaxAgeForSex(), 0.2f, pawn.ageTracker.AgeBiologicalYearsFloat);
-            return false;
         }
     }
 

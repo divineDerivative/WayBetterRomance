@@ -2,7 +2,8 @@
 using RimWorld;
 using Verse;
 using UnityEngine;
-
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace BetterRomance
 {
@@ -129,7 +130,7 @@ namespace BetterRomance
                 return false;
             }
             float ageGap = Mathf.Abs(___pawn.ageTracker.AgeBiologicalYearsFloat - otherPawn.ageTracker.AgeBiologicalYearsFloat);
-            float num = Mathf.Clamp(GenMath.LerpDouble(0f, ___pawn.MaxAgeGap() /2, 0.45f, -0.45f, ageGap), -0.45f, 0.45f);
+            float num = Mathf.Clamp(GenMath.LerpDouble(0f, ___pawn.MaxAgeGap() / 2, 0.45f, -0.45f, ageGap), -0.45f, 0.45f);
             float num2 = __instance.ConstantPerPawnsPairCompatibilityOffset(otherPawn.thingIDNumber);
             __result = num + num2;
             return false;
@@ -161,7 +162,7 @@ namespace BetterRomance
                     result = 0.3f;
                 }
             }
-            if (otherBeauty > 0f)
+            else if (otherBeauty > 0f)
             {
                 if (pawnBeauty > 0f)
                 {

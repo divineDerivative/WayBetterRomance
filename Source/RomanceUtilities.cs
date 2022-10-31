@@ -445,12 +445,12 @@ namespace BetterRomance
         /// Generates points for the lovin age curve based on age settings
         /// </summary>
         /// <returns>List<CurvePoint></returns>
-        public static List<CurvePoint> GetLovinCurve(this Pawn pawn)
+        public static SimpleCurve GetLovinCurve(this Pawn pawn)
         {
             float minAge = pawn.MinAgeForSex();
             float maxAge = pawn.MaxAgeForSex();
             float declineAge = pawn.DeclineAtAge();
-            List<CurvePoint> curves = new List<CurvePoint>
+            List<CurvePoint> points = new List<CurvePoint>
             {
                 new CurvePoint(minAge, 1.5f),
                 new CurvePoint((declineAge / 5) + minAge, 1.5f),
@@ -458,7 +458,7 @@ namespace BetterRomance
                 new CurvePoint((maxAge / 4) + declineAge, 12f),
                 new CurvePoint(maxAge, 36f)
             };
-            return curves;
+            return new SimpleCurve(points);
         }
     }
 }

@@ -2,6 +2,7 @@
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 
@@ -193,10 +194,20 @@ namespace BetterRomance
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "OpinionFactor")]
     public class InteractionWorker_RomanceAttempt_OpinionFactor
     {
-        public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            __result = Mathf.InverseLerp(recipient.MinOpinionForRomance(), 100f, recipient.relations.OpinionOf(initiator));
-            return false;
+            foreach (CodeInstruction instruction in instructions)
+            {
+                if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(5f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
+                }
+                else
+                {
+                    yield return instruction;
+                }
+            }
         }
     }
 

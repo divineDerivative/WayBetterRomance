@@ -2,41 +2,37 @@
 using RimWorld;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using Verse;
 
 namespace BetterRomance
 {
-    //Uses age settings to generate the lovin curve, then calculates it as normal
+    //Let HAR go first so I can patch his transpiler
+    //Otherwise transpile to use age settings to generate the lovin curve
     [HarmonyPatch(typeof(JobDriver_Lovin), "GenerateRandomMinTicksToNextLovin")]
+    [HarmonyAfter(new string[] { "rimworld.erdelf.alien_race.main" })]
     public static class JobDriver_Lovin_GenerateRandomMinTicksToNextLovin
     {
-        public static bool Prefix(Pawn pawn, ref int __result)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
+            FieldInfo ageCurveInfo = AccessTools.Field(typeof(JobDriver_Lovin), "LovinIntervalHoursFromAgeCurve");
 
-            SimpleCurve LovinIntervalHoursFromAgeCurve = new SimpleCurve(RomanceUtilities.GetLovinCurve(pawn));
-            if (DebugSettings.alwaysDoLovin)
+            foreach (CodeInstruction instruction in instructions)
             {
-                __result = 100;
-                return false;
-            }
-            float num = LovinIntervalHoursFromAgeCurve.Evaluate(pawn.ageTracker.AgeBiologicalYearsFloat);
-
-            //Added from vanilla for 1.4
-            if (ModsConfig.BiotechActive && pawn.genes != null)
-            {
-                foreach (Gene item in pawn.genes.GenesListForReading)
+                //Don't do anything if HAR is active, since the first part of this will still be true
+                if (instruction.LoadsField(ageCurveInfo) && !Settings.HARActive)
                 {
-                    num *= item.def.lovinMTBFactor;
+                    //Because the instruction I'm replacing is used as a jump to point, the new instruction needs to have the same label as the old one
+                    CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
+                    newInstruction.MoveLabelsFrom(instruction);
+                    yield return newInstruction;
+                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetLovinCurve));
+                }
+                else
+                {
+                    yield return instruction;
                 }
             }
-            num = Rand.Gaussian(num, 0.3f);
-            if (num < 0.5f)
-            {
-                num = 0.5f;
-            }
-            __result = (int)(num * 2500f);
-            pawn.mindState.canLovinTick = Find.TickManager.TicksGame + 1;
-            return false;
         }
     }
 }
