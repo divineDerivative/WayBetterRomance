@@ -9,7 +9,7 @@ namespace BetterRomance
         public Pawn Pawn => (Pawn)parent;
         public CompListVars Date;
         public CompListVars Hookup;
-        public const float tickInterval = 60000f;
+        public const float tickInterval = 120000f;
 
         public override void Initialize(CompProperties props)
         {
