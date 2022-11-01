@@ -49,6 +49,11 @@ namespace BetterRomance
                     {
                         continue;
                     }
+                    //Also skip if slave status is not the same for both pawns for hookups only
+                    else if (pawn.IsSlave != p.IsSlave && hookup)
+                    {
+                        continue;
+                    }
                     //For hookup check romance factor, for date check opinion
                     else if ((pawn.relations.SecondaryRomanceChanceFactor(p) > num && hookup) || (pawn.relations.OpinionOf(p) > num && !hookup))
                     {
