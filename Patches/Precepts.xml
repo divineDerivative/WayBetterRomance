@@ -12,7 +12,7 @@
 					<value>
 						<li Class="PreceptComp_UnwillingToDo_Chance">
 							<eventDef>GotLovin_NonSpouse</eventDef>
-							<chance>0.8</chance>
+							<chance>0.9</chance>
 						</li>
 					</value>
 				</li>
@@ -21,7 +21,7 @@
 					<value>
 						<li Class="PreceptComp_UnwillingToDo_Chance">
 							<eventDef>GotLovin_NonSpouse</eventDef>
-							<chance>0.6</chance>
+							<chance>0.75</chance>
 						</li>
 					</value>
 				</li>
@@ -30,7 +30,7 @@
 					<value>
 						<li Class="PreceptComp_UnwillingToDo_Chance">
 							<eventDef>GotLovin_NonSpouse</eventDef>
-							<chance>0.4</chance>
+							<chance>0.5</chance>
 						</li>
 					</value>
 				</li>
