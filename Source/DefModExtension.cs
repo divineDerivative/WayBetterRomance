@@ -32,10 +32,10 @@ namespace BetterRomance
         public HookupTrigger orderedHookupTriggers;
         public override IEnumerable<string> ConfigErrors()
         {
-            if (hookupRate > 1000.99)
+            if (hookupRate > 200.99)
             {
-                hookupRate = 1000.99f;
-                yield return "Hookup rate cannot be higher than 1000";
+                hookupRate = 200.99f;
+                yield return "Hookup rate cannot be higher than 200";
             }
             if (alienLoveChance > 100.99)
             {

@@ -169,7 +169,7 @@ namespace BetterRomance
                             cheatOn = p;
                         }
                     }
-                    if (Rand.Range(0f, 1f) *(BetterRomanceMod.settings.cheatChance/100f) < opinionFactor)
+                    if (Rand.Value *(BetterRomanceMod.settings.cheatChance/100f) < opinionFactor)
                     {
                         return false;
                     }

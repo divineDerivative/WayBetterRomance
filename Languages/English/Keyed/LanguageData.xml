@@ -17,7 +17,7 @@
 	<WBR.DateRate>Base Rate at Which Pawns Will Propose Dates and Hangouts:</WBR.DateRate>
 	<WBR.DateRateTip>Relative frequency for dates. Please note that since this is a recreation activity, the actual frequency will depend on the availability of other recreation activities. Bored pawns will propose dates/hangouts more often. Set to 0% to disable dates and hanouts entirely.</WBR.DateRateTip>
 	<WBR.HookupRate>Base Rate at Which Pawns Will Propose Hookups:</WBR.HookupRate>
-	<WBR.HokupRateTip>Relative frequency for hookups. Please note that since this is a recreation activity, the actual frequency will depend on the availability of other recreation activities. Bored pawns will propose hookups more often. Set to 0% to disable hookups entirely.</WBR.HokupRateTip>
+	<WBR.HookupRateTip>Relative frequency for hookups. Please note that since this is a recreation activity, the actual frequency will depend on the availability of other recreation activities. Bored pawns will propose hookups more often. Set to 0% to disable hookups entirely.</WBR.HookupRateTip>
 	<WBR.MinOpinionRomance>Minimum Opinion for Romance Attempts:</WBR.MinOpinionRomance>
 	<WBR.MinOpinionRomanceTip>A pawn will never consider a romance attempt if their opinion of the other person is lower than this setting.</WBR.MinOpinionRomanceTip>
 	<WBR.CheatChance>Modifier for Cheating:</WBR.CheatChance>

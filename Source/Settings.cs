@@ -138,9 +138,9 @@ namespace BetterRomance
         {
             Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOther, "WBR.OtherHeading".Translate());
             list.Label("WBR.DateRate".Translate() + "  " + (int)settings.dateRate + "%", tooltip: "WBR.DateRateTip".Translate());
-            settings.dateRate = list.Slider(settings.dateRate, 0f, 1000.99f);
-            list.Label("WBR.HookupRate".Translate() + "  " + (int)settings.hookupRate + "%", tooltip: "WBR.HokupRateTip".Translate());
-            settings.hookupRate = list.Slider(settings.hookupRate, 0f, 1000.99f);
+            settings.dateRate = list.Slider(settings.dateRate, 0f, 200.99f);
+            list.Label("WBR.HookupRate".Translate() + "  " + (int)settings.hookupRate + "%", tooltip: "WBR.HookupRateTip".Translate());
+            settings.hookupRate = list.Slider(settings.hookupRate, 0f, 200.99f);
             list.Label("WBR.CheatChance".Translate() + "  " + (int)settings.cheatChance + "%", tooltip: "WBR.CheatChanceTip".Translate());
             settings.cheatChance = list.Slider(settings.cheatChance, 0f, 200.99f);
             list.Label("WBR.AlienLoveChance".Translate() + "  " + (int)settings.alienLoveChance + "%", tooltip: "WBR.AlienLoveChanceTip".Translate());

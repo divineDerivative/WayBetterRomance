@@ -12,8 +12,6 @@ namespace BetterRomance
     {
         public override Job TryGiveJob(Pawn pawn)
         {
-            float percentRate = pawn.HookupRate() /2;
-
             //Asexual pawns will never initiate sex
             if (pawn.story.traits.HasTrait(TraitDefOf.Asexual))
             {
@@ -25,7 +23,7 @@ namespace BetterRomance
                 return null;
             }
             //Generate random number to check against hookup settings
-            else if (100f * Rand.Value > percentRate)
+            else if (100f * Rand.Value > pawn.HookupRate() / 2)
             {
                 return null;
             }

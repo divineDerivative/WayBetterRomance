@@ -10,8 +10,6 @@ namespace BetterRomance
 {
     public class JoyGiver_Date : JoyGiver
     {
-        public static float percentRate = BetterRomanceMod.settings.dateRate / 2;
-
         public override Job TryGiveJob(Pawn pawn)
         {
             if (!InteractionUtility.CanInitiateInteraction(pawn) || PawnUtility.WillSoonHaveBasicNeed(pawn))
@@ -19,7 +17,7 @@ namespace BetterRomance
                 return null;
             }
             //Generate random number and check against date rate setting
-            else if (100f * Rand.Value > percentRate)
+            else if (100f * Rand.Value > BetterRomanceMod.settings.dateRate / 2)
             {
                 return null;
             }
