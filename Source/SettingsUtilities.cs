@@ -287,7 +287,11 @@ namespace BetterRomance
             {
                 return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).usualMaleAgeToHaveChildren : 30f;
             }
-            throw new ArgumentException("This pawn has no gender");
+            else
+            {
+                Log.Message("Pawn has no gender, defaulting to female setting");
+                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).usualFemaleAgeToHaveChildren : 27f;
+            }
         }
         //Same as above but takes a gender argument, for use when getting age settings for pawns that haven't been generated yet
         public static float UsualAgeToHaveChildren(this Pawn pawn, Gender gender)
@@ -393,7 +397,7 @@ namespace BetterRomance
             }
             else if (pawn.gender == Gender.Female)
             {
-                return (GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).maleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender));
+                return (GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).femaleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender));
             }
             else
             {
