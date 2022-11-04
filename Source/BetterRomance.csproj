@@ -38,6 +38,10 @@
       <HintPath>..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SyrTraits">
+      <HintPath>..\..\..\..\..\workshop\content\294100\1497105115\1.4\Assemblies\SyrTraits.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -61,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Harmony\Biotech Romance\RelationsUtility.cs" />
     <Compile Include="Harmony\Biotech Romance\SocialCardUtility.cs" />
+    <Compile Include="Harmony\CompAbilityEffect_WordOfLove.cs" />
     <Compile Include="Harmony\HARPatches.cs" />
     <Compile Include="StatPart_Asexual.cs" />
     <Compile Include="Comp_PartnerList.cs" />
