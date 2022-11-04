@@ -2,7 +2,7 @@
 <Defs>
   <TraitDef>
     <defName>Straight</defName>
-    <commonality>0.001</commonality>
+    <commonality>0</commonality>
     <degreeDatas>
       <li>
         <label>straight</label>

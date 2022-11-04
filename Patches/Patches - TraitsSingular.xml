@@ -3,7 +3,7 @@
   <Operation Class="PatchOperationReplace">
     <xpath>Defs/TraitDef[defName = "Gay" or defName = "Bisexual" or defName = "Asexual"]/commonality</xpath>
     <value>
-      <commonality>0.001</commonality>
+      <commonality>0</commonality>
     </value>
   </Operation>
 </Patch>
