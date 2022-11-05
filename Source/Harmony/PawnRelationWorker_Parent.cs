@@ -2,7 +2,7 @@
 using RimWorld;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //If spouses are not allowed, look at lover relations for the generated child's other parent
     [HarmonyPatch(typeof(PawnRelationWorker_Parent), "CreateRelation")]

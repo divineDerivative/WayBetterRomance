@@ -3,7 +3,7 @@ using RimWorld;
 using Verse;
 using UnityEngine;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //Adjusted to use age settings
     [HarmonyPatch(typeof(PawnRelationWorker_Fiance), "GetOldAgeFactor")]

@@ -3,7 +3,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //This stops pawns who aren't allowed to do hookups from considering hookups for recreation
     [HarmonyPatch(typeof(JoyKindDef), "PawnCanDo")]

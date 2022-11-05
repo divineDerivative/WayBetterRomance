@@ -8,7 +8,7 @@ using Verse;
 using HarmonyLib;
 using System.Reflection.Emit;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     [HarmonyPatch(typeof(RelationsUtility), "RomanceEligible")]
     public static class RelationsUtility_RomanceEligible

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     [HarmonyPatch(typeof(StatPart_FertilityByGenderAge), "AgeFactor")]
     public static class StatPart_FertilityByGenderAge_AgeFactor

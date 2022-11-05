@@ -3,7 +3,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //This stops asexual pawns from initiating lovin' while in bed with a partner
     [HarmonyPatch(typeof(JobGiver_DoLovin), "TryGiveJob")]

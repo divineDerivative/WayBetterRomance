@@ -3,7 +3,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //If settings do not allow spouses for either sibling, do not force their parents to be spouses
     [HarmonyPatch(typeof(PawnRelationWorker_Sibling), "CreateRelation")]

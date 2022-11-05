@@ -2,7 +2,7 @@
 using RimWorld;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //Do not force a spouse relation on a newly generated parent if settings do not allow spouses
     //Actually need to have it run for parents with orientation mismatch

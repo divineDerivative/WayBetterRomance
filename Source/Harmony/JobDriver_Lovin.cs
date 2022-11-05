@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //Let HAR go first so I can patch his transpiler
     //Otherwise transpile to use age settings to generate the lovin curve

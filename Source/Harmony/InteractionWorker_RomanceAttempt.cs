@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //This determines chances of a pawn initiating a romance attempt (not a hookup)
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "RandomSelectionWeight")]

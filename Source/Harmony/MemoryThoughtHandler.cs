@@ -4,7 +4,7 @@ using System;
 using System.Reflection;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //Intercepts adding the 'got some lovin'' thought and replaces it with the asexual version if needed
     [HarmonyPatch(typeof(MemoryThoughtHandler), "TryGainMemory", new Type[] {typeof(Thought_Memory), typeof(Pawn)})]

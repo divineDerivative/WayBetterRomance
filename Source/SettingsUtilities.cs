@@ -358,22 +358,7 @@ namespace BetterRomance
             return result;
         }
 
-        /// <summary>
-        /// Checks HAR settings to see if pawns consider each other aliens.
-        /// DO NOT CALL IF HAR IS NOT ACTIVE
-        /// </summary>
-        /// <param name="p1"></param>
-        /// <param name="p2"></param>
-        /// <returns>True or False</returns>
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        public static bool AreRacesConsideredXeno(Pawn p1, Pawn p2)
-        {
-            if (p1.def != p2.def)
-            {
-                return !(p1.def is ThingDef_AlienRace alienDef && alienDef.alienRace.generalSettings.notXenophobistTowards.Contains(p2.def));
-            }
-            return false;
-        }
+
 
         //Biotech Settings
         public static BiotechSettings GetBiotechSettings(Pawn pawn)

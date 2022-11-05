@@ -7,7 +7,7 @@ using RimWorld;
 using Verse;
 using HarmonyLib;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
 
     [HarmonyPatch(typeof(SocialCardUtility), "CanDrawTryRomance")]

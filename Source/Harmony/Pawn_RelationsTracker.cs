@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //This determines how likely a pawn is to want to have sex with another pawn
     [HarmonyPatch(typeof(Pawn_RelationsTracker), "SecondaryLovinChanceFactor")]
@@ -34,7 +34,7 @@ namespace BetterRomance
             float crossSpecies = 1f;
             if (Settings.HARActive)
             {
-                if (SettingsUtilities.AreRacesConsideredXeno(___pawn, otherPawn))
+                if (HAR_Integration.AreRacesConsideredXeno(___pawn, otherPawn))
                 {
                     crossSpecies = ___pawn.AlienLoveChance() / 100;
                 }

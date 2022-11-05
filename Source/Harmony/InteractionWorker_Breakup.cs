@@ -6,7 +6,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //This determines chance of a breakup
     [HarmonyPatch(typeof(InteractionWorker_Breakup), "RandomSelectionWeight")]

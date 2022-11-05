@@ -3,7 +3,7 @@ using RimWorld;
 using HarmonyLib;
 using System.Reflection.Emit;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     [HarmonyPatch(typeof(CompAbilityEffect_WordOfLove), "ValidateTarget")]
     public static class CompAbilityEffect_WordOfLove_ValidateTarget

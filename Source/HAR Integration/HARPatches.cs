@@ -10,6 +10,7 @@ using RimWorld;
 using Verse;
 
 namespace BetterRomance
+
 {
     public static class HARPatches
     {
@@ -17,8 +18,8 @@ namespace BetterRomance
         public static void PatchHAR()
         {
             Harmony harmony = new Harmony(id: "rimworld.divineDerivative.HARinterference");
-            harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), typeof(HarmonyPatches).GetMethod("CompatibilityWithPostfix"));
-            harmony.Patch(AccessTools.Method(typeof(HarmonyPatches), nameof(HarmonyPatches.LovinInterval)), prefix: new HarmonyMethod(typeof(HARPatches), nameof(HARPatches.LovinInternalPrefix)));
+            harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), typeof(AlienRace.HarmonyPatches).GetMethod("CompatibilityWithPostfix"));
+            harmony.Patch(AccessTools.Method(typeof(AlienRace.HarmonyPatches), nameof(AlienRace.HarmonyPatches.LovinInterval)), prefix: new HarmonyMethod(typeof(HARPatches), nameof(HARPatches.LovinInternalPrefix)));
         }
 
         public static bool LovinInternalPrefix(SimpleCurve humanDefault, Pawn pawn, ref SimpleCurve __result)

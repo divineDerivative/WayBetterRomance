@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //This determines the chance of generating a love relation, it is called by most relation workers
     [HarmonyPatch(typeof(LovePartnerRelationUtility), "LovePartnerRelationGenerationChance")]

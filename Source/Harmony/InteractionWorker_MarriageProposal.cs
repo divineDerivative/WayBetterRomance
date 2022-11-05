@@ -7,7 +7,7 @@ using System.Text;
 using UnityEngine;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //This determines if a pawn will propose marriage to another pawn
     [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), "RandomSelectionWeight")]

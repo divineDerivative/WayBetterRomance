@@ -2,7 +2,7 @@
 using RimWorld;
 using Verse;
 
-namespace BetterRomance
+namespace BetterRomance.HarmonyPatches
 {
     //Orientation traits are now added with a new method, don't allow that method to run in order to use user settings
     //Still ending up with occasional duplicate traits
