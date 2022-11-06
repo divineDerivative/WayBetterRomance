@@ -7,12 +7,16 @@ namespace BetterRomance
     {
         public static void EnsureTraits(this Pawn pawn)
         {
-            if (!pawn.story.traits.HasTrait(TraitDefOf.Asexual) &&
+            //Don't give orientation to kids, hopefully
+            if (pawn.DevelopmentalStage.Adult())
+            {
+                if (!pawn.story.traits.HasTrait(TraitDefOf.Asexual) &&
                 !pawn.story.traits.HasTrait(TraitDefOf.Bisexual) &&
                 !pawn.story.traits.HasTrait(TraitDefOf.Gay) &&
                 !pawn.story.traits.HasTrait(RomanceDefOf.Straight))
-            {
-                AssignOrientation(pawn);
+                {
+                    AssignOrientation(pawn);
+                }
             }
         }
         public static void AssignOrientation(Pawn pawn)
