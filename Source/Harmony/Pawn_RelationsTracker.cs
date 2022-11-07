@@ -55,13 +55,7 @@ namespace BetterRomance.HarmonyPatches
             float sexualityFactor = 1f;
             if ( ___pawn.story?.traits?.HasTrait(TraitDefOf.Asexual) ?? false)
             {
-                //This should probably be a lerp, just have to remember how those work
-                //This is just a fancy way of dividing by 2 :/
-                //sexualityFactor = Mathf.Lerp(0f, 0.5f, ___pawn.AsexualRating());
-                //LerpDouble might actually be what I need, to scale the rating to a smaller range
-
-
-                sexualityFactor = Mathf.Min(___pawn.AsexualRating() + 0.15f, 1f);
+                sexualityFactor = ___pawn.AsexualRating() /2;
             }
             if ( ___pawn.story?.traits?.HasTrait(TraitDefOf.Gay) ?? false)
             {
