@@ -38,8 +38,11 @@ namespace BetterRomance
             {
                 yield break;
             }
-            //Walk to target pawn
-            yield return Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
+            //Walk to the target
+            Toil WalkToTarget = Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
+            //Should fail if target goes into an area forbidden to actor
+            WalkToTarget.AddFailCondition(() => TargetPawn.IsForbidden(Actor));
+            yield return WalkToTarget;
 
             Toil proposeHookup = new Toil();
             //Fail if target is dead or downed

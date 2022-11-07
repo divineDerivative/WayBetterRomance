@@ -1,5 +1,6 @@
 ﻿using Verse;
 using System.Collections.Generic;
+using RimWorld;
 
 namespace BetterRomance
 {
@@ -38,7 +39,7 @@ namespace BetterRomance
             {
                 foreach (Pawn p in type.list)
                 {
-                    if (RomanceUtilities.IsPawnFree(p))
+                    if (RomanceUtilities.IsPawnFree(p) && ! p.IsForbidden(Pawn))
                     {
                         partner = p;
                         break;

@@ -119,6 +119,7 @@ namespace BetterRomance
         {
             return RomanceUtilities.IsPawnFree(TargetPawn) && ((IsDate && RomanceUtilities.IsDateAppealing(TargetPawn, Actor)) || (!IsDate && RomanceUtilities.IsHangoutAppealing(TargetPawn, Actor)));
         }
+
         //No idea how this works either
         private bool TryFindMostBeautifulRootInDistance(int distance, Pawn p1, Pawn p2, out IntVec3 best)
         {
@@ -138,7 +139,7 @@ namespace BetterRomance
             if (list.Count == 0)
             {
                 result = false;
-                //Log.Message("No date walk destination found.");
+                Log.Message("No date walk destination found.");
             }
             else
             {
@@ -147,9 +148,7 @@ namespace BetterRomance
                     select c).ToList();
                 best = list2.FirstOrDefault();
                 list2.Reverse();
-                //Log.Message("Date walk destinations found from beauty " +
-                //            BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " +
-                //            BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
+                Log.Message("Date walk destinations found from beauty " + BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " + BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
                 result = true;
             }
 
@@ -164,7 +163,10 @@ namespace BetterRomance
                 yield break;
             }
             //Walk to the target
-            yield return Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
+            Toil WalkToTarget = Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
+            //Should fail if target goes into an area forbidden to actor
+            WalkToTarget.AddFailCondition(() => TargetPawn.IsForbidden(Actor));
+            yield return WalkToTarget;
             //Start new toil
             Toil AskOut = new Toil();
             //Fail if target is downed or dead
@@ -233,7 +235,7 @@ namespace BetterRomance
                         if (TryFindUnforbiddenDatePath(pawn, TargetPawn, root, out List<IntVec3> list))
                         {
                             //Add the path info to the job info
-                            //Log.Message("Date walk path found.");
+                            Log.Message("Date walk path found.");
                             jobDateLead.targetQueueB = new List<LocalTargetInfo>();
                             for (int i = 1; i < list.Count; i++)
                             {
@@ -258,7 +260,7 @@ namespace BetterRomance
                         }
                         else
                         {
-                            //Log.Message("No date walk path found.");
+                            Log.Message("No date walk path found.");
                         }
                     }
                 };
