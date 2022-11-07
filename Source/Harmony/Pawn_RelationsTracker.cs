@@ -22,13 +22,20 @@ namespace BetterRomance.HarmonyPatches
                 __result = 0f;
                 return false;
             }
-            //If at least one of the pawns is not humanlike, don't allow if they're not the same "race"
-            //I think this is to weed out animals/mechs while still allowing for different alien races
-            if ((!___pawn.RaceProps.Humanlike || !otherPawn.RaceProps.Humanlike) && ___pawn.def != otherPawn.def)
+            //Both should be humanlikes
+            if (!___pawn.RaceProps.Humanlike || !otherPawn.RaceProps.Humanlike)
             {
                 __result = 0f;
                 return false;
             }
+
+            //If either one is too young for sex, do not allow
+            if (otherPawn.ageTracker.AgeBiologicalYearsFloat < otherPawn.MinAgeForSex() || ___pawn.ageTracker.AgeBiologicalYearsFloat < ___pawn.MinAgeForSex())
+            {
+                __result = 0f;
+                return false;
+            }
+
             //Applies cross species setting if race def is not the same
             //Also use HAR to determine if they consider each other aliens
             float crossSpecies = 1f;
@@ -46,36 +53,29 @@ namespace BetterRomance.HarmonyPatches
             //Not reducing chances to 0, but lowering if gender and sexuality do not match
             //Changing this to what's in romance attempt success chance and then removing it from there
             float sexualityFactor = 1f;
-            if (___pawn.RaceProps.Humanlike && ___pawn.story.traits.HasTrait(TraitDefOf.Asexual))
+            if ( ___pawn.story?.traits?.HasTrait(TraitDefOf.Asexual) ?? false)
             {
+                //This should probably be a lerp, just have to remember how those work
+                //This is just a fancy way of dividing by 2 :/
+                //sexualityFactor = Mathf.Lerp(0f, 0.5f, ___pawn.AsexualRating());
+                //LerpDouble might actually be what I need, to scale the rating to a smaller range
+
+
                 sexualityFactor = Mathf.Min(___pawn.AsexualRating() + 0.15f, 1f);
             }
-            if (___pawn.RaceProps.Humanlike && ___pawn.story.traits.HasTrait(TraitDefOf.Gay))
+            if ( ___pawn.story?.traits?.HasTrait(TraitDefOf.Gay) ?? false)
             {
                 if (otherPawn.gender != ___pawn.gender)
                 {
-                    sexualityFactor = 0.15f;
+                    sexualityFactor = 0.125f;
                 }
             }
-            if (___pawn.RaceProps.Humanlike && ___pawn.story.traits.HasTrait(RomanceDefOf.Straight))
+            if (___pawn.story?.traits?.HasTrait(RomanceDefOf.Straight) ?? false)
             {
                 if (otherPawn.gender == ___pawn.gender)
                 {
-                    sexualityFactor = 0.15f;
+                    sexualityFactor = 0.125f;
                 }
-            }
-
-            //Calculations based on age of both parties; most have been moved to a separate method in 1.4
-            float targetMinAgeForSex = otherPawn.MinAgeForSex();
-            float pawnMinAgeForSex = ___pawn.MinAgeForSex();
-            float pawnAge = ___pawn.ageTracker.AgeBiologicalYearsFloat;
-            float targetAge = otherPawn.ageTracker.AgeBiologicalYearsFloat;
-
-            //If either one is too young for sex, do not allow
-            if (targetAge < targetMinAgeForSex || pawnAge < pawnMinAgeForSex)
-            {
-                __result = 0f;
-                return false;
             }
             
             //This changes chances based on talking/manipulation/moving stats
