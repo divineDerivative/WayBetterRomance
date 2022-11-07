@@ -17,6 +17,11 @@ namespace BetterRomance
             {
                 return null;
             }
+            //Don't allow for kids
+            else if (pawn.ageTracker.AgeBiologicalYearsFloat < pawn.MinAgeForSex())
+            {
+                return null;
+            }
             //Checks on whether pawn should try hookup now
             else if (!InteractionUtility.CanInitiateInteraction(pawn) || !RomanceUtilities.WillPawnTryHookup(pawn) || PawnUtility.WillSoonHaveBasicNeed(pawn))
             {
