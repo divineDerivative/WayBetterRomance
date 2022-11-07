@@ -69,7 +69,8 @@ namespace BetterRomance
                         //Need to also check opinion against setting for a hookup
                         if ((memory == null && pawn.relations.OpinionOf(p) > pawn.MinOpinionForHookup()) || !hookup)
                         {
-                            num = pawn.relations.SecondaryRomanceChanceFactor(p);
+                            //romance factor for hookup, opinion for date
+                            num = hookup ? pawn.relations.SecondaryRomanceChanceFactor(p) : pawn.relations.OpinionOf(p);
                             tempPawn = p;
                         }
                     }
