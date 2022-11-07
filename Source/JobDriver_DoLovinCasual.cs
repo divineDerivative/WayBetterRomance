@@ -1,3 +1,4 @@
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
@@ -106,8 +107,8 @@ namespace BetterRomance
                     {
                         ticksLeftThisToil = ticksOtherwise;
                     }
-                    
-                    if (RomanceUtilities.IsThisCheating(Actor,Partner,out List<Pawn> cheatedOnList))
+
+                    if (RomanceUtilities.IsThisCheating(Actor, Partner, out List<Pawn> cheatedOnList))
                     {
                         //This is really just to grab the list, separate if statement since it can return false even if the list is not empty
                     }
@@ -163,6 +164,8 @@ namespace BetterRomance
                     Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.GotLovin, Actor.Named(HistoryEventArgsNames.Doer)));
                     HistoryEventDef def = Actor.relations.DirectRelationExists(PawnRelationDefOf.Spouse, Partner) ? HistoryEventDefOf.GotLovin_Spouse : HistoryEventDefOf.GotLovin_NonSpouse;
                     Find.HistoryEventsManager.RecordEvent(new HistoryEvent(def, Actor.Named(HistoryEventArgsNames.Doer)));
+                    //Attempt to have hookups behave more like normal lovin, use the same cooldown period based on age
+                    Actor.mindState.canLovinTick = Find.TickManager.TicksGame + GenerateRandomMinTicksToNextLovin(Actor);
                     //Biotech addition
                     if (ModsConfig.BiotechActive)
                     {
@@ -179,6 +182,28 @@ namespace BetterRomance
                 defaultCompleteMode = ToilCompleteMode.Instant,
                 socialMode = RandomSocialMode.Off,
             };
+        }
+
+        private int GenerateRandomMinTicksToNextLovin(Pawn pawn)
+        {
+            if (DebugSettings.alwaysDoLovin)
+            {
+                return 100;
+            }
+            float num = pawn.GetLovinCurve().Evaluate(pawn.ageTracker.AgeBiologicalYearsFloat);
+            if (ModsConfig.BiotechActive && pawn.genes != null)
+            {
+                foreach (Gene item in pawn.genes.GenesListForReading)
+                {
+                    num *= item.def.lovinMTBFactor;
+                }
+            }
+            num = Rand.Gaussian(num, 0.3f);
+            if (num < 0.5f)
+            {
+                num = 0.5f;
+            }
+            return (int)(num * 2500f);
         }
     }
 }

@@ -280,6 +280,11 @@ namespace BetterRomance
             {
                 return false;
             }
+            //Check against canLovinTick
+            if (Find.TickManager.TicksGame < pawn.mindState.canLovinTick)
+            {
+                return false;
+            }
             return true;
         }
 
