@@ -30,7 +30,8 @@
       <HintPath>..\..\..\..\..\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="AlienRace">
+    <Reference Include="AlienRace, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\workshop\content\294100\839005762\1.4\Assemblies\AlienRace.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -65,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Harmony\Biotech Romance\RelationsUtility.cs" />
     <Compile Include="Harmony\Biotech Romance\SocialCardUtility.cs" />
+    <Compile Include="Harmony\ChoiceLetter_GrowthMoment.cs" />
     <Compile Include="Harmony\CompAbilityEffect_WordOfLove.cs" />
     <Compile Include="HAR Integration\HAR_Integration.cs" />
     <Compile Include="HAR Integration\HARPatches.cs" />

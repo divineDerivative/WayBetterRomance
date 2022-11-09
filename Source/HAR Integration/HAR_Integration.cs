@@ -33,7 +33,7 @@ namespace BetterRomance
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static int[] GetGrowthMoments(Pawn pawn)
         {
-            return (pawn.def as ThingDef_AlienRace)?.alienRace.generalSettings.growthAges?.ToArray() ?? GrowthUtility.GrowthMomentAges;
+            return (pawn.def as ThingDef_AlienRace)?.alienRace.generalSettings.growthAges?.ToArray();
         }
     }
 }
