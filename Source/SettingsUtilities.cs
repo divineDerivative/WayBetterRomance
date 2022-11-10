@@ -282,7 +282,7 @@ namespace BetterRomance
 
         public static float MinOpinionForRomance(this Pawn pawn)
         {
-            return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).minOpinionRomance : 5f;
+            return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).minOpinionRomance : BetterRomanceMod.settings.minOpinionRomance;
         }
 
         //Love Relation Settings
