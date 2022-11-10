@@ -62,29 +62,13 @@ namespace BetterRomance
         /// <returns></returns>
         public static HookupTrigger GetHookupSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<CasualSexSettings>())
+            if (pawn.kindDef.HasModExtension<CasualSexSettings>() && pawn.kindDef.GetModExtension<CasualSexSettings>().hookupTriggers != null)
             {
-                if (pawn.kindDef.GetModExtension<CasualSexSettings>().hookupTriggers != null)
-                {
-                    return pawn.kindDef.GetModExtension<CasualSexSettings>().hookupTriggers;
-                }
-                else if (pawn.def.HasModExtension<CasualSexSettings>())
-                {
-                    if (pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers != null)
-                    {
-                        return pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers;
-                    }
-                    return null;
-                }
-                return null;
+                return pawn.kindDef.GetModExtension<CasualSexSettings>().hookupTriggers;
             }
-            else if (pawn.def.HasModExtension<CasualSexSettings>())
+            else if (pawn.def.HasModExtension<CasualSexSettings>() && pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers != null)
             {
-                if (pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers != null)
-                {
-                    return pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers;
-                }
-                return null;
+                return pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers;
             }
             return null;
         }
@@ -106,29 +90,13 @@ namespace BetterRomance
         /// <returns></returns>
         public static HookupTrigger GetOrderedHookupSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<CasualSexSettings>())
+            if (pawn.kindDef.HasModExtension<CasualSexSettings>() && pawn.kindDef.GetModExtension<CasualSexSettings>().orderedHookupTriggers != null)
             {
-                if (pawn.kindDef.GetModExtension<CasualSexSettings>().orderedHookupTriggers != null)
-                {
-                    return pawn.kindDef.GetModExtension<CasualSexSettings>().orderedHookupTriggers;
-                }
-                else if (pawn.def.HasModExtension<CasualSexSettings>())
-                {
-                    if (pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers != null)
-                    {
-                        return pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers;
-                    }
-                    return null;
-                }
-                return null;
+                return pawn.kindDef.GetModExtension<CasualSexSettings>().orderedHookupTriggers;
             }
-            else if (pawn.def.HasModExtension<CasualSexSettings>())
+            else if (pawn.def.HasModExtension<CasualSexSettings>() && pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers != null)
             {
-                if (pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers != null)
-                {
-                    return pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers;
-                }
-                return null;
+                return pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers;
             }
             return null;
         }
@@ -217,9 +185,9 @@ namespace BetterRomance
                 {
                     return GetRelationSettings(pawn).pawnKindForParentMale;
                 }
-                else if (gender == Gender.None)
+                else
                 {
-                    throw new ArgumentException("Please provide a gender");
+                    throw new ArgumentException("Invalid gender provided for finding parent pawnkind");
                 }
             }
             throw new Exception("No parent pawnkind set for " + pawn.kindDef.defName + " or " + pawn.def.defName);
@@ -378,15 +346,15 @@ namespace BetterRomance
         {
             if (pawn.gender == Gender.Male)
             {
-                return (GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).maleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender));
+                return GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).maleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
             }
             else if (pawn.gender == Gender.Female)
             {
-                return (GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).femaleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender));
+                return GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).femaleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
             }
             else
             {
-                return (GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).noneFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender));
+                return GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).noneFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
             }
         }
 

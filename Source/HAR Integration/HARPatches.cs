@@ -24,7 +24,14 @@ namespace BetterRomance
 
         public static bool LovinInternalPrefix(SimpleCurve humanDefault, Pawn pawn, ref SimpleCurve __result)
         {
-            __result = pawn.def is ThingDef_AlienRace alienProps ? alienProps.alienRace.generalSettings.lovinIntervalHoursFromAge ?? pawn.GetLovinCurve() : pawn.GetLovinCurve();
+            if (pawn.def is ThingDef_AlienRace alienProps)
+            {
+                __result = alienProps.alienRace.generalSettings.lovinIntervalHoursFromAge ?? pawn.GetLovinCurve();
+            }
+            else
+            {
+                __result = pawn.GetLovinCurve();
+            }
             return false;
         }
     }
