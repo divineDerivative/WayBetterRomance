@@ -34,14 +34,14 @@ namespace BetterRomance.HarmonyPatches
 
         private static int GetLastGrowthMoment(Pawn pawn)
         {
-            if (Settings.HARActive)
-            {
-                int[] array = HAR_Integration.GetGrowthMoments(pawn);
-                if (array != null)
-                {
-                    return array[2];
-                }
-            }
+            //if (Settings.HARActive)
+            //{
+            //    int[] array = HAR_Integration.GetGrowthMoments(pawn);
+            //    if (array != null)
+            //    {
+            //        return array[2];
+            //    }
+            //}
             return (int)pawn.ageTracker.AdultMinAge;
         }
     }
