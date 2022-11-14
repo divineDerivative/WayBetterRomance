@@ -47,7 +47,7 @@ namespace BetterRomance
 
     public class HookupTrigger
     {
-        public int minOpinion = -5;
+        public float minOpinion = -5f;
         public TraitDef hasTrait = null;
         public bool mustBeFertile = false;
     }

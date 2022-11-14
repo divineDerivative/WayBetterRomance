@@ -73,9 +73,9 @@ namespace BetterRomance
             return null;
         }
 
-        public static int MinOpinionForHookup(this Pawn pawn)
+        public static float MinOpinionForHookup(this Pawn pawn)
         {
-            return (GetHookupSettings(pawn) != null) ? GetHookupSettings(pawn).minOpinion : 5;
+            return (GetHookupSettings(pawn) != null) ? GetHookupSettings(pawn).minOpinion : BetterRomanceMod.settings.minOpinionHookup;
         }
 
         public static bool MustBeFertileForHookup(this Pawn pawn)
@@ -101,7 +101,7 @@ namespace BetterRomance
             return null;
         }
 
-        public static int MinOpinionForOrderedHookup(this Pawn pawn)
+        public static float MinOpinionForOrderedHookup(this Pawn pawn)
         {
             return (GetOrderedHookupSettings(pawn) != null) ? GetOrderedHookupSettings(pawn).minOpinion : 5;
         }

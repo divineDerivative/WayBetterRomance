@@ -13,9 +13,11 @@ namespace BetterRomance
         public float straightChance = 20f;
         public float dateRate = 100f;
         public float hookupRate = 100f;
+        public float cheatChance = 100f;
         public float alienLoveChance = 33f;
         public float minOpinionRomance = 5f;
-        public float cheatChance = 100f;
+        public float minOpinionHookup = 5f;
+        
 
         //These are not set by the user
         public static bool HARActive = false;
@@ -32,6 +34,7 @@ namespace BetterRomance
             Scribe_Values.Look(ref alienLoveChance, "alienLoveChance", 33.0f);
             Scribe_Values.Look(ref minOpinionRomance, "minOpinionRomance", 5.0f);
             Scribe_Values.Look(ref cheatChance, "cheatChance", 100.0f);
+            Scribe_Values.Look(ref minOpinionHookup, "minOpinionHookup", 5.0f);
         }
     }
 
@@ -86,6 +89,7 @@ namespace BetterRomance
                 settings.alienLoveChance = 33f;
                 settings.minOpinionRomance = 5f;
                 settings.cheatChance = 100f;
+                settings.minOpinionHookup = 5f;
             }
             list.End();
         }
@@ -147,6 +151,8 @@ namespace BetterRomance
             settings.alienLoveChance = list.Slider(settings.alienLoveChance, 0f, 100.99f);
             list.Label("WBR.MinOpinionRomance".Translate() + " " + (int)settings.minOpinionRomance, tooltip: "WBR.MinOpinionRomanceTip".Translate());
             settings.minOpinionRomance = list.Slider(settings.minOpinionRomance, -100.99f, 100.99f);
+            list.Label("WBR.MinOpinionHookup".Translate() + " " + (int)settings.minOpinionHookup, tooltip: "WBR.MinOpinionHookupTip".Translate());
+            settings.minOpinionHookup = list.Slider(settings.minOpinionHookup, -100.99f, 50.99f);
             DrawCustomSectionEnd(listing, list, out sectionHeightOther);
         }
     }

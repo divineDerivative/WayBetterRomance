@@ -13,6 +13,7 @@
       <li>SexualOrientation</li>
     </exclusionTags>
   </TraitDef>
+	
   <TraitDef>
     <defName>Faithful</defName>
     <commonality>0.05</commonality>
@@ -26,6 +27,7 @@
       <li>Philanderer</li>
     </conflictingTraits>
   </TraitDef>
+	
   <TraitDef>
     <defName>Philanderer</defName>
     <commonality>0.05</commonality>
