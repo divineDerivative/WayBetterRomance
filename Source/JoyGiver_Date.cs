@@ -44,6 +44,7 @@ namespace BetterRomance
                 {
                     return null;
                 }
+                //Change this once new activities are added
                 else if (!JoyUtility.EnjoyableOutsideNow(pawn))
                 {
                     return null;

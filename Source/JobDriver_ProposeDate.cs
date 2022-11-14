@@ -10,12 +10,20 @@ namespace BetterRomance
 {
     public class JobDriver_ProposeDate : JobDriver
     {
-        public bool successfulPass = true;
+        private bool successfulPass = true;
         public bool WasSuccessfulPass => successfulPass;
         private Pawn Actor => GetActor();
         private Pawn TargetPawn => TargetThingA as Pawn;
         private TargetIndex TargetPawnIndex => TargetIndex.A;
         private bool IsDate => job.def == RomanceDefOf.ProposeDate;
+        private TypeOfDate activity;
+        private enum TypeOfDate
+        {
+            Walk,
+            Movie,
+            Drinking,
+            Eating,
+        }
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -155,6 +163,57 @@ namespace BetterRomance
             return result;
         }
 
+        private bool TryGetDateType(out Job dateLeadJob, out Job dateFollowJob)
+        {
+            if (JoyUtility.EnjoyableOutsideNow(pawn))
+            {
+                if (TryFindMostBeautifulRootInDistance(40, pawn, TargetPawn, out IntVec3 root))
+                {
+                    if (TryFindUnforbiddenDatePath(pawn, TargetPawn, root, out List<IntVec3> list))
+                    {
+                        activity = TypeOfDate.Walk;
+                        //Create date lead job
+                        dateLeadJob = new Job(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead);
+                        //Add the path info to the job info
+                        Log.Message("Date walk path found.");
+                        dateLeadJob.targetQueueB = new List<LocalTargetInfo>();
+                        for (int i = 1; i < list.Count; i++)
+                        {
+                            dateLeadJob.targetQueueB.Add(list[i]);
+                        }
+                        //Wander along path
+                        dateLeadJob.locomotionUrgency = LocomotionUrgency.Amble;
+                        //Add the target pawn to the job info
+                        dateLeadJob.targetA = TargetPawn;
+
+                        //Create date follow job, with wander and actor info
+                        dateFollowJob = new Job(IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow)
+                        {
+                            locomotionUrgency = LocomotionUrgency.Amble,
+                            targetA = Actor
+                        };
+                        return true;
+                    }
+                }
+            }
+            //else if (IsTelevisionFree())
+            //{
+            //    activity = TypeOfDate.Movie;
+            //}
+            //else if (DoesBeerExist())
+            //{
+            //    activity = TypeOfDate.Drinking;
+            //}
+            //else if (FoodAndTableAvailable())
+            //{
+            //    activity = TypeOfDate.Walk;
+            //}
+
+            dateLeadJob = null;
+            dateFollowJob = null;
+            return false;
+        }
+
         protected override IEnumerable<Toil> MakeNewToils()
         {
             //Stop if target is not free
@@ -224,44 +283,17 @@ namespace BetterRomance
                         {
                             return;
                         }
-                        //Create date lead job
-                        Job jobDateLead = new Job(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead);
-                        //But stop if a starting tile isn't found
-                        if (!TryFindMostBeautifulRootInDistance(40, pawn, TargetPawn, out IntVec3 root))
+                        //If no date activities were found, end the toil
+                        if (!TryGetDateType(out Job leadJob, out Job followJob))
                         {
                             return;
                         }
-                        //Find a path to walk during date
-                        if (TryFindUnforbiddenDatePath(pawn, TargetPawn, root, out List<IntVec3> list))
-                        {
-                            //Add the path info to the job info
-                            Log.Message("Date walk path found.");
-                            jobDateLead.targetQueueB = new List<LocalTargetInfo>();
-                            for (int i = 1; i < list.Count; i++)
-                            {
-                                jobDateLead.targetQueueB.Add(list[i]);
-                            }
-                            //Wander along path
-                            jobDateLead.locomotionUrgency = LocomotionUrgency.Amble;
-                            //Add the target pawn to the job info
-                            jobDateLead.targetA = TargetPawn;
-                            //Give the job to the pawn
-                            Actor.jobs.jobQueue.EnqueueFirst(jobDateLead);
-                            //Create date follow job, with wander and actor info
-                            Job jobDateFollow = new Job(IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow)
-                            {
-                                locomotionUrgency = LocomotionUrgency.Amble, targetA = Actor
-                            };
-                            //Give the job to the target
-                            TargetPawn.jobs.jobQueue.EnqueueFirst(jobDateFollow);
-                            //Allow the date to be interrupted
-                            TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
-                            Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
-                        }
-                        else
-                        {
-                            Log.Message("No date walk path found.");
-                        }
+                        //Give the jobs we just created
+                        Actor.jobs.jobQueue.EnqueueFirst(leadJob);
+                        TargetPawn.jobs.jobQueue.EnqueueFirst(followJob);
+                        //Allow the date to be interrupted
+                        TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
+                        Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                     }
                 };
             }
