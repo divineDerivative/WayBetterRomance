@@ -1,5 +1,8 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 
@@ -58,51 +61,82 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //Uses age settings of existing child to help generate an appropriate parent
+    //Uses pawnkinds for parents if children are not allowed by child pawnkind/race
     [HarmonyPatch(typeof(PawnRelationWorker_Sibling), "GenerateParent")]
     public static class PawnRelationWorker_Sibling_GenerateParent
     {
-        public static bool Prefix(Pawn generatedChild, Pawn existingChild, Gender genderToGenerate, PawnGenerationRequest childRequest, bool newlyGeneratedParentsWillBeSpousesIfNotGay, PawnRelationWorker_Sibling __instance, ref Pawn __result)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            float generatedAge = generatedChild.ageTracker.AgeChronologicalYearsFloat;
-            float existingAge = existingChild.ageTracker.AgeChronologicalYearsFloat;
-            float minAgeToHaveChild = ((genderToGenerate == Gender.Male) ? existingChild.MinAgeToHaveChildren(Gender.Male) : existingChild.MinAgeToHaveChildren(Gender.Female));
-            float maxAgeToHaveChild = ((genderToGenerate == Gender.Male) ? existingChild.MaxAgeToHaveChildren(Gender.Male) : existingChild.MaxAgeToHaveChildren(Gender.Female));
-            float usualAgeToHaveChild = ((genderToGenerate == Gender.Male) ? existingChild.UsualAgeToHaveChildren(Gender.Male) : existingChild.UsualAgeToHaveChildren(Gender.Female));
-            float minChronologicalAge = Mathf.Max(generatedAge, existingAge) + minAgeToHaveChild;
-            float maxChronologicalAge = minChronologicalAge + (maxAgeToHaveChild - minAgeToHaveChild);
-            float midChronologicalAge = minChronologicalAge + (usualAgeToHaveChild - minAgeToHaveChild);
-
-            object[] arguments = new object[] { minChronologicalAge, maxChronologicalAge, midChronologicalAge, minAgeToHaveChild, generatedChild, existingChild, childRequest, null, null, null, null };
-            AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParentParams").Invoke(__instance, arguments);
-            float biologicalAge = (float)arguments[7];
-            float chronologicalAge = (float)arguments[8];
-            string lastName = (string)arguments[9];
-            XenotypeDef xenotype = (XenotypeDef)arguments[10];
-            Faction faction = existingChild.Faction;
-            if (faction == null || faction.IsPlayer)
+            foreach (CodeInstruction instruction in instructions)
             {
-                bool tryMedievalOrBetter = faction != null && (int)faction.def.techLevel >= 3;
-                if (!Find.FactionManager.TryGetRandomNonColonyHumanlikeFaction(out faction, tryMedievalOrBetter, allowDefeated: true))
+                if (instruction.opcode == OpCodes.Ldc_R4)
                 {
-                    faction = Faction.OfAncients;
+                    if (instruction.OperandIs(14f))
+                    {
+                        //Because the instruction I'm replacing is used as a jump to point, the new instruction needs to have the same label as the old one
+                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
+                        newInstruction.MoveLabelsFrom(instruction);
+                        yield return newInstruction;
+                        //Since Gender is an enum, I need to load the value of Male, which is 1
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_1);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender)});
+                    }
+                    else if (instruction.OperandIs(16f))
+                    {
+                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
+                        newInstruction.MoveLabelsFrom(instruction);
+                        yield return newInstruction;
+                        //Since Gender is an enum, I need to load the value of Female, which is 2
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_2);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                    }
+                    else if (instruction.OperandIs(50f))
+                    {
+                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
+                        newInstruction.MoveLabelsFrom(instruction);
+                        yield return newInstruction;
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_1);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                    }
+                    else if (instruction.OperandIs(45f))
+                    {
+                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
+                        newInstruction.MoveLabelsFrom(instruction);
+                        yield return newInstruction;
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_2);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                    }
+                    else if (instruction.OperandIs(30f))
+                    {
+                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
+                        newInstruction.MoveLabelsFrom(instruction);
+                        yield return newInstruction;
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_1);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                    }
+                    else if (instruction.OperandIs(27f))
+                    {
+                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
+                        newInstruction.MoveLabelsFrom(instruction);
+                        yield return newInstruction;
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_2);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                    }
+                    else
+                    {
+                        yield return instruction;
+                    }
+                }
+                else if (instruction.LoadsField(AccessTools.Field(typeof(Pawn), nameof(Pawn.kindDef))))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ParentPawnkind));
+                }
+                else
+                {
+                    yield return instruction;
                 }
             }
-            Pawn pawn;
-            //If children are not allowed, use the pawnkind provided in settings
-            if (!existingChild.ChildAllowed())
-            {
-                pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(existingChild.ParentPawnkind(genderToGenerate), faction: faction, forceGenerateNewPawn: true, allowDead: true, allowDowned: true, canGeneratePawnRelations: false, colonistRelationChanceFactor: 1f, fixedBiologicalAge: biologicalAge, fixedChronologicalAge: chronologicalAge, fixedGender: genderToGenerate, fixedLastName: lastName, forcedXenotype: xenotype));
-            }
-            else
-            {
-                pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(existingChild.kindDef, faction: faction, forceGenerateNewPawn: true, allowDead: true, allowDowned: true, canGeneratePawnRelations: false, colonistRelationChanceFactor: 1f, fixedBiologicalAge: biologicalAge, fixedChronologicalAge: chronologicalAge, fixedGender: genderToGenerate, fixedLastName: lastName, forcedXenotype: xenotype));
-            }
-            if (!Find.WorldPawns.Contains(pawn))
-            {
-                Find.WorldPawns.PassToWorld(pawn);
-            }
-            __result = pawn;
-            return false;
         }
     }
 
@@ -110,29 +144,35 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(PawnRelationWorker_Sibling), "GenerationChance")]
     public static class PawnRelationWorker_Sibling_GenerationChance
     {
-        public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, ref float __result, PawnRelationWorker_Sibling __instance)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            float exsistingParentFactor = 1f;
-            if (other.GetFather() != null || other.GetMother() != null)
+            foreach (CodeInstruction instruction in instructions)
             {
-                exsistingParentFactor = ChildRelationUtility.ChanceOfBecomingChildOf(generated, other.GetFather(), other.GetMother(), request, null, null);
+                if (instruction.Is(OpCodes.Ldc_R4, 40f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
+                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, 2f);
+                    yield return new CodeInstruction(OpCodes.Div);
+                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), new Type[] {typeof(float), typeof(float)});
+                }
+                else if (instruction.Is(OpCodes.Ldc_R4, 10f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
+                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, 8f);
+                    yield return new CodeInstruction(OpCodes.Div);
+                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), new Type[] { typeof(float), typeof(float) });
+                }
+                else
+                {
+                    yield return instruction;
+                }
             }
-            if (!ChildRelationUtility.XenotypesCompatible(generated, other))
-            {
-                return true;
-            }
-            float ageGap = Mathf.Abs(generated.ageTracker.AgeChronologicalYearsFloat - other.ageTracker.AgeChronologicalYearsFloat);
-            float ageGapFactor = 1f;
-            if (ageGap > Mathf.Min(generated.MaxAgeForSex(), other.MaxAgeForSex() / 2))
-            {
-                ageGapFactor = 0.2f;
-            }
-            else if (ageGap > Mathf.Min(generated.MaxAgeForSex(), other.MaxAgeForSex() / 8))
-            {
-                ageGapFactor = 0.65f;
-            }
-            __result = exsistingParentFactor * ageGapFactor * __instance.BaseGenerationChanceFactor(generated, other, request);
-            return false;
         }
     }
 }

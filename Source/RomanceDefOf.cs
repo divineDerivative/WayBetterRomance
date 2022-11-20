@@ -14,6 +14,7 @@ namespace BetterRomance
         public static JobDef ProposeHangout;
         public static JobDef JobHangoutLead;
         public static JobDef JobHangoutFollow;
+        //public static JobDef JobDateMovie;
         public static ThoughtDef FailedHookupAttemptOnMe;
         public static ThoughtDef RebuffedMyHookupAttempt;
         public static ThoughtDef GotSomeLovinAsexual;

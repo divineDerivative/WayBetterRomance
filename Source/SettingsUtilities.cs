@@ -168,9 +168,20 @@ namespace BetterRomance
         {
             return GetRelationSettings(pawn) == null || GetRelationSettings(pawn).childrenAllowed;
         }
-
+        /// <summary>
+        /// Provides an appropriate pawnkind for a newly generated parent. If children are not allowed, uses a pawnkind from settings, otherwise uses the same pawnkind as the child.
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <param name="gender"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="Exception"></exception>
         public static PawnKindDef ParentPawnkind(this Pawn pawn, Gender gender)
         {
+            if (pawn.ChildAllowed())
+            {
+                return pawn.kindDef;
+            }
             if (GetRelationSettings(pawn).pawnKindForParentGlobal != null)
             {
                 return GetRelationSettings(pawn).pawnKindForParentGlobal;

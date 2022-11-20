@@ -6,6 +6,7 @@ using UnityEngine;
 namespace BetterRomance.HarmonyPatches
 {
     //Adjusted to use age settings
+    //Could maybe make this a transpiler but seems like a lot of effort for such a small method
     [HarmonyPatch(typeof(PawnRelationWorker_Fiance), "GetOldAgeFactor")]
     public static class PawnRelationWorker_Fiance_GetOldAgeFactor
     {
