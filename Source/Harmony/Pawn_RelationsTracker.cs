@@ -4,6 +4,7 @@ using Verse;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using System.Reflection;
 
 namespace BetterRomance.HarmonyPatches
 {
@@ -115,19 +116,31 @@ namespace BetterRomance.HarmonyPatches
     {
         //Change from Vanilla:
         //Age adjustments
-        public static bool Prefix(Pawn otherPawn, ref float __result, ref Pawn_RelationsTracker __instance, Pawn ___pawn)
+        //Check for humanlike instead of def
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            //This will allow for cross species calculations
-            if (___pawn.RaceProps.Humanlike != otherPawn.RaceProps.Humanlike || ___pawn == otherPawn)
+            FieldInfo def = AccessTools.Field(typeof(Thing), nameof(Thing.def));
+
+            foreach (var instruction in instructions)
             {
-                __result = 0f;
-                return false;
+                if (instruction.Is(OpCodes.Ldc_R4, 20f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.LoadField(typeof(Pawn_RelationsTracker), "pawn");
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, 2f);
+                    yield return new CodeInstruction(OpCodes.Div);
+                }
+                else if (instruction.LoadsField(def))
+                {
+                    yield return CodeInstruction.Call(typeof(Pawn), "get_RaceProps");
+                    yield return CodeInstruction.Call(typeof(RaceProperties), "get_Humanlike");
+                }
+                else
+                {
+                    yield return instruction;
+                }
             }
-            float ageGap = Mathf.Abs(___pawn.ageTracker.AgeBiologicalYearsFloat - otherPawn.ageTracker.AgeBiologicalYearsFloat);
-            float num = Mathf.Clamp(GenMath.LerpDouble(0f, ___pawn.MaxAgeGap() / 2, 0.45f, -0.45f, ageGap), -0.45f, 0.45f);
-            float num2 = __instance.ConstantPerPawnsPairCompatibilityOffset(otherPawn.thingIDNumber);
-            __result = num + num2;
-            return false;
         }
     }
 

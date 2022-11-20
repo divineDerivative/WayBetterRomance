@@ -11,8 +11,7 @@ namespace BetterRomance.HarmonyPatches
     public static class ChildRelationUtility_ChanceOfBecomingChildOf
     {
         // CHANGE: Removed bias against gays being assigned as parents.
-        public static bool Prefix(Pawn child, Pawn father, Pawn mother, PawnGenerationRequest? childGenerationRequest, PawnGenerationRequest? fatherGenerationRequest, PawnGenerationRequest? motherGenerationRequest,
-            ref float __result)
+        public static bool Prefix(Pawn child, Pawn father, Pawn mother, PawnGenerationRequest? childGenerationRequest, PawnGenerationRequest? fatherGenerationRequest, PawnGenerationRequest? motherGenerationRequest, ref float __result)
         {
             //Check if settings allow children
             if ((father != null && !father.ChildAllowed()) || (mother != null && !mother.ChildAllowed()))
@@ -60,6 +59,19 @@ namespace BetterRomance.HarmonyPatches
             {
                 __result = 0f;
                 return false;
+            }
+            if (ModsConfig.BiotechActive)
+            {
+                if (father?.records != null && father.records.GetValue(RecordDefOf.TimeAsChildInColony) > 0f)
+                {
+                    __result = 0f;
+                    return false;
+                }
+                if (mother?.records != null && mother.records.GetValue(RecordDefOf.TimeAsChildInColony) > 0f)
+                {
+                    __result = 0f;
+                    return false;
+                }
             }
             //Calculations based on age of parents compared to child
             float fatherAgeFactor = 1f;

@@ -123,7 +123,7 @@ namespace BetterRomance
                                 continue;
                             }
                             //If p is on the map there's a 25% they notice the cheating
-                            if (p.Map == Actor.Map || Rand.Value < 0.25)
+                            if (p.Map == Actor.Map || Rand.Value < 0.25f)
                             {
                                 p.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.CheatedOnMe, Actor);
                             }
