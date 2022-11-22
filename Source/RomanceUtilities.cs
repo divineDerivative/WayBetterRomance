@@ -290,10 +290,10 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Returns false if <paramref name="pawn"/> is close to needing to eat/sleep, there's enemies nearby, they're drafted, or they're doing a job that should not be interrupted
+        /// Determines if <paramref name="pawn"/> is available for an activity.
         /// </summary>
         /// <param name="pawn"></param>
-        /// <returns>True or False</returns>
+        /// <returns><see langword="false"/> if <paramref name="pawn"/> is close to needing to eat/sleep, there's enemies nearby, they're drafted, in labor, in a mental break, or they're doing a job that should not be interrupted.</returns>
         public static bool IsPawnFree(Pawn pawn)
         {
             if (PawnUtility.WillSoonHaveBasicNeed(pawn) || PawnUtility.EnemiesAreNearby(pawn) || pawn.Drafted )
@@ -304,37 +304,66 @@ namespace BetterRomance
             {
                 return false;
             }
-            return pawn.CurJob.def != JobDefOf.LayDown &&
-       pawn.CurJob.def != JobDefOf.BeatFire &&
-       pawn.CurJob.def != JobDefOf.Arrest &&
-       pawn.CurJob.def != JobDefOf.Capture &&
-       pawn.CurJob.def != JobDefOf.EscortPrisonerToBed &&
-       pawn.CurJob.def != JobDefOf.ExtinguishSelf &&
-       pawn.CurJob.def != JobDefOf.FleeAndCower &&
-       pawn.CurJob.def != JobDefOf.MarryAdjacentPawn &&
-       pawn.CurJob.def != JobDefOf.PrisonerExecution &&
-       pawn.CurJob.def != JobDefOf.ReleasePrisoner &&
-       pawn.CurJob.def != JobDefOf.Rescue &&
-       pawn.CurJob.def != JobDefOf.SocialFight &&
-       pawn.CurJob.def != JobDefOf.SpectateCeremony &&
-       pawn.CurJob.def != JobDefOf.TakeToBedToOperate &&
-       pawn.CurJob.def != JobDefOf.TakeWoundedPrisonerToBed &&
-       pawn.CurJob.def != JobDefOf.UseCommsConsole &&
-       pawn.CurJob.def != JobDefOf.Vomit &&
-       pawn.CurJob.def != JobDefOf.Wait_Downed &&
-       pawn.CurJob.def != RomanceDefOf.DoLovinCasual &&
-       pawn.CurJob.def != JobDefOf.Lovin &&
-       pawn.CurJob.def != JobDefOf.EnterTransporter &&
-       pawn.CurJob.def != JobDefOf.GiveSpeech &&
-       pawn.CurJob.def != JobDefOf.BestowingCeremony &&
-       pawn.CurJob.def != RomanceDefOf.JobDateLead &&
-       pawn.CurJob.def != RomanceDefOf.JobDateFollow &&
-       pawn.CurJob.def != RomanceDefOf.JobHangoutLead &&
-       pawn.CurJob.def != RomanceDefOf.JobHangoutFollow &&
-       pawn.CurJob.def != JobDefOf.PrepareSkylantern &&
-       pawn.CurJob.def != JobDefOf.Deathrest &&
-       pawn.CurJob.def != JobDefOf.Breastfeed;
+            if (pawn.mindState.mentalStateHandler.InMentalState)
+            {
+                return false;
+            }
+            return !DontInterruptJobs.Contains(pawn.CurJob.def);
         }
+
+        private static readonly List<JobDef> DontInterruptJobs = new List<JobDef>
+        {
+            //Incapacitated
+            JobDefOf.Wait_Downed,
+            JobDefOf.Vomit,
+            JobDefOf.Deathrest,
+            JobDefOf.ExtinguishSelf,
+            JobDefOf.Flee,
+            JobDefOf.FleeAndCower,
+            //Ceremonies
+            JobDefOf.MarryAdjacentPawn,
+            JobDefOf.SpectateCeremony,
+            JobDefOf.GiveSpeech,
+            JobDefOf.BestowingCeremony,
+            JobDefOf.PrepareSkylantern,
+            JobDefOf.PrisonerExecution,
+            JobDefOf.Sacrifice,
+            JobDefOf.Scarify,
+            JobDefOf.Blind,
+            //Emergency work
+            JobDefOf.BeatFire,
+            JobDefOf.Arrest,
+            JobDefOf.Capture,
+            JobDefOf.EscortPrisonerToBed,
+            JobDefOf.Rescue,
+            JobDefOf.CarryToBiosculpterPod,
+            JobDefOf.BringBabyToSafety,
+            //Medical work
+            JobDefOf.TakeToBedToOperate,
+            JobDefOf.TakeWoundedPrisonerToBed,
+            JobDefOf.TendPatient,
+            JobDefOf.FeedPatient,
+            //Romance
+            RomanceDefOf.DoLovinCasual,
+            JobDefOf.Lovin,
+            RomanceDefOf.JobDateLead,
+            RomanceDefOf.JobDateFollow,
+            RomanceDefOf.JobHangoutLead,
+            RomanceDefOf.JobHangoutFollow,
+            JobDefOf.TryRomance,
+            //Ordered jobs
+            JobDefOf.LayDown,
+            JobDefOf.ReleasePrisoner,
+            JobDefOf.UseCommsConsole,
+            JobDefOf.EnterTransporter,
+            JobDefOf.EnterCryptosleepCasket,
+            JobDefOf.EnterBiosculpterPod,
+            JobDefOf.TradeWithPawn,
+            JobDefOf.ApplyTechprint,
+
+            JobDefOf.SocialFight,
+            JobDefOf.Breastfeed,
+        };
 
         /// <summary>
         /// Grabs the first non-spouse love partner of the opposite gender. For use in generating parents.
