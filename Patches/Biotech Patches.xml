@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Biotech</li>
+		</mods>
+		<match Class="PatchOperationReplace">
+			<xpath>Defs/RecipeDef[defName="TubalLigation" or defName="Vasectomy"]/minAllowedAge</xpath>
+			<value>
+				<developmentalStageFilter>Adult</developmentalStageFilter>
+			</value>
+		</match>
+	</Operation>
+	
+</Patch>
