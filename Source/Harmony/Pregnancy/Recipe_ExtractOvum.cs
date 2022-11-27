@@ -17,30 +17,30 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            int replacementCount = 0;
             FieldInfo recipe = AccessTools.Field(typeof(RecipeWorker), nameof(RecipeWorker.recipe));
             FieldInfo minAllowedAge = AccessTools.Field(typeof(RecipeDef), nameof(RecipeDef.minAllowedAge));
 
-            foreach (CodeInstruction instruction in instructions)
+            List<CodeInstruction> codes = instructions.ToList();
+
+            for (int i = 0; i < codes.Count; i++)
             {
-                if (instruction.opcode == OpCodes.Ldarg_0 && replacementCount < 2)
+                if (codes[i].opcode == OpCodes.Ldarg_0)
                 {
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), new Type[] { typeof(Pawn) });
-                    yield return new CodeInstruction(OpCodes.Conv_I4);
-                    replacementCount++;
-                }
-                else if (instruction.LoadsField(recipe))
-                {
-                    continue;
-                }
-                else if (instruction.LoadsField(minAllowedAge))
-                {
-                    continue;
+                    if (codes[i+1].LoadsField(recipe) && codes[i+2].LoadsField(minAllowedAge))
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldloc_0);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), new Type[] { typeof(Pawn) });
+                        yield return new CodeInstruction(OpCodes.Conv_I4);
+                        i += 2;
+                    }
+                    else
+                    {
+                        yield return codes[i];
+                    }
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return codes[i];
                 }
             }
         }

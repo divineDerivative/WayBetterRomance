@@ -68,6 +68,10 @@
     <Compile Include="Harmony\Biotech Romance\RelationsUtility.cs" />
     <Compile Include="Harmony\Biotech Romance\SocialCardUtility.cs" />
     <Compile Include="Harmony\ChoiceLetter_GrowthMoment.cs" />
+    <Compile Include="Harmony\Pregnancy\Recipe_ImplantIUD.cs" />
+    <Compile Include="Harmony\Pregnancy\HumanEmbryo.cs" />
+    <Compile Include="Harmony\Pregnancy\Recipe_ExtractOvum.cs" />
+    <Compile Include="Harmony\Pregnancy\HumanOvum.cs" />
     <Compile Include="Harmony\CompAbilityEffect_WordOfLove.cs" />
     <Compile Include="HAR Integration\HAR_Integration.cs" />
     <Compile Include="HAR Integration\HARPatches.cs" />
@@ -75,7 +79,7 @@
     <Compile Include="Comp_PartnerList.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Harmony\ChildRelationUtility.cs" />
-    <Compile Include="Harmony\StatPart_FertilityByGenderAge_AgeFactor.cs" />
+    <Compile Include="Harmony\Pregnancy\StatPart_FertilityByGenderAge_AgeFactor.cs" />
     <Compile Include="Harmony\InteractionWorker_Breakup.cs" />
     <Compile Include="Harmony\InteractionWorker_MarriageProposal.cs" />
     <Compile Include="Harmony\InteractionWorker_RomanceAttempt.cs" />
