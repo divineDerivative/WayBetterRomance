@@ -16,26 +16,84 @@ namespace BetterRomance
         private Pawn TargetPawn => TargetThingA as Pawn;
         private TargetIndex TargetPawnIndex => TargetIndex.A;
         private bool IsDate => job.def == RomanceDefOf.ProposeDate;
-        private TypeOfDate activity;
-        private enum TypeOfDate
-        {
-            Walk,
-            Movie,
-            Drinking,
-            Eating,
-        }
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
             return true;
         }
+
+        private bool IsTargetPawnOkay()
+        {
+            return !TargetPawn.Dead && !TargetPawn.Downed;
+        }
+
+        private bool DoesTargetPawnAcceptDate()
+        {
+            return RomanceUtilities.IsPawnFree(TargetPawn) && ((IsDate && RomanceUtilities.IsDateAppealing(TargetPawn, Actor)) || (!IsDate && RomanceUtilities.IsHangoutAppealing(TargetPawn, Actor)));
+        }
+
+        private bool TryGetDateJobs(out Job dateLeadJob, out Job dateFollowJob)
+        {
+            if (JoyUtility.EnjoyableOutsideNow(pawn))
+            {
+                if (TryFindMostBeautifulRootInDistance(40, pawn, TargetPawn, out IntVec3 root))
+                {
+                    if (TryFindUnforbiddenDatePath(pawn, TargetPawn, root, out List<IntVec3> list))
+                    {
+                        //Create date lead job
+                        dateLeadJob = new Job(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead);
+                        //Add the path info to the job info
+                        Log.Message("Date walk path found.");
+                        dateLeadJob.targetQueueB = new List<LocalTargetInfo>();
+                        for (int i = 1; i < list.Count; i++)
+                        {
+                            dateLeadJob.targetQueueB.Add(list[i]);
+                        }
+                        //Wander along path
+                        dateLeadJob.locomotionUrgency = LocomotionUrgency.Amble;
+                        //Add the target pawn to the job info
+                        dateLeadJob.targetA = TargetPawn;
+
+                        //Create date follow job, with wander and actor info
+                        dateFollowJob = new Job(IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow)
+                        {
+                            locomotionUrgency = LocomotionUrgency.Amble,
+                            targetA = Actor
+                        };
+                        return true;
+                    }
+                }
+            }
+            //There can only be three targets for a job and one of them needs to be the other pawn
+            //So rework this to output just a building, and make a double bed a possibility
+            //A is the partner, B is the tv, C is the chair
+            //else if (TryFindTelevision(out Building television, out IntVec3 p1Cell, out IntVec3 p2Cell, out Building p1Chair, out Building p2Chair))
+            //{
+            //    dateLeadJob = JobMaker.MakeJob(RomanceDefOf.JobDateMovie, television, p1Cell, p1Chair);
+            //    dateLeadJob.locomotionUrgency = LocomotionUrgency.Walk;
+            //    dateFollowJob = JobMaker.MakeJob(RomanceDefOf.JobDateMovie, television, p2Cell, p2Chair);
+            //    dateFollowJob.locomotionUrgency = LocomotionUrgency.Walk;
+            //    return true;
+            //}
+            //else if (DoesBeerExist())
+            //{
+            //}
+            //else if (FoodAndTableAvailable())
+            //{
+            //}
+
+            dateLeadJob = null;
+            dateFollowJob = null;
+            return false;
+        }
+
         //No idea how this works
         private bool TryFindUnforbiddenDatePath(Pawn p1, Pawn p2, IntVec3 root, out List<IntVec3> result)
         {
             int StartRadialIndex = GenRadial.NumCellsInRadius(14f);
             int EndRadialIndex = GenRadial.NumCellsInRadius(2f);
             int RadialIndexStride = 3;
-            List<IntVec3> intVec3s = new List<IntVec3> {root};
+            List<IntVec3> intVec3s = new List<IntVec3> { root };
             IntVec3 intVec3 = root;
             for (int i = 0; i < 8; i++)
             {
@@ -118,16 +176,6 @@ namespace BetterRomance
             return true;
         }
 
-        private bool IsTargetPawnOkay()
-        {
-            return !TargetPawn.Dead && !TargetPawn.Downed;
-        }
-
-        private bool DoesTargetPawnAcceptDate()
-        {
-            return RomanceUtilities.IsPawnFree(TargetPawn) && ((IsDate && RomanceUtilities.IsDateAppealing(TargetPawn, Actor)) || (!IsDate && RomanceUtilities.IsHangoutAppealing(TargetPawn, Actor)));
-        }
-
         //No idea how this works either
         private bool TryFindMostBeautifulRootInDistance(int distance, Pawn p1, Pawn p2, out IntVec3 best)
         {
@@ -152,8 +200,8 @@ namespace BetterRomance
             else
             {
                 List<IntVec3> list2 = (from c in list
-                    orderby BeautyUtility.AverageBeautyPerceptible(c, p1.Map) descending
-                    select c).ToList();
+                                       orderby BeautyUtility.AverageBeautyPerceptible(c, p1.Map) descending
+                                       select c).ToList();
                 best = list2.FirstOrDefault();
                 list2.Reverse();
                 Log.Message("Date walk destinations found from beauty " + BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " + BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
@@ -163,56 +211,32 @@ namespace BetterRomance
             return result;
         }
 
-        private bool TryGetDateType(out Job dateLeadJob, out Job dateFollowJob)
-        {
-            if (JoyUtility.EnjoyableOutsideNow(pawn))
-            {
-                if (TryFindMostBeautifulRootInDistance(40, pawn, TargetPawn, out IntVec3 root))
-                {
-                    if (TryFindUnforbiddenDatePath(pawn, TargetPawn, root, out List<IntVec3> list))
-                    {
-                        activity = TypeOfDate.Walk;
-                        //Create date lead job
-                        dateLeadJob = new Job(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead);
-                        //Add the path info to the job info
-                        Log.Message("Date walk path found.");
-                        dateLeadJob.targetQueueB = new List<LocalTargetInfo>();
-                        for (int i = 1; i < list.Count; i++)
-                        {
-                            dateLeadJob.targetQueueB.Add(list[i]);
-                        }
-                        //Wander along path
-                        dateLeadJob.locomotionUrgency = LocomotionUrgency.Amble;
-                        //Add the target pawn to the job info
-                        dateLeadJob.targetA = TargetPawn;
-
-                        //Create date follow job, with wander and actor info
-                        dateFollowJob = new Job(IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow)
-                        {
-                            locomotionUrgency = LocomotionUrgency.Amble,
-                            targetA = Actor
-                        };
-                        return true;
-                    }
-                }
-            }
-            //else if (IsTelevisionFree())
-            //{
-            //    activity = TypeOfDate.Movie;
-            //}
-            //else if (DoesBeerExist())
-            //{
-            //    activity = TypeOfDate.Drinking;
-            //}
-            //else if (FoodAndTableAvailable())
-            //{
-            //    activity = TypeOfDate.Walk;
-            //}
-
-            dateLeadJob = null;
-            dateFollowJob = null;
-            return false;
-        }
+        //private bool TryFindTelevision(out Building television, out IntVec3 p1Cell, out IntVec3 p2Cell, out Building p1Chair, out Building p2Chair)
+        //{
+        //    List<ThingDef> tvDefs = DefDatabase<JoyGiverDef>.GetNamed("WatchTelevision").thingDefs;
+        //    IEnumerable<Building> possibleTelevisions = Actor.Map.listerBuildings.allBuildingsColonist.Where(tv => tvDefs.Contains(tv.def) && DateUtility.CanInteractWith(Actor, tv) && DateUtility.CanInteractWith(TargetPawn, tv));
+        //    foreach(Building tv in possibleTelevisions)
+        //    {
+        //        if (WatchBuildingUtility.TryFindBestWatchCell(tv, Actor, true, out IntVec3 watchCell1, out Building chair1))
+        //        {
+        //            if (DateUtility.TryFindBestWatchCellNear(tv, TargetPawn, chair1, true, out IntVec3 watchCell2, out Building chair2))
+        //            {
+        //                television = tv;
+        //                p1Cell = watchCell1;
+        //                p2Cell = watchCell2;
+        //                p1Chair = chair1;
+        //                p2Chair = chair2;
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    television = null;
+        //    p1Cell = IntVec3.Invalid;
+        //    p2Cell = IntVec3.Invalid;
+        //    p1Chair = null;
+        //    p2Chair = null;
+        //    return false;
+        //}
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
@@ -284,7 +308,7 @@ namespace BetterRomance
                             return;
                         }
                         //If no date activities were found, end the toil
-                        if (!TryGetDateType(out Job leadJob, out Job followJob))
+                        if (!TryGetDateJobs(out Job leadJob, out Job followJob))
                         {
                             return;
                         }

@@ -41,6 +41,15 @@
     <joyXpPerTick>0.004</joyXpPerTick>
     <joyKind>Social</joyKind>
   </JobDef>
+	<!--<JobDef>
+		<defName>JobDateMovie</defName>
+		<driverClass>BetterRomance.JobDriver_JobDateMovie</driverClass>
+		<reportString>watching television with TargetB.</reportString>
+		<joyDuration>4000</joyDuration>
+		<joyMaxParticipants>2</joyMaxParticipants>
+		<joyKind>Television</joyKind>
+		<allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+	</JobDef>-->
 	
 	<!--Copy of above with different labels-->
 	<JobDef>
