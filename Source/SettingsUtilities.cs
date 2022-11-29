@@ -337,8 +337,6 @@ namespace BetterRomance
             return result;
         }
 
-
-
         //Biotech Settings
         public static BiotechSettings GetBiotechSettings(Pawn pawn)
         {

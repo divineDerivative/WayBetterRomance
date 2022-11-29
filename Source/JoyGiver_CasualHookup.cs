@@ -46,7 +46,7 @@ namespace BetterRomance
                     comp = pawn.TryGetComp<Comp_PartnerList>();
                     if (comp == null)
                     {
-                        Log.Error("Unable to add Comp_HookupList");
+                        Log.Error("Unable to add Comp_PartnerList");
                     }
                 }
                 Pawn partner = comp.GetPartner(true);
