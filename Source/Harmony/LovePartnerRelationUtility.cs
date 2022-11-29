@@ -30,6 +30,20 @@ namespace BetterRomance.HarmonyPatches
                 __result = 0f;
                 return false;
             }
+            //Don't generate relations for pawns that grew up in the colony
+            if (ModsConfig.BiotechActive)
+            {
+                if (generated?.records != null && generated.records.GetValue(RecordDefOf.TimeAsChildInColony) > 0f)
+                {
+                    __result = 0f;
+                    return false;
+                }
+                if (other?.records != null && other.records.GetValue(RecordDefOf.TimeAsChildInColony) > 0f)
+                {
+                    __result = 0f;
+                    return false;
+                }
+            }
             //Not reducing chances to 0, but significantly lowering if gender and sexuality do not match
             float sexualityFactor = 1f;
             if (generated.RaceProps.Humanlike && generated.story.traits.HasTrait(TraitDefOf.Asexual))
