@@ -44,7 +44,8 @@ namespace BetterRomance.HarmonyPatches
                     return false;
                 }
             }
-            //Not reducing chances to 0, but significantly lowering if gender and sexuality do not match
+            //Removing wrong orientation matches for randomly generated relationships, since this is used for both spouses and lovers
+            //Do not allow if gender and sexuality do not match
             float sexualityFactor = 1f;
             if (generated.RaceProps.Humanlike && generated.IsAsexual())
             {
@@ -55,14 +56,16 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (other.gender != generated.gender)
                 {
-                    sexualityFactor *= 0.01f;
+                    __result = 0f;
+                    return false;
                 }
             }
             else if (generated.RaceProps.Humanlike && generated.GetOrientation() == Orientation.Hetero)
             {
                 if (other.gender == generated.gender)
                 {
-                    sexualityFactor *= 0.01f;
+                    __result = 0f;
+                    return false;
                 }
             }
 
