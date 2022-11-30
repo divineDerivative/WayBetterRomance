@@ -11,7 +11,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static bool Prefix(Pawn pawn, ref Job __result)
         {
-            if (pawn.story.traits.HasTrait(TraitDefOf.Asexual))
+            if (pawn.IsAsexual())
             {
                 __result = null;
                 return false;

@@ -52,24 +52,24 @@ namespace BetterRomance.HarmonyPatches
                 crossSpecies = ___pawn.AlienLoveChance() / 100;
             }
             //Not reducing chances to 0, but lowering if gender and sexuality do not match
-            //Changing this to what's in romance attempt success chance and then removing it from there
+            ___pawn.EnsureTraits();
             float sexualityFactor = 1f;
-            if ( ___pawn.story?.traits?.HasTrait(TraitDefOf.Asexual) ?? false)
+            if ( ___pawn.IsAsexual())
             {
-                sexualityFactor = ___pawn.AsexualRating() /2;
+                sexualityFactor *= ___pawn.AsexualRating() /2;
             }
-            if ( ___pawn.story?.traits?.HasTrait(TraitDefOf.Gay) ?? false)
+            if ( ___pawn.GetOrientation() == Orientation.Homo)
             {
                 if (otherPawn.gender != ___pawn.gender)
                 {
-                    sexualityFactor = 0.125f;
+                    sexualityFactor *= 0.125f;
                 }
             }
-            if (___pawn.story?.traits?.HasTrait(RomanceDefOf.Straight) ?? false)
+            if (___pawn.GetOrientation() == Orientation.Hetero)
             {
                 if (otherPawn.gender == ___pawn.gender)
                 {
-                    sexualityFactor = 0.125f;
+                    sexualityFactor *= 0.125f;
                 }
             }
             

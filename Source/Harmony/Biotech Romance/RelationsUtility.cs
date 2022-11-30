@@ -78,7 +78,7 @@ namespace BetterRomance.HarmonyPatches
                                 foundTraitDefOf = true;
                                 break;
                             }
-                            
+
                         }
                     }
                 }
@@ -91,14 +91,14 @@ namespace BetterRomance.HarmonyPatches
             return codes.AsEnumerable();
         }
     }
-    
+
     [HarmonyPatch(typeof(RelationsUtility), "RomanceEligiblePair")]
     public static class RelationsUtility_RomanceEligiblePair
     {
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> MinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach(CodeInstruction instruction in instructions)
+            foreach (CodeInstruction instruction in instructions)
             {
                 if (instruction.Is(OpCodes.Ldc_R4, 16f))
                 {
@@ -126,7 +126,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (!foundStart && codes[i].opcode == OpCodes.Ldarg_1)
                 {
-                    if (codes[i+1].opcode == OpCodes.Ldarg_0)
+                    if (codes[i + 1].opcode == OpCodes.Ldarg_0)
                     {
                         startIndex = i - 1;
                         foundStart = true;
@@ -134,7 +134,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else if (foundStart && !foundEnd && codes[i].opcode == OpCodes.Brtrue_S)
                 {
-                    endIndex = i -1;
+                    endIndex = i - 1;
                     foundEnd = true;
                 }
             }
@@ -152,23 +152,21 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Pawn pawn, Gender gender, ref bool __result)
         {
             pawn.EnsureTraits();
-            Pawn_StoryTracker story = pawn.story;
-            if (story != null)
+            if (pawn.story != null)
             {
-                //This is true for now since they are biromantic
-                if (story.traits.HasTrait(TraitDefOf.Asexual))
+                if (pawn.GetOrientation() == Orientation.None)
                 {
-                    __result = true;
+                    __result = false;
                 }
-                else if (story.traits.HasTrait(TraitDefOf.Gay))
+                else if (pawn.GetOrientation() == Orientation.Homo)
                 {
                     __result = pawn.gender == gender;
                 }
-                else if (story.traits.HasTrait(RomanceDefOf.Straight))
+                else if (pawn.GetOrientation() == Orientation.Hetero)
                 {
                     __result = pawn.gender != gender;
                 }
-                else if (story.traits.HasTrait(TraitDefOf.Bisexual))
+                else if (pawn.GetOrientation() == Orientation.Bi)
                 {
                     __result = true;
                 }

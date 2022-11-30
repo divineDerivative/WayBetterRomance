@@ -63,21 +63,21 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //If genders are incorrect for initiator's sexuality, do not allow
-            if (initiator.gender == recipient.gender && initiator.story.traits.HasTrait(RomanceDefOf.Straight))
+            if (initiator.gender == recipient.gender && initiator.GetOrientation() == Orientation.Hetero)
             {
                 __result = 0f;
                 return false;
             }
-            if (initiator.gender != recipient.gender && initiator.story.traits.HasTrait(TraitDefOf.Gay))
+            if (initiator.gender != recipient.gender && initiator.GetOrientation() == Orientation.Homo)
             {
                 __result = 0f;
                 return false;
             }
             //If they are asexual and sex repulsed, do not allow unless partner is also asexual
             //Not sure about this
-            if (initiator.story.traits.HasTrait(TraitDefOf.Asexual) && initiator.AsexualRating() < 0.2f)
+            if (initiator.IsAsexual() && initiator.AsexualRating() < 0.2f)
             {
-                if (!recipient.story.traits.HasTrait(TraitDefOf.Asexual))
+                if (!recipient.IsAsexual())
                 {
                     __result = 0f;
                     return false;
@@ -134,21 +134,21 @@ namespace BetterRomance.HarmonyPatches
             //If they don't have a sexuality trait, assign one.
             recipient.EnsureTraits();
             //If pawns are the wrong gender, they will not accept
-            if (initiator.gender == recipient.gender && recipient.story.traits.HasTrait(RomanceDefOf.Straight))
+            if (initiator.gender == recipient.gender && recipient.GetOrientation() == Orientation.Hetero)
             {
                 __result = 0f;
                 return;
             }
-            if (initiator.gender != recipient.gender && recipient.story.traits.HasTrait(TraitDefOf.Gay))
+            if (initiator.gender != recipient.gender && recipient.GetOrientation() == Orientation.Homo)
             {
                 __result = 0f;
                 return;
             }
             //If pawn is asexual and sex repulsed, they will only accept from another asexual pawn
             //Not sure about this
-            if (recipient.story.traits.HasTrait(TraitDefOf.Asexual) && recipient.AsexualRating() < 0.2f)
+            if (recipient.IsAsexual() && recipient.AsexualRating() < 0.2f)
             {
-                if (!initiator.story.traits.HasTrait(TraitDefOf.Asexual))
+                if (!initiator.IsAsexual())
                 {
                     __result = 0f;
                     return;

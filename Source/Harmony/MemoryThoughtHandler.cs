@@ -15,7 +15,7 @@ namespace BetterRomance.HarmonyPatches
 
             if (newThought.def == ThoughtDefOf.GotSomeLovin)
             {
-                if (___pawn.story.traits.HasTrait(TraitDefOf.Asexual))
+                if (___pawn.IsAsexual())
                 {
                     Thought_MemorySocial replacementThought = (Thought_MemorySocial)ThoughtMaker.MakeThought(RomanceDefOf.GotSomeLovinAsexual);
                     if ((___pawn.health != null && ___pawn.health.hediffSet != null && ___pawn.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) || (otherPawn.health != null && otherPawn.health.hediffSet != null && otherPawn.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)))

@@ -6,13 +6,55 @@
     <degreeDatas>
       <li>
         <label>straight</label>
-        <description>{PAWN_nameDef} is romantically attracted to people of the opposite gender.</description>
+        <description>{PAWN_nameDef} is romantically and sexually attracted to people of the opposite gender.</description>
       </li>
     </degreeDatas>
     <exclusionTags>
       <li>SexualOrientation</li>
     </exclusionTags>
   </TraitDef>
+
+	<TraitDef>
+		<defName>HeteroAce</defName>
+		<commonality>0</commonality>
+		<degreeDatas>
+			<li>
+				<label>asexual (hetero)</label>
+				<description>{PAWN_nameDef} is uninterested in sexual engagements, but is romantically attracted to people of the opposite gender.</description>
+			</li>
+		</degreeDatas>
+		<exclusionTags>
+			<li>SexualOrientation</li>
+		</exclusionTags>
+	</TraitDef>
+
+	<TraitDef>
+		<defName>HomoAce</defName>
+		<commonality>0</commonality>
+		<degreeDatas>
+			<li>
+				<label>asexual (homo)</label>
+				<description>{PAWN_nameDef} is uninterested in sexual engagements, but is romantically attracted to people of {PAWN_possessive} own gender.</description>
+			</li>
+		</degreeDatas>
+		<exclusionTags>
+			<li>SexualOrientation</li>
+		</exclusionTags>
+	</TraitDef>
+
+	<TraitDef>
+		<defName>BiAce</defName>
+		<commonality>0</commonality>
+		<degreeDatas>
+			<li>
+				<label>asexual (bi)</label>
+				<description>{PAWN_nameDef} is uninterested in sexual engagements, but is romantically attracted to people regardless of gender.</description>
+			</li>
+		</degreeDatas>
+		<exclusionTags>
+			<li>SexualOrientation</li>
+		</exclusionTags>
+	</TraitDef>
 	
   <TraitDef>
     <defName>Faithful</defName>

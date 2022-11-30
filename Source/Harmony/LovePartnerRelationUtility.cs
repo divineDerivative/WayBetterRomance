@@ -46,22 +46,23 @@ namespace BetterRomance.HarmonyPatches
             }
             //Not reducing chances to 0, but significantly lowering if gender and sexuality do not match
             float sexualityFactor = 1f;
-            if (generated.RaceProps.Humanlike && generated.story.traits.HasTrait(TraitDefOf.Asexual))
+            if (generated.RaceProps.Humanlike && generated.IsAsexual())
             {
-                sexualityFactor = Mathf.Min(generated.AsexualRating() + 0.01f, 1f);
+                sexualityFactor = generated.AsexualRating();
             }
-            else if (generated.RaceProps.Humanlike && generated.story.traits.HasTrait(TraitDefOf.Gay))
+            //Separate now that asexuality is a spectrum
+            if (generated.RaceProps.Humanlike && generated.GetOrientation() == Orientation.Homo)
             {
                 if (other.gender != generated.gender)
                 {
-                    sexualityFactor = 0.01f;
+                    sexualityFactor *= 0.01f;
                 }
             }
-            else if (generated.RaceProps.Humanlike && generated.story.traits.HasTrait(RomanceDefOf.Straight))
+            else if (generated.RaceProps.Humanlike && generated.GetOrientation() == Orientation.Hetero)
             {
                 if (other.gender == generated.gender)
                 {
-                    sexualityFactor = 0.01f;
+                    sexualityFactor *= 0.01f;
                 }
             }
 

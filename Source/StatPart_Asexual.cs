@@ -7,7 +7,7 @@ namespace BetterRomance
     {
         private bool ActiveFor(Pawn pawn)
         {
-            if (pawn.story.traits.HasTrait(TraitDefOf.Asexual))
+            if (pawn.IsAsexual())
             {
                 return true;
             }

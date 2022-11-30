@@ -195,7 +195,7 @@ namespace BetterRomance
                 return false;
             }
             //Asexual pawns below a certain rating will only agree to sex with existing partners
-            if (target.story.traits.HasTrait(TraitDefOf.Asexual) && target.AsexualRating() < 0.5f)
+            if (target.IsAsexual() && target.AsexualRating() < 0.5f)
             {
                 if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
                 {
@@ -267,7 +267,7 @@ namespace BetterRomance
         public static bool WillPawnTryHookup(Pawn pawn)
         {
             //Sex repulsed asexual pawns will never agree to sex
-            if (pawn.story.traits.HasTrait(TraitDefOf.Asexual) && pawn.AsexualRating() < 0.2f)
+            if (pawn.IsAsexual() && pawn.AsexualRating() < 0.2f)
             {
                 return false;
             }
@@ -481,6 +481,44 @@ namespace BetterRomance
             return rating;
         }
 
+        public static Orientation GetOrientation(this Pawn pawn)
+        {
+            if (pawn.story != null && pawn.story.traits != null)
+            {
+                TraitSet traits = pawn.story.traits;
+                if (traits.HasTrait(TraitDefOf.Gay) || traits.HasTrait(RomanceDefOf.HomoAce))
+                {
+                    return Orientation.Homo;
+                }
+                else if (traits.HasTrait(RomanceDefOf.Straight) || traits.HasTrait(RomanceDefOf.HeteroAce))
+                {
+                    return Orientation.Hetero;
+                }
+                else if (traits.HasTrait(TraitDefOf.Bisexual) || traits.HasTrait(RomanceDefOf.BiAce))
+                {
+                    return Orientation.Bi;
+                }
+                else if (traits.HasTrait(TraitDefOf.Asexual))
+                {
+                    return Orientation.None;
+                }
+            }
+            return Orientation.None;
+        }
+
+        public static bool IsAsexual(this Pawn pawn)
+        {
+            if (pawn.story != null && pawn.story.traits != null)
+            {
+                TraitSet traits = pawn.story.traits;
+                if (traits.HasTrait(TraitDefOf.Asexual) || traits.HasTrait(RomanceDefOf.BiAce) || traits.HasTrait(RomanceDefOf.HeteroAce) || traits.HasTrait(RomanceDefOf.HomoAce))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Generates points for the lovin age curve based on age settings
         /// </summary>
@@ -500,5 +538,24 @@ namespace BetterRomance
             };
             return new SimpleCurve(points);
         }
+
+        public static readonly List<TraitDef> OrientationTraits = new List<TraitDef>()
+        {
+            TraitDefOf.Gay,
+            TraitDefOf.Bisexual,
+            RomanceDefOf.Straight,
+            TraitDefOf.Asexual,
+            RomanceDefOf.HeteroAce,
+            RomanceDefOf.HomoAce,
+            RomanceDefOf.BiAce,
+        };
+    }
+
+    public enum Orientation
+    {
+        Homo,
+        Hetero,
+        Bi,
+        None,
     }
 }

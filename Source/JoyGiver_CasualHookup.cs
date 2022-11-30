@@ -13,7 +13,7 @@ namespace BetterRomance
         public override Job TryGiveJob(Pawn pawn)
         {
             //Asexual pawns will never initiate sex
-            if (pawn.story.traits.HasTrait(TraitDefOf.Asexual))
+            if (pawn.IsAsexual())
             {
                 return null;
             }

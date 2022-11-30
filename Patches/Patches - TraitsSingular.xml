@@ -1,9 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Patch>
-  <Operation Class="PatchOperationReplace">
-    <xpath>Defs/TraitDef[defName = "Gay" or defName = "Bisexual" or defName = "Asexual"]/commonality</xpath>
-    <value>
-      <commonality>0</commonality>
-    </value>
-  </Operation>
+
+	<!--Change commonality to 0-->
+	<Operation Class="PatchOperationReplace">
+		<xpath>Defs/TraitDef[defName = "Gay" or defName = "Bisexual" or defName = "Asexual"]/commonality</xpath>
+		<value>
+			<commonality>0</commonality>
+		</value>
+	</Operation>
+
 </Patch>

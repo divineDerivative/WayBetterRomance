@@ -26,11 +26,12 @@ namespace BetterRomance
         public static ThoughtDef RebuffedMyDateAttempt;
         public static ThoughtDef RebuffedMyHangoutAttempt;
         public static ThoughtDef FailedHangoutAttemptOnMe;
-        public static TraitDef Asexual;
-        public static TraitDef Bisexual;
         public static TraitDef Faithful;
         public static TraitDef Philanderer;
         public static TraitDef Straight;
+        public static TraitDef HeteroAce;
+        public static TraitDef HomoAce;
+        public static TraitDef BiAce;
         public static InteractionDef TriedHookupWith;
         public static InteractionDef AskedForDate;
         public static InteractionDef AskedForHangout;

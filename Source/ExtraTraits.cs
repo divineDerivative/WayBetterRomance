@@ -10,13 +10,14 @@ namespace BetterRomance
             //Don't give orientation to kids, hopefully
             if (pawn.DevelopmentalStage.Adult())
             {
-                if (!pawn.story.traits.HasTrait(TraitDefOf.Asexual) &&
-                !pawn.story.traits.HasTrait(TraitDefOf.Bisexual) &&
-                !pawn.story.traits.HasTrait(TraitDefOf.Gay) &&
-                !pawn.story.traits.HasTrait(RomanceDefOf.Straight))
+                foreach (var trait in pawn.story.traits.allTraits)
                 {
-                    AssignOrientation(pawn);
+                    if (RomanceUtilities.OrientationTraits.Contains(trait.def))
+                    {
+                        return;
+                    }
                 }
+                AssignOrientation(pawn);
             }
         }
         public static void AssignOrientation(Pawn pawn)
@@ -64,24 +65,56 @@ namespace BetterRomance
                     return;
                 }
                 //Asexual chance
-                if (orientation < asexualChance / 100)
+                if (orientation < asexualChance / 100f)
                 {
                     if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
                     {
                         pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
                     }
+                    //Need to roll again to determine romantic orientation
                     else
                     {
-                        pawn.story.traits.GainTrait(new Trait(TraitDefOf.Asexual));
+                        if (mightBeGay)
+                        {
+                            pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HomoAce));
+                        }
+                        else if (mightBeStraight)
+                        {
+                            pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HeteroAce));
+                        }
+                        else
+                        {
+                            float romantic = Rand.Value;
+                            //Asexual chance
+                            if (romantic < asexualChance / 100f)
+                            {
+                                pawn.story.traits.GainTrait(new Trait(TraitDefOf.Asexual));
+                            }
+                            //Bisexual chance
+                            else if (romantic < (asexualChance + bisexualChance) / 100f)
+                            {
+                                pawn.story.traits.GainTrait(new Trait(RomanceDefOf.BiAce));
+                            }
+                            //Gay chance
+                            else if (romantic < (asexualChance + bisexualChance + gayChance) / 100f)
+                            {
+                                pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HomoAce));
+                            }
+                            //Straight chance
+                            else
+                            {
+                                pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HeteroAce));
+                            }
+                        }
                     }
                 }
                 //Bisexual chance
-                else if (orientation < (asexualChance + bisexualChance) / 100)
+                else if (orientation < (asexualChance + bisexualChance) / 100f)
                 {
                     pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
                 }
                 //Gay chance
-                else if (orientation < (asexualChance + bisexualChance + gayChance) / 100)
+                else if (orientation < (asexualChance + bisexualChance + gayChance) / 100f)
                 {
                     if (mightBeStraight)
                     {
