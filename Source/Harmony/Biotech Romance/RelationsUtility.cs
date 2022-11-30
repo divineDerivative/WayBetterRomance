@@ -144,6 +144,44 @@ namespace BetterRomance.HarmonyPatches
             }
             return codes.AsEnumerable();
         }
+        [HarmonyDebug]
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> OpinionTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            int startIndex = -1;
+            int endIndex = -1;
+            bool foundStart = false;
+            bool foundEnd = false;
+
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+
+            for (var i = 0; i < codes.Count; i++)
+            {
+                if (!foundStart && codes[i].opcode == OpCodes.Ldarg_1)
+                {
+                    if (codes[i + 1].opcode == OpCodes.Ldfld && codes[i + 2].opcode == OpCodes.Ldarg_0)
+                    {
+                        foundStart = true;
+                        yield return new CodeInstruction(OpCodes.Ldarg_0) { labels = codes[i].ExtractLabels() };
+                        yield return codes[i + 1];
+                        yield return new CodeInstruction(OpCodes.Ldarg_1);
+                        yield return codes[i + 3];
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
+                        yield return new CodeInstruction(OpCodes.Conv_I4);
+                        i += 4;
+                    }
+                    else
+                    {
+                        yield return codes[i];
+                    }
+                }
+                else
+                {
+                    yield return codes[i];
+                }
+            }
+        }
     }
 
     [HarmonyPatch(typeof(RelationsUtility), "AttractedToGender")]
