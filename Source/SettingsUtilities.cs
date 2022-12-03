@@ -393,5 +393,21 @@ namespace BetterRomance
                 };
             }
         }
+        public static int GetGrowthMoment(Pawn pawn, int index)
+        {
+            if (Settings.HARActive)
+            {
+                int[] array = HAR_Integration.GetGrowthMoments(pawn);
+                if (array != null)
+                {
+                    return array[index];
+                }
+            }
+            else if (index == 2)
+            {
+                return (int)pawn.ageTracker.AdultMinAge;
+            }
+            return GrowthUtility.GrowthMomentAges[index];
+        }
     }
 }

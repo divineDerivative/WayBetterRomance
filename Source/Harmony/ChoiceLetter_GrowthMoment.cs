@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RimWorld;
-using Verse;
 using HarmonyLib;
 using System.Reflection.Emit;
 using System.Reflection;
@@ -23,7 +19,8 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Ldfld, pawn);
-                    yield return CodeInstruction.Call(typeof(ChoiceLetter_GrowthMoment_MakeChoices), nameof(ChoiceLetter_GrowthMoment_MakeChoices.GetLastGrowthMoment));
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_2);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMoment));
                 }
                 else
                 {
@@ -31,18 +28,32 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
+    }
 
-        private static int GetLastGrowthMoment(Pawn pawn)
+    [HarmonyPatch(typeof(ChoiceLetter_GrowthMoment), "CacheLetterText")]
+    public static class ChoiceLetter_GrowthMoment_CacheLetterText
+    {
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            //if (Settings.HARActive)
-            //{
-            //    int[] array = HAR_Integration.GetGrowthMoments(pawn);
-            //    if (array != null)
-            //    {
-            //        return array[2];
-            //    }
-            //}
-            return (int)pawn.ageTracker.AdultMinAge;
+            FieldInfo GrowthMomentAges = AccessTools.Field(typeof(GrowthUtility), nameof(GrowthUtility.GrowthMomentAges));
+
+            List<CodeInstruction> codes = instructions.ToList();
+
+            for (int i = 0; i < codes.Count; i++)
+            {
+                if (codes[i].LoadsField(GrowthMomentAges))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.LoadField(typeof(ChoiceLetter_GrowthMoment), nameof(ChoiceLetter_GrowthMoment.pawn));
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMoment));
+                    i += 2;
+                }
+                else
+                {
+                    yield return codes[i];
+                }
+            }
         }
     }
 }

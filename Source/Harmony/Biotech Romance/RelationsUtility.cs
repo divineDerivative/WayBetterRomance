@@ -144,7 +144,7 @@ namespace BetterRomance.HarmonyPatches
             }
             return codes.AsEnumerable();
         }
-        [HarmonyDebug]
+
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> OpinionTranspiler(IEnumerable<CodeInstruction> instructions)
         {
