@@ -53,6 +53,12 @@ namespace BetterRomance.HarmonyPatches
             }
             //Not reducing chances to 0, but lowering if gender and sexuality do not match
             ___pawn.EnsureTraits();
+            //Don't allow for ace/aro
+            if (___pawn.GetOrientation() == Orientation.None)
+            {
+                __result = 0f;
+                return false;
+            }
             float sexualityFactor = 1f;
             if ( ___pawn.IsAsexual())
             {

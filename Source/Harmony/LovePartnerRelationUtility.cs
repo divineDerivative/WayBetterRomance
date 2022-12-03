@@ -52,7 +52,12 @@ namespace BetterRomance.HarmonyPatches
                 sexualityFactor = generated.AsexualRating();
             }
             //Separate now that asexuality is a spectrum
-            if (generated.RaceProps.Humanlike && generated.GetOrientation() == Orientation.Homo)
+            if (generated.RaceProps.Humanlike && generated.GetOrientation() == Orientation.None)
+            {
+                __result = 0f;
+                return false;
+            }
+            else if (generated.RaceProps.Humanlike && generated.GetOrientation() == Orientation.Homo)
             {
                 if (other.gender != generated.gender)
                 {

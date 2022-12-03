@@ -73,6 +73,12 @@ namespace BetterRomance.HarmonyPatches
                 __result = 0f;
                 return false;
             }
+            //Don't allow for ace/aro pawns
+            if (initiator.GetOrientation() == Orientation.None)
+            {
+                __result = 0f;
+                return false;
+            }
             //If they are asexual and sex repulsed, do not allow unless partner is also asexual
             //Not sure about this
             if (initiator.IsAsexual() && initiator.AsexualRating() < 0.2f)
@@ -140,6 +146,12 @@ namespace BetterRomance.HarmonyPatches
                 return;
             }
             if (initiator.gender != recipient.gender && recipient.GetOrientation() == Orientation.Homo)
+            {
+                __result = 0f;
+                return;
+            }
+            //Don't allow for ace/aro pawns
+            if (initiator.GetOrientation() == Orientation.None)
             {
                 __result = 0f;
                 return;

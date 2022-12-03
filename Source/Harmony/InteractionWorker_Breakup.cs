@@ -29,6 +29,10 @@ namespace BetterRomance.HarmonyPatches
             {
                 __result *= 2f;
             }
+            if (initiator.GetOrientation() == Orientation.None)
+            {
+                __result *= 2f;
+            }
             if (initiator.IsAsexual() && !recipient.IsAsexual())
             {
                 __result *= 1.5f;
