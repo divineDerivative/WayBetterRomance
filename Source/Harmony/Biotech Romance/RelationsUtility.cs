@@ -148,10 +148,7 @@ namespace BetterRomance.HarmonyPatches
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> OpinionTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            int startIndex = -1;
-            int endIndex = -1;
             bool foundStart = false;
-            bool foundEnd = false;
 
             List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
 

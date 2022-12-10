@@ -47,33 +47,35 @@ namespace BetterRomance.HarmonyPatches
             //Removing wrong orientation matches for randomly generated relationships, since this is used for both spouses and lovers
             //Do not allow if gender and sexuality do not match
             float sexualityFactor = 1f;
-            if (generated.RaceProps.Humanlike && generated.IsAsexual())
+            if (generated.RaceProps.Humanlike)
             {
-                sexualityFactor = generated.AsexualRating();
-            }
-            //Separate now that asexuality is a spectrum
-            if (generated.RaceProps.Humanlike && generated.GetOrientation() == Orientation.None)
-            {
-                __result = 0f;
-                return false;
-            }
-            else if (generated.RaceProps.Humanlike && generated.GetOrientation() == Orientation.Homo)
-            {
-                if (other.gender != generated.gender)
+                if (generated.IsAsexual())
+                {
+                    sexualityFactor = generated.AsexualRating();
+                }
+                //Separate now that asexuality is a spectrum
+                if (generated.GetOrientation() == Orientation.None)
                 {
                     __result = 0f;
                     return false;
                 }
-            }
-            else if (generated.RaceProps.Humanlike && generated.GetOrientation() == Orientation.Hetero)
-            {
-                if (other.gender == generated.gender)
+                else if (generated.GetOrientation() == Orientation.Homo)
                 {
-                    __result = 0f;
-                    return false;
+                    if (other.gender != generated.gender)
+                    {
+                        __result = 0f;
+                        return false;
+                    }
+                }
+                else if (generated.GetOrientation() == Orientation.Hetero)
+                {
+                    if (other.gender == generated.gender)
+                    {
+                        __result = 0f;
+                        return false;
+                    }
                 }
             }
-
             float exFactor = 1f;
             //Reduce chances of generating an ex relation for each existing ex relation
             if (ex)

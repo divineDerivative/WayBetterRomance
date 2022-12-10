@@ -5,7 +5,6 @@
     <defName>LeadHookup</defName>
     <driverClass>BetterRomance.JobDriver_LeadHookup</driverClass>
     <reportString>attempting hookup.</reportString>
-    <joyDuration>4000</joyDuration>
     <joyMaxParticipants>1</joyMaxParticipants>
     <joyKind>Lewd</joyKind>
   </JobDef>
@@ -16,6 +15,7 @@
     <joySkill>Social</joySkill>
     <joyXpPerTick>0.004</joyXpPerTick>
     <joyKind>Lewd</joyKind>
+	  <joyGainRate>3</joyGainRate>
   </JobDef>
 	
 	<!--Dates-->
