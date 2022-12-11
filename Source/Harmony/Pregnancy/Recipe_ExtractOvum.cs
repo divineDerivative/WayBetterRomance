@@ -24,7 +24,8 @@ namespace BetterRomance.HarmonyPatches
 
             for (int i = 0; i < codes.Count; i++)
             {
-                if (codes[i].opcode == OpCodes.Ldarg_0)
+                CodeInstruction instruction = codes[i];
+                if (instruction.opcode == OpCodes.Ldarg_0)
                 {
                     if (codes[i+1].LoadsField(recipe) && codes[i+2].LoadsField(minAllowedAge))
                     {
@@ -35,12 +36,12 @@ namespace BetterRomance.HarmonyPatches
                     }
                     else
                     {
-                        yield return codes[i];
+                        yield return instruction;
                     }
                 }
                 else
                 {
-                    yield return codes[i];
+                    yield return instruction;
                 }
             }
         }

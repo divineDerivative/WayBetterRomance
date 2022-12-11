@@ -41,7 +41,8 @@ namespace BetterRomance.HarmonyPatches
 
             for (int i = 0; i < codes.Count; i++)
             {
-                if (codes[i].LoadsField(GrowthMomentAges))
+                CodeInstruction instruction = codes[i];
+                if (instruction.LoadsField(GrowthMomentAges))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(typeof(ChoiceLetter_GrowthMoment), nameof(ChoiceLetter_GrowthMoment.pawn));
@@ -51,7 +52,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else
                 {
-                    yield return codes[i];
+                    yield return instruction;
                 }
             }
         }

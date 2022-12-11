@@ -15,7 +15,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach ( CodeInstruction instruction in instructions)
+            foreach (CodeInstruction instruction in instructions)
             {
                 if (instruction.Is(OpCodes.Ldc_I4, 16))
                 {

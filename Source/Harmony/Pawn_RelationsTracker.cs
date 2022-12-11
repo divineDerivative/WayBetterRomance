@@ -127,7 +127,7 @@ namespace BetterRomance.HarmonyPatches
         {
             FieldInfo def = AccessTools.Field(typeof(Thing), nameof(Thing.def));
 
-            foreach (var instruction in instructions)
+            foreach (CodeInstruction instruction in instructions)
             {
                 if (instruction.Is(OpCodes.Ldc_R4, 20f))
                 {
