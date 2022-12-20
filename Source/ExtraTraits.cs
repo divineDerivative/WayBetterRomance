@@ -64,9 +64,11 @@ namespace BetterRomance
                     pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
                     return;
                 }
+
                 //Asexual chance
                 if (orientation < asexualChance / 100f)
                 {
+                    
                     if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
                     {
                         pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
@@ -74,6 +76,24 @@ namespace BetterRomance
                     //Need to roll again to determine romantic orientation
                     else
                     {
+                        //Set up romantic orientation chances
+                        float aceAroChance = BetterRomanceMod.settings.aceAroChance;
+                        float aceBiChance = BetterRomanceMod.settings.aceBiChance;
+                        float aceHomoChance = BetterRomanceMod.settings.aceHomoChance;
+                        float aceHeteroChance = BetterRomanceMod.settings.aceHeteroChance;
+
+                        if (pawn.kindDef.HasModExtension<SexualityChances>())
+                        {
+                            aceAroChance = pawn.kindDef.GetModExtension<SexualityChances>().aceAroChance;
+                            aceBiChance = pawn.kindDef.GetModExtension<SexualityChances>().aceBiChance;
+                            aceHomoChance = pawn.kindDef.GetModExtension<SexualityChances>().aceHomoChance;
+                        }
+                        else if (pawn.def.HasModExtension<SexualityChances>())
+                        {
+                            aceAroChance = pawn.def.GetModExtension<SexualityChances>().aceAroChance;
+                            aceBiChance = pawn.def.GetModExtension<SexualityChances>().aceBiChance;
+                            aceHomoChance = pawn.def.GetModExtension<SexualityChances>().aceHomoChance;
+                        }
                         if (mightBeGay)
                         {
                             pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HomoAce));
@@ -86,17 +106,17 @@ namespace BetterRomance
                         {
                             float romantic = Rand.Value;
                             //Asexual chance
-                            if (romantic < asexualChance / 100f)
+                            if (romantic < aceAroChance / 100f)
                             {
                                 pawn.story.traits.GainTrait(new Trait(TraitDefOf.Asexual));
                             }
                             //Bisexual chance
-                            else if (romantic < (asexualChance + bisexualChance) / 100f)
+                            else if (romantic < (aceAroChance + aceBiChance) / 100f)
                             {
                                 pawn.story.traits.GainTrait(new Trait(RomanceDefOf.BiAce));
                             }
                             //Gay chance
-                            else if (romantic < (asexualChance + bisexualChance + gayChance) / 100f)
+                            else if (romantic < (aceAroChance + aceBiChance + aceHomoChance) / 100f)
                             {
                                 pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HomoAce));
                             }

@@ -11,13 +11,18 @@ namespace BetterRomance
         public float bisexualChance = 50f;
         public float gayChance = 20f;
         public float straightChance = 20f;
+
+        public float aceAroChance = 10f;
+        public float aceBiChance = 50f;
+        public float aceHomoChance = 20f;
+        public float aceHeteroChance = 20f;
+
         public float dateRate = 100f;
         public float hookupRate = 100f;
         public float cheatChance = 100f;
         public float alienLoveChance = 33f;
         public float minOpinionRomance = 5f;
         public float minOpinionHookup = 5f;
-        
 
         //These are not set by the user
         public static bool HARActive = false;
@@ -29,6 +34,12 @@ namespace BetterRomance
             Scribe_Values.Look(ref bisexualChance, "bisexualChance", 50.0f);
             Scribe_Values.Look(ref gayChance, "gayChance", 20.0f);
             Scribe_Values.Look(ref straightChance, "straightChance", 20.0f);
+
+            Scribe_Values.Look(ref asexualChance, "aceAroChance", 10.0f);
+            Scribe_Values.Look(ref bisexualChance, "acebiChance", 50.0f);
+            Scribe_Values.Look(ref gayChance, "aceHomoChance", 20.0f);
+            Scribe_Values.Look(ref straightChance, "aceHeteroChance", 20.0f);
+
             Scribe_Values.Look(ref dateRate, "dateRate", 100.0f);
             Scribe_Values.Look(ref hookupRate, "hookupRate", 100.0f);
             Scribe_Values.Look(ref alienLoveChance, "alienLoveChance", 33.0f);
@@ -65,11 +76,7 @@ namespace BetterRomance
                 ColumnWidth = canvas.width / 2f - 17f
             };
             list.Begin(canvas);
-            //Text.Font = GameFont.Tiny;
-            //list.Label("WBR.Overview".Translate());
-            //Text.Font = GameFont.Small;
-
-            DrawCustomLeft(list);
+            DrawBaseSexualityChance(list);
             list.Gap();
             if (list.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
             {
@@ -78,6 +85,17 @@ namespace BetterRomance
                 settings.gayChance = 20f;
                 settings.straightChance = 20f;
             }
+
+            DrawAceOrientationChance(list);
+            list.Gap();
+            if (list.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
+            {
+                settings.aceAroChance = 10f;
+                settings.aceBiChance = 50f;
+                settings.aceHomoChance = 20f;
+                settings.aceHeteroChance = 20f;
+            }
+
             list.NewColumn();
             DrawCustomRight(list);
             list.Gap();
@@ -112,7 +130,7 @@ namespace BetterRomance
             height = section.CurHeight;
         }
 
-        private static void DrawCustomLeft(Listing_Standard listing)
+        private static void DrawBaseSexualityChance(Listing_Standard listing)
         {
             Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.OrentationHeading".Translate(), tooltip: "WBR.OrentationHeadingTip".Translate());
             list.Label("WBR.StraightChance".Translate() + "  " + (int)settings.straightChance + "%", tooltip: "WBR.StraightChanceTip".Translate());
@@ -135,6 +153,32 @@ namespace BetterRomance
             }
             settings.asexualChance = 100 - (int)settings.straightChance - (int)settings.bisexualChance - (int)settings.gayChance;
             list.Label("WBR.AsexualChance".Translate() + "  " + settings.asexualChance + "%", tooltip: "WBR.AsexualChanceTip".Translate());
+            DrawCustomSectionEnd(listing, list, out sectionHeightOrientation);
+        }
+
+        private static void DrawAceOrientationChance(Listing_Standard listing)
+        {
+            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.AceOrentationHeading".Translate(), tooltip: "WBR.AceOrentationHeadingTip".Translate());
+            list.Label("WBR.AceHeteroChance".Translate() + "  " + (int)settings.aceHeteroChance + "%", tooltip: "WBR.AceHeteroChanceTip".Translate());
+            settings.aceHeteroChance = list.Slider(settings.aceHeteroChance, 0f, 100.99f);
+            if (settings.aceHeteroChance > 100.99f - settings.aceBiChance - settings.aceHomoChance)
+            {
+                settings.aceHeteroChance = 100.99f - settings.aceBiChance - settings.aceHomoChance;
+            }
+            list.Label("WBR.AceBiChance".Translate() + "  " + (int)settings.aceBiChance + "%", tooltip: "WBR.AceBiChanceTip".Translate());
+            settings.aceBiChance = list.Slider(settings.aceBiChance, 0f, 100.99f);
+            if (settings.aceBiChance > 100.99f - settings.aceHeteroChance - settings.aceHomoChance)
+            {
+                settings.aceBiChance = 100.99f - settings.aceHeteroChance - settings.aceHomoChance;
+            }
+            list.Label("WBR.AceHomoChance".Translate() + "  " + (int)settings.aceHomoChance + "%", tooltip: "WBR.AceHomoChanceTip".Translate());
+            settings.aceHomoChance = list.Slider(settings.aceHomoChance, 0f, 100.99f);
+            if (settings.aceHomoChance > 100.99f - settings.aceHeteroChance - settings.aceBiChance)
+            {
+                settings.aceHomoChance = 100.99f - settings.aceHeteroChance - settings.aceBiChance;
+            }
+            settings.aceAroChance = 100 - (int)settings.aceHeteroChance - (int)settings.aceBiChance - (int)settings.aceHomoChance;
+            list.Label("WBR.AceAroChance".Translate() + "  " + settings.aceAroChance + "%", tooltip: "WBR.AceAroChanceTip".Translate());
             DrawCustomSectionEnd(listing, list, out sectionHeightOrientation);
         }
 

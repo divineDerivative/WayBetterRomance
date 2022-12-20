@@ -12,12 +12,31 @@ namespace BetterRomance
         public float gayChance;
         public float straightChance;
 
+        public float aceAroChance;
+        public float aceBiChance;
+        public float aceHomoChance;
+        public float aceHeteroChance;
+
         public override IEnumerable<string> ConfigErrors()
         {
-            if (asexualChance + bisexualChance + gayChance + straightChance > 100.99)
+            if (asexualChance + bisexualChance + gayChance + straightChance != 100f)
             {
                 //Do math here to reset rates?
-                yield return "Sexuality chances cannot total more than 100";
+                yield return "Sexuality chances must add up to 100";
+            }
+            if (aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance != 100f)
+            {
+                //Do math here to reset rates?
+                yield return "Asexual romantic orientation chances must add up to 100";
+            }
+            //If not set, default to orientation chances
+            if (aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance == 0f)
+            {
+                Log.Warning("Romantic orientation chances for asexual pawns not found. Defaulting to match sexual orientation chances.");
+                aceAroChance = asexualChance;
+                aceBiChance = bisexualChance;
+                aceHomoChance = gayChance;
+                aceHeteroChance = straightChance;
             }
         }
     }
