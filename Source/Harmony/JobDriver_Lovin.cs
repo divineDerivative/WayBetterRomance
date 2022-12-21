@@ -7,20 +7,19 @@ using Verse;
 
 namespace BetterRomance.HarmonyPatches
 {
-    //Let HAR go first so I can patch his transpiler
-    //Otherwise transpile to use age settings to generate the lovin curve
+    //Let HAR go first so my curve can be passed to his helper
     [HarmonyPatch(typeof(JobDriver_Lovin), "GenerateRandomMinTicksToNextLovin")]
     [HarmonyAfter(new string[] { "rimworld.erdelf.alien_race.main" })]
     public static class JobDriver_Lovin_GenerateRandomMinTicksToNextLovin
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            FieldInfo ageCurveInfo = AccessTools.Field(typeof(JobDriver_Lovin), "LovinIntervalHoursFromAgeCurve");
+            FieldInfo LovinIntervalHoursFromAgeCurve = AccessTools.Field(typeof(JobDriver_Lovin), "LovinIntervalHoursFromAgeCurve");
 
             foreach (CodeInstruction instruction in instructions)
             {
-                //Don't do anything if HAR is active, since the first part of this will still be true
-                if (instruction.LoadsField(ageCurveInfo) && !Settings.HARActive)
+                //If HAR is active, this will put my curve in place of humanDefault, which is only used if lovinIntervalHoursFromAge is not set
+                if (instruction.LoadsField(LovinIntervalHoursFromAgeCurve))
                 {
                     //Because the instruction I'm replacing is used as a jump to point, the new instruction needs to have the same label as the old one
                     CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);

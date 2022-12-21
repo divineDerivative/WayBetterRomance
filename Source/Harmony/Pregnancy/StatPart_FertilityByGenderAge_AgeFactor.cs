@@ -14,6 +14,13 @@ namespace BetterRomance.HarmonyPatches
     {
         public static bool Prefix(Pawn pawn, ref float __result)
         {
+            if (Settings.HARActive)
+            {
+                if (HAR_Integration.FertilityCurveExists(pawn))
+                {
+                    return true;
+                }
+            }
             SimpleCurve curve = new SimpleCurve(pawn.GetFertilityAgeCurve());
             __result = curve.Evaluate(pawn.ageTracker.AgeBiologicalYearsFloat);
             return false;

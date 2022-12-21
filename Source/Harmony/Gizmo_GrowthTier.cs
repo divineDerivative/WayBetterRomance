@@ -35,7 +35,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos), MethodType.Enumerator)]
     public static class Pawn_GetGizmos
     {
-        [HarmonyDebug]
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> codes = instructions.ToList();

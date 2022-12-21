@@ -19,20 +19,6 @@ namespace BetterRomance
         {
             Harmony harmony = new Harmony(id: "rimworld.divineDerivative.HARinterference");
             harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), typeof(AlienRace.HarmonyPatches).GetMethod("CompatibilityWithPostfix"));
-            harmony.Patch(AccessTools.Method(typeof(AlienRace.HarmonyPatches), nameof(AlienRace.HarmonyPatches.LovinInterval)), prefix: new HarmonyMethod(typeof(HARPatches), nameof(HARPatches.LovinInternalPrefix)));
-        }
-
-        public static bool LovinInternalPrefix(SimpleCurve humanDefault, Pawn pawn, ref SimpleCurve __result)
-        {
-            if (pawn.def is ThingDef_AlienRace alienProps)
-            {
-                __result = alienProps.alienRace.generalSettings.lovinIntervalHoursFromAge ?? pawn.GetLovinCurve();
-            }
-            else
-            {
-                __result = pawn.GetLovinCurve();
-            }
-            return false;
         }
     }
 }

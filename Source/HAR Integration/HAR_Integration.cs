@@ -35,5 +35,18 @@ namespace BetterRomance
         {
             return (pawn.def as ThingDef_AlienRace)?.alienRace.generalSettings.growthAges?.ToArray();
         }
+
+        public static bool FertilityCurveExists(Pawn pawn)
+        {
+            if (!(pawn.def is ThingDef_AlienRace alienRace))
+            {
+                return false;
+            }
+            if (pawn.gender != Gender.Female)
+            {
+                return alienRace.alienRace.generalSettings.reproduction.maleFertilityAgeFactor != null;
+            }
+            return alienRace.alienRace.generalSettings.reproduction.femaleFertilityAgeFactor != null;
+        }
     }
 }
