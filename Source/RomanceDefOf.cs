@@ -43,6 +43,7 @@ namespace BetterRomance
         public static RulePackDef DateFailed;
         public static RulePackDef HangoutSucceeded;
         public static RulePackDef HangoutFailed;
+        public static FleckDef FriendHeart;
 
         static RomanceDefOf()
         {

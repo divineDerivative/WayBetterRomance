@@ -71,7 +71,7 @@
 	<InteractionDef>
 		<defName>AskedForHangout</defName>
 		<label>hangout attempt</label>
-		<symbol>Things/Mote/SpeechSymbols/Romance</symbol>
+		<symbol>Motes/HeartIcon</symbol>
 		<initiatorXpGainSkill>Social</initiatorXpGainSkill>
 		<initiatorXpGainAmount>10</initiatorXpGainAmount>
 		<logRulesInitiator>

@@ -259,7 +259,7 @@ namespace BetterRomance
             AskOut.initAction = delegate
             {
                 ticksLeftThisToil = 50;
-                FleckMaker.ThrowMetaIcon(GetActor().Position, GetActor().Map, FleckDefOf.Heart);
+                FleckMaker.ThrowMetaIcon(GetActor().Position, GetActor().Map, IsDate ? FleckDefOf.Heart : RomanceDefOf.FriendHeart);
             };
             yield return AskOut;
             //Start new toil
@@ -274,7 +274,7 @@ namespace BetterRomance
                     if (successfulPass)
                     {
                         //Make hearts and add correct string to the log
-                        FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.Heart);
+                        FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, IsDate ? FleckDefOf.Heart : RomanceDefOf.FriendHeart);
                         list.Add(IsDate ? RomanceDefOf.DateSucceeded : RomanceDefOf.HangoutSucceeded);
                     }
                     else
