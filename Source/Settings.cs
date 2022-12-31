@@ -45,7 +45,7 @@ namespace BetterRomance
             Scribe_Values.Look(ref alienLoveChance, "alienLoveChance", 33.0f);
             Scribe_Values.Look(ref minOpinionRomance, "minOpinionRomance", 5.0f);
             Scribe_Values.Look(ref cheatChance, "cheatChance", 100.0f);
-            Scribe_Values.Look(ref minOpinionHookup, "minOpinionHookup", 5.0f);
+            Scribe_Values.Look(ref minOpinionHookup, "minOpinionHookup", 0f);
         }
     }
 
@@ -107,7 +107,7 @@ namespace BetterRomance
                 settings.alienLoveChance = 33f;
                 settings.minOpinionRomance = 5f;
                 settings.cheatChance = 100f;
-                settings.minOpinionHookup = 5f;
+                settings.minOpinionHookup = 0f;
             }
             list.End();
         }
