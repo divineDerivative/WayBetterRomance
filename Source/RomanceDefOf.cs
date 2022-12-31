@@ -43,8 +43,14 @@ namespace BetterRomance
         public static RulePackDef HangoutSucceeded;
         public static RulePackDef HangoutFailed;
         public static FleckDef FriendHeart;
+        [MayRequirePersonalityM2]
+        public static ThoughtDef SP_PassionateLovin;
         public static ThoughtDef LovinAsexualPositive;
         public static ThoughtDef LovinAsexualNegative;
+        [MayRequirePersonalityM2]
+        public static ThoughtDef PassionateLovinAsexualPositive;
+        [MayRequirePersonalityM2]
+        public static ThoughtDef PassionateLovinAsexualNegative;
 
         static RomanceDefOf()
         {

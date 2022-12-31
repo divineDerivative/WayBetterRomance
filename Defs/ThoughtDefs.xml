@@ -192,4 +192,38 @@
 		</stages>
 	</ThoughtDef>
 
+	<ThoughtDef MayRequire="hahkethomemah.simplepersonalities.module2">
+		<defName>PassionateLovinAsexualPositive</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<requiredTraits>
+			<li>Asexual</li>
+		</requiredTraits>
+		<durationDays>3</durationDays>
+		<stackLimit>5</stackLimit>
+		<stackedEffectMultiplier>0.75</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>got some passionate lovin'</label>
+				<description>It was more intense than usual, which was nice.</description>
+			</li>
+		</stages>
+	</ThoughtDef>
+	
+	<ThoughtDef MayRequire="hahkethomemah.simplepersonalities.module2">
+		<defName>PassionateLovinAsexualNegative</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<requiredTraits>
+			<li>Asexual</li>
+		</requiredTraits>
+		<durationDays>3</durationDays>
+		<stackLimit>5</stackLimit>
+		<stackedEffectMultiplier>0.75</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>got some passionate lovin'</label>
+				<description>It was more intense than usual, which was terrible.</description>
+			</li>
+		</stages>
+	</ThoughtDef>
+	
 </Defs>

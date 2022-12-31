@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>1-2-3 Personalities M2</li>
+		</mods>
+		<!-- SP_PassionateLovin and SP_PassionateLovinOneNightStand -->
+		<match Class="PatchOperationSequence">
+			<operations>
+				<!--Duration from 3 to 2 days-->
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/durationDays</xpath>
+					<value>
+						<durationDays>2</durationDays>
+					</value>
+				</li>
+				<!--Stack limit from 10 to 5-->
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/stackLimit</xpath>
+					<value>
+						<stackLimit>5</stackLimit>
+					</value>
+				</li>
+				<!--Mood offset from 8 to 10-->
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/stages/li[1]/baseMoodEffect</xpath>
+					<value>
+						<baseMoodEffect>10</baseMoodEffect>
+					</value>
+				</li>
+				<!--Opinion offset from 6 to 10-->
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/stages/li[1]/baseOpinionOffset</xpath>
+					<value>
+						<baseOpinionOffset>10</baseOpinionOffset>
+					</value>
+				</li>
+				<!--Remove from asexual pawns-->
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/nullifyingTraits</xpath>
+					<match Class="PatchOperationAdd">
+						<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/nullifyingTraits</xpath>
+						<value>
+							<li>Asexual</li>
+						</value>
+					</match>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]</xpath>
+						<value>
+							<nullifyingTraits>
+								<li>Asexual</li>
+							</nullifyingTraits>
+						</value>
+					</nomatch>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+
+</Patch>

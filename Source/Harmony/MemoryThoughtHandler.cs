@@ -30,6 +30,25 @@ namespace BetterRomance.HarmonyPatches
                     return true;
                 }
             }
+            //This thought is from 123 Personalities M2
+            else if (newThought.def == RomanceDefOf.SP_PassionateLovin)
+            {
+                if (___pawn.IsAsexual())
+                {
+                    int moodOffset = (int)GenMath.LerpDouble(0f, 1f, -10f, 10f, ___pawn.AsexualRating());
+                    float opinionOffset = GenMath.LerpDouble(0f, 1f, -8f, 8f, ___pawn.AsexualRating());
+                    Thought_MemorySocial replacementThought = ThoughtMaker.MakeThought((moodOffset < 0) ? RomanceDefOf.PassionateLovinAsexualNegative : RomanceDefOf.PassionateLovinAsexualPositive) as Thought_MemorySocial;
+
+                    if ((___pawn.health != null && ___pawn.health.hediffSet != null && ___pawn.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) || (otherPawn.health != null && otherPawn.health.hediffSet != null && otherPawn.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)))
+                    {
+                        replacementThought.moodPowerFactor = 1.5f;
+                    }
+                    replacementThought.moodOffset = moodOffset;
+                    replacementThought.opinionOffset = opinionOffset;
+                    newThought = replacementThought;
+                    return true;
+                }
+            }
             return true;
         }
     }

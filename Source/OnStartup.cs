@@ -33,4 +33,11 @@ namespace BetterRomance
             : base("erdelf.humanoidalienraces")
         { }
     }
+
+    public class MayRequirePersonalityM2Attribute : MayRequireAttribute
+    {
+        public MayRequirePersonalityM2Attribute()
+            : base("hahkethomemah.simplepersonalities.module2")
+        { }
+    }
 }
