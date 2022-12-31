@@ -54,6 +54,11 @@ namespace BetterRomance
                     {
                         continue;
                     }
+                    //Skip if prisoner status is not the same
+                    else if (pawn.IsPrisoner != p.IsPrisoner)
+                    {
+                        continue;
+                    }
                     //For hookup check romance factor, for date check opinion
                     else if ((pawn.relations.SecondaryRomanceChanceFactor(p) > num && hookup) || (pawn.relations.OpinionOf(p) > num && !hookup))
                     {

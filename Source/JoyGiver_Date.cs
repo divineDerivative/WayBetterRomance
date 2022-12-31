@@ -16,6 +16,11 @@ namespace BetterRomance
             {
                 return null;
             }
+            //Prisoners usually can't go outside and all they have to do is talk to each other anyways
+            else if (pawn.IsPrisoner)
+            {
+                return null;
+            }
             //Generate random number and check against date rate setting
             else if (100f * Rand.Value > BetterRomanceMod.settings.dateRate / 2)
             {
