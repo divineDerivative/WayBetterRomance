@@ -72,7 +72,8 @@ namespace BetterRomance
                         list.Add(RomanceDefOf.HookupSucceeded);
                     }
                     else
-                    {//Remove the person from the list here
+                    {
+                        //Remove the person from the list here
                         //Make ! mote, add rebuffed memories, and add correct string to the log
                         FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.IncapIcon);
                         Actor.needs.mood.thoughts.memories.TryGainMemory(RomanceDefOf.RebuffedMyHookupAttempt, TargetPawn);

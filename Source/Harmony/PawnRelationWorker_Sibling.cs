@@ -74,51 +74,39 @@ namespace BetterRomance.HarmonyPatches
                     if (instruction.OperandIs(14f))
                     {
                         //Because the instruction I'm replacing is used as a jump to point, the new instruction needs to have the same label as the old one
-                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
-                        newInstruction.MoveLabelsFrom(instruction);
-                        yield return newInstruction;
+                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         //Since Gender is an enum, I need to load the value of Male, which is 1
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender)});
                     }
                     else if (instruction.OperandIs(16f))
                     {
-                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
-                        newInstruction.MoveLabelsFrom(instruction);
-                        yield return newInstruction;
+                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         //Since Gender is an enum, I need to load the value of Female, which is 2
                         yield return new CodeInstruction(OpCodes.Ldc_I4_2);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
                     }
                     else if (instruction.OperandIs(50f))
                     {
-                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
-                        newInstruction.MoveLabelsFrom(instruction);
-                        yield return newInstruction;
+                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
                     }
                     else if (instruction.OperandIs(45f))
                     {
-                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
-                        newInstruction.MoveLabelsFrom(instruction);
-                        yield return newInstruction;
+                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         yield return new CodeInstruction(OpCodes.Ldc_I4_2);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
                     }
                     else if (instruction.OperandIs(30f))
                     {
-                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
-                        newInstruction.MoveLabelsFrom(instruction);
-                        yield return newInstruction;
+                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
                     }
                     else if (instruction.OperandIs(27f))
                     {
-                        CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
-                        newInstruction.MoveLabelsFrom(instruction);
-                        yield return newInstruction;
+                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         yield return new CodeInstruction(OpCodes.Ldc_I4_2);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
                     }

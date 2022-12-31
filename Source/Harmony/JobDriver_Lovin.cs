@@ -22,9 +22,7 @@ namespace BetterRomance.HarmonyPatches
                 if (instruction.LoadsField(LovinIntervalHoursFromAgeCurve))
                 {
                     //Because the instruction I'm replacing is used as a jump to point, the new instruction needs to have the same label as the old one
-                    CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldarg_1);
-                    newInstruction.MoveLabelsFrom(instruction);
-                    yield return newInstruction;
+                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                     yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetLovinCurve));
                 }
                 else

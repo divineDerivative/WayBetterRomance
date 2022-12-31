@@ -1,97 +1,97 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-  
+
 	<!--Hookups-->
-  <ThoughtDef>
-    <defName>RebuffedMyHookupAttempt</defName>
-    <thoughtClass>Thought_MemorySocial</thoughtClass>
-    <durationDays>5.0</durationDays>
-    <stackLimit>300</stackLimit>
-    <stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
-    <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
-    <stages>
-      <li>
-        <label>turned me down</label>
-        <baseOpinionOffset>-5</baseOpinionOffset>
-      </li>
-    </stages>
-    <thoughtToMake>RebuffedMyHookupAttemptMood</thoughtToMake>
-  </ThoughtDef>
-  
-  <ThoughtDef>
-    <defName>RebuffedMyHookupAttemptMood</defName>
-    <durationDays>2.5</durationDays>
-    <stackLimit>10</stackLimit>
-    <stackedEffectMultiplier>0.9</stackedEffectMultiplier>
-    <stages>
-      <li>
-        <label>turned down by {0}</label>
-        <description>What, am I not pretty enough for a tumble??</description>
-        <baseMoodEffect>-1</baseMoodEffect>
-      </li>
-    </stages>
-  </ThoughtDef>
-  
-  <ThoughtDef>
-    <defName>FailedHookupAttemptOnMe</defName>
-    <thoughtClass>Thought_MemorySocial</thoughtClass>
-    <durationDays>5.0</durationDays>
-    <stackLimit>300</stackLimit>
-    <stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
-    <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
-    <stages>
-      <li>
-        <label>had to turn them down</label>
-        <baseOpinionOffset>-3</baseOpinionOffset>
-      </li>
-    </stages>
-  </ThoughtDef>
+	<ThoughtDef>
+		<defName>RebuffedMyHookupAttempt</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<durationDays>5.0</durationDays>
+		<stackLimit>300</stackLimit>
+		<stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
+		<stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>turned me down</label>
+				<baseOpinionOffset>-5</baseOpinionOffset>
+			</li>
+		</stages>
+		<thoughtToMake>RebuffedMyHookupAttemptMood</thoughtToMake>
+	</ThoughtDef>
+
+	<ThoughtDef>
+		<defName>RebuffedMyHookupAttemptMood</defName>
+		<durationDays>2.5</durationDays>
+		<stackLimit>10</stackLimit>
+		<stackedEffectMultiplier>0.9</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>turned down by {0}</label>
+				<description>What, am I not pretty enough for a tumble??</description>
+				<baseMoodEffect>-1</baseMoodEffect>
+			</li>
+		</stages>
+	</ThoughtDef>
+
+	<ThoughtDef>
+		<defName>FailedHookupAttemptOnMe</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<durationDays>5.0</durationDays>
+		<stackLimit>300</stackLimit>
+		<stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
+		<stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>had to turn them down</label>
+				<baseOpinionOffset>-3</baseOpinionOffset>
+			</li>
+		</stages>
+	</ThoughtDef>
 
 	<!--Dates-->
-  <ThoughtDef>
-    <defName>RebuffedMyDateAttempt</defName>
-    <thoughtClass>Thought_MemorySocial</thoughtClass>
-    <durationDays>5.0</durationDays>
-    <stackLimit>300</stackLimit>
-    <stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
-    <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
-    <stages>
-      <li>
-        <label>turned down my date</label>
-        <baseOpinionOffset>-3</baseOpinionOffset>
-      </li>
-    </stages>
-    <thoughtToMake>RebuffedMyDateAttemptMood</thoughtToMake>
-  </ThoughtDef>
+	<ThoughtDef>
+		<defName>RebuffedMyDateAttempt</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<durationDays>5.0</durationDays>
+		<stackLimit>300</stackLimit>
+		<stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
+		<stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>turned down my date</label>
+				<baseOpinionOffset>-3</baseOpinionOffset>
+			</li>
+		</stages>
+		<thoughtToMake>RebuffedMyDateAttemptMood</thoughtToMake>
+	</ThoughtDef>
 
-  <ThoughtDef>
-    <defName>RebuffedMyDateAttemptMood</defName>
-    <durationDays>2.5</durationDays>
-    <stackLimit>10</stackLimit>
-    <stackedEffectMultiplier>0.9</stackedEffectMultiplier>
-    <stages>
-      <li>
-        <label>turned down by {0}</label>
-        <description>What, can't even give me a chance??</description>
-        <baseMoodEffect>-1</baseMoodEffect>
-      </li>
-    </stages>
-  </ThoughtDef>
+	<ThoughtDef>
+		<defName>RebuffedMyDateAttemptMood</defName>
+		<durationDays>2.5</durationDays>
+		<stackLimit>10</stackLimit>
+		<stackedEffectMultiplier>0.9</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>turned down by {0}</label>
+				<description>What, can't even give me a chance??</description>
+				<baseMoodEffect>-1</baseMoodEffect>
+			</li>
+		</stages>
+	</ThoughtDef>
 
-  <ThoughtDef>
-    <defName>FailedDateAttemptOnMe</defName>
-    <thoughtClass>Thought_MemorySocial</thoughtClass>
-    <durationDays>5.0</durationDays>
-    <stackLimit>300</stackLimit>
-    <stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
-    <stackedEffectMultiplier>0.5</stackedEffectMultiplier>
-    <stages>
-      <li>
-        <label>had to turn down for a date</label>
-        <baseOpinionOffset>-2</baseOpinionOffset>
-      </li>
-    </stages>
-  </ThoughtDef>
+	<ThoughtDef>
+		<defName>FailedDateAttemptOnMe</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<durationDays>5.0</durationDays>
+		<stackLimit>300</stackLimit>
+		<stackLimitForSameOtherPawn>5</stackLimitForSameOtherPawn>
+		<stackedEffectMultiplier>0.5</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>had to turn down for a date</label>
+				<baseOpinionOffset>-2</baseOpinionOffset>
+			</li>
+		</stages>
+	</ThoughtDef>
 
 	<!--Hangouts-->
 	<ThoughtDef>
@@ -139,21 +139,22 @@
 		</stages>
 	</ThoughtDef>
 
-	<!--Lovin-->
-  <ThoughtDef>
-    <defName>GotSomeLovinAsexual</defName>
-    <thoughtClass>Thought_MemorySocial</thoughtClass>
-    <requiredTraits>
-      <li>Asexual</li>
-    </requiredTraits>
-    <durationDays>3</durationDays>
-    <stackLimit>5</stackLimit>
-    <stackedEffectMultiplier>0.75</stackedEffectMultiplier>
-    <stages>
-      <li>
-        <label>got some lovin'</label>
-        <description>Had sex while asexual.</description>
-      </li>
-    </stages>
-  </ThoughtDef>
+	<!--Asexual Lovin'-->
+	<ThoughtDef>
+		<defName>GotSomeLovinAsexual</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<requiredTraits>
+			<li>Asexual</li>
+		</requiredTraits>
+		<durationDays>3</durationDays>
+		<stackLimit>5</stackLimit>
+		<stackedEffectMultiplier>0.75</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>got some lovin'</label>
+				<description>Had sex while asexual.</description>
+			</li>
+		</stages>
+	</ThoughtDef>
+	
 </Defs>

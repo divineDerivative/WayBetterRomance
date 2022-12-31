@@ -170,7 +170,7 @@ namespace BetterRomance
                             cheatOn = p;
                         }
                     }
-                    if (Rand.Value *(BetterRomanceMod.settings.cheatChance/100f) < opinionFactor)
+                    if (Rand.Value * (BetterRomanceMod.settings.cheatChance / 100f) < opinionFactor)
                     {
                         return false;
                     }
@@ -296,7 +296,7 @@ namespace BetterRomance
         /// <returns><see langword="false"/> if <paramref name="pawn"/> is close to needing to eat/sleep, there's enemies nearby, they're drafted, in labor, in a mental break, or they're doing a job that should not be interrupted.</returns>
         public static bool IsPawnFree(Pawn pawn)
         {
-            if (PawnUtility.WillSoonHaveBasicNeed(pawn) || PawnUtility.EnemiesAreNearby(pawn) || pawn.Drafted )
+            if (PawnUtility.WillSoonHaveBasicNeed(pawn) || PawnUtility.EnemiesAreNearby(pawn) || pawn.Drafted)
             {
                 return false;
             }

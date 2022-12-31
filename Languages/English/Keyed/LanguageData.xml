@@ -27,7 +27,7 @@
 	<WBR.AlienLoveChance>Modifier for Cross-Species Romance:</WBR.AlienLoveChance>
 	<WBR.AlienLoveChanceTip>This slider determines how likely pawns are to be romantically interested in pawns of other species. (Obviously, the setting only matters if you're actually playing with alien races in your game.) If set to 100%, pawns will be just as likely to attempt to romance members of alien species as to romance members of their own species. If set to 0%, cross-species romances will never occur.</WBR.AlienLoveChanceTip>
 	<WBR.DateRate>Base Rate at Which Pawns Will Propose Dates and Hangouts:</WBR.DateRate>
-	<WBR.DateRateTip>Relative frequency for dates. Please note that since this is a recreation activity, the actual frequency will depend on the availability of other recreation activities. Bored pawns will propose dates/hangouts more often. Set to 0% to disable dates and hanouts entirely.</WBR.DateRateTip>
+	<WBR.DateRateTip>Relative frequency for dates. Please note that since this is a recreation activity, the actual frequency will depend on the availability of other recreation activities. Bored pawns will propose dates/hangouts more often. Set to 0% to disable dates and hangouts entirely.</WBR.DateRateTip>
 	<WBR.HookupRate>Base Rate at Which Pawns Will Propose Hookups:</WBR.HookupRate>
 	<WBR.HookupRateTip>Relative frequency for hookups. Please note that since this is a recreation activity, the actual frequency will depend on the availability of other recreation activities. Bored pawns will propose hookups more often. Set to 0% to disable hookups entirely.</WBR.HookupRateTip>
 	<WBR.MinOpinionRomance>Minimum Opinion for Romance Attempts:</WBR.MinOpinionRomance>

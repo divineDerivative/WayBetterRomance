@@ -393,6 +393,7 @@ namespace BetterRomance
                 };
             }
         }
+
         public static int GetGrowthMoment(Pawn pawn, int index)
         {
             if (Settings.HARActive)
