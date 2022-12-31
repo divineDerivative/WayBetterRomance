@@ -28,21 +28,7 @@ namespace BetterRomance
             }
             else
             {
-                Comp_PartnerList comp = pawn.TryGetComp<Comp_PartnerList>();
-                if (comp == null)
-                {
-                    FieldInfo field = AccessTools.Field(typeof(ThingWithComps), "comps");
-                    List<ThingComp> compList = (List<ThingComp>)field.GetValue(pawn);
-                    ThingComp newComp = (ThingComp)Activator.CreateInstance(typeof(Comp_PartnerList));
-                    newComp.parent = pawn;
-                    compList.Add(newComp);
-                    newComp.Initialize(new CompProperties_PartnerList());
-                    comp = pawn.TryGetComp<Comp_PartnerList>();
-                    if (comp == null)
-                    {
-                        Log.Error("Unable to add Comp_PartnerList");
-                    }
-                }
+                pawn.CheckForPartnerComp(out Comp_PartnerList comp);
                 Pawn partner = comp.GetPartner(false);
                 //Checks on if a partner was found and is available
                 if (partner == null || !partner.Spawned || !partner.Awake())

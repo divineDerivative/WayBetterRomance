@@ -1,6 +1,8 @@
+using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -568,6 +570,29 @@ namespace BetterRomance
             RomanceDefOf.HomoAce,
             RomanceDefOf.BiAce,
         };
+
+        public static void CheckForPartnerComp(this Pawn p, out Comp_PartnerList comp)
+        {
+            comp = p.TryGetComp<Comp_PartnerList>();
+            if (comp == null)
+            {
+                FieldInfo field = AccessTools.Field(typeof(ThingWithComps), "comps");
+                List<ThingComp> compList = (List<ThingComp>)field.GetValue(p);
+                ThingComp newComp = (ThingComp)Activator.CreateInstance(typeof(Comp_PartnerList));
+                newComp.parent = p;
+                compList.Add(newComp);
+                newComp.Initialize(new CompProperties_PartnerList());
+                comp = p.TryGetComp<Comp_PartnerList>();
+                if (comp == null)
+                {
+                    Log.Error("Unable to add Comp_PartnerList");
+                }
+                else
+                {
+                    Log.Message("Partner comp added to " + p.Name);
+                }
+            }
+        }
     }
 
     public enum Orientation
