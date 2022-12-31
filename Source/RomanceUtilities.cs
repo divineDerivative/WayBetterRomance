@@ -42,7 +42,7 @@ namespace BetterRomance
                 //For a date we can start at zero since we're looking at opinion instead of romance factor
                 float num = hookup ? 0.15f : 0f;
                 Pawn tempPawn = null;
-                foreach (Pawn p in pawn.Map.mapPawns.FreeColonistsSpawned)
+                foreach (Pawn p in GetAllSpawnedHumanlikesOnMap(pawn.Map))
                 {
                     //Skip them if they're already in the list, or they share a bed if it's a hookup
                     if (result.Contains(p) || pawn == p || (DoWeShareABed(pawn, p) && hookup))
@@ -467,6 +467,20 @@ namespace BetterRomance
                         num = pawn.relations.OpinionOf(rel.otherPawn);
                         result = rel.otherPawn;
                     }
+                }
+            }
+            return result;
+        }
+
+        public static List<Pawn> GetAllSpawnedHumanlikesOnMap(Map map)
+        {
+            List<Pawn> result = new List<Pawn>();
+            List<Pawn> pawns = map.mapPawns.AllPawnsSpawned;
+            foreach (Pawn pawn in pawns)
+            {
+                if (pawn.RaceProps.Humanlike)
+                {
+                    result.Add(pawn);
                 }
             }
             return result;
