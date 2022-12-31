@@ -17,7 +17,6 @@ namespace BetterRomance
         //public static JobDef JobDateMovie;
         public static ThoughtDef FailedHookupAttemptOnMe;
         public static ThoughtDef RebuffedMyHookupAttempt;
-        public static ThoughtDef GotSomeLovinAsexual;
         [MayRequireIdeology]
         public static ThoughtDef GotLovin_Horrible;
         [MayRequireIdeology]
@@ -44,6 +43,8 @@ namespace BetterRomance
         public static RulePackDef HangoutSucceeded;
         public static RulePackDef HangoutFailed;
         public static FleckDef FriendHeart;
+        public static ThoughtDef LovinAsexualPositive;
+        public static ThoughtDef LovinAsexualNegative;
 
         static RomanceDefOf()
         {

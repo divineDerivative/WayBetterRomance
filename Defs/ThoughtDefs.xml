@@ -140,6 +140,7 @@
 	</ThoughtDef>
 
 	<!--Asexual Lovin'-->
+	<!--Leaving this in for compatibility, will probably remove later-->
 	<ThoughtDef>
 		<defName>GotSomeLovinAsexual</defName>
 		<thoughtClass>Thought_MemorySocial</thoughtClass>
@@ -157,4 +158,38 @@
 		</stages>
 	</ThoughtDef>
 	
+	<ThoughtDef>
+		<defName>LovinAsexualPositive</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<requiredTraits>
+			<li>Asexual</li>
+		</requiredTraits>
+		<durationDays>3</durationDays>
+		<stackLimit>5</stackLimit>
+		<stackedEffectMultiplier>0.6</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>got some lovin'</label>
+				<description>It was alright I guess.</description>
+			</li>
+		</stages>
+	</ThoughtDef>
+
+	<ThoughtDef>
+		<defName>LovinAsexualNegative</defName>
+		<thoughtClass>Thought_MemorySocial</thoughtClass>
+		<requiredTraits>
+			<li>Asexual</li>
+		</requiredTraits>
+		<durationDays>3</durationDays>
+		<stackLimit>5</stackLimit>
+		<stackedEffectMultiplier>0.6</stackedEffectMultiplier>
+		<stages>
+			<li>
+				<label>got some lovin'</label>
+				<description>I did not enjoy it.</description>
+			</li>
+		</stages>
+	</ThoughtDef>
+
 </Defs>
