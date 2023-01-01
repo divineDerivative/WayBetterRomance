@@ -28,7 +28,7 @@ namespace BetterRomance
             }
             else
             {
-                pawn.CheckForPartnerComp(out Comp_PartnerList comp);
+                Comp_PartnerList comp = pawn.CheckForPartnerComp();
                 Pawn partner = comp.GetPartner(false);
                 //Checks on if a partner was found and is available
                 if (partner == null || !partner.Spawned || !partner.Awake())

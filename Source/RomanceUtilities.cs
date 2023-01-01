@@ -571,9 +571,9 @@ namespace BetterRomance
             RomanceDefOf.BiAce,
         };
 
-        public static void CheckForPartnerComp(this Pawn p, out Comp_PartnerList comp)
+        public static Comp_PartnerList CheckForPartnerComp(this Pawn p)
         {
-            comp = p.TryGetComp<Comp_PartnerList>();
+            Comp_PartnerList comp = p.TryGetComp<Comp_PartnerList>();
             if (comp == null)
             {
                 FieldInfo field = AccessTools.Field(typeof(ThingWithComps), "comps");
@@ -582,6 +582,7 @@ namespace BetterRomance
                 newComp.parent = p;
                 compList.Add(newComp);
                 newComp.Initialize(new CompProperties_PartnerList());
+                newComp.PostExposeData();
                 comp = p.TryGetComp<Comp_PartnerList>();
                 if (comp == null)
                 {
@@ -592,6 +593,7 @@ namespace BetterRomance
                     Log.Message("Partner comp added to " + p.Name);
                 }
             }
+            return comp;
         }
     }
 

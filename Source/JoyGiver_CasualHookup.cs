@@ -34,7 +34,7 @@ namespace BetterRomance
             }
             else
             {
-                pawn.CheckForPartnerComp(out Comp_PartnerList comp);
+                Comp_PartnerList comp = pawn.CheckForPartnerComp();
                 Pawn partner = comp.GetPartner(true);
                 if (partner == null || !partner.Spawned || !partner.Awake())
                 {

@@ -1,6 +1,9 @@
 ﻿using Verse;
 using System.Collections.Generic;
 using RimWorld;
+using HarmonyLib;
+using System.Reflection;
+using System;
 
 namespace BetterRomance
 {
@@ -19,13 +22,24 @@ namespace BetterRomance
             Hookup = new CompListVars();
         }
 
+        public override void PostExposeData()
+        {
+            base.PostExposeData();
+            Scribe_Collections.Look(ref Date.list, "dateList", LookMode.Reference);
+            Scribe_Values.Look(ref Date.ticksSinceMake, "dateTicks", 0f);
+            Scribe_Values.Look(ref Date.listMadeEver, "dateListMade", false);
+            Scribe_Collections.Look(ref Hookup.list, "hookupList", LookMode.Reference);
+            Scribe_Values.Look(ref Hookup.ticksSinceMake, "hookupTicks", 0f);
+            Scribe_Values.Look(ref Hookup.listMadeEver, "hookupListMade", false);
+        }
+
         public void TryMakeList(bool hookup)
         {
             CompListVars type = hookup ? Hookup : Date;
-            if ((type.list.NullOrEmpty() && !type.listMadeThisSession) || type.ticksSinceMake > tickInterval)
+            if ((type.list.NullOrEmpty() && !type.listMadeEver) || type.ticksSinceMake > tickInterval)
             {
                 type.list = RomanceUtilities.FindAttractivePawns(Pawn, hookup);
-                type.listMadeThisSession = true;
+                type.listMadeEver = true;
                 type.ticksSinceMake = 0f;
             }
         }
@@ -39,6 +53,10 @@ namespace BetterRomance
             {
                 foreach (Pawn p in type.list)
                 {
+                    if (!p.Spawned)
+                    {
+                        continue;
+                    }
                     if (RomanceUtilities.IsPawnFree(p) && ! p.IsForbidden(Pawn))
                     {
                         partner = p;
@@ -68,6 +86,22 @@ namespace BetterRomance
     {
         public List<Pawn> list;
         public float ticksSinceMake = 0f;
-        public bool listMadeThisSession = false;
+        public bool listMadeEver = false;
+    }
+}
+
+//This is the patch to apply to comp only to pawns with the joy need, since it's only used for joy activities
+namespace BetterRomance.HarmonyPatches
+{
+    [HarmonyPatch(typeof(Pawn_NeedsTracker), "AddOrRemoveNeedsAsAppropriate")]
+    public static class Pawn_NeedsTracker_AddOrRemoveNeedsAsAppropriate
+    {
+        public static void Postfix(Pawn_NeedsTracker __instance, Pawn ___pawn)
+        {
+            if (__instance.joy != null)
+            {
+                ___pawn.CheckForPartnerComp();
+            }
+        }
     }
 }
