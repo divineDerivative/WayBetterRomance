@@ -10,43 +10,43 @@
 			<operations>
 				<!--Duration from 3 to 2 days-->
 				<li Class="PatchOperationReplace">
-					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/durationDays</xpath>
+					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or defName = "SP_PassionateLovinOneNightStand"]/durationDays</xpath>
 					<value>
 						<durationDays>2</durationDays>
 					</value>
 				</li>
 				<!--Stack limit from 10 to 5-->
 				<li Class="PatchOperationReplace">
-					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/stackLimit</xpath>
+					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or defName = "SP_PassionateLovinOneNightStand"]/stackLimit</xpath>
 					<value>
 						<stackLimit>5</stackLimit>
 					</value>
 				</li>
 				<!--Mood offset from 8 to 10-->
 				<li Class="PatchOperationReplace">
-					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/stages/li[1]/baseMoodEffect</xpath>
+					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or defName = "SP_PassionateLovinOneNightStand"]/stages/li[1]/baseMoodEffect</xpath>
 					<value>
 						<baseMoodEffect>10</baseMoodEffect>
 					</value>
 				</li>
 				<!--Opinion offset from 6 to 10-->
 				<li Class="PatchOperationReplace">
-					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/stages/li[1]/baseOpinionOffset</xpath>
+					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or defName = "SP_PassionateLovinOneNightStand"]/stages/li[1]/baseOpinionOffset</xpath>
 					<value>
 						<baseOpinionOffset>10</baseOpinionOffset>
 					</value>
 				</li>
 				<!--Remove from asexual pawns-->
 				<li Class="PatchOperationConditional">
-					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/nullifyingTraits</xpath>
+					<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or defName = "SP_PassionateLovinOneNightStand"]/nullifyingTraits</xpath>
 					<match Class="PatchOperationAdd">
-						<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]/nullifyingTraits</xpath>
+						<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or defName = "SP_PassionateLovinOneNightStand"]/nullifyingTraits</xpath>
 						<value>
 							<li>Asexual</li>
 						</value>
 					</match>
 					<nomatch Class="PatchOperationAdd">
-						<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or "SP_PassionateLovinOneNightStand"]</xpath>
+						<xpath>Defs/ThoughtDef[defName = "SP_PassionateLovin" or defName = "SP_PassionateLovinOneNightStand"]</xpath>
 						<value>
 							<nullifyingTraits>
 								<li>Asexual</li>
