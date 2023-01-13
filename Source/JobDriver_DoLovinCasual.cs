@@ -14,7 +14,7 @@ namespace BetterRomance
         private readonly TargetIndex SlotInd = TargetIndex.C;
         private int ticksLeft;
         private const int TicksBetweenHeartMotes = 100;
-        private static float PregnancyChance = 0.05f;
+        private const float PregnancyChance = 0.05f;
         private const int ticksForEnhancer = 2750;
         private const int ticksOtherwise = 1000;
 

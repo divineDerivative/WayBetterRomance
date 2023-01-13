@@ -124,13 +124,18 @@ namespace BetterRomance
             //The cheater list is for use later, initiator will only look at their ideo and settings to decide if they're cheating
             if (new HistoryEvent(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo() || !pawn.CaresAboutCheating())
             {
+                //Faithful pawns will respect their partner's ideo
+                if (!cheaterList.NullOrEmpty() && pawn.story.traits.HasTrait(RomanceDefOf.Faithful))
+                {
+                    return true;
+                }
                 return false;
             }
             return true;
         }
 
         /// <summary>
-        /// Returns true if interaction between <paramref name="pawn"/> and <paramref name="target"/> is not cheating and is allowed by ideo. Otherwise, finds the partner they would feel the worst about cheating on and decides based on opinion.
+        /// Always returns true if interaction between <paramref name="pawn"/> and <paramref name="target"/> is not cheating and is allowed by ideo. Otherwise, finds the partner they would feel the worst about cheating on and decides based on opinion and <paramref name="pawn"/>'s traits.
         /// </summary>
         /// <param name="pawn"></param>
         /// <param name="target"></param>
@@ -143,14 +148,20 @@ namespace BetterRomance
             {
                 if (!cheatedOnList.NullOrEmpty())
                 {
+                    float cheatChance = BetterRomanceMod.settings.cheatChance;
                     //At this point, both the pawn and a non-zero number of partners consider this cheating
                     //If they are faithful, don't do it
                     if (pawn.story.traits.HasTrait(RomanceDefOf.Faithful))
                     {
                         return false;
                     }
+                    //Lower chances for kind trait
+                    if (pawn.story.traits.HasTrait(TraitDefOf.Kind))
+                    {
+                        cheatChance *= .25f;
+                    }
                     //Don't allow if user has turned cheating off
-                    if (BetterRomanceMod.settings.cheatChance == 0f)
+                    if (cheatChance == 0f)
                     {
                         return false;
                     }
@@ -177,7 +188,7 @@ namespace BetterRomance
                             cheatOn = p;
                         }
                     }
-                    if (Rand.Value * (BetterRomanceMod.settings.cheatChance / 100f) < opinionFactor)
+                    if (Rand.Value * (cheatChance / 100f) < opinionFactor)
                     {
                         return false;
                     }
@@ -587,10 +598,6 @@ namespace BetterRomance
                 if (comp == null)
                 {
                     Log.Error("Unable to add Comp_PartnerList");
-                }
-                else
-                {
-                    Log.Message("Partner comp added to " + p.Name);
                 }
             }
             return comp;
