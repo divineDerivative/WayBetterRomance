@@ -200,25 +200,39 @@ namespace BetterRomance
         /// </summary>
         /// <param name="pawn">The pawn in question</param>
         /// <returns>True or False</returns>
-        public static bool WillPawnTryHookup(Pawn pawn)
+        public static AcceptanceReport WillPawnTryHookup(Pawn pawn, bool needReason = false)
         {
+            //Check age
+            if (pawn.ageTracker.AgeBiologicalYearsFloat < pawn.MinAgeForSex())
+            {
+                return false;
+            }
             //Sex repulsed asexual pawns will never agree to sex
             if (pawn.IsAsexual() && pawn.AsexualRating() < 0.2f)
             {
+                if (needReason)
+                {
+                    return "WBR.CantHookupInitiateMessageAsexual".Translate(pawn).CapitalizeFirst();
+                }
                 return false;
             }
             //Is the race/pawnkind allowed to have hookups?
             if (!pawn.HookupAllowed())
             {
+                //Decide if this should be reported to user and how to word it
                 return false;
             }
             //If their ideo prohibits all lovin', do not allow
             if (!new HistoryEvent(HistoryEventDefOf.SharedBed, pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo())
             {
+                if (needReason)
+                {
+                    return "WBR.CantHookupInitiateMessageIdeo".Translate(pawn);
+                }
                 return false;
             }
-            //Check against canLovinTick
-            if (Find.TickManager.TicksGame < pawn.mindState.canLovinTick)
+            //Check against canLovinTick, except for drawing the ordered hookup menu
+            if (Find.TickManager.TicksGame < pawn.mindState.canLovinTick && !needReason)
             {
                 return false;
             }
@@ -230,21 +244,50 @@ namespace BetterRomance
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns><see langword="false"/> if <paramref name="pawn"/> is close to needing to eat/sleep, there's enemies nearby, they're drafted, in labor, in a mental break, or they're doing a job that should not be interrupted.</returns>
-        public static bool IsPawnFree(Pawn pawn)
+        public static AcceptanceReport IsPawnFree(Pawn pawn, bool forcedJob = false)
         {
-            if (PawnUtility.WillSoonHaveBasicNeed(pawn) || PawnUtility.EnemiesAreNearby(pawn) || pawn.Drafted)
+            if (pawn.Drafted)
             {
-                return false;
+                if (forcedJob)
+                {
+                    return "WBR.CantHookupInitiateMessageDrafted".Translate(pawn);
+                }
+                return AcceptanceReport.WasRejected;
+            }
+            if (pawn.Downed)
+            {
+                if (forcedJob)
+                {
+                    return "WBR.CantHookupInitiateMessageDowned".Translate(pawn);
+                }
+                return AcceptanceReport.WasRejected;
             }
             if (pawn.health.hediffSet.HasHediff(HediffDefOf.PregnancyLabor) || pawn.health.hediffSet.HasHediff(HediffDefOf.PregnancyLaborPushing))
             {
+                if (forcedJob)
+                {
+                    return "WBR.CantHookupInitiateMessageInLabor".Translate(pawn);
+                }
                 return false;
             }
             if (pawn.mindState.mentalStateHandler.InMentalState)
             {
+                if (forcedJob)
+                {
+                    return "WBR.CantHookupInitiateMessageMentalState".Translate(pawn);
+                }
                 return false;
             }
-            return !DontInterruptJobs.Contains(pawn.CurJob.def);
+            if (forcedJob && CantInterruptJobs.Contains(pawn.CurJob.def))
+            {
+                return "WBR.CantHookupInitiateMessageUninterruptableJob".Translate(pawn);
+            }
+            if (!forcedJob && (PawnUtility.WillSoonHaveBasicNeed(pawn) || PawnUtility.EnemiesAreNearby(pawn)))
+            {
+                return false;
+            }
+
+            return !DontInterruptJobs.Contains(pawn.CurJobDef) && !CantInterruptJobs.Contains(pawn.CurJobDef);
         }
 
         private static readonly List<JobDef> DontInterruptJobs = new List<JobDef>
