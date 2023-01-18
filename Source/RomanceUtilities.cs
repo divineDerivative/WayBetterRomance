@@ -279,7 +279,6 @@ namespace BetterRomance
             JobDefOf.TradeWithPawn,
             JobDefOf.ApplyTechprint,
 
-            JobDefOf.SocialFight,
             JobDefOf.Breastfeed,
         };
 

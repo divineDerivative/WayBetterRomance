@@ -32,30 +32,42 @@ namespace BetterRomance
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
+            //Fail if partner gets despawned, wasn't assigned, or wanders into an area forbidden to actor
+            this.FailOnDespawnedNullOrForbidden(TargetPawnIndex);
             //Stop if the target is not available
             if (!RomanceUtilities.IsPawnFree(TargetPawn))
             {
                 yield break;
             }
             //Walk to the target
-            Toil WalkToTarget = Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
-            //Should fail if target goes into an area forbidden to actor
-            WalkToTarget.AddFailCondition(() => TargetPawn.IsForbidden(Actor));
-            yield return WalkToTarget;
+            Toil walkToTarget = Toils_Interpersonal.GotoInteractablePosition(TargetPawnIndex);
+            walkToTarget.socialMode = RandomSocialMode.Off;
+            yield return walkToTarget;
+            //This is from vanilla, not sure why it's needed
+            Toil finalGoto = Toils_Interpersonal.GotoInteractablePosition(TargetPawnIndex);
+            yield return Toils_Jump.JumpIf(finalGoto, () => !TargetPawn.Awake());
 
-            Toil proposeHookup = new Toil();
+            //Wait if needed
+            Toil wait = Toils_Interpersonal.WaitToBeAbleToInteract(pawn);
+            wait.socialMode = RandomSocialMode.Off;
+            yield return wait;
+
+            finalGoto.socialMode = RandomSocialMode.Off;
+            Toil proposeHookup = new Toil
+            {
+                defaultCompleteMode = ToilCompleteMode.Delay,
+                //Make heart fleck
+                initAction = delegate
+                {
+                    ticksLeftThisToil = 50;
+                    FleckMaker.ThrowMetaIcon(Actor.Position, Actor.Map, FleckDefOf.Heart);
+                },
+            };
             //Fail if target is dead or downed
             proposeHookup.AddFailCondition(() => !IsTargetPawnOkay());
-            proposeHookup.defaultCompleteMode = ToilCompleteMode.Delay;
-            //Make heart fleck
-            proposeHookup.initAction = delegate
-            {
-                ticksLeftThisToil = 50;
-                FleckMaker.ThrowMetaIcon(Actor.Position, Actor.Map, FleckDefOf.Heart);
-            };
             yield return proposeHookup;
 
-            Toil AwaitResponse = new Toil
+            Toil awaitResponse = new Toil
             {
                 defaultCompleteMode = ToilCompleteMode.Instant,
                 initAction = delegate
@@ -88,8 +100,8 @@ namespace BetterRomance
             //If successfulPass was used here, the fail condition would be set to false, since at the moment of assignment, successfulPass is always true
             //It only changes to false when the delegate function inside the toil is run
             //Therefore the fail condition has to be a function that changes its value whenever successfulPass does
-            AwaitResponse.AddFailCondition(() => !WasSuccessfulPass);
-            yield return AwaitResponse;
+            awaitResponse.AddFailCondition(() => !WasSuccessfulPass);
+            yield return awaitResponse;
             //At this point, successfulPass and WasSuccessfulPass is always true, so this toil always gets added
             if (WasSuccessfulPass)
             {

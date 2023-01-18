@@ -16,6 +16,7 @@ namespace BetterRomance
         private Pawn TargetPawn => TargetThingA as Pawn;
         private TargetIndex TargetPawnIndex => TargetIndex.A;
         private bool IsDate => job.def == RomanceDefOf.ProposeDate;
+        private const int ticksToFail = 1000;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -29,7 +30,7 @@ namespace BetterRomance
 
         private bool DoesTargetPawnAcceptDate()
         {
-            return RomanceUtilities.IsPawnFree(TargetPawn) && ((IsDate && RomanceUtilities.IsDateAppealing(TargetPawn, Actor)) || (!IsDate && RomanceUtilities.IsHangoutAppealing(TargetPawn, Actor)));
+            return RomanceUtilities.IsPawnFree(TargetPawn) && (IsDate ? RomanceUtilities.IsDateAppealing(TargetPawn, Actor) : RomanceUtilities.IsHangoutAppealing(TargetPawn, Actor));
         }
 
         private bool TryGetDateJobs(out Job dateLeadJob, out Job dateFollowJob)
@@ -240,30 +241,46 @@ namespace BetterRomance
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
+            //Fail if partner gets despawned, wasn't assigned, or wanders into an area forbidden to actor
+            this.FailOnDespawnedNullOrForbidden(TargetPawnIndex);
             //Stop if target is not free
             if (!RomanceUtilities.IsPawnFree(TargetPawn))
             {
                 yield break;
             }
             //Walk to the target
-            Toil WalkToTarget = Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
-            //Should fail if target goes into an area forbidden to actor
-            WalkToTarget.AddFailCondition(() => TargetPawn.IsForbidden(Actor));
-            yield return WalkToTarget;
-            //Start new toil
-            Toil AskOut = new Toil();
-            //Fail if target is downed or dead
-            AskOut.AddFailCondition(() => !IsTargetPawnOkay());
-            AskOut.defaultCompleteMode = ToilCompleteMode.Delay;
-            //Make heart fleck
-            AskOut.initAction = delegate
+            Toil walkToTarget = Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
+            //attempt to make job fail if it takes too long to walk to target
+            walkToTarget.initAction = delegate
             {
-                ticksLeftThisToil = 50;
-                FleckMaker.ThrowMetaIcon(GetActor().Position, GetActor().Map, IsDate ? FleckDefOf.Heart : RomanceDefOf.FriendHeart);
+                ticksLeftThisToil = ticksToFail;
             };
-            yield return AskOut;
+            walkToTarget.tickAction = delegate
+            {
+                if (ticksLeftThisToil <= 1)
+                {
+                    Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
+                }
+            };
+            yield return walkToTarget;
+
             //Start new toil
-            Toil AwaitResponse = new Toil
+            Toil askOut = new Toil
+            {
+                defaultCompleteMode = ToilCompleteMode.Delay,
+                //Make heart fleck
+                initAction = delegate
+                {
+                    ticksLeftThisToil = 50;
+                    FleckMaker.ThrowMetaIcon(GetActor().Position, GetActor().Map, IsDate ? FleckDefOf.Heart : RomanceDefOf.FriendHeart);
+                },
+            };
+            //Fail if target is downed or dead
+            askOut.AddFailCondition(() => !IsTargetPawnOkay());
+            yield return askOut;
+
+            //Start new toil
+            Toil awaitResponse = new Toil
             {
                 defaultCompleteMode = ToilCompleteMode.Instant,
                 initAction = delegate
@@ -291,8 +308,8 @@ namespace BetterRomance
                 }
             };
             //Fails if target doesn't agree
-            AwaitResponse.AddFailCondition(() => !WasSuccessfulPass);
-            yield return AwaitResponse;
+            awaitResponse.AddFailCondition(() => !WasSuccessfulPass);
+            yield return awaitResponse;
 
             if (WasSuccessfulPass)
             {
