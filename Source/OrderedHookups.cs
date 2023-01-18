@@ -1,61 +1,52 @@
-﻿using System;
+﻿using RimWorld;
+using Verse;
+using HarmonyLib;
+using Verse.AI;
 
 namespace BetterRomance
 {
-    //Stuff that looks useful for ordered hookups
-    public static AcceptanceReport RomanceEligiblePair(Pawn initiator, Pawn target, bool forOpinionExplanation)
+    public static class HookupUtility
     {
-        if (initiator == target)
+        public static Building_Bed FindHookupBed(Pawn p1, Pawn p2)
         {
-            return false;
-        }
-        DirectPawnRelation directPawnRelation = LovePartnerRelationUtility.ExistingLoveRealtionshipBetween(initiator, target, allowDead: false);
-        if (directPawnRelation != null)
-        {
-            string genderSpecificLabel = directPawnRelation.def.GetGenderSpecificLabel(target);
-            return "RomanceChanceExistingRelation".Translate(initiator.Named("PAWN"), genderSpecificLabel.Named("RELATION"));
-        }
-        if (!RomanceEligible(initiator, initiator: true, forOpinionExplanation))
-        {
-            return false;
-        }
-        if (forOpinionExplanation && target.ageTracker.AgeBiologicalYearsFloat < 16f)
-        {
-            return "CantRomanceTargetYoung".Translate();
-        }
-        if (Incestuous(initiator, target))
-        {
-            return "CantRomanceTargetIncest".Translate();
-        }
-        if (forOpinionExplanation && target.IsPrisoner)
-        {
-            return "CantRomanceTargetPrisoner".Translate();
-        }
-        if (!AttractedToGender(initiator, target.gender) || !AttractedToGender(target, initiator.gender))
-        {
-            if (!forOpinionExplanation)
+            Building_Bed result;
+            //If p1 owns a suitable bed, use that
+            if (p1.ownership.OwnedBed != null && p1.ownership.OwnedBed.SleepingSlotsCount > 1 && !p1.ownership.OwnedBed.AnyOccupants)
             {
-                return AcceptanceReport.WasRejected;
+                result = p1.ownership.OwnedBed;
+                return result;
             }
-            return "CantRomanceTargetSexuality".Translate();
+            //If p2 owns a suitable bed, use that
+            if (p2.ownership.OwnedBed != null && p2.ownership.OwnedBed.SleepingSlotsCount > 1 && !p2.ownership.OwnedBed.AnyOccupants)
+            {
+                result = p2.ownership.OwnedBed;
+                return result;
+            }
+            //Otherwise, look through all beds to see if one is usable
+            foreach (ThingDef current in RestUtility.AllBedDefBestToWorst)
+            {
+                //This checks if it's a human or animal bed
+                if (!RestUtility.CanUseBedEver(p1, current))
+                {
+                    continue;
+                }
+                //This checks if the bed is too far away
+                Building_Bed building_Bed = (Building_Bed)GenClosest.ClosestThingReachable(p1.Position, p1.Map,
+                    ThingRequest.ForDef(current), PathEndMode.OnCell, TraverseParms.For(p1), 9999f, x => true);
+                if (building_Bed == null)
+                {
+                    continue;
+                }
+                //Does it have at least two sleeping spots
+                if (building_Bed.SleepingSlotsCount <= 1)
+                {
+                    continue;
+                }
+                //Use that bed
+                result = building_Bed;
+                return result;
+            }
+            return null;
         }
-        AcceptanceReport acceptanceReport = RomanceEligible(target, initiator: false, forOpinionExplanation);
-        if (!acceptanceReport)
-        {
-            return acceptanceReport;
-        }
-        if (target.relations.OpinionOf(initiator) <= 5)
-        {
-            return "CantRomanceTargetOpinion".Translate();
-        }
-        if (!forOpinionExplanation && InteractionWorker_RomanceAttempt.SuccessChance(initiator, target, 1f) <= 0f)
-        {
-            return "CantRomanceTargetZeroChance".Translate();
-        }
-        if ((!forOpinionExplanation && !initiator.CanReach(target, PathEndMode.Touch, Danger.Deadly)) || target.IsForbidden(initiator))
-        {
-            return "CantRomanceTargetUnreachable".Translate();
-        }
-        return true;
     }
 }

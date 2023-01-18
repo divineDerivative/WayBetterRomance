@@ -10,88 +10,6 @@ namespace BetterRomance
 {
     public static class RomanceUtilities
     {
-        /// <summary>
-        /// Builds a list of up to five other pawns that <paramref name="pawn"/> finds suitable for the given activity. Looks at romance chance factor for hookups and opinion for dates.
-        /// </summary>
-        /// <param name="pawn">The pawn who is looking</param>
-        /// <param name="hookup">Whether this list is for a hookup or a date</param>
-        /// <returns>A list of pawns, with love relations first, then descending order by the secondary factor.</returns>
-        public static List<Pawn> FindAttractivePawns(Pawn pawn, bool hookup = true)
-        {
-            List<Pawn> result = new List<Pawn>();
-            //Removed asexual check, it instead goes in the joy givers that generate jobs that need this
-            //Put existing partners in the list
-            if (LovePartnerRelationUtility.HasAnyLovePartner(pawn))
-            {
-                foreach (Pawn p in GetAllLoveRelationPawns(pawn, false, true))
-                {
-                    //Skip pawns they share a bed with except for dates
-                    if (!DoWeShareABed(pawn, p) || !hookup)
-                    {
-                        result.Add(p);
-                    }
-                }
-            }
-            //Stop here if non-spouse lovin' is not allowed
-            if (!new HistoryEvent(HistoryEventDefOf.GotLovin_NonSpouse, pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo() && hookup)
-            {
-                return result;
-            }
-            //Then grab some attractive pawns
-            while (result.Count < 5)
-            {
-                //For a hookup we need to start with a non-zero number, or pawns that they actually don't find attractive end up on the list
-                //For a date we can start at zero since we're looking at opinion instead of romance factor
-                float num = hookup ? 0.15f : 0f;
-                Pawn tempPawn = null;
-                foreach (Pawn p in GetAllSpawnedHumanlikesOnMap(pawn.Map))
-                {
-                    //Skip them if they're already in the list, or they share a bed if it's a hookup
-                    if (result.Contains(p) || pawn == p || (DoWeShareABed(pawn, p) && hookup))
-                    {
-                        continue;
-                    }
-                    //Also skip if slave status is not the same for both pawns for hookups only
-                    else if (pawn.IsSlave != p.IsSlave && hookup)
-                    {
-                        continue;
-                    }
-                    //Skip if prisoner status is not the same
-                    else if (pawn.IsPrisoner != p.IsPrisoner)
-                    {
-                        continue;
-                    }
-                    //For hookup check romance factor, for date check opinion
-                    else if ((pawn.relations.SecondaryRomanceChanceFactor(p) > num && hookup) || (pawn.relations.OpinionOf(p) > num && !hookup))
-                    {
-                        //This will skip people who recently turned them down
-                        Thought_Memory memory = pawn.needs.mood.thoughts.memories.Memories.Find(delegate (Thought_Memory x)
-                        {
-                            if (x.def == (hookup ? RomanceDefOf.RebuffedMyHookupAttempt : RomanceDefOf.RebuffedMyDateAttempt))
-                            {
-                                return x.otherPawn == p;
-                            }
-                            return false;
-                        });
-                        //Need to also check opinion against setting for a hookup
-                        if ((memory == null && pawn.relations.OpinionOf(p) > pawn.MinOpinionForHookup()) || !hookup)
-                        {
-                            //romance factor for hookup, opinion for date
-                            num = hookup ? pawn.relations.SecondaryRomanceChanceFactor(p) : pawn.relations.OpinionOf(p);
-                            tempPawn = p;
-                        }
-                    }
-                }
-                if (tempPawn == null)
-                {
-                    break;
-                }
-                result.Add(tempPawn);
-            }
-
-            return result;
-        }
-
         public static bool DoWeShareABed(Pawn pawn, Pawn other)
         {
             return pawn.ownership.OwnedBed != null && pawn.ownership.OwnedBed.OwnersForReading.Contains(other);
@@ -206,18 +124,18 @@ namespace BetterRomance
         /// <param name="target"></param>
         /// <param name="asker"></param>
         /// <returns>True or False</returns>
-        public static bool IsHookupAppealing(Pawn target, Pawn asker)
+        public static float HookupSuccessChance(Pawn target, Pawn asker)
         {
             if (target.relations.OpinionOf(asker) < target.MinOpinionForHookup())
             {
-                return false;
+                return 0f;
             }
             //Asexual pawns below a certain rating will only agree to sex with existing partners
             if (target.IsAsexual() && target.AsexualRating() < 0.5f)
             {
                 if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
                 {
-                    return false;
+                    return 0f;
                 }
                 //Otherwise their rating is already factored in via secondary romance chance factor
             }
@@ -234,9 +152,9 @@ namespace BetterRomance
                 opinionFactor *= Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
                 //Increase if opinion is positive, but on a lesser scale to above
                 opinionFactor *= GenMath.LerpDouble(0, 100f, 1f, 1.5f, target.relations.OpinionOf(asker));
-                return Rand.Range(0.05f, 1f) < (romanceFactor * opinionFactor);
+                return romanceFactor * opinionFactor;
             }
-            return false;
+            return 0f;
         }
 
         /// <summary>
@@ -331,23 +249,8 @@ namespace BetterRomance
 
         private static readonly List<JobDef> DontInterruptJobs = new List<JobDef>
         {
-            //Incapacitated
-            JobDefOf.Wait_Downed,
-            JobDefOf.Vomit,
-            JobDefOf.Deathrest,
-            JobDefOf.ExtinguishSelf,
-            JobDefOf.Flee,
-            JobDefOf.FleeAndCower,
             //Ceremonies
-            JobDefOf.MarryAdjacentPawn,
             JobDefOf.SpectateCeremony,
-            JobDefOf.GiveSpeech,
-            JobDefOf.BestowingCeremony,
-            JobDefOf.PrepareSkylantern,
-            JobDefOf.PrisonerExecution,
-            JobDefOf.Sacrifice,
-            JobDefOf.Scarify,
-            JobDefOf.Blind,
             //Emergency work
             JobDefOf.BeatFire,
             JobDefOf.Arrest,
@@ -362,13 +265,10 @@ namespace BetterRomance
             JobDefOf.TendPatient,
             JobDefOf.FeedPatient,
             //Romance
-            RomanceDefOf.DoLovinCasual,
-            JobDefOf.Lovin,
             RomanceDefOf.JobDateLead,
             RomanceDefOf.JobDateFollow,
             RomanceDefOf.JobHangoutLead,
             RomanceDefOf.JobHangoutFollow,
-            JobDefOf.TryRomance,
             //Ordered jobs
             JobDefOf.LayDown,
             JobDefOf.ReleasePrisoner,
@@ -381,6 +281,32 @@ namespace BetterRomance
 
             JobDefOf.SocialFight,
             JobDefOf.Breastfeed,
+        };
+
+        private static readonly List<JobDef> CantInterruptJobs = new List<JobDef>
+        {
+            //Incapacitated
+            JobDefOf.Wait_Downed,
+            JobDefOf.Vomit,
+            JobDefOf.Deathrest,
+            JobDefOf.ExtinguishSelf,
+            JobDefOf.Flee,
+            JobDefOf.FleeAndCower,
+            //Ceremonies
+            JobDefOf.MarryAdjacentPawn,
+            JobDefOf.GiveSpeech,
+            JobDefOf.BestowingCeremony,
+            JobDefOf.PrepareSkylantern,
+            JobDefOf.PrisonerExecution,
+            JobDefOf.Sacrifice,
+            JobDefOf.Scarify,
+            JobDefOf.Blind,
+            //Romance
+            RomanceDefOf.DoLovinCasual,
+            JobDefOf.Lovin,
+            JobDefOf.TryRomance,
+
+            JobDefOf.SocialFight,
         };
 
         /// <summary>

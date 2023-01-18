@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -23,7 +22,7 @@ namespace BetterRomance
 
         private bool DoesTargetPawnAcceptAdvance()
         {
-            return RomanceUtilities.IsPawnFree(TargetPawn) && RomanceUtilities.WillPawnTryHookup(TargetPawn) && RomanceUtilities.IsHookupAppealing(TargetPawn, Actor);
+            return RomanceUtilities.IsPawnFree(TargetPawn) && RomanceUtilities.WillPawnTryHookup(TargetPawn) && Rand.Range(0.05f, 1f) < RomanceUtilities.HookupSuccessChance(TargetPawn, Actor);
         }
 
         private bool IsTargetPawnOkay()
