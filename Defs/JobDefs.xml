@@ -17,6 +17,11 @@
     <joyKind>Lewd</joyKind>
 	  <joyGainRate>3</joyGainRate>
   </JobDef>
+	<JobDef>
+		<defName>OrderedHookup</defName>
+		<driverClass>BetterRomance.JobDriver_LeadHookup</driverClass>
+		<reportString>trying to hookup with TargetA.</reportString>
+	</JobDef>
 	
 	<!--Dates-->
   <JobDef>

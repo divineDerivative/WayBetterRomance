@@ -14,6 +14,7 @@ namespace BetterRomance
         private Pawn TargetPawn => TargetThingA as Pawn;
         private Building_Bed TargetBed => TargetThingB as Building_Bed;
         private TargetIndex TargetPawnIndex => TargetIndex.A;
+        private bool Ordered => job.def == RomanceDefOf.OrderedHookup;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -35,7 +36,7 @@ namespace BetterRomance
             //Fail if partner gets despawned, wasn't assigned, or wanders into an area forbidden to actor
             this.FailOnDespawnedNullOrForbidden(TargetPawnIndex);
             //Stop if the target is not available
-            if (!RomanceUtilities.IsPawnFree(TargetPawn))
+            if (!RomanceUtilities.IsPawnFree(TargetPawn, Ordered))
             {
                 yield break;
             }
@@ -51,8 +52,25 @@ namespace BetterRomance
             Toil wait = Toils_Interpersonal.WaitToBeAbleToInteract(pawn);
             wait.socialMode = RandomSocialMode.Off;
             yield return wait;
-
             finalGoto.socialMode = RandomSocialMode.Off;
+
+            //Wake target up if job is forced
+            if (Ordered)
+                {
+                    yield return Toils_General.Do(delegate
+                    {
+                        if (!TargetPawn.Awake())
+                        {
+                            TargetPawn.jobs.SuspendCurrentJob(JobCondition.InterruptForced);
+                            if (!pawn.interactions.CanInteractNowWith(TargetPawn, RomanceDefOf.TriedHookupWith))
+                            {
+                                Messages.Message("HookupFailedUnexpected".Translate(pawn, TargetPawn), MessageTypeDefOf.NegativeEvent, historical: false);
+                            }
+                        }
+                    });
+                }
+
+            //Ask the target
             Toil proposeHookup = new Toil
             {
                 defaultCompleteMode = ToilCompleteMode.Delay,
@@ -67,6 +85,7 @@ namespace BetterRomance
             proposeHookup.AddFailCondition(() => !IsTargetPawnOkay());
             yield return proposeHookup;
 
+            //Wait for target to respond
             Toil awaitResponse = new Toil
             {
                 defaultCompleteMode = ToilCompleteMode.Instant,
@@ -81,6 +100,11 @@ namespace BetterRomance
                         FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.Heart);
                         Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.InitiatedLovin, pawn.Named(HistoryEventArgsNames.Doer)));
                         list.Add(RomanceDefOf.HookupSucceeded);
+                        //Send message if job was ordered
+                        if (Ordered)
+                        {
+                            Messages.Message("WBR.TryHookupSuccessMessage".Translate(Actor, TargetPawn), Actor, MessageTypeDefOf.NegativeEvent, historical: false);
+                        }
                     }
                     else
                     {
@@ -91,6 +115,11 @@ namespace BetterRomance
                         TargetPawn.needs.mood.thoughts.memories.TryGainMemory(RomanceDefOf.FailedHookupAttemptOnMe, Actor);
                         list.Add(RomanceDefOf.HookupFailed);
                         Actor.GetComp<Comp_PartnerList>().Hookup.list.Remove(TargetPawn);
+                        //Send message if job was ordered
+                        if (Ordered)
+                        {
+                            Messages.Message("WBR.TryHookupFailedMessage".Translate(Actor, TargetPawn), Actor, MessageTypeDefOf.NegativeEvent, historical: false);
+                        }
                     }
                     //Add "tried hookup with" to the log, with the result
                     Find.PlayLog.Add(new PlayLogEntry_Interaction(RomanceDefOf.TriedHookupWith, pawn, TargetPawn, list));
@@ -102,6 +131,7 @@ namespace BetterRomance
             //Therefore the fail condition has to be a function that changes its value whenever successfulPass does
             awaitResponse.AddFailCondition(() => !WasSuccessfulPass);
             yield return awaitResponse;
+
             //At this point, successfulPass and WasSuccessfulPass is always true, so this toil always gets added
             if (WasSuccessfulPass)
             {

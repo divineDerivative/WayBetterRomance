@@ -10,6 +10,7 @@ namespace BetterRomance
         public static JobDef JobDateFollow;
         public static JobDef JobDateLead;
         public static JobDef LeadHookup;
+        public static JobDef OrderedHookup;
         public static JobDef ProposeDate;
         public static JobDef ProposeHangout;
         public static JobDef JobHangoutLead;

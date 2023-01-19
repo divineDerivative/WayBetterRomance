@@ -247,7 +247,7 @@
       </li>
     </operations>
   </Operation>
-  <!--Add description for modd offset-->
+  <!--Add description for mood offset-->
   <Operation Class="PatchOperationSequence">
     <success>Always</success>
     <operations>

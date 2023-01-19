@@ -61,9 +61,18 @@
       <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateUtility.cs" />
+    <Compile Include="Harmony\Biotech Romance\FloatMenuMakerMap.cs" />
     <Compile Include="Harmony\Biotech Romance\RelationsUtility.cs" />
     <Compile Include="Harmony\Biotech Romance\SocialCardUtility.cs" />
     <Compile Include="Harmony\ChoiceLetter_GrowthMoment.cs" />
@@ -76,6 +85,7 @@
     <Compile Include="HAR Integration\HAR_Integration.cs" />
     <Compile Include="HAR Integration\HARPatches.cs" />
     <Compile Include="Harmony\TraitSet_GainTrait.cs" />
+    <Compile Include="OrderedHookups.cs" />
     <Compile Include="StatPart_Asexual.cs" />
     <Compile Include="Comp_PartnerList.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -113,6 +123,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>robocopy "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\WayBetterRomance" "C:\RimWorld_Debug\Mods\Way Better Romance" /r:1 /s /xo /xd Source .vs .git /xf *.sln .gitattributes .gitignore *.md || set errorlist=0</PostBuildEvent>
+    <PostBuildEvent>robocopy "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\WayBetterRomance" "C:\RimWorld_Debug\Mods\Way Better Romance" /r:1 /s /xo /xd Source .vs .git /xf *.sln .gitattributes .gitignore .editorconfig *.md || set errorlist=0</PostBuildEvent>
   </PropertyGroup>
 </Project>
