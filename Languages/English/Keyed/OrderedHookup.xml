@@ -5,7 +5,6 @@
 	<WBR.HookupFailedUnexpected>{0_labelShort} was unable to hook up with {1_labelShort}</WBR.HookupFailedUnexpected>
 	<WBR.CantHookupTargetSlave>slave</WBR.CantHookupTargetSlave>
 	<WBR.CantHookupTargetGender>incompatible gender</WBR.CantHookupTargetGender>
-	<WBR.HookupTargetNotFree>Target not free but reason wasn't given.</WBR.HookupTargetNotFree>
 
 	<WBR.CantHookupInitiateMessagePrisoner>{0_labelShort} cannot try to hook up because {0_pronoun} is a prisoner.</WBR.CantHookupInitiateMessagePrisoner>
 	<WBR.CantHookupInitiateMessageDowned>{0_labelShort} cannot try to hook up because {0_pronoun} is incapacitated.</WBR.CantHookupInitiateMessageDowned>
@@ -15,15 +14,14 @@
 	<WBR.CantHookupInitiateMessageUninterruptableJob>{0_labelShort} cannot try to hook up because {0_possessive} current job cannot be interrupted.</WBR.CantHookupInitiateMessageUninterruptableJob>
 	<WBR.CantHookupInitiateMessageInLabor>{0_labelShort} cannot try to hook up because {0_pronoun} is in labor.</WBR.CantHookupInitiateMessageInLabor>
 	<WBR.CantHookupInitiateMessageIdeo>{0_labelShort}'s ideoligion does not allow hooking up.</WBR.CantHookupInitiateMessageIdeo>
-	
+
 	<WBR.HookupExistingRelationshipWarning>Having {INITIATOR_nameDef} hook up with {TARGET_nameDef} could sow resentment among existing partners, lead to breakups, and cause altercations.</WBR.HookupExistingRelationshipWarning>
 	<WBR.NoHookupBedFound>No suitable bed found for {0_labelShort} and {1_labelShort} to hook up in.</WBR.NoHookupBedFound>
 	<WBR.TryHookupFailedMessage>{0_labelShort}'s attempt to hook up with {1_labelShort} was unsuccessful.</WBR.TryHookupFailedMessage>
 	<WBR.TryHookupSuccessMessage>{1_labelShort} agreed to hook up with {0_labelShort}.</WBR.TryHookupSuccessMessage>
+	<WBR.CantHookupInitiateMessageCooldown>{0_labelShort} tried hooking up recently and must wait {1} until trying again.</WBR.CantHookupInitiateMessageCooldown>
+	<WBR.HookupTargetNotFree>Target not free but reason wasn't given.</WBR.HookupTargetNotFree>
 
 	<WBR.CannotHookup>Cannot hook up with {0}</WBR.CannotHookup>
 	<WBR.CanHookup>Hook up with {0}</WBR.CanHookup>
-
-	<CantRomanceInitiateMessageCooldown>{0_labelShort} tried romancing recently and must wait {1} until trying again.</CantRomanceInitiateMessageCooldown>
-	
 </LanguageData>

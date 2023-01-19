@@ -287,7 +287,7 @@ namespace BetterRomance
                 return false;
             }
 
-            return !DontInterruptJobs.Contains(pawn.CurJobDef) && !CantInterruptJobs.Contains(pawn.CurJobDef);
+            return !CantInterruptJobs.Contains(pawn.CurJobDef) && (forcedJob || !DontInterruptJobs.Contains(pawn.CurJobDef));
         }
 
         private static readonly List<JobDef> DontInterruptJobs = new List<JobDef>
@@ -481,6 +481,11 @@ namespace BetterRomance
             return rating;
         }
 
+        /// <summary>
+        /// Determines the romantic <see cref="Orientation"/> of a <paramref name="pawn"/> based on their traits
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <returns></returns>
         public static Orientation GetOrientation(this Pawn pawn)
         {
             if (pawn.story != null && pawn.story.traits != null)
@@ -550,6 +555,11 @@ namespace BetterRomance
             RomanceDefOf.BiAce,
         };
 
+        /// <summary>
+        /// Checks if a <see cref="Comp_PartnerList"/> already exists on <paramref name="p"/>, adds it if needed, and then returns the comp
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public static Comp_PartnerList CheckForPartnerComp(this Pawn p)
         {
             Comp_PartnerList comp = p.TryGetComp<Comp_PartnerList>();

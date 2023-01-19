@@ -13,7 +13,9 @@ namespace BetterRomance
         public Pawn Pawn => (Pawn)parent;
         public CompListVars Date;
         public CompListVars Hookup;
-        public const float tickInterval = 120000f;
+        private const int tickInterval = 120000;
+        public int orderedHookupTick = -1;
+        public bool IsOrderedHookupOnCooldown => orderedHookupTick > Find.TickManager.TicksGame;
 
         public override void Initialize(CompProperties props)
         {
@@ -26,11 +28,12 @@ namespace BetterRomance
         {
             base.PostExposeData();
             Scribe_Collections.Look(ref Date.list, "dateList", LookMode.Reference);
-            Scribe_Values.Look(ref Date.ticksSinceMake, "dateTicks", 0f);
+            Scribe_Values.Look(ref Date.ticksSinceMake, "dateTicks", 0);
             Scribe_Values.Look(ref Date.listMadeEver, "dateListMade", false);
             Scribe_Collections.Look(ref Hookup.list, "hookupList", LookMode.Reference);
-            Scribe_Values.Look(ref Hookup.ticksSinceMake, "hookupTicks", 0f);
+            Scribe_Values.Look(ref Hookup.ticksSinceMake, "hookupTicks", 0);
             Scribe_Values.Look(ref Hookup.listMadeEver, "hookupListMade", false);
+            Scribe_Values.Look(ref orderedHookupTick, "orderedHookupTick", 0);
         }
 
         public void TryMakeList(bool hookup)
@@ -40,7 +43,7 @@ namespace BetterRomance
             {
                 type.list = FindAttractivePawns(Pawn, hookup);
                 type.listMadeEver = true;
-                type.ticksSinceMake = 0f;
+                type.ticksSinceMake = 0;
             }
         }
 
@@ -167,7 +170,7 @@ namespace BetterRomance
     public class CompListVars
     {
         public List<Pawn> list;
-        public float ticksSinceMake = 0f;
+        public int ticksSinceMake = 0;
         public bool listMadeEver = false;
     }
 }

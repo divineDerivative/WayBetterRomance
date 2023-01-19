@@ -69,17 +69,16 @@ namespace BetterRomance.HarmonyPatches
         private static void DrawTryHookup(Rect buttonRect, Pawn pawn)
         {
             Color color = GUI.color;
-            bool isTryRomanceOnCooldown = false; //pawn.relations.IsTryRomanceOnCooldown;
+            bool isTryHookupOnCooldown = pawn.CheckForPartnerComp().IsOrderedHookupOnCooldown;
             AcceptanceReport canDoHookup = HookupUtility.HookupEligible(pawn, initiator: true, forOpinionExplanation: false);
             List<FloatMenuOption> list = canDoHookup.Accepted ? HookupOptions(pawn) : null;
-            GUI.color = (!canDoHookup.Accepted || list.NullOrEmpty() || isTryRomanceOnCooldown) ? ColoredText.SubtleGrayColor : Color.white;
+            GUI.color = (!canDoHookup.Accepted || list.NullOrEmpty() || isTryHookupOnCooldown) ? ColoredText.SubtleGrayColor : Color.white;
             if (Widgets.ButtonText(buttonRect, "WBR.TryHookupButtonLabel".Translate() + "..."))
             {
-                //Need to figure this out
-                if (isTryRomanceOnCooldown)
+                if (isTryHookupOnCooldown)
                 {
-                    int numTicks = pawn.relations.romanceEnableTick - Find.TickManager.TicksGame;
-                    Messages.Message("CantRomanceInitiateMessageCooldown".Translate(pawn, numTicks.ToStringTicksToPeriod()), MessageTypeDefOf.RejectInput, historical: false);
+                    int numTicks = pawn.CheckForPartnerComp().orderedHookupTick - Find.TickManager.TicksGame;
+                    Messages.Message("WBR.CantHookupInitiateMessageCooldown".Translate(pawn, numTicks.ToStringTicksToPeriod()), MessageTypeDefOf.RejectInput, historical: false);
                     return;
                 }
                 if (!canDoHookup.Accepted)

@@ -15,6 +15,7 @@ namespace BetterRomance
         private Building_Bed TargetBed => TargetThingB as Building_Bed;
         private TargetIndex TargetPawnIndex => TargetIndex.A;
         private bool Ordered => job.def == RomanceDefOf.OrderedHookup;
+        private const int orderedHookupInterval = 120000;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -79,6 +80,10 @@ namespace BetterRomance
                 {
                     ticksLeftThisToil = 50;
                     FleckMaker.ThrowMetaIcon(Actor.Position, Actor.Map, FleckDefOf.Heart);
+                    if (Ordered)
+                    {
+                        Actor.CheckForPartnerComp().orderedHookupTick = Find.TickManager.TicksGame + orderedHookupInterval;
+                    }
                 },
             };
             //Fail if target is dead or downed

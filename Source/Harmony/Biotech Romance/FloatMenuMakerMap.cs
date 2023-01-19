@@ -17,19 +17,19 @@ namespace BetterRomance.HarmonyPatches
 
         public static void Postfix(Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
         {
-            if (!pawn.Drafted && pawn.ageTracker.AgeBiologicalYearsFloat > pawn.MinAgeForSex())
+            if (!pawn.Drafted && pawn.ageTracker.AgeBiologicalYearsFloat > pawn.MinAgeForSex() && !pawn.CheckForPartnerComp().IsOrderedHookupOnCooldown)
             {
                 foreach (var target in GenUI.TargetsAt(clickPos, TargetingParameters.ForRomance(pawn), thingsOnly: true))
                 {
-                    Pawn p = (Pawn)target;
+                    Pawn p = (Pawn)target.Thing;
                     if (!p.Drafted && !p.DevelopmentalStage.Baby())
                     {
-                        bool flag = HookupUtility.HookupOption(pawn, p, out FloatMenuOption option, out float chance);
+                        bool optionAvailable = HookupUtility.HookupOption(pawn, p, out FloatMenuOption option, out float chance);
                         if (option != null)
                         {
-                            option.Label = (flag ? "WBR.CanHookup" : "WBR.CannotHookup").Translate(option.Label);
+                            option.Label = (optionAvailable ? "WBR.CanHookup" : "WBR.CannotHookup").Translate(option.Label);
+                            opts.Add(option);
                         }
-                        opts.Add(option);
                     }
                 }
             }
