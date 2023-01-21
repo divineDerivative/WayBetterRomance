@@ -40,4 +40,18 @@ namespace BetterRomance
             : base("hahkethomemah.simplepersonalities.module2")
         { }
     }
+
+    public class MayRequireCSLAttribute : MayRequireAttribute
+    {
+        public MayRequireCSLAttribute()
+            : base("dylan.csl")
+        { }
+    }
+
+    public class MayRequireRJWAttribute : MayRequireAttribute
+    {
+        public MayRequireRJWAttribute()
+            : base("rim.job.world")
+        { }
+    }
 }

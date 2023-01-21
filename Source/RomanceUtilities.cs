@@ -83,30 +83,8 @@ namespace BetterRomance
                     {
                         return false;
                     }
-                    //This should find the person they would feel the worst about cheating on
-                    //With the philanderer map differences, I think this is the best way
-                    float opinionFactor = 99999f;
-                    foreach (Pawn p in cheatedOnList)
-                    {
-                        float opinion = pawn.relations.OpinionOf(p);
-                        float tempOpinionFactor;
-                        if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
-                        {
-                            tempOpinionFactor = pawn.Map == p.Map
-                                ? Mathf.InverseLerp(70f, 15f, opinion)
-                                : Mathf.InverseLerp(100f, 50f, opinion);
-                        }
-                        else
-                        {
-                            tempOpinionFactor = Mathf.InverseLerp(30f, -80f, opinion);
-                        }
-                        if (tempOpinionFactor < opinionFactor)
-                        {
-                            opinionFactor = tempOpinionFactor;
-                            cheatOn = p;
-                        }
-                    }
-                    if (Rand.Value * (cheatChance / 100f) < opinionFactor)
+
+                    if (Rand.Value * (cheatChance / 100f) < PartnerFactor(pawn, cheatedOnList, out cheatOn))
                     {
                         return false;
                     }
@@ -118,43 +96,37 @@ namespace BetterRomance
             return true;
         }
 
-        /// <summary>
-        /// Determines if <paramref name="target"/> agrees to a hookup with <paramref name="asker"/>. Takes cheating into account.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="asker"></param>
-        /// <returns>True or False</returns>
-        public static float HookupSuccessChance(Pawn target, Pawn asker)
+        //This should find the person they would feel the worst about cheating on
+        //With the philanderer map differences, I think this is the best way
+        public static float PartnerFactor(Pawn pawn, List<Pawn> partnerList, out Pawn partner)
         {
-            if (target.relations.OpinionOf(asker) < target.MinOpinionForHookup())
+            partner = null;
+            float partnerFactor = 1f;
+            if (!partnerList.NullOrEmpty())
             {
-                return 0f;
-            }
-            //Asexual pawns below a certain rating will only agree to sex with existing partners
-            if (target.IsAsexual() && target.AsexualRating() < 0.5f)
-            {
-                if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
+                partnerFactor = 99999f;
+                foreach (Pawn p in partnerList)
                 {
-                    return 0f;
+                    float opinion = pawn.relations.OpinionOf(p);
+                    float tempOpinionFactor;
+                    if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
+                    {
+                        tempOpinionFactor = pawn.Map == p.Map
+                            ? Mathf.InverseLerp(70f, 15f, opinion)
+                            : Mathf.InverseLerp(100f, 50f, opinion);
+                    }
+                    else
+                    {
+                        tempOpinionFactor = Mathf.InverseLerp(30f, -80f, opinion);
+                    }
+                    if (tempOpinionFactor < partnerFactor)
+                    {
+                        partnerFactor = tempOpinionFactor;
+                        partner = p;
+                    }
                 }
-                //Otherwise their rating is already factored in via secondary romance chance factor
             }
-            if (WillPawnContinue(target, asker, out _))
-            {
-                //It's either not cheating or they have decided to cheat
-                float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
-                if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
-                {
-                    romanceFactor /= 1.5f;
-                }
-                float opinionFactor = 1f;
-                //Decrease if opinion is negative
-                opinionFactor *= Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
-                //Increase if opinion is positive, but on a lesser scale to above
-                opinionFactor *= GenMath.LerpDouble(0, 100f, 1f, 1.5f, target.relations.OpinionOf(asker));
-                return romanceFactor * opinionFactor;
-            }
-            return 0f;
+            return partnerFactor;
         }
 
         /// <summary>
@@ -193,50 +165,6 @@ namespace BetterRomance
             float num = Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
             return Rand.Range(0.05f, 1f) < num;
 
-        }
-
-        /// <summary>
-        /// Will <paramref name="pawn"/> participate in a hookup. Checks settings and asexuality rating.
-        /// </summary>
-        /// <param name="pawn">The pawn in question</param>
-        /// <returns>True or False</returns>
-        public static AcceptanceReport WillPawnTryHookup(Pawn pawn, bool needReason = false)
-        {
-            //Check age
-            if (pawn.ageTracker.AgeBiologicalYearsFloat < pawn.MinAgeForSex())
-            {
-                return false;
-            }
-            //Sex repulsed asexual pawns will never agree to sex
-            if (pawn.IsAsexual() && pawn.AsexualRating() < 0.2f)
-            {
-                if (needReason)
-                {
-                    return "WBR.CantHookupInitiateMessageAsexual".Translate(pawn).CapitalizeFirst();
-                }
-                return false;
-            }
-            //Is the race/pawnkind allowed to have hookups?
-            if (!pawn.HookupAllowed())
-            {
-                //Decide if this should be reported to user and how to word it
-                return false;
-            }
-            //If their ideo prohibits all lovin', do not allow
-            if (!new HistoryEvent(HistoryEventDefOf.SharedBed, pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo())
-            {
-                if (needReason)
-                {
-                    return "WBR.CantHookupInitiateMessageIdeo".Translate(pawn);
-                }
-                return false;
-            }
-            //Check against canLovinTick, except for drawing the ordered hookup menu
-            if (Find.TickManager.TicksGame < pawn.mindState.canLovinTick && !needReason)
-            {
-                return false;
-            }
-            return true;
         }
 
         /// <summary>

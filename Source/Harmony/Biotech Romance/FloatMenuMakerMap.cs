@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
 using HarmonyLib;
@@ -19,7 +15,7 @@ namespace BetterRomance.HarmonyPatches
         {
             if (!pawn.Drafted && pawn.ageTracker.AgeBiologicalYearsFloat > pawn.MinAgeForSex() && !pawn.CheckForPartnerComp().IsOrderedHookupOnCooldown)
             {
-                foreach (var target in GenUI.TargetsAt(clickPos, TargetingParameters.ForRomance(pawn), thingsOnly: true))
+                foreach (LocalTargetInfo target in GenUI.TargetsAt(clickPos, TargetingParameters.ForRomance(pawn), thingsOnly: true))
                 {
                     Pawn p = (Pawn)target.Thing;
                     if (!p.Drafted && !p.DevelopmentalStage.Baby())

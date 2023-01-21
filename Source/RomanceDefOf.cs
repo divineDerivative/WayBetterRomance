@@ -52,6 +52,10 @@ namespace BetterRomance
         public static ThoughtDef PassionateLovinAsexualPositive;
         [MayRequirePersonalityM2]
         public static ThoughtDef PassionateLovinAsexualNegative;
+        [MayRequireCSL]
+        public static PawnCapacityDef Fertility;
+        [MayRequireRJW]
+        public static PawnCapacityDef RJW_Fertility;
 
         static RomanceDefOf()
         {

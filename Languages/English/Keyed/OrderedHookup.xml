@@ -3,8 +3,13 @@
 	<WBR.TryHookupButtonLabel>Hook Up</WBR.TryHookupButtonLabel>
 	<WBR.TryHookupNoOptsMessage>Nobody for {0_labelShort} to hook up with.</WBR.TryHookupNoOptsMessage>
 	<WBR.HookupFailedUnexpected>{0_labelShort} was unable to hook up with {1_labelShort}</WBR.HookupFailedUnexpected>
+	
 	<WBR.CantHookupTargetSlave>slave</WBR.CantHookupTargetSlave>
+	<WBR.CantHookupTargetAsexual>asexual</WBR.CantHookupTargetAsexual>
 	<WBR.CantHookupTargetGender>incompatible gender</WBR.CantHookupTargetGender>
+	<WBR.CantHookupTargetInfertile>infertile</WBR.CantHookupTargetInfertile>
+	<WBR.CantHookupTargetTrait>missing {0_label} trait</WBR.CantHookupTargetTrait>
+	<WBR.CantHookupTargetIdeo>{0_name}</WBR.CantHookupTargetIdeo>
 
 	<WBR.CantHookupInitiateMessagePrisoner>{0_labelShort} cannot try to hook up because {0_pronoun} is a prisoner.</WBR.CantHookupInitiateMessagePrisoner>
 	<WBR.CantHookupInitiateMessageDowned>{0_labelShort} cannot try to hook up because {0_pronoun} is incapacitated.</WBR.CantHookupInitiateMessageDowned>
@@ -14,6 +19,8 @@
 	<WBR.CantHookupInitiateMessageUninterruptableJob>{0_labelShort} cannot try to hook up because {0_possessive} current job cannot be interrupted.</WBR.CantHookupInitiateMessageUninterruptableJob>
 	<WBR.CantHookupInitiateMessageInLabor>{0_labelShort} cannot try to hook up because {0_pronoun} is in labor.</WBR.CantHookupInitiateMessageInLabor>
 	<WBR.CantHookupInitiateMessageIdeo>{0_labelShort}'s ideoligion does not allow hooking up.</WBR.CantHookupInitiateMessageIdeo>
+	<WBR.CantHookupInitiateMessageFertility>{0_labelShort} cannot try to hook up because {0_pronoun} is infertile.</WBR.CantHookupInitiateMessageFertility>
+	<WBR.CantHookupInitiateMessageTrait>{0_labelShort} cannot try to hook up because {0_pronoun} does not have the {1_label} trait.</WBR.CantHookupInitiateMessageTrait>
 
 	<WBR.HookupExistingRelationshipWarning>Having {INITIATOR_nameDef} hook up with {TARGET_nameDef} could sow resentment among existing partners, lead to breakups, and cause altercations.</WBR.HookupExistingRelationshipWarning>
 	<WBR.NoHookupBedFound>No suitable bed found for {0_labelShort} and {1_labelShort} to hook up in.</WBR.NoHookupBedFound>
@@ -24,4 +31,11 @@
 
 	<WBR.CannotHookup>Cannot hook up with {0}</WBR.CannotHookup>
 	<WBR.CanHookup>Hook up with {0}</WBR.CanHookup>
+
+	<WBR.HookupChance>Hookup chance</WBR.HookupChance>
+	<HookupChanceExistingRelation>already {PAWN_nameDef}'s {RELATION}</HookupChanceExistingRelation>
+	<WBR.HookupChanceCant>Cannot hook up with</WBR.HookupChanceCant>
+	<HookupChanceAgeFactor>Relative age</HookupChanceAgeFactor>
+	<HookupChanceBeautyFactor>Beauty</HookupChanceBeautyFactor>
+	<HookupChancePartnerFactor>Opinion of partner</HookupChancePartnerFactor>
 </LanguageData>

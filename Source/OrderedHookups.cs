@@ -2,6 +2,9 @@
 using Verse;
 using HarmonyLib;
 using Verse.AI;
+using UnityEngine;
+using System.Text;
+using System.Collections.Generic;
 
 namespace BetterRomance
 {
@@ -32,7 +35,7 @@ namespace BetterRomance
             }
             if (acceptanceReport.Accepted)
             {
-                chance = RomanceUtilities.HookupSuccessChance(hookupTarget, initiator);
+                chance = HookupSuccessChance(hookupTarget, initiator);
                 string label = string.Format("{0} ({1} {2})", hookupTarget.LabelShort, chance.ToStringPercent(), "chance".Translate());
                 option = new FloatMenuOption(label, delegate
                 {
@@ -124,7 +127,7 @@ namespace BetterRomance
         /// <param name="target"></param>
         /// <param name="forOpinionExplanation"></param>
         /// <returns>An <see cref="AcceptanceReport"/> with a rejection reason if applicable</returns>
-        private static AcceptanceReport HookupEligiblePair(Pawn initiator, Pawn target, bool forOpinionExplanation)
+        public static AcceptanceReport HookupEligiblePair(Pawn initiator, Pawn target, bool forOpinionExplanation)
         {
             if (initiator == target)
             {
@@ -164,6 +167,16 @@ namespace BetterRomance
                 }
                 return "WBR.CantHookupTargetGender".Translate();
             }
+            //Don't allow if fertility requirement is not met
+            if (!target.MeetsHookupFertilityRequirement(true))
+            {
+                return "WBR.CantHookupTargetInfertile".Translate();
+            }
+            //Don't allow if trait requirement is not met
+            if (!target.MeetsHookupTraitRequirment(out TraitDef trait, true))
+            {
+                return "WBR.CantHookupTargetTrait".Translate(trait);
+            }
             AcceptanceReport acceptanceReport = HookupEligible(target, initiator: false, forOpinionExplanation);
             //Don't allow if target is not able to hookup at all
             if (!acceptanceReport)
@@ -176,7 +189,7 @@ namespace BetterRomance
                 return "CantRomanceTargetOpinion".Translate();
             }
             //Don't allow if acceptance chance is 0
-            if (!forOpinionExplanation && RomanceUtilities.HookupSuccessChance(target, initiator) <= 0f)
+            if (!forOpinionExplanation && HookupSuccessChance(target, initiator) <= 0f)
             {
                 return "CantRomanceTargetZeroChance".Translate();
             }
@@ -190,27 +203,23 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Checks if <paramref name="pawn"/> is allowed to participate in a hookup
+        /// Checks if <paramref name="pawn"/> is allowed to participate in an ordered hookup
         /// </summary>
         /// <param name="pawn">The <see cref="Pawn"/> being checked</param>
         /// <param name="initiator">If <paramref name="pawn"/> is initiating the hookup</param>
-        /// <param name="forOpinionExplanation"></param>
+        /// <param name="forOpinionExplanation">Need to find out where vanilla uses this</param>
         /// <returns></returns>
         public static AcceptanceReport HookupEligible(Pawn pawn, bool initiator, bool forOpinionExplanation)
         {
             //Check the basic requirements first
-            AcceptanceReport ar = RomanceUtilities.WillPawnTryHookup(pawn, true);
+            AcceptanceReport ar = HookupUtility.WillPawnTryHookup(pawn, initiator, true);
             if (!ar.Accepted)
             {
                 return ar;
             }
             if (pawn.IsPrisoner)
             {
-                if (!initiator || forOpinionExplanation)
-                {
-                    return AcceptanceReport.WasRejected;
-                }
-                return "WBR.CantHookupInitiateMessagePrisoner".Translate(pawn).CapitalizeFirst();
+                return initiator ? "WBR.CantHookupInitiateMessagePrisoner".Translate(pawn).CapitalizeFirst() : "CantRomanceTargetPrisoner".Translate();
             }
             if (pawn.Downed && !forOpinionExplanation)
             {
@@ -273,6 +282,167 @@ namespace BetterRomance
                 return result;
             }
             return null;
+        }
+
+        public static bool CanDrawTryHookup(Pawn pawn)
+        {
+            if (pawn.ageTracker.AgeBiologicalYearsFloat >= pawn.MinAgeForSex() && pawn.Spawned)
+            {
+                return pawn.IsFreeColonist;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if <paramref name="target"/> agrees to a hookup with <paramref name="asker"/>. Takes cheating into account.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="asker"></param>
+        /// <returns>True or False</returns>
+        public static float HookupSuccessChance(Pawn target, Pawn asker)
+        {
+            if (target.relations.OpinionOf(asker) < target.MinOpinionForHookup())
+            {
+                return 0f;
+            }
+            //Asexual pawns below a certain rating will only agree to sex with existing partners
+            if (target.IsAsexual() && target.AsexualRating() < 0.5f)
+            {
+                if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
+                {
+                    return 0f;
+                }
+                //Otherwise their rating is already factored in via secondary romance chance factor
+            }
+            if (RomanceUtilities.WillPawnContinue(target, asker, out _))
+            {
+                //It's either not cheating or they have decided to cheat
+                float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
+                if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
+                {
+                    romanceFactor /= 1.5f;
+                }
+
+                return romanceFactor * OpinionFactor(target, asker);
+            }
+            return 0f;
+        }
+
+        public static float OpinionFactor(Pawn target, Pawn asker)
+        {
+            float opinionFactor = 1f;
+            //Decrease if opinion is negative
+            opinionFactor *= Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
+            //Increase if opinion is positive, but on a lesser scale to above
+            opinionFactor *= GenMath.LerpDouble(0, 100f, 1f, 1.5f, target.relations.OpinionOf(asker));
+            return opinionFactor;
+        }
+
+        /// <summary>
+        /// Will <paramref name="pawn"/> participate in a hookup. Checks settings and asexuality rating.
+        /// </summary>
+        /// <param name="pawn">The pawn in question</param>
+        /// <returns></returns>
+        public static AcceptanceReport WillPawnTryHookup(Pawn pawn, bool initiator = false, bool ordered = false)
+        {
+            //Check age
+            if (pawn.ageTracker.AgeBiologicalYearsFloat < pawn.MinAgeForSex())
+            {
+                return false;
+            }
+            //Sex repulsed asexual pawns will never agree to sex
+            if (pawn.IsAsexual() && pawn.AsexualRating() < 0.2f)
+            {
+                return initiator ? "WBR.CantHookupInitiateMessageAsexual".Translate(pawn).CapitalizeFirst() : "WBR.CantHookupTargetAsexual".Translate();
+            }
+            //Is the race/pawnkind allowed to have hookups?
+            if (!pawn.HookupAllowed())
+            {
+                //Decide if this should be reported to user and how to word it
+                return false;
+            }
+            if (!pawn.MeetsHookupFertilityRequirement(ordered))
+            {
+                return initiator ? "WBR.CantHookupInitiateMessageFertility".Translate(pawn) : "WBR.CantHookupTargetInfertile".Translate();
+            }
+            if (!pawn.MeetsHookupTraitRequirment(out TraitDef trait, ordered))
+            {
+                return initiator ? "WBR.CantHookupInitiateMessageTrait".Translate(pawn, trait) : "WBR.CantHookupTargetTrait".Translate(trait);
+            }
+            //If their ideo prohibits all lovin', do not allow
+            if (!new HistoryEvent(HistoryEventDefOf.SharedBed, pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo())
+            {
+                return initiator ? "WBR.CantHookupInitiateMessageIdeo".Translate(pawn) : "WBR.CantHookupTargetIdeo".Translate(pawn.ideo.Ideo);
+            }
+            //Check against canLovinTick, except for drawing the ordered hookup menu
+            if (Find.TickManager.TicksGame < pawn.mindState.canLovinTick && !ordered)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static string HookupFactors(Pawn initiator, Pawn target)
+        {
+            StringBuilder text = new StringBuilder();
+            text.AppendLine(HookupFactorLine("RomanceChanceOpinionFactor".Translate(), OpinionFactor(initiator, target)));
+            text.AppendLine(HookupFactorLine("RomanceChanceAgeFactor".Translate(), target.relations.LovinAgeFactor(initiator)));
+            if (RomanceUtilities.IsThisCheating(initiator, target, out List<Pawn> partnerList))
+            {
+                float partnerFactor = RomanceUtilities.PartnerFactor(target, partnerList, out _);
+                if (partnerFactor != 1f)
+                {
+                    text.AppendLine(HookupFactorLine("RomanceChancePartnerFactor".Translate(), partnerFactor));
+                }
+            }
+            float prettyFactor = target.relations.PrettinessFactor(initiator);
+            if (prettyFactor != 1f)
+            {
+                text.AppendLine(HookupFactorLine("RomanceChanceBeautyFactor".Translate(), prettyFactor));
+            }
+            if (ModsConfig.BiotechActive)
+            {
+                if (initiator.genes != null)
+                {
+                    foreach (Gene gene in initiator.genes.GenesListForReading)
+                    {
+                        if (gene.Active && gene.def.missingGeneRomanceChanceFactor != 1f && (target.genes == null || !target.genes.HasGene(gene.def)))
+                        {
+                            float value = gene.def.missingGeneRomanceChanceFactor;
+                            string geneText1 = string.Empty;
+                            if (target.story?.traits != null && target.story.traits.HasTrait(TraitDefOf.Kind))
+                            {
+                                value = 1f;
+                                geneText1 = " (" + TraitDefOf.Kind.DataAtDegree(0).label + ")";
+                            }
+                            text.AppendLine(HookupFactorLine(gene.def.LabelCap + " (" + initiator.NameShortColored.Resolve() + ")", value) + geneText1);
+                        }
+                    }
+                }
+                if (target.genes != null)
+                {
+                    foreach (Gene gene in target.genes.GenesListForReading)
+                    {
+                        if (gene.Active && gene.def.missingGeneRomanceChanceFactor != 1f && (initiator.genes == null || !initiator.genes.HasGene(gene.def)))
+                        {
+                            float value2 = gene.def.missingGeneRomanceChanceFactor;
+                            string geneText2 = string.Empty;
+                            if (target.story?.traits != null && initiator.story.traits.HasTrait(TraitDefOf.Kind))
+                            {
+                                value2 = 1f;
+                                geneText2 = " (" + TraitDefOf.Kind.DataAtDegree(0).label + ")";
+                            }
+                            text.AppendLine(HookupFactorLine(gene.def.LabelCap + " (" + target.NameShortColored + ")", value2) + geneText2);
+                        }
+                    }
+                }
+            }
+            return text.ToString();
+        }
+
+        private static string HookupFactorLine(string label, float value)
+        {
+            return " - " + label + ": x" + value.ToStringPercent();
         }
     }
 }

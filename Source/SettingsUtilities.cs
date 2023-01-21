@@ -1,10 +1,7 @@
 ﻿using RimWorld;
 using System;
-using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using Verse;
-using AlienRace;
-using HarmonyLib;
 
 namespace BetterRomance
 {
@@ -60,55 +57,61 @@ namespace BetterRomance
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns></returns>
-        public static HookupTrigger GetHookupSettings(Pawn pawn)
+        public static HookupTrigger GetHookupSettings(Pawn pawn, bool ordered = false)
         {
-            if (pawn.kindDef.HasModExtension<CasualSexSettings>() && pawn.kindDef.GetModExtension<CasualSexSettings>().hookupTriggers != null)
+            if (pawn.kindDef.HasModExtension<CasualSexSettings>())
             {
-                return pawn.kindDef.GetModExtension<CasualSexSettings>().hookupTriggers;
+                return ordered ? pawn.kindDef.GetModExtension<CasualSexSettings>().orderedHookupTriggers : pawn.kindDef.GetModExtension<CasualSexSettings>().hookupTriggers;
             }
-            else if (pawn.def.HasModExtension<CasualSexSettings>() && pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers != null)
+            else if (pawn.def.HasModExtension<CasualSexSettings>())
             {
-                return pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers;
-            }
-            return null;
-        }
-
-        public static float MinOpinionForHookup(this Pawn pawn)
-        {
-            return (GetHookupSettings(pawn) != null) ? GetHookupSettings(pawn).minOpinion : BetterRomanceMod.settings.minOpinionHookup;
-        }
-
-        public static bool MustBeFertileForHookup(this Pawn pawn)
-        {
-            return (GetHookupSettings(pawn) != null) && GetHookupSettings(pawn).mustBeFertile;
-        }
-
-        /// <summary>
-        /// Get settings related to ordered hookups
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
-        public static HookupTrigger GetOrderedHookupSettings(Pawn pawn)
-        {
-            if (pawn.kindDef.HasModExtension<CasualSexSettings>() && pawn.kindDef.GetModExtension<CasualSexSettings>().orderedHookupTriggers != null)
-            {
-                return pawn.kindDef.GetModExtension<CasualSexSettings>().orderedHookupTriggers;
-            }
-            else if (pawn.def.HasModExtension<CasualSexSettings>() && pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers != null)
-            {
-                return pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers;
+                return ordered ? pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers : pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers;
             }
             return null;
         }
 
-        public static float MinOpinionForOrderedHookup(this Pawn pawn)
+        public static float MinOpinionForHookup(this Pawn pawn, bool ordered = false)
         {
-            return (GetOrderedHookupSettings(pawn) != null) ? GetOrderedHookupSettings(pawn).minOpinion : 5;
+            HookupTrigger triggers = GetHookupSettings(pawn, ordered);
+            return (triggers != null) ? triggers.minOpinion : BetterRomanceMod.settings.minOpinionHookup;
         }
 
-        public static bool MustBeFertileForOrderedHookup(this Pawn pawn)
+        public static bool MustBeFertileForHookup(this Pawn pawn, bool ordered)
         {
-            return (GetOrderedHookupSettings(pawn) != null) && GetOrderedHookupSettings(pawn).mustBeFertile;
+            HookupTrigger triggers = GetHookupSettings(pawn, ordered);
+            return triggers != null && triggers.mustBeFertile;
+        }
+        public static bool MeetsHookupFertilityRequirement(this Pawn pawn, bool ordered = false)
+        {
+            if (pawn.MustBeFertileForHookup(ordered))
+            {
+                if (ModsConfig.BiotechActive)
+                {
+                    return pawn.GetStatValue(StatDefOf.Fertility) > 0.05f;
+                }
+                else if (ModsConfig.IsActive("dylan.csl"))
+                {
+                    return pawn.health.capacities.GetLevel(RomanceDefOf.Fertility) > 0.05f;
+                }
+                else if (ModsConfig.IsActive("rim.job.world"))
+                {
+                    return pawn.health.capacities.GetLevel(RomanceDefOf.RJW_Fertility) > 0.05f;
+                }
+                Log.Message("");
+            }
+            return true;
+        }
+
+        public static bool MeetsHookupTraitRequirment(this Pawn pawn, out TraitDef trait, bool ordered = false)
+        {
+            HookupTrigger triggers = GetHookupSettings(pawn, ordered);
+            if (triggers?.hasTrait != null)
+            {
+                trait = triggers.hasTrait;
+                return pawn.story.traits.HasTrait(trait);
+            }
+            trait = null;
+            return true;
         }
 
         //Regular sex settings

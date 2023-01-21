@@ -6,6 +6,8 @@ using HarmonyLib;
 using System.Reflection.Emit;
 using System.Reflection;
 using UnityEngine;
+using System.Text;
+using System;
 
 namespace BetterRomance.HarmonyPatches
 {
@@ -51,19 +53,10 @@ namespace BetterRomance.HarmonyPatches
         private static void SocialCardHelper(Pawn pawn, Rect rect)
         {
             Vector2 ButtonSize = (Vector2)AccessTools.Field(typeof(SocialCardUtility), "RoleChangeButtonSize").GetValue(null);
-            if (CanDrawTryHookup(pawn))
+            if (HookupUtility.CanDrawTryHookup(pawn))
             {
                 DrawTryHookup(new Rect(rect.width - 150f - ButtonSize.x - 5f, rect.height - ButtonSize.y, ButtonSize.x, ButtonSize.y), pawn);
             }
-        }
-
-        private static bool CanDrawTryHookup(Pawn pawn)
-        {
-            if (pawn.ageTracker.AgeBiologicalYearsFloat >= pawn.MinAgeForSex() && pawn.Spawned)
-            {
-                return pawn.IsFreeColonist;
-            }
-            return false;
         }
 
         private static void DrawTryHookup(Rect buttonRect, Pawn pawn)
@@ -120,6 +113,78 @@ namespace BetterRomance.HarmonyPatches
             return (from pair in eligibleList
                     orderby pair.Item1 descending
                     select pair.Item2).Concat(ineligibleList.OrderBy((FloatMenuOption opt) => opt.Label)).ToList();
+        }
+    }
+
+    //Adds an explanation of hookup chance to the social card tooltip
+    [HarmonyPatch(typeof(SocialCardUtility), "GetPawnRowTooltip")]
+    public static class SocialCardUtility_GetPawnRowTooltip
+    {
+        
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
+        {
+            MethodInfo RomanceExplanation = AccessTools.Method(typeof(SocialCardUtility), "RomanceExplanation");
+            FieldInfo otherPawn = AccessTools.Field(AccessTools.TypeByName("RimWorld.SocialCardUtility.CachedSocialTabEntry"), "otherPawn");
+            Label newLabel = ilg.DefineLabel();
+            Label oldLabel = ilg.DefineLabel();
+            LocalBuilder text = ilg.DeclareLocal(typeof(string));
+            bool startFound = false;
+
+            foreach (CodeInstruction code in instructions)
+            {
+                if (startFound && code.opcode == OpCodes.Brtrue_S)
+                {
+                    oldLabel = (Label)code.operand;
+                    code.operand = newLabel;
+                }
+
+                yield return code;
+
+                if (startFound && code.opcode == OpCodes.Pop)
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = new List<Label> { newLabel } };
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.LoadField(AccessTools.Inner(typeof(SocialCardUtility), "CachedSocialTabEntry"), "otherPawn");
+                    yield return CodeInstruction.Call(typeof(SocialCardUtility_GetPawnRowTooltip), nameof(SocialCardUtility_GetPawnRowTooltip.HookupExplanation));
+                    yield return new CodeInstruction(OpCodes.Stloc, text);
+                    yield return new CodeInstruction(OpCodes.Ldloc, text);
+                    yield return CodeInstruction.Call(typeof(GenText), nameof(GenText.NullOrEmpty));
+                    yield return new CodeInstruction(OpCodes.Brtrue, oldLabel);
+                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    yield return new CodeInstruction(OpCodes.Ldloc, text);
+                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), parameters: new Type[] { typeof(string) });
+                    yield return new CodeInstruction(OpCodes.Pop);
+
+                    startFound = false;
+                }
+                
+                if (code.Calls(RomanceExplanation))
+                {
+                    startFound = true;
+                }
+            }
+        }
+
+        public static string HookupExplanation(Pawn initiator, Pawn target)
+        {
+            if (!HookupUtility.CanDrawTryHookup(initiator))
+            {
+                return null;
+            }
+            var ar = HookupUtility.HookupEligiblePair(initiator, target, true);
+            if (!ar.Accepted && ar.Reason.NullOrEmpty())
+            {
+                return null;
+            }
+            if (!ar.Accepted)
+            {
+                return "WBR.HookupChanceCant".Translate() + (" (" + ar.Reason + ")\n");
+            }
+            var text = new StringBuilder();
+            float chance = HookupUtility.HookupSuccessChance(target, initiator);
+            text.AppendLine(("WBR.HookupChance".Translate() + (": " + chance.ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
+            text.Append(HookupUtility.HookupFactors(initiator, target));
+            return text.ToString();
         }
     }
 }
