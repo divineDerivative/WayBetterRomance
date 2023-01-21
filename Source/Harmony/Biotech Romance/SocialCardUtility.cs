@@ -94,6 +94,11 @@ namespace BetterRomance.HarmonyPatches
             GUI.color = color;
         }
 
+        /// <summary>
+        /// Generates a list of <see cref="Pawn"/>s that <paramref name="romancer"/> can try to hook up with
+        /// </summary>
+        /// <param name="romancer"></param>
+        /// <returns></returns>
         private static List<FloatMenuOption> HookupOptions(Pawn romancer)
         {
             List<(float, FloatMenuOption)> eligibleList = new List<(float, FloatMenuOption)>();
@@ -116,11 +121,11 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
-    //Adds an explanation of hookup chance to the social card tooltip
+    //Adds an explanation of ordered hookup acceptance chance to the social card tooltip
     [HarmonyPatch(typeof(SocialCardUtility), "GetPawnRowTooltip")]
     public static class SocialCardUtility_GetPawnRowTooltip
     {
-        
+
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             MethodInfo RomanceExplanation = AccessTools.Method(typeof(SocialCardUtility), "RomanceExplanation");
@@ -157,7 +162,7 @@ namespace BetterRomance.HarmonyPatches
 
                     startFound = false;
                 }
-                
+
                 if (code.Calls(RomanceExplanation))
                 {
                     startFound = true;
@@ -171,7 +176,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 return null;
             }
-            var ar = HookupUtility.HookupEligiblePair(initiator, target, true);
+            AcceptanceReport ar = HookupUtility.HookupEligiblePair(initiator, target, forOpinionExplanation: true);
             if (!ar.Accepted && ar.Reason.NullOrEmpty())
             {
                 return null;
@@ -180,8 +185,8 @@ namespace BetterRomance.HarmonyPatches
             {
                 return "WBR.HookupChanceCant".Translate() + (" (" + ar.Reason + ")\n");
             }
-            var text = new StringBuilder();
-            float chance = HookupUtility.HookupSuccessChance(target, initiator);
+            StringBuilder text = new StringBuilder();
+            float chance = HookupUtility.HookupSuccessChance(target, initiator, ordered: true);
             text.AppendLine(("WBR.HookupChance".Translate() + (": " + chance.ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
             text.Append(HookupUtility.HookupFactors(initiator, target));
             return text.ToString();

@@ -59,33 +59,14 @@ namespace BetterRomance.HarmonyPatches
                 __result = 0f;
                 return false;
             }
-            float sexualityFactor = 1f;
-            if ( ___pawn.IsAsexual())
-            {
-                sexualityFactor *= ___pawn.AsexualRating() /2;
-            }
-            if ( ___pawn.GetOrientation() == Orientation.Homo)
-            {
-                if (otherPawn.gender != ___pawn.gender)
-                {
-                    sexualityFactor *= 0.125f;
-                }
-            }
-            if (___pawn.GetOrientation() == Orientation.Hetero)
-            {
-                if (otherPawn.gender == ___pawn.gender)
-                {
-                    sexualityFactor *= 0.125f;
-                }
-            }
-            
+
             //This changes chances based on talking/manipulation/moving stats
             float targetBaseCapabilities = 1f;
             targetBaseCapabilities *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Talking));
             targetBaseCapabilities *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Manipulation));
             targetBaseCapabilities *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Moving));
 
-            __result = __instance.LovinAgeFactor(otherPawn) * __instance.PrettinessFactor(otherPawn) * targetBaseCapabilities  * crossSpecies * sexualityFactor;
+            __result = __instance.LovinAgeFactor(otherPawn) * __instance.PrettinessFactor(otherPawn) * targetBaseCapabilities  * crossSpecies * RomanceUtilities.SexualityFactor(___pawn, otherPawn);
             return false;
         }
     }

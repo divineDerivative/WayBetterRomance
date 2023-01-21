@@ -508,6 +508,36 @@ namespace BetterRomance
             }
             return comp;
         }
+
+        /// <summary>
+        /// Adjustment to success chance based on <paramref name="pawn"/>'s orientation and <paramref name="target"/>'s gender
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static float SexualityFactor(Pawn pawn, Pawn target)
+        {
+            float factor = 1f;
+            if (pawn.IsAsexual())
+            {
+                factor *= pawn.AsexualRating() / 2;
+            }
+            if (pawn.GetOrientation() == Orientation.Homo)
+            {
+                if (target.gender != pawn.gender)
+                {
+                    factor *= 0.125f;
+                }
+            }
+            if (pawn.GetOrientation() == Orientation.Hetero)
+            {
+                if (target.gender == pawn.gender)
+                {
+                    factor *= 0.125f;
+                }
+            }
+            return factor;
+        }
     }
 
     public enum Orientation

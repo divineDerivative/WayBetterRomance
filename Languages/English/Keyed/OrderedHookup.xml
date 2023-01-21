@@ -35,7 +35,6 @@
 	<WBR.HookupChance>Hookup chance</WBR.HookupChance>
 	<HookupChanceExistingRelation>already {PAWN_nameDef}'s {RELATION}</HookupChanceExistingRelation>
 	<WBR.HookupChanceCant>Cannot hook up with</WBR.HookupChanceCant>
-	<HookupChanceAgeFactor>Relative age</HookupChanceAgeFactor>
-	<HookupChanceBeautyFactor>Beauty</HookupChanceBeautyFactor>
-	<HookupChancePartnerFactor>Opinion of partner</HookupChancePartnerFactor>
+	<WBR.HookupChanceNotPartner>No relationship</WBR.HookupChanceNotPartner>
+	<WBR.HookupChanceSexuality>Orientation factor</WBR.HookupChanceSexuality>
 </LanguageData>

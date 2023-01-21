@@ -26,12 +26,14 @@ namespace BetterRomance
 
         public static bool CaresAboutCheating(this Pawn pawn)
         {
-            return GetCasualSexSettings(pawn) == null || GetCasualSexSettings(pawn).caresAboutCheating;
+            CasualSexSettings settings = GetCasualSexSettings(pawn);
+            return settings == null || settings.caresAboutCheating;
         }
 
         public static bool HookupAllowed(this Pawn pawn)
         {
-            return GetCasualSexSettings(pawn) == null || GetCasualSexSettings(pawn).willDoHookup;
+            CasualSexSettings settings = GetCasualSexSettings(pawn);
+            return settings == null || settings.willDoHookup;
         }
 
         public static float HookupRate(this Pawn pawn)
@@ -40,7 +42,8 @@ namespace BetterRomance
             {
                 return 0f;
             }
-            return (GetCasualSexSettings(pawn) != null) ? GetCasualSexSettings(pawn).hookupRate : BetterRomanceMod.settings.hookupRate;
+            CasualSexSettings settings = GetCasualSexSettings(pawn);
+            return (settings != null) ? settings.hookupRate : BetterRomanceMod.settings.hookupRate;
         }
 
         public static float AlienLoveChance(this Pawn pawn)
@@ -49,7 +52,8 @@ namespace BetterRomance
             {
                 return 0f;
             }
-            return (GetCasualSexSettings(pawn) != null) ? GetCasualSexSettings(pawn).alienLoveChance : BetterRomanceMod.settings.alienLoveChance;
+            CasualSexSettings settings = GetCasualSexSettings(pawn);
+            return (settings != null) ? settings.alienLoveChance : BetterRomanceMod.settings.alienLoveChance;
         }
 
         /// <summary>
@@ -79,8 +83,10 @@ namespace BetterRomance
         public static bool MustBeFertileForHookup(this Pawn pawn, bool ordered)
         {
             HookupTrigger triggers = GetHookupSettings(pawn, ordered);
+            //If triggers are not provided, default is false
             return triggers != null && triggers.mustBeFertile;
         }
+
         public static bool MeetsHookupFertilityRequirement(this Pawn pawn, bool ordered = false)
         {
             if (pawn.MustBeFertileForHookup(ordered))
@@ -110,6 +116,7 @@ namespace BetterRomance
                 trait = triggers.hasTrait;
                 return pawn.story.traits.HasTrait(trait);
             }
+            //Default is no trait requirement
             trait = null;
             return true;
         }
@@ -130,22 +137,26 @@ namespace BetterRomance
 
         public static float MinAgeForSex(this Pawn pawn)
         {
-            return (GetSexSettings(pawn) != null) ? GetSexSettings(pawn).minAgeForSex : 16f;
+            RegularSexSettings settings = GetSexSettings(pawn);
+            return (settings != null) ? settings.minAgeForSex : 16f;
         }
 
         public static float MaxAgeForSex(this Pawn pawn)
         {
-            return (GetSexSettings(pawn) != null) ? GetSexSettings(pawn).maxAgeForSex : 80f;
+            RegularSexSettings settings = GetSexSettings(pawn);
+            return (settings != null) ? settings.maxAgeForSex : 80f;
         }
 
         public static float MaxAgeGap(this Pawn pawn)
         {
-            return (GetSexSettings(pawn) != null) ? GetSexSettings(pawn).maxAgeGap : 40f;
+            RegularSexSettings settings = GetSexSettings(pawn);
+            return (settings != null) ? settings.maxAgeGap : 40f;
         }
 
         public static float DeclineAtAge(this Pawn pawn)
         {
-            return (GetSexSettings(pawn) != null) ? GetSexSettings(pawn).declineAtAge : 30f;
+            RegularSexSettings settings = GetSexSettings(pawn);
+            return (settings != null) ? settings.declineAtAge : 30f;
         }
 
         //Relation Settings
@@ -164,12 +175,14 @@ namespace BetterRomance
 
         public static bool SpouseAllowed(this Pawn pawn)
         {
-            return GetRelationSettings(pawn) == null || GetRelationSettings(pawn).spousesAllowed;
+            RelationSettings settings = GetRelationSettings(pawn);
+            return settings == null || settings.spousesAllowed;
         }
 
         public static bool ChildAllowed(this Pawn pawn)
         {
-            return GetRelationSettings(pawn) == null || GetRelationSettings(pawn).childrenAllowed;
+            RelationSettings settings = GetRelationSettings(pawn);
+            return settings == null || settings.childrenAllowed;
         }
         /// <summary>
         /// Provides an appropriate pawnkind for a newly generated parent. If children are not allowed, uses a pawnkind from settings, otherwise uses the same pawnkind as the child.
@@ -185,19 +198,20 @@ namespace BetterRomance
             {
                 return pawn.kindDef;
             }
-            if (GetRelationSettings(pawn).pawnKindForParentGlobal != null)
+            RelationSettings settings = GetRelationSettings(pawn);
+            if (settings.pawnKindForParentGlobal != null)
             {
-                return GetRelationSettings(pawn).pawnKindForParentGlobal;
+                return settings.pawnKindForParentGlobal;
             }
-            if (GetRelationSettings(pawn).pawnKindForParentFemale != null && GetRelationSettings(pawn).pawnKindForParentMale != null)
+            if (settings.pawnKindForParentFemale != null && settings.pawnKindForParentMale != null)
             {
                 if (gender == Gender.Female)
                 {
-                    return GetRelationSettings(pawn).pawnKindForParentFemale;
+                    return settings.pawnKindForParentFemale;
                 }
                 else if (gender == Gender.Male)
                 {
-                    return GetRelationSettings(pawn).pawnKindForParentMale;
+                    return settings.pawnKindForParentMale;
                 }
                 else
                 {
@@ -209,94 +223,102 @@ namespace BetterRomance
 
         public static float MinAgeToHaveChildren(this Pawn pawn)
         {
+            RelationSettings settings = GetRelationSettings(pawn);
             if (pawn.gender == Gender.Female)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).minFemaleAgeToHaveChildren : 16f;
+                return (settings != null) ? settings.minFemaleAgeToHaveChildren : 16f;
             }
             else if (pawn.gender == Gender.Male)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).minMaleAgeToHaveChildren : 14f;
+                return (settings != null) ? settings.minMaleAgeToHaveChildren : 14f;
             }
             throw new ArgumentException("This pawn has no gender");
         }
         //Same as above but takes a gender argument, for use when getting age settings for pawns that haven't been generated yet
         public static float MinAgeToHaveChildren(this Pawn pawn, Gender gender)
         {
+            RelationSettings settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).minFemaleAgeToHaveChildren : 16f;
+                return (settings != null) ? settings.minFemaleAgeToHaveChildren : 16f;
             }
             else if (gender == Gender.Male)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).minMaleAgeToHaveChildren : 14f;
+                return (settings != null) ? settings.minMaleAgeToHaveChildren : 14f;
             }
             throw new ArgumentException("No gender provided");
         }
 
         public static float MaxAgeToHaveChildren(this Pawn pawn)
         {
+            RelationSettings settings = GetRelationSettings(pawn);
             if (pawn.gender == Gender.Female)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).maxFemaleAgeToHaveChildren : 45f;
+                return (settings != null) ? settings.maxFemaleAgeToHaveChildren : 45f;
             }
             else if (pawn.gender == Gender.Male)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).maxMaleAgeToHaveChildren : 50f;
+                return (settings != null) ? settings.maxMaleAgeToHaveChildren : 50f;
             }
             throw new ArgumentException("This pawn has no gender");
         }
         //Same as above but takes a gender argument, for use when getting age settings for pawns that haven't been generated yet
         public static float MaxAgeToHaveChildren(this Pawn pawn, Gender gender)
         {
+            RelationSettings settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).maxFemaleAgeToHaveChildren : 45f;
+                return (settings != null) ? settings.maxFemaleAgeToHaveChildren : 45f;
             }
             else if (gender == Gender.Male)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).maxMaleAgeToHaveChildren : 50f;
+                return (settings != null) ? settings.maxMaleAgeToHaveChildren : 50f;
             }
             throw new ArgumentException("This pawn has no gender");
         }
 
         public static float UsualAgeToHaveChildren(this Pawn pawn)
         {
+            RelationSettings settings = GetRelationSettings(pawn);
             if (pawn.gender == Gender.Female)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).usualFemaleAgeToHaveChildren : 27f;
+                return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
             }
             else if (pawn.gender == Gender.Male)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).usualMaleAgeToHaveChildren : 30f;
+                return (settings != null) ? settings.usualMaleAgeToHaveChildren : 30f;
             }
             else
             {
                 Log.Message("Pawn has no gender, defaulting to female setting");
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).usualFemaleAgeToHaveChildren : 27f;
+                return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
             }
         }
         //Same as above but takes a gender argument, for use when getting age settings for pawns that haven't been generated yet
         public static float UsualAgeToHaveChildren(this Pawn pawn, Gender gender)
         {
+            RelationSettings settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).usualFemaleAgeToHaveChildren : 27f;
+                return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
             }
             else if (gender == Gender.Male)
             {
-                return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).usualMaleAgeToHaveChildren : 30f;
+                return (settings != null) ? settings.usualMaleAgeToHaveChildren : 30f;
             }
             throw new ArgumentException("No gender provided");
         }
 
         public static int MaxChildren(this Pawn pawn)
         {
-            return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).maxChildrenDesired : 3;
+            RelationSettings settings = GetRelationSettings(pawn);
+            return (settings != null) ? settings.maxChildrenDesired : 3;
         }
 
         public static float MinOpinionForRomance(this Pawn pawn)
         {
-            return (GetRelationSettings(pawn) != null) ? GetRelationSettings(pawn).minOpinionRomance : BetterRomanceMod.settings.minOpinionRomance;
+            RelationSettings settings = GetRelationSettings(pawn);
+            return (settings != null) ? settings.minOpinionRomance : BetterRomanceMod.settings.minOpinionRomance;
         }
 
         //Love Relation Settings
@@ -311,11 +333,12 @@ namespace BetterRomance
             {
                 if (def.HasModExtension<LoveRelations>())
                 {
-                    if (def.GetModExtension<LoveRelations>().isLoveRelation)
+                    LoveRelations extension = def.GetModExtension<LoveRelations>();
+                    if (extension.isLoveRelation)
                     {
-                        if (def.GetModExtension<LoveRelations>().exLoveRelation != null)
+                        if (extension.exLoveRelation != null)
                         {
-                            result.Add(def.GetModExtension<LoveRelations>().exLoveRelation);
+                            result.Add(extension.exLoveRelation);
                         }
                     }
                 }
@@ -356,17 +379,18 @@ namespace BetterRomance
 
         public static SimpleCurve GetFertilityAgeCurve(this Pawn pawn)
         {
+            BiotechSettings settings = GetBiotechSettings(pawn);
             if (pawn.gender == Gender.Male)
             {
-                return GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).maleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
+                return settings != null ? settings.maleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
             }
             else if (pawn.gender == Gender.Female)
             {
-                return GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).femaleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
+                return settings != null ? settings.femaleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
             }
             else
             {
-                return GetBiotechSettings(pawn) != null ? GetBiotechSettings(pawn).noneFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
+                return settings != null ? settings.noneFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
             }
         }
 
