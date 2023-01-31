@@ -40,7 +40,6 @@ namespace BetterRomance
                 {
                     return null;
                 }
-
                 //If this hookup is cheating, will pawn do it anyways?
                 if (!RomanceUtilities.WillPawnContinue(pawn, partner, out _))
                 {

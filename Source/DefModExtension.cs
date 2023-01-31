@@ -61,6 +61,21 @@ namespace BetterRomance
                 alienLoveChance = 100.99f;
                 yield return "Alien love chance cannot be higher than 100";
             }
+            if (hookupTriggers!= null && hookupTriggers.mustBeFertile)
+            {
+                hookupTriggers.forBreedingOnly = hookupTriggers.mustBeFertile;
+                yield return "mustBeFertile has been changed to forBreedingOnly, please update accordingly. Copying value for hookupTriggers.";
+            }
+            if (orderedHookupTriggers != null && orderedHookupTriggers.mustBeFertile)
+            {
+                orderedHookupTriggers.forBreedingOnly = orderedHookupTriggers.mustBeFertile;
+                yield return "mustBeFertile has been changed to forBreedingOnly, please update accordingly. Copying value for orderedHookupTriggers.";
+            }
+            if (hookupTriggers != null && hookupTriggers.forBreedingOnly)
+            {
+                hookupTriggers.forBreedingOnly = false;
+                yield return "forBreedingOnly is for ordered hookups only. Setting to false.";
+            }
         }
     }
 
@@ -68,7 +83,9 @@ namespace BetterRomance
     {
         public float minOpinion = BetterRomanceMod.settings.minOpinionHookup;
         public TraitDef hasTrait = null;
+        [Obsolete]
         public bool mustBeFertile = false;
+        public bool forBreedingOnly = false;
     }
 
     public class RegularSexSettings : DefModExtension

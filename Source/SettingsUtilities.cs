@@ -80,33 +80,70 @@ namespace BetterRomance
             return (triggers != null) ? triggers.minOpinion : BetterRomanceMod.settings.minOpinionHookup;
         }
 
-        public static bool MustBeFertileForHookup(this Pawn pawn, bool ordered)
+        /// <summary>
+        /// Checks if ordered hookups are only allowed for breeding purposes.
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <param name="ordered"></param>
+        /// <returns></returns>
+        public static bool HookupForBreedingOnly(this Pawn pawn)
         {
-            HookupTrigger triggers = GetHookupSettings(pawn, ordered);
+            HookupTrigger triggers = GetHookupSettings(pawn, true);
             //If triggers are not provided, default is false
-            return triggers != null && triggers.mustBeFertile;
+            return triggers != null && triggers.forBreedingOnly;
         }
 
-        public static bool MeetsHookupFertilityRequirement(this Pawn pawn, bool ordered = false)
+        /// <summary>
+        /// First checks if ordered hookups are only allowed for breeding purposes. If so, checks if pregnancy is possible between <paramref name="asker"/> and <paramref name="target"/>.
+        /// </summary>
+        /// <param name="asker"></param>
+        /// <param name="target"></param>
+        /// <param name="ordered"></param>
+        /// <returns></returns>
+        public static bool MeetsHookupBreedingRequirement(Pawn asker, Pawn target)
         {
-            if (pawn.MustBeFertileForHookup(ordered))
+            if (asker.HookupForBreedingOnly() || target.HookupForBreedingOnly())
             {
-                if (ModsConfig.BiotechActive)
+                if (BetterRomanceMod.settings.fertilityMod != "None")
                 {
-                    return pawn.GetStatValue(StatDefOf.Fertility) > 0.05f;
+                    string mod = BetterRomanceMod.settings.fertilityMod;
+                    if (ModsConfig.BiotechActive && mod == "ludeon.rimworld.biotech")
+                    {
+                        return PregnancyUtility.CanEverProduceChild(asker, target);
+                    }
+                    if (Settings.HARActive)
+                    {
+                        return HAR_Integration.CanEverProduceChild(asker, target);
+                    }
+                    return HookupUtility.CanEverProduceChild(asker, target);
+
                 }
-                else if (ModsConfig.IsActive("dylan.csl"))
-                {
-                    return pawn.health.capacities.GetLevel(RomanceDefOf.Fertility) > 0.05f;
-                }
-                else if (ModsConfig.IsActive("rim.job.world"))
-                {
-                    return pawn.health.capacities.GetLevel(RomanceDefOf.RJW_Fertility) > 0.05f;
-                }
-                Log.Message("");
             }
             return true;
         }
+
+        public static float GetFertilityLevel(this Pawn pawn)
+        {
+            if (BetterRomanceMod.settings.fertilityMod != "None")
+            {
+                string mod = BetterRomanceMod.settings.fertilityMod;
+                switch (mod)
+                {
+                    case "ludeon.rimworld.biotech":
+                        return pawn.GetStatValue(StatDefOf.Fertility);
+                    case "dylan.csl":
+                        return pawn.health.capacities.GetLevel(RomanceDefOf.Fertility);
+                    case "rim.job.world":
+                        return pawn.health.capacities.GetLevel(RomanceDefOf.RJW_Fertility);
+                }
+                Log.Error("Unexpected value of fertilityMod: " + mod);
+                return 0f;
+            }
+            Log.Message("If you are using a mod that adds fertility/pregnancy, please set it in the mod options for Way Better Romance. Otherwise, ignore this message.");
+            return 0f;
+        }
+
+        public static bool IsFertile(this Pawn pawn) => pawn.GetFertilityLevel() > 0f;
 
         public static bool MeetsHookupTraitRequirment(this Pawn pawn, out TraitDef trait, bool ordered = false)
         {

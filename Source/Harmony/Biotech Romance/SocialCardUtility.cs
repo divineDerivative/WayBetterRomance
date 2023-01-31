@@ -38,6 +38,8 @@ namespace BetterRomance.HarmonyPatches
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             MethodInfo EndGroup = AccessTools.Method(typeof(Widgets), nameof(Widgets.EndGroup));
+            MethodInfo CanDrawTryRomance = AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance");
+
             foreach (CodeInstruction code in instructions)
             {
                 if (code.Calls(EndGroup))
@@ -47,6 +49,12 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.Call(typeof(SocialCardUtility_DrawRelationsAndOpinions), "SocialCardHelper");
                 }
                 yield return code;
+                if (code.Calls(CanDrawTryRomance))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(HookupUtility), nameof(HookupUtility.CanDrawTryHookup));
+                    yield return new CodeInstruction(OpCodes.Or);
+                }
             }
         }
 
@@ -55,7 +63,10 @@ namespace BetterRomance.HarmonyPatches
             Vector2 ButtonSize = (Vector2)AccessTools.Field(typeof(SocialCardUtility), "RoleChangeButtonSize").GetValue(null);
             if (HookupUtility.CanDrawTryHookup(pawn))
             {
-                DrawTryHookup(new Rect(rect.width - 150f - ButtonSize.x - 5f, rect.height - ButtonSize.y, ButtonSize.x, ButtonSize.y), pawn);
+                bool romanceDrawn = (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, new object[] { pawn });
+                //Adjust x position based on if romance button is present
+                float width = romanceDrawn ? rect.width - 150f - ButtonSize.x - 5f : rect.width - 150f - +10f;
+                DrawTryHookup(new Rect(width, rect.height - ButtonSize.y, ButtonSize.x, ButtonSize.y), pawn);
             }
         }
 
@@ -190,6 +201,21 @@ namespace BetterRomance.HarmonyPatches
             text.AppendLine(("WBR.HookupChance".Translate() + (": " + chance.ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
             text.Append(HookupUtility.HookupFactors(initiator, target));
             return text.ToString();
+        }
+    }
+
+    //This is to prevent drawing the button since I had to co-opt the bool that usually prevents it
+    [HarmonyPatch(typeof(SocialCardUtility), "DrawTryRomance")]
+    public static class SocialCardUtility_DrawTryRomance
+    {
+        public static bool Prefix(Rect buttonRect, Pawn pawn)
+        {
+            bool canTry = (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, new object[] { pawn });
+            if (!canTry)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

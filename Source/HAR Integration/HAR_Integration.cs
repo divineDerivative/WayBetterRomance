@@ -48,5 +48,61 @@ namespace BetterRomance
             }
             return alienRace.alienRace.generalSettings.reproduction.femaleFertilityAgeFactor != null;
         }
+
+        public static AcceptanceReport CanEverProduceChild(Pawn first, Pawn second)
+        {
+            return HookupUtility.CanEverProduceChild(first, second);
+            //Switch to below when HAR stable updates
+
+            //if (first.Dead)
+            //{
+            //    return "WBR.PawnIsDead".Translate(first.Named("PAWN"));
+            //}
+            //if (second.Dead)
+            //{
+            //    return "WBR.PawnIsDead".Translate(second.Named("PAWN"));
+            //}
+            //if (!ReproductionSettings.GenderReproductionCheck(first, second))
+            //{
+            //    return "WBR.PawnsHaveSameGender".Translate(first.Named("PAWN1"), second.Named("PAWN2")).Resolve();
+            //}
+            //Pawn fertilizer = ReproductionSettings.ApplicableGender(first, false) ? first : second;
+            //Pawn gestator = ReproductionSettings.ApplicableGender(first, true) ? first : second;
+            //bool fertilizerFertile = fertilizer.GetFertilityLevel() <= 0f;
+            //bool gestatorFertile = gestator.GetFertilityLevel() <= 0f;
+            //if (fertilizerFertile && gestatorFertile)
+            //{
+            //    return "WBR.PawnsAreInfertile".Translate(fertilizer.Named("PAWN1"), gestator.Named("PAWN2")).Resolve();
+            //}
+            //if (fertilizerFertile != gestatorFertile)
+            //{
+            //    return "WBR.PawnIsInfertile".Translate((fertilizerFertile ? fertilizer : gestator).Named("PAWN")).Resolve();
+            //}
+            //bool fertilizerYoung = !fertilizer.ageTracker.CurLifeStage.reproductive;
+            //bool gestatorYoung = !gestator.ageTracker.CurLifeStage.reproductive;
+            //if (fertilizerYoung && gestatorYoung)
+            //{
+            //    return "WBR.PawnsAreTooYoung".Translate(fertilizer.Named("PAWN1"), gestator.Named("PAWN2")).Resolve();
+            //}
+            //if (fertilizerYoung != gestatorYoung)
+            //{
+            //    return "WBR.PawnIsTooYoung".Translate((fertilizerYoung ? fertilizer : gestator).Named("PAWN")).Resolve();
+            //}
+            //bool gestatorSterile = gestator.Sterile() && PregnancyUtility.GetPregnancyHediff(gestator) == null;
+            //bool fertilizerSterile = fertilizer.Sterile();
+            //if (fertilizerSterile && gestatorSterile)
+            //{
+            //    return "WBR.PawnsAreSterile".Translate(fertilizer.Named("PAWN1"), gestator.Named("PAWN2")).Resolve();
+            //}
+            //if (fertilizerSterile != gestatorSterile)
+            //{
+            //    return "WBR.PawnIsSterile".Translate((fertilizerSterile ? fertilizer : gestator).Named("PAWN")).Resolve();
+            //}
+            //if (!RaceRestrictionSettings.CanReproduce(first, second))
+            //{
+            //    return $"{first.gender} {first.def.LabelCap} can not reproduce with {second.gender} {second.def.LabelCap}";
+            //}
+            //return true;
+        }
     }
 }

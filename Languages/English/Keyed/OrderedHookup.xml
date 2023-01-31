@@ -7,22 +7,33 @@
 	<WBR.CantHookupTargetSlave>slave</WBR.CantHookupTargetSlave>
 	<WBR.CantHookupTargetAsexual>asexual</WBR.CantHookupTargetAsexual>
 	<WBR.CantHookupTargetGender>incompatible gender</WBR.CantHookupTargetGender>
-	<WBR.CantHookupTargetInfertile>infertile</WBR.CantHookupTargetInfertile>
+	<WBR.CantHookupTargetInfertile>pregnancy not possible</WBR.CantHookupTargetInfertile>
 	<WBR.CantHookupTargetTrait>missing {0_label} trait</WBR.CantHookupTargetTrait>
 	<WBR.CantHookupTargetIdeo>{0_name}</WBR.CantHookupTargetIdeo>
+	<WBR.CantHookupTargetUnreachable>unreachable</WBR.CantHookupTargetUnreachable>
+	<WBR.CantHookupTargetDowned>incapacitated</WBR.CantHookupTargetDowned>
+	<WBR.CantHookupTargetDrafted>drafted</WBR.CantHookupTargetDrafted>
+	<WBR.CantHookupTargetMentalState>mental break</WBR.CantHookupTargetMentalState>
+	<WBR.CantHookupTargetIncest>incestuous</WBR.CantHookupTargetIncest>
+	<WBR.CantHookupTargetOpinion>low opinion</WBR.CantHookupTargetOpinion>
+	<WBR.CantHookupTargetPrisoner>prisoner</WBR.CantHookupTargetPrisoner>
+	<WBR.CantHookupTargetYoung>too young</WBR.CantHookupTargetYoung>
+	<WBR.CantHookupTargetZeroChance>zero chance</WBR.CantHookupTargetZeroChance>
 
-	<WBR.CantHookupInitiateMessagePrisoner>{0_labelShort} cannot try to hook up because {0_pronoun} is a prisoner.</WBR.CantHookupInitiateMessagePrisoner>
-	<WBR.CantHookupInitiateMessageDowned>{0_labelShort} cannot try to hook up because {0_pronoun} is incapacitated.</WBR.CantHookupInitiateMessageDowned>
-	<WBR.CantHookupInitiateMessageAsexual>{0_labelShort} cannot try to hook up because {0_pronoun} is asexual.</WBR.CantHookupInitiateMessageAsexual>
-	<WBR.CantHookupInitiateMessageDrafted>{0_labelShort} cannot try to hook up because {0_pronoun} is drafted.</WBR.CantHookupInitiateMessageDrafted>
-	<WBR.CantHookupInitiateMessageMentalState>{0_labelShort} cannot try to hook up because {0_pronoun} is in an unfit mental state.</WBR.CantHookupInitiateMessageMentalState>
-	<WBR.CantHookupInitiateMessageUninterruptableJob>{0_labelShort} cannot try to hook up because {0_possessive} current job cannot be interrupted.</WBR.CantHookupInitiateMessageUninterruptableJob>
-	<WBR.CantHookupInitiateMessageInLabor>{0_labelShort} cannot try to hook up because {0_pronoun} is in labor.</WBR.CantHookupInitiateMessageInLabor>
+	<WBR.CantHookupInitiateMessagePrisoner>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is a prisoner.</WBR.CantHookupInitiateMessagePrisoner>
+	<WBR.CantHookupInitiateMessageDowned>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is incapacitated.</WBR.CantHookupInitiateMessageDowned>
+	<WBR.CantHookupInitiateMessageAsexual>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is asexual.</WBR.CantHookupInitiateMessageAsexual>
+	<WBR.CantHookupInitiateMessageDrafted>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is drafted.</WBR.CantHookupInitiateMessageDrafted>
+	<WBR.CantHookupInitiateMessageMentalState>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is in an unfit mental state.</WBR.CantHookupInitiateMessageMentalState>
+	<WBR.CantHookupInitiateMessageUninterruptableJob>{0_labelShort} cannot be ordered to hook up because {0_possessive} current job cannot be interrupted.</WBR.CantHookupInitiateMessageUninterruptableJob>
+	<WBR.CantHookupInitiateMessageInLabor>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is in labor.</WBR.CantHookupInitiateMessageInLabor>
 	<WBR.CantHookupInitiateMessageIdeo>{0_labelShort}'s ideoligion does not allow hooking up.</WBR.CantHookupInitiateMessageIdeo>
-	<WBR.CantHookupInitiateMessageFertility>{0_labelShort} cannot try to hook up because {0_pronoun} is infertile.</WBR.CantHookupInitiateMessageFertility>
-	<WBR.CantHookupInitiateMessageTrait>{0_labelShort} cannot try to hook up because {0_pronoun} does not have the {1_label} trait.</WBR.CantHookupInitiateMessageTrait>
+	<WBR.CantHookupInitiateMessageFertility>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is infertile.</WBR.CantHookupInitiateMessageFertility>
+	<WBR.CantHookupInitiateMessageTrait>{0_labelShort} cannot be ordered to hook up because {0_pronoun} does not have the {1_label} trait.</WBR.CantHookupInitiateMessageTrait>
 
 	<WBR.HookupExistingRelationshipWarning>Having {INITIATOR_nameDef} hook up with {TARGET_nameDef} could sow resentment among existing partners, lead to breakups, and cause altercations.</WBR.HookupExistingRelationshipWarning>
+	<WBR.HookupWarningMonogamous>{0_nameDef} is already in a relationship.</WBR.HookupWarningMonogamous>
+	<WBR.HookupWarningPolygamous>{0_nameDef} already has {1} partners.</WBR.HookupWarningPolygamous>
 	<WBR.NoHookupBedFound>No suitable bed found for {0_labelShort} and {1_labelShort} to hook up in.</WBR.NoHookupBedFound>
 	<WBR.TryHookupFailedMessage>{0_labelShort}'s attempt to hook up with {1_labelShort} was unsuccessful.</WBR.TryHookupFailedMessage>
 	<WBR.TryHookupSuccessMessage>{1_labelShort} agreed to hook up with {0_labelShort}.</WBR.TryHookupSuccessMessage>
@@ -34,7 +45,20 @@
 
 	<WBR.HookupChance>Hookup chance</WBR.HookupChance>
 	<HookupChanceExistingRelation>already {PAWN_nameDef}'s {RELATION}</HookupChanceExistingRelation>
-	<WBR.HookupChanceCant>Cannot hook up with</WBR.HookupChanceCant>
+	<WBR.HookupChanceCant>Cannot order hook up with</WBR.HookupChanceCant>
 	<WBR.HookupChanceNotPartner>No relationship</WBR.HookupChanceNotPartner>
 	<WBR.HookupChanceSexuality>Orientation factor</WBR.HookupChanceSexuality>
+	<WBR.HookupChanceAgeFactor>Relative age</WBR.HookupChanceAgeFactor>
+	<WBR.HookupChanceBeautyFactor>Beauty</WBR.HookupChanceBeautyFactor>
+	<WBR.HookupChanceOpinionFactor>Opinion</WBR.HookupChanceOpinionFactor>
+	<WBR.HookupChancePartnerFactor>Opinion of partner</WBR.HookupChancePartnerFactor>
+
+	<WBR.PawnsHaveSameGender>{PAWN1_nameDef} and {PAWN2_nameDef} are the same gender.</WBR.PawnsHaveSameGender>
+	<WBR.PawnsAreSterile>{PAWN1_nameDef} and {PAWN2_nameDef} are sterile.</WBR.PawnsAreSterile>
+	<WBR.PawnIsSterile>{PAWN_nameDef} is sterile.</WBR.PawnIsSterile>
+	<WBR.PawnsAreInfertile>{PAWN1_nameDef} and {PAWN2_nameDef} are infertile.</WBR.PawnsAreInfertile>
+	<WBR.PawnIsInfertile>{PAWN_nameDef} is infertile.</WBR.PawnIsInfertile>
+	<WBR.PawnsAreTooYoung>{PAWN1_nameDef} and {PAWN2_nameDef} are too young to have children.</WBR.PawnsAreTooYoung>
+	<WBR.PawnIsTooYoung>{PAWN_nameDef} is too young to have children.</WBR.PawnIsTooYoung>
+	<WBR.PawnIsDead>{PAWN_nameDef} is dead.</WBR.PawnIsDead>
 </LanguageData>

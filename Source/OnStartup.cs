@@ -1,11 +1,7 @@
-using System;
-using System.Reflection;
-using System.Collections.Generic;
 using HarmonyLib;
-using UnityEngine;
 using Verse;
 using RimWorld;
-using AlienRace;
+using System.Linq;
 
 namespace BetterRomance
 {
@@ -24,6 +20,28 @@ namespace BetterRomance
             }
             Harmony harmony = new Harmony(id: "rimworld.divineDerivative.romance");
             harmony.PatchAll();
+            MakeFertilityModList();
+        }
+
+        private static void MakeFertilityModList()
+        {
+            if (ModsConfig.BiotechActive)
+            {
+                Settings.FertilityMods.Add("ludeon.rimworld.biotech", "Biotech");
+            }
+            if (ModsConfig.IsActive("dylan.csl"))
+            {
+                Settings.FertilityMods.Add("dylan.csl", "Children, school and learning");
+            }
+            if (ModsConfig.IsActive("rim.job.world"))
+            {
+                Settings.FertilityMods.Add("rim.job.world", "RJW");
+            }
+            //Try to auto set if there's only one choice
+            if (Settings.FertilityMods.Count == 1 && (BetterRomanceMod.settings.fertilityMod == "None" || !Settings.FertilityMods.ContainsKey(BetterRomanceMod.settings.fertilityMod)))
+            {
+                BetterRomanceMod.settings.fertilityMod = Settings.FertilityMods.First().Key;
+            }
         }
     }
 

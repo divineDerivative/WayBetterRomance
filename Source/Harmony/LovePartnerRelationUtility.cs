@@ -212,32 +212,6 @@ namespace BetterRomance.HarmonyPatches
     public static class LovePartnerRelationUtility_MinPossibleAgeGapAtMinAgeToGenerateAsLovers
     {
         //I don't really understand what this does, but it's updated to use proper ages
-        //public static bool Prefix(Pawn p1, Pawn p2, ref float __result)
-        //{
-        //    float p1AdjustedAge = p1.ageTracker.AgeChronologicalYearsFloat - p1.MinAgeForSex();
-        //    if (p1AdjustedAge < 0f)
-        //    {
-        //        __result = 0f;
-        //        return false;
-        //    }
-        //    float p2MinAgeForSex = p2.MinAgeForSex();
-        //    float p2MaxPossibleAge = PawnRelationUtility.MaxPossibleBioAgeAt(p2.ageTracker.AgeBiologicalYearsFloat, p2.ageTracker.AgeChronologicalYearsFloat, p1AdjustedAge);
-        //    float p2MinPossibleAge = PawnRelationUtility.MinPossibleBioAgeAt(p2.ageTracker.AgeBiologicalYearsFloat, p1AdjustedAge);
-        //    if (p2MaxPossibleAge < 0f || p2MaxPossibleAge < p2MinAgeForSex)
-        //    {
-        //        __result = -1f;
-        //        return false;
-        //    }
-
-        //    if (p2MinPossibleAge <= p2MinAgeForSex)
-        //    {
-        //        __result = 0f;
-        //        return false;
-        //    }
-        //    __result = p2MinPossibleAge - p2MinAgeForSex;
-        //    return false;
-        //}
-
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             bool firstFound = false;
@@ -276,18 +250,6 @@ namespace BetterRomance.HarmonyPatches
         //Changes from vanilla:
         //Age adjustments
         //No adjustment made for asexual pawns as that is handled elsewhere
-        //public static bool Prefix(Pawn pawn, ref float __result)
-        //{
-        //    float baseMtb = 1f;
-        //    baseMtb /= 1f - pawn.health.hediffSet.PainTotal;
-        //    float level = pawn.health.capacities.GetLevel(PawnCapacityDefOf.Consciousness);
-        //    if (level < 0.5f)
-        //    {
-        //        baseMtb /= level * 2f;
-        //    }
-        //    __result = baseMtb / GenMath.FlatHill(0f, pawn.MinAgeForSex() - 2f, pawn.MinAgeForSex(), pawn.DeclineAtAge(), pawn.MaxAgeForSex(), 0.2f, pawn.ageTracker.AgeBiologicalYearsFloat);
-        //    return false;
-        //}
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         { 

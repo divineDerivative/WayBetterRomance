@@ -73,17 +73,17 @@ namespace BetterRomance
                     {
                         return false;
                     }
-                    //Lower chances for kind trait
-                    if (pawn.story.traits.HasTrait(TraitDefOf.Kind))
-                    {
-                        cheatChance *= .25f;
-                    }
                     //Don't allow if user has turned cheating off
                     if (cheatChance == 0f)
                     {
                         return false;
                     }
-
+                    //Lower chances for kind trait
+                    if (pawn.story.traits.HasTrait(TraitDefOf.Kind))
+                    {
+                        cheatChance *= .25f;
+                    }
+                    //Generate random value, modify by cheat chance, and compare to opinion of most liked partner
                     if (Rand.Value * (cheatChance / 100f) < PartnerFactor(pawn, cheatedOnList, out cheatOn))
                     {
                         return false;

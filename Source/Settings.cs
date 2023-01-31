@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -6,7 +7,6 @@ namespace BetterRomance
 {
     public class Settings : ModSettings
     {
-        
         public float asexualChance = 10f;
         public float bisexualChance = 50f;
         public float gayChance = 20f;
@@ -24,8 +24,11 @@ namespace BetterRomance
         public float minOpinionRomance = 5f;
         public float minOpinionHookup = 5f;
 
+        public string fertilityMod = "None";
+
         //These are not set by the user
         public static bool HARActive = false;
+        public static Dictionary<string, string> FertilityMods = new Dictionary<string, string>();
 
         public override void ExposeData()
         {
@@ -46,6 +49,8 @@ namespace BetterRomance
             Scribe_Values.Look(ref minOpinionRomance, "minOpinionRomance", 5.0f);
             Scribe_Values.Look(ref cheatChance, "cheatChance", 100.0f);
             Scribe_Values.Look(ref minOpinionHookup, "minOpinionHookup", 0f);
+
+            Scribe_Values.Look(ref fertilityMod, "fertilityMod", "None");
         }
     }
 
@@ -109,6 +114,36 @@ namespace BetterRomance
                 settings.cheatChance = 100f;
                 settings.minOpinionHookup = 0f;
             }
+
+            list.Gap();
+            if (Settings.FertilityMods.Count == 1 && (settings.fertilityMod == "None" || !Settings.FertilityMods.ContainsKey(settings.fertilityMod)))
+            {
+                settings.fertilityMod = Settings.FertilityMods.First().Key;
+            }
+            else if (!Settings.FertilityMods.ContainsKey(settings.fertilityMod))
+            {
+                settings.fertilityMod = "None";
+            }
+            if (list.ButtonTextLabeled("Fertility Mod", settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(settings.fertilityMod) : "None"))
+            {
+                List<FloatMenuOption> options = new List<FloatMenuOption>();
+                foreach (KeyValuePair<string, string> item in Settings.FertilityMods)
+                {
+                    options.Add(new FloatMenuOption(item.Value, delegate
+                    {
+                        settings.fertilityMod = item.Key;
+                    }));
+                }
+                if (!options.NullOrEmpty())
+                {
+                    Find.WindowStack.Add(new FloatMenu(options));
+                }
+            }
+            if (Settings.FertilityMods.Count == 0)
+            {
+                list.Label("No fertility mod detected. If you are using one, please let me know which one so I can add support for it.");
+            }
+
             list.End();
         }
 
