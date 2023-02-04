@@ -116,7 +116,6 @@ namespace BetterRomance
                         return HAR_Integration.CanEverProduceChild(asker, target);
                     }
                     return HookupUtility.CanEverProduceChild(asker, target);
-
                 }
             }
             return true;
@@ -136,25 +135,115 @@ namespace BetterRomance
                     case "rim.job.world":
                         return pawn.health.capacities.GetLevel(RomanceDefOf.RJW_Fertility);
                 }
-                Log.Error("Unexpected value of fertilityMod: " + mod);
-                return 0f;
+                Log.ErrorOnce("Unexpected value of fertilityMod: " + mod, 1798621);
+                return 100f;
             }
             Log.Message("If you are using a mod that adds fertility/pregnancy, please set it in the mod options for Way Better Romance. Otherwise, ignore this message.");
-            return 0f;
+            return 100f;
         }
 
         public static bool IsFertile(this Pawn pawn) => pawn.GetFertilityLevel() > 0f;
 
-        public static bool MeetsHookupTraitRequirment(this Pawn pawn, out TraitDef trait, bool ordered = false)
+        public static Dictionary<ThingDef, List<TraitRequirement>> RaceHookupTraits = new Dictionary<ThingDef, List<TraitRequirement>>();
+        public static Dictionary<PawnKindDef, List<TraitRequirement>> PawnkindHookupTraits = new Dictionary<PawnKindDef, List<TraitRequirement>>();
+
+        public static void MakeTraitList()
         {
-            HookupTrigger triggers = GetHookupSettings(pawn, ordered);
-            if (triggers?.hasTrait != null)
+            List<TraitDef> traitList = DefDatabase<TraitDef>.AllDefsListForReading;
+            foreach (TraitDef trait in traitList)
             {
-                trait = triggers.hasTrait;
-                return pawn.story.traits.HasTrait(trait);
+                if (trait.HasModExtension<HookupTrait>())
+                {
+                    HookupTrait extension = trait.GetModExtension<HookupTrait>();
+                    if (!extension.races.NullOrEmpty())
+                    {
+                        foreach (ThingDef race in extension.races)
+                        {
+                            if (!RaceHookupTraits.ContainsKey(race))
+                            {
+                                RaceHookupTraits.Add(race, new List<TraitRequirement>());
+                            }
+                            if (extension.degrees.NullOrEmpty())
+                            {
+                                RaceHookupTraits[race].Add(new TraitRequirement()
+                                {
+                                    def = trait,
+                                    degree = 0,
+                                });
+                            }
+                            else
+                            {
+                                foreach (int i in extension.degrees)
+                                {
+                                    RaceHookupTraits[race].Add(new TraitRequirement()
+                                    {
+                                        def = trait,
+                                        degree = i,
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    if (!extension.pawnkinds.NullOrEmpty())
+                    {
+                        foreach (PawnKindDef pawnkind in extension.pawnkinds)
+                        {
+                            if (!PawnkindHookupTraits.ContainsKey(pawnkind))
+                            {
+                                PawnkindHookupTraits.Add(pawnkind, new List<TraitRequirement>());
+                            }
+                            if (extension.degrees.NullOrEmpty())
+                            {
+                                PawnkindHookupTraits[pawnkind].Add(new TraitRequirement()
+                                {
+                                    def = trait,
+                                    degree = 0,
+                                });
+                            }
+                            else
+                            {
+                                foreach (int i in extension.degrees)
+                                {
+                                    PawnkindHookupTraits[pawnkind].Add(new TraitRequirement()
+                                    {
+                                        def = trait,
+                                        degree = i,
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            //Default is no trait requirement
-            trait = null;
+        }
+
+        public static bool MeetsHookupTraitRequirment(this Pawn pawn, out List<string> list)
+        {
+            list = new List<string>();
+            if (PawnkindHookupTraits.ContainsKey(pawn.kindDef))
+            {
+                foreach (TraitRequirement trait in PawnkindHookupTraits[pawn.kindDef])
+                {
+                    list.Add(trait.def.DataAtDegree(trait.degree ?? 0).label);
+                    if (trait.HasTrait(pawn))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else if (RaceHookupTraits.ContainsKey(pawn.def))
+            {
+                foreach (TraitRequirement trait in RaceHookupTraits[pawn.def])
+                {
+                    list.Add(trait.def.DataAtDegree(trait.degree ?? 0).label);
+                    if (trait.HasTrait(pawn))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
             return true;
         }
 
@@ -221,6 +310,7 @@ namespace BetterRomance
             RelationSettings settings = GetRelationSettings(pawn);
             return settings == null || settings.childrenAllowed;
         }
+
         /// <summary>
         /// Provides an appropriate pawnkind for a newly generated parent. If children are not allowed, uses a pawnkind from settings, otherwise uses the same pawnkind as the child.
         /// </summary>
@@ -271,6 +361,7 @@ namespace BetterRomance
             }
             throw new ArgumentException("This pawn has no gender");
         }
+
         //Same as above but takes a gender argument, for use when getting age settings for pawns that haven't been generated yet
         public static float MinAgeToHaveChildren(this Pawn pawn, Gender gender)
         {
@@ -299,6 +390,7 @@ namespace BetterRomance
             }
             throw new ArgumentException("This pawn has no gender");
         }
+
         //Same as above but takes a gender argument, for use when getting age settings for pawns that haven't been generated yet
         public static float MaxAgeToHaveChildren(this Pawn pawn, Gender gender)
         {
@@ -331,6 +423,7 @@ namespace BetterRomance
                 return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
             }
         }
+
         //Same as above but takes a gender argument, for use when getting age settings for pawns that haven't been generated yet
         public static float UsualAgeToHaveChildren(this Pawn pawn, Gender gender)
         {

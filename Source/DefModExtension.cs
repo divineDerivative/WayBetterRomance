@@ -45,6 +45,7 @@ namespace BetterRomance
     {
         public bool caresAboutCheating = true;
         public bool willDoHookup = true;
+        public bool canDoOrderedHookup = true;
         public float hookupRate = BetterRomanceMod.settings.hookupRate;
         public float alienLoveChance = BetterRomanceMod.settings.alienLoveChance;
         public HookupTrigger hookupTriggers;
@@ -61,31 +62,54 @@ namespace BetterRomance
                 alienLoveChance = 100.99f;
                 yield return "Alien love chance cannot be higher than 100";
             }
-            if (hookupTriggers!= null && hookupTriggers.mustBeFertile)
+#pragma warning disable CS0612 // Type or member is obsolete
+            if (hookupTriggers != null && hookupTriggers.mustBeFertile)
             {
-                hookupTriggers.forBreedingOnly = hookupTriggers.mustBeFertile;
-                yield return "mustBeFertile has been changed to forBreedingOnly, please update accordingly. Copying value for hookupTriggers.";
+                yield return "mustBeFertile has been changed to forBreedingOnly, and can only be used for ordered hookups. Please update accordingly.";
             }
             if (orderedHookupTriggers != null && orderedHookupTriggers.mustBeFertile)
             {
                 orderedHookupTriggers.forBreedingOnly = orderedHookupTriggers.mustBeFertile;
                 yield return "mustBeFertile has been changed to forBreedingOnly, please update accordingly. Copying value for orderedHookupTriggers.";
             }
+#pragma warning restore CS0612 // Type or member is obsolete
             if (hookupTriggers != null && hookupTriggers.forBreedingOnly)
             {
                 hookupTriggers.forBreedingOnly = false;
                 yield return "forBreedingOnly is for ordered hookups only. Setting to false.";
             }
+#pragma warning disable CS0612 // Type or member is obsolete
+            if ((hookupTriggers != null && hookupTriggers.hasTrait != null) || (orderedHookupTriggers != null && orderedHookupTriggers.hasTrait != null))
+            {
+                yield return "hasTrait field is being removed. Please add the new HookupTrait setting to the TraitDef.";
+            }
+#pragma warning restore CS0612 // Type or member is obsolete
         }
     }
 
     public class HookupTrigger
     {
         public float minOpinion = BetterRomanceMod.settings.minOpinionHookup;
+        [Obsolete]
         public TraitDef hasTrait = null;
         [Obsolete]
         public bool mustBeFertile = false;
         public bool forBreedingOnly = false;
+    }
+
+    public class HookupTrait : DefModExtension
+    {
+        public List<ThingDef> races;
+        public List<PawnKindDef> pawnkinds;
+        public List<int> degrees;
+
+        public override IEnumerable<string> ConfigErrors()
+        {
+            if (races.NullOrEmpty() && pawnkinds.NullOrEmpty())
+            {
+                yield return "Must provide either a race or pawnkind that trait requirement should apply to.";
+            }
+        }
     }
 
     public class RegularSexSettings : DefModExtension

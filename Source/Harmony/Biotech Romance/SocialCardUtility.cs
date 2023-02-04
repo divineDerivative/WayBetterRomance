@@ -11,6 +11,7 @@ using System;
 
 namespace BetterRomance.HarmonyPatches
 {
+    //Use min age setting instead of static 16
     [HarmonyPatch(typeof(SocialCardUtility), "CanDrawTryRomance")]
     public static class SocialCardUtility_CanDrawTryRomance
     {

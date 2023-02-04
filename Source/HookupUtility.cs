@@ -4,6 +4,7 @@ using HarmonyLib;
 using Verse.AI;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BetterRomance
 {
@@ -218,6 +219,7 @@ namespace BetterRomance
             {
                 return ar;
             }
+            //Check fertility requirements
             if (pawn.HookupForBreedingOnly() && (!pawn.ageTracker.CurLifeStage.reproductive || !pawn.IsFertile()))
             {
                 return initiator ? "WBR.CantHookupInitiateMessageFertility".Translate(pawn) : "WBR.CantHookupTargetInfertile".Translate();
@@ -340,8 +342,8 @@ namespace BetterRomance
                 {
                     romanceFactor /= 1.5f;
                 }
-                //Adjust based on opinion
-                return romanceFactor * OpinionFactor(target, asker);
+                //Adjust based on opinion and increase chance for forced job
+                return romanceFactor * OpinionFactor(target, asker) * (ordered ? 1.2f : 1f);
             }
             return 0f;
         }
@@ -397,9 +399,15 @@ namespace BetterRomance
                 return initiator ? (AcceptanceReport)"WBR.CantHookupInitiateMessageFertility".Translate(pawn) : (AcceptanceReport)"WBR.CantHookupTargetInfertile".Translate();
             }
             //Check trait requirements
-            if (!pawn.MeetsHookupTraitRequirment(out TraitDef trait, ordered))
+            if (ordered && !pawn.MeetsHookupTraitRequirment(out List<string> traitList))
             {
-                return initiator ? "WBR.CantHookupInitiateMessageTrait".Translate(pawn, trait) : "WBR.CantHookupTargetTrait".Translate(trait);
+                if (!traitList.NullOrEmpty())
+                {
+                    string text = traitList.ToCommaListOr();
+                    return initiator ? "WBR.CantHookupInitiateMessageTrait".Translate(pawn, text) : "WBR.CantHookupTargetTrait".Translate();
+                }
+                //Make a list of traits pawn needs and report that somehow
+                return initiator ? "WBR.CantHookupInitiateMessageTrait".Translate(pawn) : "WBR.CantHookupTargetTrait".Translate();
             }
             //If their ideo prohibits all lovin', do not allow
             if (!new HistoryEvent(HistoryEventDefOf.SharedBed, pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo())

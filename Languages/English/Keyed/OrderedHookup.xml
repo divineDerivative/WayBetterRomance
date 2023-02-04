@@ -8,7 +8,7 @@
 	<WBR.CantHookupTargetAsexual>asexual</WBR.CantHookupTargetAsexual>
 	<WBR.CantHookupTargetGender>incompatible gender</WBR.CantHookupTargetGender>
 	<WBR.CantHookupTargetInfertile>pregnancy not possible</WBR.CantHookupTargetInfertile>
-	<WBR.CantHookupTargetTrait>missing {0_label} trait</WBR.CantHookupTargetTrait>
+	<WBR.CantHookupTargetTrait>missing trait</WBR.CantHookupTargetTrait>
 	<WBR.CantHookupTargetIdeo>{0_name}</WBR.CantHookupTargetIdeo>
 	<WBR.CantHookupTargetUnreachable>unreachable</WBR.CantHookupTargetUnreachable>
 	<WBR.CantHookupTargetDowned>incapacitated</WBR.CantHookupTargetDowned>
@@ -29,7 +29,7 @@
 	<WBR.CantHookupInitiateMessageInLabor>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is in labor.</WBR.CantHookupInitiateMessageInLabor>
 	<WBR.CantHookupInitiateMessageIdeo>{0_labelShort}'s ideoligion does not allow hooking up.</WBR.CantHookupInitiateMessageIdeo>
 	<WBR.CantHookupInitiateMessageFertility>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is infertile.</WBR.CantHookupInitiateMessageFertility>
-	<WBR.CantHookupInitiateMessageTrait>{0_labelShort} cannot be ordered to hook up because {0_pronoun} does not have the {1_label} trait.</WBR.CantHookupInitiateMessageTrait>
+	<WBR.CantHookupInitiateMessageTrait>{0_labelShort} cannot be ordered to hook up because {0_pronoun} does not have the {1} trait.</WBR.CantHookupInitiateMessageTrait>
 
 	<WBR.HookupExistingRelationshipWarning>Having {INITIATOR_nameDef} hook up with {TARGET_nameDef} could sow resentment among existing partners, lead to breakups, and cause altercations.</WBR.HookupExistingRelationshipWarning>
 	<WBR.HookupWarningMonogamous>{0_nameDef} is already in a relationship.</WBR.HookupWarningMonogamous>

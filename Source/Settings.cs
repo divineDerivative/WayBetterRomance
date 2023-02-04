@@ -1,3 +1,4 @@
+using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,6 +26,8 @@ namespace BetterRomance
         public float minOpinionHookup = 5f;
 
         public string fertilityMod = "None";
+        public bool joyOnSlaves = false;
+        public bool joyOnPrisoners = false;
 
         //These are not set by the user
         public static bool HARActive = false;
@@ -51,6 +54,33 @@ namespace BetterRomance
             Scribe_Values.Look(ref minOpinionHookup, "minOpinionHookup", 0f);
 
             Scribe_Values.Look(ref fertilityMod, "fertilityMod", "None");
+            Scribe_Values.Look(ref joyOnSlaves, "joyOnSlaves", false);
+            Scribe_Values.Look(ref joyOnPrisoners, "joyOnPrisoners", false);
+        }
+
+        public static void ApplyJoySettings()
+        {
+            NeedDef def = DefDatabase<NeedDef>.GetNamed("Joy");
+            if (BetterRomanceMod.settings.joyOnSlaves)
+            {
+                def.neverOnSlave = false;
+            }
+            else
+            {
+                def.neverOnSlave = true;
+            }
+            if (BetterRomanceMod.settings.joyOnPrisoners)
+            {
+                def.neverOnPrisoner = false;
+                def.colonistAndPrisonersOnly = true;
+                def.colonistsOnly = false;
+            }
+            else
+            {
+                def.neverOnPrisoner = true;
+                def.colonistAndPrisonersOnly = false;
+                def.colonistsOnly = true;
+            }
         }
     }
 
@@ -72,6 +102,7 @@ namespace BetterRomance
         public override void WriteSettings()
         {
             base.WriteSettings();
+            Settings.ApplyJoySettings();
         }
 
         public override void DoSettingsWindowContents(Rect canvas)
@@ -143,7 +174,9 @@ namespace BetterRomance
             {
                 list.Label("No fertility mod detected. If you are using one, please let me know which one so I can add support for it.");
             }
-
+            list.Label("Add joy need (reload save after changing)");
+            list.CheckboxLabeled("Slaves", ref settings.joyOnSlaves);
+            list.CheckboxLabeled("Prisoners", ref settings.joyOnPrisoners);
             list.End();
         }
 
