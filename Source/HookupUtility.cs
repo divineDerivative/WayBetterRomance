@@ -388,7 +388,7 @@ namespace BetterRomance
                 return initiator ? "WBR.CantHookupInitiateMessageAsexual".Translate(pawn).CapitalizeFirst() : "WBR.CantHookupTargetAsexual".Translate();
             }
             //Is the race/pawnkind allowed to have hookups?
-            if (!pawn.HookupAllowed())
+            if (!pawn.HookupAllowed(ordered))
             {
                 //Decide if this should be reported to user and how to word it
                 return false;

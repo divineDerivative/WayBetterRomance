@@ -30,10 +30,10 @@ namespace BetterRomance
             return settings == null || settings.caresAboutCheating;
         }
 
-        public static bool HookupAllowed(this Pawn pawn)
+        public static bool HookupAllowed(this Pawn pawn, bool ordered = false)
         {
             CasualSexSettings settings = GetCasualSexSettings(pawn);
-            return settings == null || settings.willDoHookup;
+            return settings == null || (ordered ? settings.canDoOrderedHookup : settings.willDoHookup);
         }
 
         public static float HookupRate(this Pawn pawn)
