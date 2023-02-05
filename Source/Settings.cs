@@ -175,7 +175,10 @@ namespace BetterRomance
                 list.Label("No fertility mod detected. If you are using one, please let me know which one so I can add support for it.");
             }
             list.Label("Add joy need (reload save after changing)");
-            list.CheckboxLabeled("Slaves", ref settings.joyOnSlaves);
+            if (ModsConfig.IdeologyActive)
+            {
+                list.CheckboxLabeled("Slaves", ref settings.joyOnSlaves);
+            }
             list.CheckboxLabeled("Prisoners", ref settings.joyOnPrisoners);
             list.End();
         }
