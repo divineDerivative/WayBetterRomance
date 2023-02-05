@@ -57,19 +57,19 @@ namespace BetterRomance
 
             //Wake target up if job is forced
             if (Ordered)
+            {
+                yield return Toils_General.Do(delegate
                 {
-                    yield return Toils_General.Do(delegate
+                    if (!TargetPawn.Awake())
                     {
-                        if (!TargetPawn.Awake())
+                        TargetPawn.jobs.SuspendCurrentJob(JobCondition.InterruptForced);
+                        if (!pawn.interactions.CanInteractNowWith(TargetPawn, RomanceDefOf.TriedHookupWith))
                         {
-                            TargetPawn.jobs.SuspendCurrentJob(JobCondition.InterruptForced);
-                            if (!pawn.interactions.CanInteractNowWith(TargetPawn, RomanceDefOf.TriedHookupWith))
-                            {
-                                Messages.Message("HookupFailedUnexpected".Translate(pawn, TargetPawn), MessageTypeDefOf.NegativeEvent, historical: false);
-                            }
+                            Messages.Message("HookupFailedUnexpected".Translate(pawn, TargetPawn), MessageTypeDefOf.NegativeEvent, historical: false);
                         }
-                    });
-                }
+                    }
+                });
+            }
 
             //Ask the target
             Toil proposeHookup = new Toil
@@ -119,7 +119,11 @@ namespace BetterRomance
                         Actor.needs.mood.thoughts.memories.TryGainMemory(RomanceDefOf.RebuffedMyHookupAttempt, TargetPawn);
                         TargetPawn.needs.mood.thoughts.memories.TryGainMemory(RomanceDefOf.FailedHookupAttemptOnMe, Actor);
                         list.Add(RomanceDefOf.HookupFailed);
-                        Actor.GetComp<Comp_PartnerList>().Hookup.list.Remove(TargetPawn);
+                        Comp_PartnerList comp = Actor.GetComp<Comp_PartnerList>();
+                        if (!comp.Hookup.list.NullOrEmpty())
+                        {
+                            comp.Hookup.list.Remove(TargetPawn);
+                        }
                         //Send message if job was ordered
                         if (Ordered)
                         {
