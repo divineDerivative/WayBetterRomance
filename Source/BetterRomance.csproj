@@ -75,6 +75,7 @@
     <Compile Include="Harmony\Biotech Romance\RelationsUtility.cs" />
     <Compile Include="Harmony\Biotech Romance\SocialCardUtility.cs" />
     <Compile Include="Harmony\ChoiceLetter_GrowthMoment.cs" />
+    <Compile Include="Harmony\Pawn.cs" />
     <Compile Include="Harmony\Gizmo_GrowthTier.cs" />
     <Compile Include="Harmony\Pregnancy\Recipe_ImplantIUD.cs" />
     <Compile Include="Harmony\Pregnancy\HumanEmbryo.cs" />

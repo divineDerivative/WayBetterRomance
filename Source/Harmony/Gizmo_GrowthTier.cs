@@ -32,25 +32,5 @@ namespace BetterRomance.HarmonyPatches
     }
 
     
-    [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos), MethodType.Enumerator)]
-    public static class Pawn_GetGizmos
-    {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            List<CodeInstruction> codes = instructions.ToList();
-            for (int i = 0; i < codes.Count; i++)
-            {
-                CodeInstruction instruction = codes[i];
-                yield return instruction;
-                if (instruction.Is(OpCodes.Callvirt, AccessTools.DeclaredPropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AgeBiologicalYears))))
-                {   
-                    yield return new CodeInstruction(OpCodes.Ldloc_2);
-                    yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.DeclaredPropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AdultMinAge)));
-                    yield return new CodeInstruction(OpCodes.Conv_I4);
-                    i++;
-                }
-            }
-        }
-    }
+    
 }

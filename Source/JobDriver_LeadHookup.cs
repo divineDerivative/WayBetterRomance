@@ -44,16 +44,13 @@ namespace BetterRomance
             //Walk to the target
             Toil walkToTarget = Toils_Interpersonal.GotoInteractablePosition(TargetPawnIndex);
             walkToTarget.socialMode = RandomSocialMode.Off;
+            
             yield return walkToTarget;
-            //This is from vanilla, not sure why it's needed
-            Toil finalGoto = Toils_Interpersonal.GotoInteractablePosition(TargetPawnIndex);
-            yield return Toils_Jump.JumpIf(finalGoto, () => !TargetPawn.Awake());
 
             //Wait if needed
             Toil wait = Toils_Interpersonal.WaitToBeAbleToInteract(pawn);
             wait.socialMode = RandomSocialMode.Off;
             yield return wait;
-            finalGoto.socialMode = RandomSocialMode.Off;
 
             //Wake target up if job is forced
             if (Ordered)

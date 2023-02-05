@@ -249,20 +249,27 @@ namespace BetterRomance
                 yield break;
             }
             //Walk to the target
-            Toil walkToTarget = Toils_Goto.GotoThing(TargetPawnIndex, PathEndMode.Touch);
+            Toil walkToTarget = Toils_Interpersonal.GotoInteractablePosition(TargetPawnIndex);
             //attempt to make job fail if it takes too long to walk to target
-            walkToTarget.initAction = delegate
-            {
-                ticksLeftThisToil = ticksToFail;
-            };
-            walkToTarget.tickAction = delegate
-            {
-                if (ticksLeftThisToil <= 1)
-                {
-                    Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
-                }
-            };
+            //This just makes them stand in place after one attempt to reach the target and then times out :(
+            //walkToTarget.initAction = delegate
+            //{
+            //    ticksLeftThisToil = ticksToFail;
+            //};
+            //walkToTarget.tickAction = delegate
+            //{
+            //    if (ticksLeftThisToil <= 1)
+            //    {
+            //        Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
+            //    }
+            //};
+            walkToTarget.socialMode = RandomSocialMode.Off;
             yield return walkToTarget;
+
+            //Wait if needed
+            Toil wait = Toils_Interpersonal.WaitToBeAbleToInteract(pawn);
+            wait.socialMode = RandomSocialMode.Off;
+            yield return wait;
 
             //Start new toil
             Toil askOut = new Toil
