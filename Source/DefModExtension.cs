@@ -24,19 +24,19 @@ namespace BetterRomance
                 //Do math here to reset rates?
                 yield return "Sexuality chances must add up to 100";
             }
-            if (aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance != 100f)
-            {
-                //Do math here to reset rates?
-                yield return "Asexual romantic orientation chances must add up to 100";
-            }
             //If not set, default to orientation chances
-            if (aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance == 0f)
+            if ( asexualChance != 0f && aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance == 0f)
             {
                 Log.Warning("Romantic orientation chances for asexual pawns not found. Defaulting to match sexual orientation chances.");
                 aceAroChance = asexualChance;
                 aceBiChance = bisexualChance;
                 aceHomoChance = gayChance;
                 aceHeteroChance = straightChance;
+            }
+            if (aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance != 100f)
+            {
+                //Do math here to reset rates?
+                yield return "Asexual romantic orientation chances must add up to 100";
             }
         }
     }
