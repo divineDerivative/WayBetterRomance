@@ -51,7 +51,7 @@ namespace BetterRomance
                 Actor.pather.StartPath(Partner, PathEndMode.Touch);
             };
             //Gain joy
-            FollowPartner.tickAction = delegate { JoyUtility.JoyTickCheckEnd(Actor, JoyTickFullJoyAction.None); };
+            FollowPartner.tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); };
             //Yield this toil 100 times
             //Date lead job has a finite end, so the date won't go on forever
             for (int i = 0; i < 100; i++)

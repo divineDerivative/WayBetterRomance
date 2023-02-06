@@ -1,9 +1,5 @@
 ﻿using RimWorld;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -103,6 +99,52 @@ namespace BetterRomance
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Determines if <paramref name="target"/> accepts a date with <paramref name="asker"/>.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="asker"></param>
+        /// <returns>True or false</returns>
+        public static bool IsDateAppealing(Pawn target, Pawn asker)
+        {
+            //Always agree with an existing partner
+            if (LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
+            {
+                return true;
+            }
+            if (RomanceUtilities.WillPawnContinue(target, asker, out _))
+            {
+                //Definitely not cheating, or they decided to cheat
+                //Same math as agreeing to a hookup but no asexual check
+                float num = 0f;
+                num += target.relations.SecondaryRomanceChanceFactor(asker) / 1.5f;
+                num *= Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
+                return Rand.Range(0.05f, 1f) < num;
+            }
+            return false;
+        }
+
+        public static bool IsHangoutAppealing(Pawn target, Pawn asker)
+        {
+            //Always agree with an existing partner?
+            if (LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
+            {
+                return true;
+            }
+            //Just looking at opinion
+            float num = Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
+            return Rand.Range(0.05f, 1f) < num;
+        }
+
+        public static void DateTickAction(Pawn pawn, bool isDate)
+        {
+            JoyUtility.JoyTickCheckEnd(pawn, JoyTickFullJoyAction.None);
+            if (isDate)
+            {
+                HelperClasses.RotRFillRomanceBar?.Invoke(null, new object[] { pawn, 0.00002f });
+            }
         }
     }
 }

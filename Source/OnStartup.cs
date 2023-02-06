@@ -1,7 +1,9 @@
 using HarmonyLib;
 using Verse;
 using RimWorld;
+using System;
 using System.Linq;
+using System.Reflection;
 
 namespace BetterRomance
 {
@@ -48,6 +50,20 @@ namespace BetterRomance
             else if (!Settings.FertilityMods.ContainsKey(BetterRomanceMod.settings.fertilityMod))
             {
                 BetterRomanceMod.settings.fertilityMod = "None";
+            }
+        }
+    }
+
+    [StaticConstructorOnStartup]
+    public static class HelperClasses
+    {
+        public static MethodInfo RotRFillRomanceBar;
+
+        static HelperClasses()
+        {
+            if (ModsConfig.IsActive("telardo.romanceontherim"))
+            {
+                RotRFillRomanceBar = AccessTools.DeclaredMethod(Type.GetType("RomanceOnTheRim.RomanceUtility,RomanceOnTheRim"), "TryAffectRomanceNeedLevelForPawn");
             }
         }
     }

@@ -160,6 +160,7 @@ namespace BetterRomance
                     if (Actor.needs.mood != null)
                     {
                         Actor.needs.mood.thoughts.memories.TryGainMemory(thought_Memory, Partner);
+                        HelperClasses.RotRFillRomanceBar?.Invoke(null, new object[] { Actor, 0.5f });
                     }
                     Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.GotLovin, Actor.Named(HistoryEventArgsNames.Doer)));
                     HistoryEventDef def = Actor.relations.DirectRelationExists(PawnRelationDefOf.Spouse, Partner) ? HistoryEventDefOf.GotLovin_Spouse : HistoryEventDefOf.GotLovin_NonSpouse;

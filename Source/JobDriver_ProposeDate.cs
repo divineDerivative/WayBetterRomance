@@ -30,7 +30,7 @@ namespace BetterRomance
 
         private bool DoesTargetPawnAcceptDate()
         {
-            return RomanceUtilities.IsPawnFree(TargetPawn) && (IsDate ? RomanceUtilities.IsDateAppealing(TargetPawn, Actor) : RomanceUtilities.IsHangoutAppealing(TargetPawn, Actor));
+            return RomanceUtilities.IsPawnFree(TargetPawn) && (IsDate ? DateUtility.IsDateAppealing(TargetPawn, Actor) : DateUtility.IsHangoutAppealing(TargetPawn, Actor));
         }
 
         private bool TryGetDateJobs(out Job dateLeadJob, out Job dateFollowJob)

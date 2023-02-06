@@ -11,7 +11,7 @@ namespace BetterRomance
         private readonly TargetIndex PartnerInd = TargetIndex.A;
         private int ticksLeft = 20;
         private Pawn Actor => GetActor();
-        private Pawn Partner => (Pawn) (Thing) job.GetTarget(PartnerInd);
+        private Pawn Partner => (Pawn)(Thing)job.GetTarget(PartnerInd);
         private bool IsDate => job.def == RomanceDefOf.JobDateLead;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
@@ -39,8 +39,7 @@ namespace BetterRomance
                 toil.actor.pather.StartPath(target, PathEndMode.OnCell);
             };
             //Gain joy while walking
-            toil.tickAction = delegate
-            { JoyUtility.JoyTickCheckEnd(Actor, JoyTickFullJoyAction.None); } ;
+            toil.tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); };
             toil.defaultCompleteMode = ToilCompleteMode.PatherArrival;
             //Fail if partner despawns, dies, or stops the follow job
             toil.AddFailCondition(() => !Partner.Spawned);
@@ -56,7 +55,7 @@ namespace BetterRomance
                 //Hang out for 700 ticks and gain joy
                 defaultCompleteMode = ToilCompleteMode.Delay,
                 initAction = delegate { ticksLeftThisToil = 700; },
-                tickAction = delegate { JoyUtility.JoyTickCheckEnd(Actor, JoyTickFullJoyAction.None); }
+                tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); },
             };
             //Fail if either participant needs to go eat or sleep
             toil.AddFailCondition(() =>
