@@ -66,7 +66,7 @@ namespace BetterRomance.HarmonyPatches
             targetBaseCapabilities *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Manipulation));
             targetBaseCapabilities *= Mathf.Lerp(0.2f, 1f, otherPawn.health.capacities.GetLevel(PawnCapacityDefOf.Moving));
 
-            __result = __instance.LovinAgeFactor(otherPawn) * __instance.PrettinessFactor(otherPawn) * targetBaseCapabilities  * crossSpecies * RomanceUtilities.SexualityFactor(___pawn, otherPawn);
+            __result = __instance.LovinAgeFactor(otherPawn) * __instance.PrettinessFactor(otherPawn) * targetBaseCapabilities * crossSpecies * RomanceUtilities.SexualityFactor(___pawn, otherPawn);
             return false;
         }
     }
@@ -147,25 +147,11 @@ namespace BetterRomance.HarmonyPatches
 
             if (otherBeauty < 0f && !___pawn.story.traits.HasTrait(TraitDefOf.Kind))
             {
-                if (pawnBeauty < 0f)
-                {
-                    result = 0.8f;
-                }
-                else
-                {
-                    result = 0.3f;
-                }
+                result = pawnBeauty < 0f ? 0.8f : 0.3f;
             }
             else if (otherBeauty > 0f)
             {
-                if (pawnBeauty > 0f)
-                {
-                    result = 1.2f;
-                }
-                else
-                {
-                    result = 1.6f;
-                }
+                result = pawnBeauty > 0f ? 1.2f : 1.6f;
             }
             __result = result;
             return false;

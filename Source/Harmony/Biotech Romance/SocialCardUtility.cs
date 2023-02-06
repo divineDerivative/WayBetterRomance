@@ -212,11 +212,7 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Rect buttonRect, Pawn pawn)
         {
             bool canTry = (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, new object[] { pawn });
-            if (!canTry)
-            {
-                return false;
-            }
-            return true;
+            return canTry;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace BetterRomance
     {
         private readonly TargetIndex PartnerInd = TargetIndex.A;
         private Pawn Actor => GetActor();
-        private Pawn Partner => (Pawn) (Thing) job.GetTarget(PartnerInd);
+        private Pawn Partner => (Pawn)(Thing)job.GetTarget(PartnerInd);
         private bool IsDate => job.def == RomanceDefOf.JobDateFollow;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using AlienRace;
+﻿using System.Runtime.CompilerServices;
 using HarmonyLib;
 using RimWorld;
-using Verse;
 
 namespace BetterRomance
 

@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace BetterRomance.HarmonyPatches
@@ -103,7 +102,7 @@ namespace BetterRomance.HarmonyPatches
                     return false;
                 }
 
-                childrenCountFactor = 1f - mother.relations.ChildrenCount / (float)maxChildren;
+                childrenCountFactor = 1f - (mother.relations.ChildrenCount / (float)maxChildren);
             }
             //Lower chances if one parent already has a spouse that is not the other parent
             float curRelationFactor = 1f;

@@ -28,11 +28,7 @@ namespace BetterRomance
                 return false;
             }
             CompPowerTrader compPowerTrader = t.TryGetComp<CompPowerTrader>();
-            if (compPowerTrader != null && !compPowerTrader.PowerOn)
-            {
-                return false;
-            }
-            return true;
+            return compPowerTrader == null || compPowerTrader.PowerOn;
         }
 
         public static bool TryFindBestWatchCellNear(Thing toWatch, Pawn pawn, Building otherChair, bool desireSit, out IntVec3 result, out Building chair)
@@ -94,11 +90,7 @@ namespace BetterRomance
 
         public static bool IsPartnerNearGoal(Thing t, Pawn p)
         {
-            if (t.Position.InHorDistOf(p.Position, 2f))
-            {
-                return true;
-            }
-            return false;
+            return t.Position.InHorDistOf(p.Position, 2f);
         }
 
         /// <summary>

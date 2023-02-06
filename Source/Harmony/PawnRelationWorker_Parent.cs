@@ -12,34 +12,34 @@ namespace BetterRomance.HarmonyPatches
         {
             if (!other.SpouseAllowed())
             {
-				if (other.gender == Gender.Male)
-				{
-					generated.SetFather(other);
-					Pawn firstLoverOfOppositeGender = RomanceUtilities.GetFirstLoverOfOppositeGender(other);
-					if (firstLoverOfOppositeGender != null)
-					{
-						generated.SetMother(firstLoverOfOppositeGender);
-					}
-					AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
-				}
-				else if (other.gender == Gender.Female)
-				{
-					generated.SetMother(other);
-					Pawn firstLoverOfOppositeGender = RomanceUtilities.GetFirstLoverOfOppositeGender(other);
-					if (firstLoverOfOppositeGender != null)
-					{
-						generated.SetFather(firstLoverOfOppositeGender);
-					}
-					AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
-				}
-				//Just in case another mod has patches to run for genderless pawns
-				else
-				{
-					return true;
-				}
-				return false;
-			}
+                if (other.gender == Gender.Male)
+                {
+                    generated.SetFather(other);
+                    Pawn firstLoverOfOppositeGender = RomanceUtilities.GetFirstLoverOfOppositeGender(other);
+                    if (firstLoverOfOppositeGender != null)
+                    {
+                        generated.SetMother(firstLoverOfOppositeGender);
+                    }
+                    AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
+                }
+                else if (other.gender == Gender.Female)
+                {
+                    generated.SetMother(other);
+                    Pawn firstLoverOfOppositeGender = RomanceUtilities.GetFirstLoverOfOppositeGender(other);
+                    if (firstLoverOfOppositeGender != null)
+                    {
+                        generated.SetFather(firstLoverOfOppositeGender);
+                    }
+                    AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
+                }
+                //Just in case another mod has patches to run for genderless pawns
+                else
+                {
+                    return true;
+                }
+                return false;
+            }
             return true;
         }
-	}
+    }
 }

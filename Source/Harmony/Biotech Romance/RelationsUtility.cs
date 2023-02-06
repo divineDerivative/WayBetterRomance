@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RimWorld;
 using Verse;
 using HarmonyLib;
@@ -152,7 +149,7 @@ namespace BetterRomance.HarmonyPatches
 
             List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
 
-            for (var i = 0; i < codes.Count; i++)
+            for (int i = 0; i < codes.Count; i++)
             {
                 if (!foundStart && codes[i].opcode == OpCodes.Ldarg_1)
                 {

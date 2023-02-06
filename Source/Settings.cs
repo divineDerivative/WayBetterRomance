@@ -61,14 +61,7 @@ namespace BetterRomance
         public static void ApplyJoySettings()
         {
             NeedDef def = DefDatabase<NeedDef>.GetNamed("Joy");
-            if (BetterRomanceMod.settings.joyOnSlaves)
-            {
-                def.neverOnSlave = false;
-            }
-            else
-            {
-                def.neverOnSlave = true;
-            }
+            def.neverOnSlave = !BetterRomanceMod.settings.joyOnSlaves;
             if (BetterRomanceMod.settings.joyOnPrisoners)
             {
                 def.neverOnPrisoner = false;
@@ -109,7 +102,7 @@ namespace BetterRomance
         {
             Listing_Standard list = new Listing_Standard
             {
-                ColumnWidth = canvas.width / 2f - 17f
+                ColumnWidth = (canvas.width / 2f) - 17f
             };
             list.Begin(canvas);
             DrawBaseSexualityChance(list);

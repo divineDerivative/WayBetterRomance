@@ -25,7 +25,7 @@ namespace BetterRomance
                 yield return "Sexuality chances must add up to 100";
             }
             //If not set, default to orientation chances
-            if ( asexualChance != 0f && aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance == 0f)
+            if (asexualChance != 0f && aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance == 0f)
             {
                 Log.Warning("Romantic orientation chances for asexual pawns not found. Defaulting to match sexual orientation chances.");
                 aceAroChance = asexualChance;

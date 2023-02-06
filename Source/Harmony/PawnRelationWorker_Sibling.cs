@@ -77,7 +77,7 @@ namespace BetterRomance.HarmonyPatches
                         yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         //Since Gender is an enum, I need to load the value of Male, which is 1
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender)});
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
                     }
                     else if (instruction.OperandIs(16f))
                     {
@@ -144,7 +144,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 2f);
                     yield return new CodeInstruction(OpCodes.Div);
-                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), new Type[] {typeof(float), typeof(float)});
+                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), new Type[] { typeof(float), typeof(float) });
                 }
                 else if (instruction.Is(OpCodes.Ldc_R4, 10f))
                 {

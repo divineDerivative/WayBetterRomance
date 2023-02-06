@@ -7,11 +7,7 @@ namespace BetterRomance
     {
         private bool ActiveFor(Pawn pawn)
         {
-            if (pawn.IsAsexual())
-            {
-                return true;
-            }
-            return false;
+            return pawn.IsAsexual();
         }
 
         public override void TransformValue(StatRequest req, ref float val)

@@ -1,7 +1,5 @@
-using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
-using UnityEngine;
 using Verse;
 using Verse.AI;
 
@@ -43,11 +41,7 @@ namespace BetterRomance
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            if (pawn.Reserve(Partner, job, 1, -1, null, errorOnFailed))
-            {
-                return pawn.Reserve(Bed, job, Bed.SleepingSlotsCount, 0, null, errorOnFailed);
-            }
-            return false;
+            return pawn.Reserve(Partner, job, 1, -1, null, errorOnFailed) && pawn.Reserve(Bed, job, Bed.SleepingSlotsCount, 0, null, errorOnFailed);
         }
 
         public override bool CanBeginNowWhileLyingDown()
@@ -88,7 +82,8 @@ namespace BetterRomance
                 curDriver.asleep = false;
                 layDown.actor.jobs.posture = PawnPosture.LayingInBed;
             };
-            layDown.tickAction = delegate {
+            layDown.tickAction = delegate
+            {
                 Actor.GainComfortFromCellIfPossible();
             };
             yield return layDown;
@@ -99,14 +94,7 @@ namespace BetterRomance
                 //This checks if actor is cheating
                 initAction = delegate
                 {
-                    if ((Actor.health != null && Actor.health.hediffSet != null && Actor.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) || (Partner.health != null && Partner.health.hediffSet != null && Partner.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)))
-                    {
-                        ticksLeftThisToil = ticksForEnhancer;
-                    }
-                    else
-                    {
-                        ticksLeftThisToil = ticksOtherwise;
-                    }
+                    ticksLeftThisToil = (Actor.health != null && Actor.health.hediffSet != null && Actor.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) || (Partner.health != null && Partner.health.hediffSet != null && Partner.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) ? ticksForEnhancer : ticksOtherwise;
 
                     if (RomanceUtilities.IsThisCheating(Actor, Partner, out List<Pawn> cheatedOnList))
                     {
@@ -143,7 +131,7 @@ namespace BetterRomance
                 defaultCompleteMode = ToilCompleteMode.Delay
             };
             //Fail if partner dies, or there's over 100 ticks left and the partner has wandered off
-            loveToil.AddFailCondition(() => Partner.Dead || ticksLeftThisToil > 100 && !IsInOrByBed(Bed, Partner));
+            loveToil.AddFailCondition(() => Partner.Dead || (ticksLeftThisToil > 100 && !IsInOrByBed(Bed, Partner)));
             yield return loveToil;
             //If they finish, add the appropriate memory and record events
             //Vanilla has this as a "finish action" on the previous toil, but I think it only makes sense to add this stuff if the lovin' actually... finishes
@@ -171,7 +159,7 @@ namespace BetterRomance
                     if (ModsConfig.BiotechActive)
                     {
                         Pawn male = (Actor.gender == Gender.Male) ? Actor : ((Partner.gender == Gender.Male) ? Partner : null);
-                        Pawn female = ((Actor.gender == Gender.Female) ? Actor : ((Partner.gender == Gender.Female) ? Partner : null));
+                        Pawn female = (Actor.gender == Gender.Female) ? Actor : ((Partner.gender == Gender.Female) ? Partner : null);
                         if (male != null && female != null && Rand.Chance(PregnancyChance * PregnancyUtility.PregnancyChanceForPartners(female, male)))
                         {
                             Hediff_Pregnant hediff_Pregnant = (Hediff_Pregnant)HediffMaker.MakeHediff(HediffDefOf.PregnantHuman, female);

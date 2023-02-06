@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
@@ -181,11 +180,7 @@ namespace BetterRomance.HarmonyPatches
         //Checks if pawn cares about cheating
         public static bool Prefix(Pawn pawn, Pawn cheater)
         {
-            if (!pawn.CaresAboutCheating())
-            {
-                return false;
-            }
-            return true;
+            return pawn.CaresAboutCheating();
         }
     }
 
@@ -245,7 +240,7 @@ namespace BetterRomance.HarmonyPatches
                     //Check for custom relations and use same adjustment as lover
                     else if (!SettingsUtilities.LoveRelations.NullOrEmpty())
                     {
-                        foreach (var rel in SettingsUtilities.LoveRelations)
+                        foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
                         {
                             if (recipient.relations.DirectRelationExists(rel, partnerToConsider))
                             {

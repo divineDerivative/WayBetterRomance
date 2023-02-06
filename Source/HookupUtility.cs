@@ -4,7 +4,6 @@ using HarmonyLib;
 using Verse.AI;
 using System.Text;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BetterRomance
 {
@@ -124,11 +123,7 @@ namespace BetterRomance
             {
                 return "";
             }
-            if (count <= 1)
-            {
-                return " - " + "WBR.HookupWarningMonogamous".Translate(pawn) + "\n";
-            }
-            return " - " + "WBR.HookupWarningPolygamous".Translate(pawn, count) + "\n";
+            return count <= 1 ? (" - " + "WBR.HookupWarningMonogamous".Translate(pawn) + "\n") : (" - " + "WBR.HookupWarningPolygamous".Translate(pawn, count) + "\n");
         }
 
         /// <summary>
@@ -201,7 +196,6 @@ namespace BetterRomance
                 return "WBR.CantHookupTargetUnreachable".Translate();
             }
             return true;
-
         }
 
         /// <summary>
@@ -304,11 +298,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static bool CanDrawTryHookup(Pawn pawn)
         {
-            if (pawn.ageTracker.AgeBiologicalYearsFloat >= pawn.MinAgeForSex() && pawn.Spawned)
-            {
-                return pawn.IsFreeColonist;
-            }
-            return false;
+            return pawn.ageTracker.AgeBiologicalYearsFloat >= pawn.MinAgeForSex() && pawn.Spawned && pawn.IsFreeColonist;
         }
 
         /// <summary>
@@ -415,11 +405,7 @@ namespace BetterRomance
                 return initiator ? "WBR.CantHookupInitiateMessageIdeo".Translate(pawn) : "WBR.CantHookupTargetIdeo".Translate(pawn.ideo.Ideo);
             }
             //Check against canLovinTick, except for drawing the ordered hookup menu
-            if (Find.TickManager.TicksGame < pawn.mindState.canLovinTick && !ordered)
-            {
-                return false;
-            }
-            return true;
+            return Find.TickManager.TicksGame >= pawn.mindState.canLovinTick || ordered;
         }
 
         /// <summary>
@@ -432,15 +418,7 @@ namespace BetterRomance
         {
             StringBuilder text = new StringBuilder();
             //Opinion factor
-            float opinionFactor;
-            if (target.relations.OpinionOf(initiator) < target.MinOpinionForHookup(true))
-            {
-                opinionFactor = 0f;
-            }
-            else
-            {
-                opinionFactor = OpinionFactor(target, initiator);
-            }
+            float opinionFactor = target.relations.OpinionOf(initiator) < target.MinOpinionForHookup(true) ? 0f : OpinionFactor(target, initiator);
             text.AppendLine(HookupFactorLine("WBR.HookupChanceOpinionFactor".Translate(), opinionFactor));
             //Relative age
             text.AppendLine(HookupFactorLine("WBR.HookupChanceAgeFactor".Translate(), target.relations.LovinAgeFactor(initiator)));
@@ -465,15 +443,7 @@ namespace BetterRomance
                 text.AppendLine(HookupFactorLine("WBR.HookupChanceBeautyFactor".Translate(), prettyFactor));
             }
             //Adjustment for any sexuality incompatibilities
-            float sexualityFactor;
-            if (target.IsAsexual() && target.AsexualRating() < 0.5f)
-            {
-                sexualityFactor = 0f;
-            }
-            else
-            {
-                sexualityFactor = RomanceUtilities.SexualityFactor(target, initiator);
-            }
+            float sexualityFactor = target.IsAsexual() && target.AsexualRating() < 0.5f ? 0f : RomanceUtilities.SexualityFactor(target, initiator);
             if (sexualityFactor != 1f)
             {
                 text.AppendLine(HookupFactorLine("WBR.HookupChanceSexuality".Translate(), sexualityFactor));

@@ -183,7 +183,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
-                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), parameters: new Type[] {typeof(float), typeof(float)});
+                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), parameters: new Type[] { typeof(float), typeof(float) });
                     //need to store this value somewhere
                     yield return new CodeInstruction(OpCodes.Stloc, local_maxAgeGap.LocalIndex);
                     yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
@@ -227,7 +227,7 @@ namespace BetterRomance.HarmonyPatches
                 if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(14f) && !firstFound)
                 {
                     firstFound = true;
-                    
+
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                 }
@@ -252,7 +252,7 @@ namespace BetterRomance.HarmonyPatches
         //No adjustment made for asexual pawns as that is handled elsewhere
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        { 
+        {
             foreach (CodeInstruction instruction in instructions)
             {
                 if (instruction.opcode == OpCodes.Ldc_R4)
@@ -401,11 +401,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, float extraChanceFactor)
         {
-            if (!generated.ChildAllowed())
-            {
-                return false;
-            }
-            return true;
+            return generated.ChildAllowed();
         }
     }
 }

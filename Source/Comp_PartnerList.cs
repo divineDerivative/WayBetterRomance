@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using RimWorld;
 using HarmonyLib;
-using System.Reflection;
-using System;
 
 namespace BetterRomance
 {
@@ -60,7 +58,7 @@ namespace BetterRomance
                     {
                         continue;
                     }
-                    if (RomanceUtilities.IsPawnFree(p) && ! p.IsForbidden(Pawn))
+                    if (RomanceUtilities.IsPawnFree(p) && !p.IsForbidden(Pawn))
                     {
                         partner = p;
                         break;
@@ -127,11 +125,7 @@ namespace BetterRomance
                         //This will skip people who recently turned them down
                         Thought_Memory memory = pawn.needs.mood.thoughts.memories.Memories.Find(delegate (Thought_Memory x)
                         {
-                            if (x.def == (hookup ? RomanceDefOf.RebuffedMyHookupAttempt : RomanceDefOf.RebuffedMyDateAttempt))
-                            {
-                                return x.otherPawn == p;
-                            }
-                            return false;
+                            return x.def == (hookup ? RomanceDefOf.RebuffedMyHookupAttempt : RomanceDefOf.RebuffedMyDateAttempt) && x.otherPawn == p;
                         });
                         //Need to also check opinion against setting for a hookup
                         if ((memory == null && pawn.relations.OpinionOf(p) > pawn.MinOpinionForHookup()) || !hookup)

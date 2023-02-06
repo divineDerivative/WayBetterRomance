@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
 using HarmonyLib;
 using System.Reflection.Emit;
-using System.Linq;
 
 namespace BetterRomance.HarmonyPatches
 {
@@ -30,7 +28,4 @@ namespace BetterRomance.HarmonyPatches
             }
         }
     }
-
-    
-    
 }

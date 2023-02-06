@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using RimWorld;
 using Verse;
 using HarmonyLib;
 using System.Reflection.Emit;
-using System.Data.SqlClient;
 
 namespace BetterRomance.HarmonyPatches
 {
@@ -27,7 +24,7 @@ namespace BetterRomance.HarmonyPatches
                 CodeInstruction instruction = codes[i];
                 if (instruction.opcode == OpCodes.Ldarg_0)
                 {
-                    if (codes[i+1].LoadsField(recipe) && codes[i+2].LoadsField(minAllowedAge))
+                    if (codes[i + 1].LoadsField(recipe) && codes[i + 2].LoadsField(minAllowedAge))
                     {
                         yield return new CodeInstruction(OpCodes.Ldloc_0);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), new Type[] { typeof(Pawn) });

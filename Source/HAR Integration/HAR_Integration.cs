@@ -1,11 +1,6 @@
 ﻿using AlienRace;
 using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Verse;
 
 namespace BetterRomance
@@ -23,11 +18,7 @@ namespace BetterRomance
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static bool AreRacesConsideredXeno(Pawn p1, Pawn p2)
         {
-            if (p1.def != p2.def)
-            {
-                return !(p1.def is ThingDef_AlienRace alienDef && alienDef.alienRace.generalSettings.notXenophobistTowards.Contains(p2.def));
-            }
-            return false;
+            return p1.def != p2.def && !(p1.def is ThingDef_AlienRace alienDef && alienDef.alienRace.generalSettings.notXenophobistTowards.Contains(p2.def));
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -42,11 +33,7 @@ namespace BetterRomance
             {
                 return false;
             }
-            if (pawn.gender != Gender.Female)
-            {
-                return alienRace.alienRace.generalSettings.reproduction.maleFertilityAgeFactor != null;
-            }
-            return alienRace.alienRace.generalSettings.reproduction.femaleFertilityAgeFactor != null;
+            return pawn.gender != Gender.Female ? alienRace.alienRace.generalSettings.reproduction.maleFertilityAgeFactor != null : alienRace.alienRace.generalSettings.reproduction.femaleFertilityAgeFactor != null;
         }
 
         public static AcceptanceReport CanEverProduceChild(Pawn first, Pawn second)

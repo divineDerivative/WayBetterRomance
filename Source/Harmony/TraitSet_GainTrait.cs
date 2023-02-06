@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 using HarmonyLib;
 
@@ -18,7 +13,7 @@ namespace BetterRomance.HarmonyPatches
             if (RomanceUtilities.OrientationTraits.Contains(trait.def))
             {
                 //Check if pawn already has one
-                foreach (var traitDef in RomanceUtilities.OrientationTraits)
+                foreach (TraitDef traitDef in RomanceUtilities.OrientationTraits)
                 {
                     if (___pawn.story.traits.HasTrait(traitDef))
                     {
@@ -37,7 +32,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 //Check if a second orientation trait got added
                 int traitCount = 0;
-                foreach (var traitDef in RomanceUtilities.OrientationTraits)
+                foreach (TraitDef traitDef in RomanceUtilities.OrientationTraits)
                 {
                     if (___pawn.story.traits.HasTrait(traitDef))
                     {

@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -218,14 +217,8 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else
                 {
-                    if (initiator.needs.mood != null)
-                    {
-                        initiator.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.RejectedMyProposal, recipient);
-                    }
-                    if (recipient.needs.mood != null)
-                    {
-                        recipient.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.IRejectedTheirProposal, initiator);
-                    }
+                    initiator.needs.mood?.thoughts.memories.TryGainMemory(ThoughtDefOf.RejectedMyProposal, recipient);
+                    recipient.needs.mood?.thoughts.memories.TryGainMemory(ThoughtDefOf.IRejectedTheirProposal, initiator);
                     extraSentencePacks.Add(RulePackDefOf.Sentence_MarriageProposalRejected);
                     //Determine if they break up due to the rejection
                     if (Rand.Value < 0.4f)

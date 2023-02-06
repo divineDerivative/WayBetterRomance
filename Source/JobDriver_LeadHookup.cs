@@ -44,7 +44,7 @@ namespace BetterRomance
             //Walk to the target
             Toil walkToTarget = Toils_Interpersonal.GotoInteractablePosition(TargetPawnIndex);
             walkToTarget.socialMode = RandomSocialMode.Off;
-            
+
             yield return walkToTarget;
 
             //Wait if needed

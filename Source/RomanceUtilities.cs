@@ -43,11 +43,7 @@ namespace BetterRomance
             if (new HistoryEvent(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo() || !pawn.CaresAboutCheating())
             {
                 //Faithful pawns will respect their partner's ideo
-                if (!cheaterList.NullOrEmpty() && pawn.story.traits.HasTrait(RomanceDefOf.Faithful))
-                {
-                    return true;
-                }
-                return false;
+                return !cheaterList.NullOrEmpty() && pawn.story.traits.HasTrait(RomanceDefOf.Faithful);
             }
             return true;
         }
@@ -111,9 +107,7 @@ namespace BetterRomance
                     float tempOpinionFactor;
                     if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
                     {
-                        tempOpinionFactor = pawn.Map == p.Map
-                            ? Mathf.InverseLerp(70f, 15f, opinion)
-                            : Mathf.InverseLerp(100f, 50f, opinion);
+                        tempOpinionFactor = pawn.Map == p.Map ? Mathf.InverseLerp(70f, 15f, opinion) : Mathf.InverseLerp(100f, 50f, opinion);
                     }
                     else
                     {
@@ -138,35 +132,19 @@ namespace BetterRomance
         {
             if (pawn.Drafted)
             {
-                if (forcedJob)
-                {
-                    return "WBR.CantHookupInitiateMessageDrafted".Translate(pawn);
-                }
-                return AcceptanceReport.WasRejected;
+                return forcedJob ? (AcceptanceReport)"WBR.CantHookupInitiateMessageDrafted".Translate(pawn) : AcceptanceReport.WasRejected;
             }
             if (pawn.Downed)
             {
-                if (forcedJob)
-                {
-                    return "WBR.CantHookupInitiateMessageDowned".Translate(pawn);
-                }
-                return AcceptanceReport.WasRejected;
+                return forcedJob ? (AcceptanceReport)"WBR.CantHookupInitiateMessageDowned".Translate(pawn) : AcceptanceReport.WasRejected;
             }
             if (pawn.health.hediffSet.HasHediff(HediffDefOf.PregnancyLabor) || pawn.health.hediffSet.HasHediff(HediffDefOf.PregnancyLaborPushing))
             {
-                if (forcedJob)
-                {
-                    return "WBR.CantHookupInitiateMessageInLabor".Translate(pawn);
-                }
-                return false;
+                return forcedJob ? (AcceptanceReport)"WBR.CantHookupInitiateMessageInLabor".Translate(pawn) : (AcceptanceReport)false;
             }
             if (pawn.mindState.mentalStateHandler.InMentalState)
             {
-                if (forcedJob)
-                {
-                    return "WBR.CantHookupInitiateMessageMentalState".Translate(pawn);
-                }
-                return false;
+                return forcedJob ? (AcceptanceReport)"WBR.CantHookupInitiateMessageMentalState".Translate(pawn) : (AcceptanceReport)false;
             }
             if (forcedJob && CantInterruptJobs.Contains(pawn.CurJob.def))
             {

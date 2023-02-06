@@ -1,10 +1,6 @@
 using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Verse;
 using Verse.AI;
-using HarmonyLib;
 
 namespace BetterRomance
 {
@@ -40,17 +36,10 @@ namespace BetterRomance
                 {
                     return null;
                 }
-                //Create the job, ProposeDate
+                //Create the job based on romance factor
                 else
                 {
-                    if (pawn.relations.SecondaryRomanceChanceFactor(partner) > 0.2f)
-                    {
-                        return new Job(RomanceDefOf.ProposeDate, partner);
-                    }
-                    else
-                    {
-                        return new Job(RomanceDefOf.ProposeHangout, partner);
-                    }
+                    return pawn.relations.SecondaryRomanceChanceFactor(partner) > 0.2f ? new Job(RomanceDefOf.ProposeDate, partner) : new Job(RomanceDefOf.ProposeHangout, partner);
                 }
             }
         }

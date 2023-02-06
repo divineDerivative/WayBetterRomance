@@ -1,9 +1,7 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Collections.Generic;
 using HarmonyLib;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace BetterRomance.HarmonyPatches
@@ -74,10 +72,7 @@ namespace BetterRomance.HarmonyPatches
                     {
                         initiator.relations.AddDirectRelation(relation.GetModExtension<LoveRelations>().exLoveRelation, recipient);
                     }
-                    if (recipient.needs.mood != null)
-                    {
-                        recipient.needs.mood.thoughts.memories.TryGainMemory(ThoughtDefOf.BrokeUpWithMe, initiator);
-                    }
+                    recipient.needs.mood?.thoughts.memories.TryGainMemory(ThoughtDefOf.BrokeUpWithMe, initiator);
                     if (initiator.ownership.OwnedBed != null && initiator.ownership.OwnedBed == recipient.ownership.OwnedBed)
                     {
                         ((Rand.Value < 0.5f) ? initiator : recipient).ownership.UnclaimBed();

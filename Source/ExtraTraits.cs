@@ -10,7 +10,7 @@ namespace BetterRomance
             //Don't give orientation to kids, hopefully
             if (pawn.DevelopmentalStage.Adult())
             {
-                foreach (var trait in pawn.story.traits.allTraits)
+                foreach (Trait trait in pawn.story.traits.allTraits)
                 {
                     if (RomanceUtilities.OrientationTraits.Contains(trait.def))
                     {
@@ -68,7 +68,7 @@ namespace BetterRomance
                 //Asexual chance
                 if (orientation < asexualChance / 100f)
                 {
-                    
+
                     if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
                     {
                         pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
