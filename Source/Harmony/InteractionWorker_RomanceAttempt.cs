@@ -1,7 +1,10 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
+using System.Text;
 using UnityEngine;
 using Verse;
 
@@ -269,6 +272,61 @@ namespace BetterRomance.HarmonyPatches
                 __result = relationFactor;
                 return false;
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.RomanceFactors))]
+    public static class InteractionWorker_RomanceAttempt_RomanceFactors
+    {
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
+        {
+            MethodInfo PrettinessFactor = AccessTools.Method(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.PrettinessFactor));
+            Label newLabel = ilg.DefineLabel();
+            Label oldLabel = ilg.DefineLabel();
+            LocalBuilder num = ilg.DeclareLocal(typeof(float));
+            bool startFound = false;
+
+            foreach (CodeInstruction code in instructions)
+            {
+                if (startFound && code.opcode == OpCodes.Beq_S)
+                {
+                    oldLabel = (Label)code.operand;
+                    code.operand = newLabel;
+                }
+
+                yield return code;
+
+                if (startFound && code.opcode == OpCodes.Pop)
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = new List<Label> { newLabel } };
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(InteractionWorker_RomanceAttempt_RomanceFactors), nameof(InteractionWorker_RomanceAttempt_RomanceFactors.SexualityFactor));
+                    yield return new CodeInstruction(OpCodes.Stloc, num);
+                    yield return new CodeInstruction(OpCodes.Ldloc, num);
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
+                    yield return new CodeInstruction(OpCodes.Beq_S, oldLabel);
+                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    yield return new CodeInstruction(OpCodes.Ldstr, "WBR.HookupChanceSexuality");
+                    yield return CodeInstruction.Call(typeof(Translator), nameof(Translator.Translate), new Type[] { typeof(string) });
+                    yield return CodeInstruction.Call(typeof(TaggedString), "op_Implicit", new Type[] { typeof(TaggedString) });
+                    yield return new CodeInstruction(OpCodes.Ldloc, num);
+                    yield return CodeInstruction.Call(typeof(InteractionWorker_RomanceAttempt), "RomanceFactorLine");
+                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), new Type[] { typeof(string) });
+                    yield return new CodeInstruction(OpCodes.Pop);
+
+                    startFound = false;
+                }
+
+                if (code.Calls(PrettinessFactor))
+                {
+                    startFound = true;
+                }
+            }
+        }
+
+        private static float SexualityFactor(Pawn target, Pawn initiator)
+        {
+            return target.IsAsexual() && target.AsexualRating() < 0.5f ? 0f : RomanceUtilities.SexualityFactor(target, initiator);
         }
     }
 }
