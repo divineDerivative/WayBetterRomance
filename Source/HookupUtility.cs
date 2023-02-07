@@ -16,7 +16,7 @@ namespace BetterRomance
         /// <param name="hookupTarget"></param>
         /// <param name="option"></param>
         /// <param name="chance"></param>
-        /// <returns><see langword="True"/> if an <paramref name="option"/> was created, <see langword="False"/> if <paramref name="option"/> is null</returns>
+        /// <returns><see langword="True"/> if an accepted <paramref name="option"/> was created, <see langword="False"/> if rejected <paramref name="option"/> is created or <paramref name="option"/> is null</returns>
         public static bool HookupOption(Pawn initiator, Pawn hookupTarget, out FloatMenuOption option, out float chance)
         {
             //Do not allow if target's gender does not match initiator's orientation

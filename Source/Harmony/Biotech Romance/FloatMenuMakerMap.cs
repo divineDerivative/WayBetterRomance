@@ -20,7 +20,7 @@ namespace BetterRomance.HarmonyPatches
                     Pawn p = (Pawn)target.Thing;
                     if (!p.Drafted && !p.DevelopmentalStage.Baby())
                     {
-                        bool optionAvailable = HookupUtility.HookupOption(pawn, p, out FloatMenuOption option, out float chance);
+                        bool optionAvailable = HookupUtility.HookupOption(pawn, p, out FloatMenuOption option, out _);
                         if (option != null)
                         {
                             option.Label = (optionAvailable ? "WBR.CanHookup" : "WBR.CannotHookup").Translate(option.Label);
