@@ -207,6 +207,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static AcceptanceReport HookupEligible(Pawn pawn, bool initiator, bool forOpinionExplanation)
         {
+
             //Check the basic requirements first
             AcceptanceReport ar = WillPawnTryHookup(pawn, initiator, true);
             if (!ar.Accepted)
@@ -317,7 +318,8 @@ namespace BetterRomance
             //Asexual pawns below a certain rating will only agree to sex with existing partners
             if (target.IsAsexual() && target.AsexualRating() < 0.5f)
             {
-                if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
+                //They'll also refuse partners if rating is low enough
+                if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker) || target.AsexualRating() < 0.2f)
                 {
                     return 0f;
                 }
@@ -358,7 +360,7 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Will <paramref name="pawn"/> participate in a hookup. Checks settings and asexuality rating.
+        /// Will <paramref name="pawn"/> participate in a hookup. Checks settings and asexuality.
         /// </summary>
         /// <param name="pawn">The pawn in question</param>
         /// <param name="initiator">If <paramref name="pawn"/> is initiating the hookup</param>
@@ -372,10 +374,10 @@ namespace BetterRomance
             {
                 return false;
             }
-            //Sex repulsed asexual pawns will never agree to sex
-            if (pawn.IsAsexual() && pawn.AsexualRating() < 0.2f)
+            //Asexual pawns will never initiate a hookup
+            if (initiator && pawn.IsAsexual())
             {
-                return initiator ? "WBR.CantHookupInitiateMessageAsexual".Translate(pawn).CapitalizeFirst() : "WBR.CantHookupTargetAsexual".Translate();
+                return "WBR.CantHookupInitiateMessageAsexual".Translate(pawn).CapitalizeFirst();
             }
             //Is the race/pawnkind allowed to have hookups?
             if (!pawn.HookupAllowed(ordered))

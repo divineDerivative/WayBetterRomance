@@ -300,7 +300,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = new List<Label> { newLabel } };
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(InteractionWorker_RomanceAttempt_RomanceFactors), nameof(InteractionWorker_RomanceAttempt_RomanceFactors.SexualityFactor));
+                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.SexualityFactor));
                     yield return new CodeInstruction(OpCodes.Stloc, num);
                     yield return new CodeInstruction(OpCodes.Ldloc, num);
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
@@ -322,11 +322,6 @@ namespace BetterRomance.HarmonyPatches
                     startFound = true;
                 }
             }
-        }
-
-        private static float SexualityFactor(Pawn target, Pawn initiator)
-        {
-            return target.IsAsexual() && target.AsexualRating() < 0.5f ? 0f : RomanceUtilities.SexualityFactor(target, initiator);
         }
     }
 }
