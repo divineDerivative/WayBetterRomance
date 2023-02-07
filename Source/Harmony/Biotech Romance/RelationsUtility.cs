@@ -134,6 +134,11 @@ namespace BetterRomance.HarmonyPatches
                     endIndex = i - 1;
                     foundEnd = true;
                 }
+
+                if (codes[i].opcode == OpCodes.Ldstr && (string)codes[i].operand == "CantRomanceTargetSexuality")
+                {
+                    codes[i].operand = "WBR.CantHookupTargetGender";
+                }
             }
             if (startIndex > -1 && endIndex > -1)
             {
