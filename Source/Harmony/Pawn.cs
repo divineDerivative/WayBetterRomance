@@ -37,14 +37,15 @@ namespace BetterRomance.HarmonyPatches
             {
                 yield return gizmo;
             }
-            if (DebugSettings.ShowDevGizmos && __instance.GetComp<Comp_PartnerList>().IsOrderedHookupOnCooldown)
+            Comp_PartnerList comp = __instance.TryGetComp<Comp_PartnerList>();
+            if (comp != null && DebugSettings.ShowDevGizmos && comp.IsOrderedHookupOnCooldown)
             {
                 Command_Action action = new Command_Action
                 {
                     defaultLabel = "DEV: Reset ordered hookup cooldown",
                     action = delegate
                     {
-                        __instance.GetComp<Comp_PartnerList>().orderedHookupTick = -1;
+                        comp.orderedHookupTick = -1;
                     }
                 };
                 yield return action;
