@@ -338,7 +338,7 @@ namespace BetterRomance
                         //Give the jobs we just created
                         Actor.jobs.jobQueue.EnqueueFirst(leadJob);
                         TargetPawn.jobs.jobQueue.EnqueueFirst(followJob);
-                        //Allow the date to be interrupted
+                        //Stop the current job
                         TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                         Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                     }

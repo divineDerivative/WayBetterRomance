@@ -12,9 +12,7 @@ namespace BetterRomance
     {
         static OnStartup()
         {
-            //I can simplify these
-            SettingsUtilities.LoveRelations = SettingsUtilities.AdditionalLoveRelations();
-            SettingsUtilities.ExLoveRelations = SettingsUtilities.AdditionalExLoveRelations();
+            SettingsUtilities.MakeAdditionalLoveRelationsLists();
             SettingsUtilities.MakeTraitList();
 
             if (ModsConfig.IsActive("erdelf.humanoidalienraces") || ModsConfig.IsActive("erdelf.humanoidalienraces.dev"))

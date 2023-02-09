@@ -45,7 +45,7 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Pawn initiator, Pawn recipient, List<RulePackDef> extraSentencePacks, out string letterText, out string letterLabel, out LetterDef letterDef, out LookTargets lookTargets, InteractionWorker_Breakup __instance)
         {
             //Check if there's any custom relations loaded
-            if (!SettingsUtilities.LoveRelations.NullOrEmpty())
+            if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
             {
                 PawnRelationDef relation = null;
                 foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)

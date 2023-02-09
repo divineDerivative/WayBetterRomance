@@ -135,7 +135,7 @@ namespace BetterRomance.HarmonyPatches
                         continue;
                     }
                     //If no fiances found, look through other love relations
-                    if (!SettingsUtilities.LoveRelations.NullOrEmpty())
+                    if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
                     {
                         foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
                         {
@@ -241,7 +241,7 @@ namespace BetterRomance.HarmonyPatches
                         relationFactor = 0.3f;
                     }
                     //Check for custom relations and use same adjustment as lover
-                    else if (!SettingsUtilities.LoveRelations.NullOrEmpty())
+                    else if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
                     {
                         foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
                         {

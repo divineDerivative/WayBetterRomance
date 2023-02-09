@@ -232,7 +232,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                 }
                 else if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(14f))
-                {                    
+                {
                     yield return new CodeInstruction(OpCodes.Ldloc, local_p2MinAgeForSex.LocalIndex);
                 }
                 else
@@ -366,6 +366,7 @@ namespace BetterRomance.HarmonyPatches
         public static void Postfix(Pawn first, Pawn second, ref bool __result)
         {
             if (!__result)
+            {
                 if (!SettingsUtilities.ExLoveRelations.EnumerableNullOrEmpty())
                 {
                     foreach (PawnRelationDef relation in SettingsUtilities.ExLoveRelations)
@@ -377,6 +378,7 @@ namespace BetterRomance.HarmonyPatches
                         }
                     }
                 }
+            }
         }
     }
 

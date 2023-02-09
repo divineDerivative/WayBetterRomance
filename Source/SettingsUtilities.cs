@@ -144,8 +144,8 @@ namespace BetterRomance
 
         public static bool IsFertile(this Pawn pawn) => pawn.GetFertilityLevel() > 0f;
 
-        public static Dictionary<ThingDef, List<TraitRequirement>> RaceHookupTraits = new Dictionary<ThingDef, List<TraitRequirement>>();
-        public static Dictionary<PawnKindDef, List<TraitRequirement>> PawnkindHookupTraits = new Dictionary<PawnKindDef, List<TraitRequirement>>();
+        public static Dictionary<ThingDef, HashSet<TraitRequirement>> RaceHookupTraits = new Dictionary<ThingDef, HashSet<TraitRequirement>>();
+        public static Dictionary<PawnKindDef, HashSet<TraitRequirement>> PawnkindHookupTraits = new Dictionary<PawnKindDef, HashSet<TraitRequirement>>();
 
         public static void MakeTraitList()
         {
@@ -161,7 +161,7 @@ namespace BetterRomance
                         {
                             if (!RaceHookupTraits.ContainsKey(race))
                             {
-                                RaceHookupTraits.Add(race, new List<TraitRequirement>());
+                                RaceHookupTraits.Add(race, new HashSet<TraitRequirement>());
                             }
                             if (extension.degrees.NullOrEmpty())
                             {
@@ -190,7 +190,7 @@ namespace BetterRomance
                         {
                             if (!PawnkindHookupTraits.ContainsKey(pawnkind))
                             {
-                                PawnkindHookupTraits.Add(pawnkind, new List<TraitRequirement>());
+                                PawnkindHookupTraits.Add(pawnkind, new HashSet<TraitRequirement>());
                             }
                             if (extension.degrees.NullOrEmpty())
                             {
@@ -452,12 +452,11 @@ namespace BetterRomance
         }
 
         //Love Relation Settings
-        public static List<PawnRelationDef> LoveRelations;
-        public static List<PawnRelationDef> ExLoveRelations;
+        public static HashSet<PawnRelationDef> LoveRelations = new HashSet<PawnRelationDef>();
+        public static HashSet<PawnRelationDef> ExLoveRelations = new HashSet<PawnRelationDef>();
 
-        public static List<PawnRelationDef> AdditionalExLoveRelations()
+        public static void MakeAdditionalLoveRelationsLists()
         {
-            List<PawnRelationDef> result = new List<PawnRelationDef>();
             List<PawnRelationDef> relationList = DefDatabase<PawnRelationDef>.AllDefsListForReading;
             foreach (PawnRelationDef def in relationList)
             {
@@ -466,31 +465,14 @@ namespace BetterRomance
                     LoveRelations extension = def.GetModExtension<LoveRelations>();
                     if (extension.isLoveRelation)
                     {
+                        LoveRelations.Add(def);
                         if (extension.exLoveRelation != null)
                         {
-                            result.Add(extension.exLoveRelation);
+                            ExLoveRelations.Add(extension.exLoveRelation);
                         }
                     }
                 }
             }
-            return result;
-        }
-
-        public static List<PawnRelationDef> AdditionalLoveRelations()
-        {
-            List<PawnRelationDef> result = new List<PawnRelationDef>();
-            List<PawnRelationDef> relationList = DefDatabase<PawnRelationDef>.AllDefsListForReading;
-            foreach (PawnRelationDef def in relationList)
-            {
-                if (def.HasModExtension<LoveRelations>())
-                {
-                    if (def.GetModExtension<LoveRelations>().isLoveRelation)
-                    {
-                        result.Add(def);
-                    }
-                }
-            }
-            return result;
         }
 
         //Biotech Settings
