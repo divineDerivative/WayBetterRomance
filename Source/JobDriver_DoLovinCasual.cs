@@ -94,7 +94,7 @@ namespace BetterRomance
                 //This checks if actor is cheating
                 initAction = delegate
                 {
-                    ticksLeftThisToil = (Actor.health != null && Actor.health.hediffSet != null && Actor.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) || (Partner.health != null && Partner.health.hediffSet != null && Partner.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) ? ticksForEnhancer : ticksOtherwise;
+                    ticksLeftThisToil = (RomanceUtilities.HasLoveEnhancer(Actor) || RomanceUtilities.HasLoveEnhancer(Partner)) ? ticksForEnhancer : ticksOtherwise;
 
                     if (RomanceUtilities.IsThisCheating(Actor, Partner, out List<Pawn> cheatedOnList))
                     {
@@ -141,7 +141,7 @@ namespace BetterRomance
                 {
                     Thought_Memory thought_Memory = (Thought_Memory)ThoughtMaker.MakeThought(ThoughtDefOf.GotSomeLovin);
                     //Increase mood power if either pawn had a love enhancer
-                    if ((Actor.health != null && Actor.health.hediffSet != null && Actor.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) || (Partner.health != null && Partner.health.hediffSet != null && Partner.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)))
+                    if (RomanceUtilities.HasLoveEnhancer(Actor) || RomanceUtilities.HasLoveEnhancer(Partner))
                     {
                         thought_Memory.moodPowerFactor = 1.5f;
                     }

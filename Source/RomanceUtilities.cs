@@ -478,6 +478,11 @@ namespace BetterRomance
             }
             return factor;
         }
+
+        public static bool HasLoveEnhancer(Pawn pawn)
+        {
+            return pawn.health?.hediffSet?.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer) ?? false;
+        }
     }
 
     public enum Orientation

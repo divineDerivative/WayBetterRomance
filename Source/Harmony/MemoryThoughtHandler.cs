@@ -19,7 +19,7 @@ namespace BetterRomance.HarmonyPatches
                     int moodOffset = (int)GenMath.LerpDouble(0f, 1f, -8f, 8f, ___pawn.AsexualRating());
                     float opinionOffset = GenMath.LerpDouble(0f, 1f, -6f, 6f, ___pawn.AsexualRating());
                     Thought_MemorySocial replacementThought = ThoughtMaker.MakeThought((moodOffset < 0) ? RomanceDefOf.LovinAsexualNegative : RomanceDefOf.LovinAsexualPositive) as Thought_MemorySocial;
-                    if ((___pawn.health != null && ___pawn.health.hediffSet != null && ___pawn.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) || (otherPawn.health != null && otherPawn.health.hediffSet != null && otherPawn.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)))
+                    if (RomanceUtilities.HasLoveEnhancer(___pawn) || RomanceUtilities.HasLoveEnhancer(otherPawn))
                     {
                         replacementThought.moodPowerFactor = 1.5f;
                     }
@@ -38,7 +38,7 @@ namespace BetterRomance.HarmonyPatches
                     float opinionOffset = GenMath.LerpDouble(0f, 1f, -8f, 8f, ___pawn.AsexualRating());
                     Thought_MemorySocial replacementThought = ThoughtMaker.MakeThought((moodOffset < 0) ? RomanceDefOf.PassionateLovinAsexualNegative : RomanceDefOf.PassionateLovinAsexualPositive) as Thought_MemorySocial;
 
-                    if ((___pawn.health != null && ___pawn.health.hediffSet != null && ___pawn.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)) || (otherPawn.health != null && otherPawn.health.hediffSet != null && otherPawn.health.hediffSet.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer)))
+                    if (RomanceUtilities.HasLoveEnhancer(___pawn) || RomanceUtilities.HasLoveEnhancer(otherPawn))
                     {
                         replacementThought.moodPowerFactor = 1.5f;
                     }

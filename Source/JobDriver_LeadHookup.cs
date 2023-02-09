@@ -156,7 +156,7 @@ namespace BetterRomance
                         Actor.jobs.jobQueue.EnqueueFirst(new Job(RomanceDefOf.DoLovinCasual, TargetPawn, TargetBed, TargetBed.GetSleepingSlotPos(0)));
                         //Give casual lovin job to target, with actor and bed info
                         TargetPawn.jobs.jobQueue.EnqueueFirst(new Job(RomanceDefOf.DoLovinCasual, Actor, TargetBed, TargetBed.GetSleepingSlotPos(1)));
-                        //Allow them to be interrupted
+                        //Stop the current job
                         TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                         Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                     }
