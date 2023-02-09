@@ -242,11 +242,6 @@ namespace BetterRomance
         {
             //Fail if partner gets despawned, wasn't assigned, or wanders into an area forbidden to actor
             this.FailOnDespawnedNullOrForbidden(TargetPawnIndex);
-            //Stop if target is not free
-            if (!RomanceUtilities.IsPawnFree(TargetPawn))
-            {
-                yield break;
-            }
             //Walk to the target
             Toil walkToTarget = Toils_Interpersonal.GotoInteractablePosition(TargetPawnIndex);
             //attempt to make job fail if it takes too long to walk to target
