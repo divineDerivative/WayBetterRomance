@@ -148,9 +148,9 @@ namespace BetterRomance
                         }
                         //If actually successful
                         //Give casual lovin job to actor, with target and bed info
-                        Actor.jobs.jobQueue.EnqueueFirst(new Job(RomanceDefOf.DoLovinCasual, TargetPawn, TargetBed, TargetBed.GetSleepingSlotPos(0)));
+                        Actor.jobs.jobQueue.EnqueueFirst(new Job(RomanceDefOf.DoLovinCasual, TargetPawn, TargetBed, TargetBed.GetSleepingSlotPos(0)), JobTag.SatisfyingNeeds);
                         //Give casual lovin job to target, with actor and bed info
-                        TargetPawn.jobs.jobQueue.EnqueueFirst(new Job(RomanceDefOf.DoLovinCasual, Actor, TargetBed, TargetBed.GetSleepingSlotPos(1)));
+                        TargetPawn.jobs.jobQueue.EnqueueFirst(new Job(RomanceDefOf.DoLovinCasual, Actor, TargetBed, TargetBed.GetSleepingSlotPos(1)), JobTag.SatisfyingNeeds);
                         //Stop the current job
                         TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                         Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);

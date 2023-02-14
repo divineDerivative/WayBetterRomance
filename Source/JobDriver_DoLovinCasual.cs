@@ -10,7 +10,6 @@ namespace BetterRomance
         private readonly TargetIndex PartnerInd = TargetIndex.A;
         private readonly TargetIndex BedInd = TargetIndex.B;
         private readonly TargetIndex SlotInd = TargetIndex.C;
-        private int ticksLeft;
         private const int TicksBetweenHeartMotes = 100;
         private const float PregnancyChance = 0.05f;
         private const int ticksForEnhancer = 2750;
@@ -20,12 +19,6 @@ namespace BetterRomance
 
         private Pawn Partner => (Pawn)(Thing)job.GetTarget(PartnerInd);
         private Pawn Actor => GetActor();
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Values.Look(ref ticksLeft, "ticksLeft");
-        }
 
         private bool IsInOrByBed(Building_Bed b, Pawn p)
         {
@@ -125,10 +118,13 @@ namespace BetterRomance
                     {
                         FleckMaker.ThrowMetaIcon(Actor.Position, Actor.Map, FleckDefOf.Heart);
                     }
-                    //Gain joy every tick
-                    JoyUtility.JoyTickCheckEnd(Actor, JoyTickFullJoyAction.None);
+                    //Gain joy every tick, but only if they have a joy need
+                    if (Actor.needs.joy != null)
+                    {
+                        JoyUtility.JoyTickCheckEnd(Actor, JoyTickFullJoyAction.None);
+                    }
                 },
-                defaultCompleteMode = ToilCompleteMode.Delay
+                defaultCompleteMode = ToilCompleteMode.Delay,
             };
             //Fail if partner dies, or there's over 100 ticks left and the partner has wandered off
             loveToil.AddFailCondition(() => Partner.Dead || (ticksLeftThisToil > 100 && !IsInOrByBed(Bed, Partner)));
