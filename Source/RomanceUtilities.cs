@@ -12,6 +12,11 @@ namespace BetterRomance
     {
         public static bool DoWeShareABed(Pawn pawn, Pawn other)
         {
+            //We don't care if either pawn has no need to sleep
+            if (pawn.needs.rest == null || other.needs.rest == null)
+            {
+                return false;
+            }
             return pawn.ownership.OwnedBed != null && pawn.ownership.OwnedBed.OwnersForReading.Contains(other);
         }
 
