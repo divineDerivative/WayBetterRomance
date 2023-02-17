@@ -157,5 +157,4 @@ namespace BetterRomance.HarmonyPatches
             return false;
         }
     }
-
 }
