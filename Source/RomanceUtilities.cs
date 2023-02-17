@@ -67,25 +67,9 @@ namespace BetterRomance
             {
                 if (!cheatedOnList.NullOrEmpty())
                 {
-                    float cheatChance = BetterRomanceMod.settings.cheatChance;
                     //At this point, both the pawn and a non-zero number of partners consider this cheating
-                    //If they are faithful, don't do it
-                    if (pawn.story.traits.HasTrait(RomanceDefOf.Faithful))
-                    {
-                        return false;
-                    }
-                    //Don't allow if user has turned cheating off
-                    if (cheatChance == 0f)
-                    {
-                        return false;
-                    }
-                    //Lower chances for kind trait
-                    if (pawn.story.traits.HasTrait(TraitDefOf.Kind))
-                    {
-                        cheatChance *= .25f;
-                    }
-                    //Generate random value, modify by cheat chance, and compare to opinion of most liked partner
-                    if (Rand.Value * (cheatChance / 100f) < PartnerFactor(pawn, cheatedOnList, out cheatOn))
+                    //Generate random value, and compare to opinion of most liked partner and base cheat chance
+                    if (Rand.Value > CheatingChance(pawn) * PartnerFactor(pawn, cheatedOnList, out cheatOn))
                     {
                         return false;
                     }
@@ -97,35 +81,62 @@ namespace BetterRomance
             return true;
         }
 
-        //This should find the person they would feel the worst about cheating on
-        //With the philanderer map differences, I think this is the best way
+        /// <summary>
+        /// Factor based on opinion of most liked partner. Higher opinion means a lower factor. Only call if <paramref name="partnerList"/> is not empty
+        /// </summary>
+        /// <param name="pawn">The <see cref="Pawn"/> in question</param>
+        /// <param name="partnerList">List of partners that would feel cheated on, provided by <see cref="IsThisCheating(Pawn, Pawn, out List{Pawn})"/></param>
+        /// <param name="partner">The partner <paramref name="pawn"/> would feel the worst about cheating on</param>
+        /// <returns></returns>
         public static float PartnerFactor(Pawn pawn, List<Pawn> partnerList, out Pawn partner)
         {
             partner = null;
-            float partnerFactor = 1f;
-            if (!partnerList.NullOrEmpty())
+            float partnerFactor = 99999f;
+            foreach (Pawn p in partnerList)
             {
-                partnerFactor = 99999f;
-                foreach (Pawn p in partnerList)
+                float opinion = pawn.relations.OpinionOf(p);
+                float tempOpinionFactor;
+                if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
                 {
-                    float opinion = pawn.relations.OpinionOf(p);
-                    float tempOpinionFactor;
-                    if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
-                    {
-                        tempOpinionFactor = pawn.Map == p.Map ? Mathf.InverseLerp(70f, 15f, opinion) : Mathf.InverseLerp(100f, 50f, opinion);
-                    }
-                    else
-                    {
-                        tempOpinionFactor = Mathf.InverseLerp(30f, -80f, opinion);
-                    }
-                    if (tempOpinionFactor < partnerFactor)
-                    {
-                        partnerFactor = tempOpinionFactor;
-                        partner = p;
-                    }
+                    tempOpinionFactor = pawn.Map == p.Map ? Mathf.InverseLerp(70f, 15f, opinion) : Mathf.InverseLerp(100f, 50f, opinion);
+                }
+                else
+                {
+                    tempOpinionFactor = Mathf.InverseLerp(30f, -80f, opinion);
+                }
+                if (tempOpinionFactor < partnerFactor)
+                {
+                    partnerFactor = tempOpinionFactor;
+                    partner = p;
                 }
             }
             return partnerFactor;
+        }
+
+        /// <summary>
+        /// Base chance that a given <paramref name="pawn"/> will cheat. Based on settings and traits. Only call if the partner list from <see cref="IsThisCheating(Pawn, Pawn, out List{Pawn})"/> is not empty.
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <returns></returns>
+        public static float CheatingChance(Pawn pawn)
+        {
+            //If they are faithful, don't do it
+            if (pawn.story.traits.HasTrait(RomanceDefOf.Faithful))
+            {
+                return 0f;
+            }
+            float cheatChance = BetterRomanceMod.settings.cheatChance / 100f;
+            //Don't allow if user has turned cheating off
+            if (cheatChance == 0f)
+            {
+                return 0f;
+            }
+            //Lower chances for kind trait
+            if (pawn.story.traits.HasTrait(TraitDefOf.Kind))
+            {
+                cheatChance *= .25f;
+            }
+            return cheatChance;
         }
 
         /// <summary>

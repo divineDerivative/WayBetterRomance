@@ -38,7 +38,7 @@ namespace BetterRomance
             //If accepted, calculate success chance and create option
             if (acceptanceReport.Accepted)
             {
-                chance = HookupSuccessChance(hookupTarget, initiator, true);
+                chance = HookupSuccessChance(hookupTarget, initiator, true, true);
                 string label = string.Format("{0} ({1} {2})", hookupTarget.LabelShort, chance.ToStringPercent(), "chance".Translate());
                 option = new FloatMenuOption(label, delegate
                 {
@@ -308,7 +308,7 @@ namespace BetterRomance
         /// <param name="target"></param>
         /// <param name="asker"></param>
         /// <returns>Chance of success</returns>
-        public static float HookupSuccessChance(Pawn target, Pawn asker, bool ordered = false)
+        public static float HookupSuccessChance(Pawn target, Pawn asker, bool ordered = false, bool forTooltip = false)
         {
             //Check minimum opinion settings
             if (target.relations.OpinionOf(asker) < target.MinOpinionForHookup(ordered))
@@ -325,7 +325,8 @@ namespace BetterRomance
                 }
                 //Otherwise their rating is already factored in via secondary romance chance factor
             }
-            if (RomanceUtilities.WillPawnContinue(target, asker, out _))
+
+            if (RomanceUtilities.WillPawnContinue(target, asker, out Pawn partner) || forTooltip)
             {
                 //It's either not cheating or they have decided to cheat
                 float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
@@ -334,8 +335,13 @@ namespace BetterRomance
                 {
                     romanceFactor /= 1.5f;
                 }
+                float opinionFactor = OpinionFactor(target, asker);
+                if (forTooltip && partner != null)
+                {
+                    return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f) * RomanceUtilities.CheatingChance(target);
+                }
                 //Adjust based on opinion and increase chance for forced job
-                return romanceFactor * OpinionFactor(target, asker) * (ordered ? 1.2f : 1f);
+                return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f);
             }
             return 0f;
         }
@@ -354,6 +360,7 @@ namespace BetterRomance
             //opinionFactor *= Mathf.InverseLerp(-100f, 0f, target.relations.OpinionOf(asker));
             ////Increase if opinion is positive, but on a lesser scale to above
             //opinionFactor *= GenMath.LerpDouble(0, 100f, 1f, 1.5f, target.relations.OpinionOf(asker));
+
             //This will bottom out at 0.2f at min opinion and max out at 1.5f at 50 opinion
             //May need to adjust in case min opinion is set higher than 50
             return GenMath.LerpDoubleClamped(target.MinOpinionForHookup(ordered), 50f, 0.2f, 1.5f, target.relations.OpinionOf(asker));
@@ -430,12 +437,19 @@ namespace BetterRomance
                 text.AppendLine(HookupFactorLine("WBR.HookupChanceNotPartner".Translate(), 2f / 3f));
             }
             //Adjustment for opinion of existing partner
-            if (RomanceUtilities.IsThisCheating(initiator, target, out List<Pawn> partnerList))
+            if (RomanceUtilities.IsThisCheating(initiator, target, out List<Pawn> partnerList) && !partnerList.NullOrEmpty())
             {
+                //This is specifically based on opinion of a partner
                 float partnerFactor = RomanceUtilities.PartnerFactor(target, partnerList, out _);
                 if (partnerFactor != 1f)
                 {
                     text.AppendLine(HookupFactorLine("WBR.HookupChancePartnerFactor".Translate(), partnerFactor));
+                }
+                //This is a base chance to cheat based on settings and traits
+                float cheatChance = RomanceUtilities.CheatingChance(target);
+                if (cheatChance != 1f)
+                {
+                    text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheatChance));
                 }
             }
             //Effect of target's beauty stat
