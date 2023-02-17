@@ -21,18 +21,18 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Determines if an interaction between <paramref name="pawn"/> and <paramref name="target"/> would be cheating from <paramref name="pawn"/>'s point of view. Includes a list of pawns that would think they are being cheated on.
+        /// Determines if an interaction between <paramref name="pawn"/> and <paramref name="otherPawn"/> would be cheating from <paramref name="pawn"/>'s point of view. Includes a list of pawns that would think they are being cheated on.
         /// </summary>
         /// <param name="pawn"></param>
-        /// <param name="target"></param>
+        /// <param name="otherPawn"></param>
         /// <param name="cheaterList">A list of pawns who will think that <paramref name="pawn"/> cheated on them, regardless of what <paramref name="pawn"/> thinks</param>
         /// <returns>True or False</returns>
-        public static bool IsThisCheating(Pawn pawn, Pawn target, out List<Pawn> cheaterList)
+        public static bool IsThisCheating(Pawn pawn, Pawn otherPawn, out List<Pawn> cheaterList)
         {
             //This has to happen to get passed out
             cheaterList = new List<Pawn>();
             //Are they in a relationship?
-            if (target != null && LovePartnerRelationUtility.LovePartnerRelationExists(pawn, target))
+            if (otherPawn != null && LovePartnerRelationUtility.LovePartnerRelationExists(pawn, otherPawn))
             {
                 return false;
             }
@@ -54,16 +54,16 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Always returns true if interaction between <paramref name="pawn"/> and <paramref name="target"/> is not cheating and is allowed by ideo. Otherwise, finds the partner they would feel the worst about cheating on and decides based on opinion and <paramref name="pawn"/>'s traits.
+        /// Whether <paramref name="pawn"/> decides to continue with an interaction with <paramref name="otherPawn"/> Always returns true if interaction is not cheating and is allowed by ideo. Otherwise, finds the partner they would feel the worst about cheating on and decides based on opinion and <paramref name="pawn"/>'s traits.
         /// </summary>
         /// <param name="pawn"></param>
-        /// <param name="target"></param>
+        /// <param name="otherPawn"></param>
         /// <param name="cheatOn">The pawn they feel worst about cheating on</param>
         /// <returns></returns>
-        public static bool WillPawnContinue(Pawn pawn, Pawn target, out Pawn cheatOn)
+        public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out Pawn cheatOn)
         {
             cheatOn = null;
-            if (IsThisCheating(pawn, target, out List<Pawn> cheatedOnList))
+            if (IsThisCheating(pawn, otherPawn, out List<Pawn> cheatedOnList))
             {
                 if (!cheatedOnList.NullOrEmpty())
                 {

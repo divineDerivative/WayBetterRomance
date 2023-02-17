@@ -335,7 +335,7 @@ namespace BetterRomance
                 {
                     romanceFactor /= 1.5f;
                 }
-                float opinionFactor = OpinionFactor(target, asker);
+                float opinionFactor = OpinionFactor(target, asker, ordered);
                 if (forTooltip && partner != null)
                 {
                     return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f) * RomanceUtilities.CheatingChance(target);
@@ -437,7 +437,7 @@ namespace BetterRomance
                 text.AppendLine(HookupFactorLine("WBR.HookupChanceNotPartner".Translate(), 2f / 3f));
             }
             //Adjustment for opinion of existing partner
-            if (RomanceUtilities.IsThisCheating(initiator, target, out List<Pawn> partnerList) && !partnerList.NullOrEmpty())
+            if (RomanceUtilities.IsThisCheating(target, initiator , out List<Pawn> partnerList) && !partnerList.NullOrEmpty())
             {
                 //This is specifically based on opinion of a partner
                 float partnerFactor = RomanceUtilities.PartnerFactor(target, partnerList, out _);

@@ -75,6 +75,7 @@
     <Compile Include="Harmony\Biotech Romance\RelationsUtility.cs" />
     <Compile Include="Harmony\Biotech Romance\SocialCardUtility.cs" />
     <Compile Include="Harmony\ChoiceLetter_GrowthMoment.cs" />
+    <Compile Include="Harmony\InteractionWorker_RomanceAttempt.cs" />
     <Compile Include="Harmony\Pawn.cs" />
     <Compile Include="Harmony\Gizmo_GrowthTier.cs" />
     <Compile Include="Harmony\Pregnancy\Recipe_ImplantIUD.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="Harmony\CompAbilityEffect_WordOfLove.cs" />
     <Compile Include="HAR Integration\HAR_Integration.cs" />
     <Compile Include="HAR Integration\HARPatches.cs" />
-    <Compile Include="Harmony\TraitSet_GainTrait.cs" />
+    <Compile Include="Harmony\TraitSet.cs" />
     <Compile Include="HookupUtility.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StatPart_Asexual.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Harmony\Pregnancy\StatPart_FertilityByGenderAge_AgeFactor.cs" />
     <Compile Include="Harmony\InteractionWorker_Breakup.cs" />
     <Compile Include="Harmony\InteractionWorker_MarriageProposal.cs" />
-    <Compile Include="Harmony\InteractionWorker_RomanceAttempt.cs" />
     <Compile Include="Harmony\JobDriver_Lovin.cs" />
     <Compile Include="Harmony\JobGiver_DoLovin.cs" />
     <Compile Include="Harmony\JoyKindDef.cs" />
