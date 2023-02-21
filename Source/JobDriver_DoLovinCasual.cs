@@ -158,9 +158,17 @@ namespace BetterRomance
                         Pawn female = (Actor.gender == Gender.Female) ? Actor : ((Partner.gender == Gender.Female) ? Partner : null);
                         if (male != null && female != null && Rand.Chance(PregnancyChance * PregnancyUtility.PregnancyChanceForPartners(female, male)))
                         {
-                            Hediff_Pregnant hediff_Pregnant = (Hediff_Pregnant)HediffMaker.MakeHediff(HediffDefOf.PregnantHuman, female);
-                            hediff_Pregnant.SetParents(null, male, PregnancyUtility.GetInheritedGeneSet(male, female));
-                            female.health.AddHediff(hediff_Pregnant);
+                            GeneSet inheritedGeneSet = PregnancyUtility.GetInheritedGeneSet(male, female, out bool success);
+                            if (success)
+                            {
+                                Hediff_Pregnant hediff_Pregnant = (Hediff_Pregnant)HediffMaker.MakeHediff(HediffDefOf.PregnantHuman, female);
+                                hediff_Pregnant.SetParents(null, male, inheritedGeneSet);
+                                female.health.AddHediff(hediff_Pregnant);
+                            }
+                            else if (PawnUtility.ShouldSendNotificationAbout(male) || PawnUtility.ShouldSendNotificationAbout(female))
+                            {
+                                Messages.Message("MessagePregnancyFailed".Translate(male.Named("FATHER"), female.Named("MOTHER")) + ": " + "CombinedGenesExceedMetabolismLimits".Translate(), new LookTargets(male, female), MessageTypeDefOf.NegativeEvent);
+                            }
                         }
                     }
                 },
