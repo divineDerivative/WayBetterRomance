@@ -141,7 +141,6 @@ namespace BetterRomance.HarmonyPatches
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             MethodInfo RomanceExplanation = AccessTools.Method(typeof(SocialCardUtility), "RomanceExplanation");
-            FieldInfo otherPawn = AccessTools.Field(AccessTools.TypeByName("RimWorld.SocialCardUtility.CachedSocialTabEntry"), "otherPawn");
             Label newLabel = ilg.DefineLabel();
             Label oldLabel = ilg.DefineLabel();
             LocalBuilder text = ilg.DeclareLocal(typeof(string));
@@ -212,6 +211,58 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Rect buttonRect, Pawn pawn)
         {
             return (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, new object[] { pawn });
+        }
+
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
+        {
+            Label newLabel = ilg.DefineLabel();
+            Label oldLabel = ilg.DefineLabel();
+            bool cooldownFound = false;
+            MethodInfo Accepted = AccessTools.PropertyGetter(typeof(AcceptanceReport), nameof(AcceptanceReport.Accepted));
+
+            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < codes.Count; i++)
+            {
+                var code = codes[i];
+
+                if (code.opcode == OpCodes.Ldstr && (string)code.operand == "CantRomanceInitiateMessageCooldown")
+                {
+                    cooldownFound = true;
+                }
+                if (code.opcode == OpCodes.Brtrue_S && cooldownFound)
+                {
+                    oldLabel = (Label)code.operand;
+                    code.operand = newLabel;
+                    cooldownFound = false;
+                }
+
+                if (code.labels.Contains(oldLabel))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1)
+                    {
+                        labels= new List<Label> { newLabel }
+                    };
+                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.IsAsexual));
+                    yield return new CodeInstruction(OpCodes.Brfalse_S, oldLabel);
+
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetOrientation));
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_3);
+                    yield return new CodeInstruction(OpCodes.Bne_Un_S, oldLabel);
+
+                    yield return new CodeInstruction(OpCodes.Ldstr, "WBR.CantRomanceInitiateMessageAromantic");
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(NamedArgument), "op_Implicit", new Type[] { typeof(Thing) });
+                    yield return CodeInstruction.Call(typeof(TranslatorFormattedStringExtensions), nameof(TranslatorFormattedStringExtensions.Translate), new Type[] { typeof(string), typeof(NamedArgument) });
+                    yield return CodeInstruction.Call(typeof(TaggedString), "op_Implicit", new Type[] {typeof(TaggedString)});
+                    yield return CodeInstruction.LoadField(typeof(MessageTypeDefOf), nameof(MessageTypeDefOf.RejectInput));
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return CodeInstruction.Call(typeof(Messages), nameof(Messages.Message), new Type[] { typeof(string), typeof(MessageTypeDef), typeof(bool) });
+                    yield return new CodeInstruction(OpCodes.Ret);
+                }
+
+                yield return code;
+            }
         }
     }
 }

@@ -3,6 +3,7 @@
 	<WBR.TryHookupButtonLabel>Hook Up</WBR.TryHookupButtonLabel>
 	<WBR.TryHookupNoOptsMessage>Nobody for {0_labelShort} to hook up with.</WBR.TryHookupNoOptsMessage>
 	<WBR.HookupFailedUnexpected>{0_labelShort} was unable to hook up with {1_labelShort}</WBR.HookupFailedUnexpected>
+	<WBR.CantRomanceInitiateMessageAromantic>{0_labelShort} cannot try to romance because {0_pronoun} is aromantic.</WBR.CantRomanceInitiateMessageAromantic>
 	
 	<WBR.CantHookupTargetSlave>slave</WBR.CantHookupTargetSlave>
 	<WBR.CantHookupTargetAsexual>asexual</WBR.CantHookupTargetAsexual>
