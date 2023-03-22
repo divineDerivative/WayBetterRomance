@@ -19,6 +19,7 @@ namespace BetterRomance.HarmonyPatches
                 bool hasMother = other.GetMother() != null;
                 bool hasFather = other.GetFather() != null;
                 bool tryMakeLovers = Rand.Value < 0.85f;
+
                 if (hasMother && LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()))
                 {
                     tryMakeLovers = false;
@@ -27,30 +28,41 @@ namespace BetterRomance.HarmonyPatches
                 {
                     tryMakeLovers = false;
                 }
+
                 if (!hasMother)
                 {
                     Pawn newMother = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, new object[] { generated, other, Gender.Female, request, false });
                     other.SetMother(newMother);
                 }
-                generated.SetMother(other.GetMother());
+                var mother = other.GetMother();
+                if (mother != null)
+                {
+                    generated.SetMother(mother);
+                }
+
                 if (!hasFather)
                 {
                     Pawn newFather = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, new object[] { generated, other, Gender.Male, request, false });
                     other.SetFather(newFather);
                 }
-                generated.SetFather(other.GetFather());
+                var father = other.GetFather();
+                if (father != null)
+                {
+                    generated.SetFather(father);
+                }
+
                 if (!hasMother || !hasFather)
                 {
+                    if (mother != null && father != null)
+                    {
                     if (tryMakeLovers)
                     {
-                        Pawn mother = other.GetMother();
-                        Pawn father = other.GetFather();
                         father.relations.AddDirectRelation(PawnRelationDefOf.Lover, mother);
-
                     }
                     else
                     {
-                        other.GetFather().relations.AddDirectRelation(PawnRelationDefOf.ExLover, other.GetMother());
+                            father.relations.AddDirectRelation(PawnRelationDefOf.ExLover, mother);
+                        }
                     }
                 }
                 AccessTools.Method(typeof(PawnRelationWorker_Sibling), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
