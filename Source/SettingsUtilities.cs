@@ -250,11 +250,11 @@ namespace BetterRomance
         //Regular sex settings
         public static RegularSexSettings GetSexSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<RegularSexSettings>())
+            if (pawn?.kindDef.HasModExtension<RegularSexSettings>() ?? false)
             {
                 return pawn.kindDef.GetModExtension<RegularSexSettings>();
             }
-            else if (pawn.def.HasModExtension<RegularSexSettings>())
+            else if (pawn?.def.HasModExtension<RegularSexSettings>() ?? false)
             {
                 return pawn.def.GetModExtension<RegularSexSettings>();
             }
@@ -288,11 +288,11 @@ namespace BetterRomance
         //Relation Settings
         public static RelationSettings GetRelationSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<RelationSettings>())
+            if (pawn?.kindDef.HasModExtension<RelationSettings>() ?? false)
             {
                 return pawn.kindDef.GetModExtension<RelationSettings>();
             }
-            else if (pawn.def.HasModExtension<RelationSettings>())
+            else if (pawn?.def.HasModExtension<RelationSettings>() ?? false)
             {
                 return pawn.def.GetModExtension<RelationSettings>();
             }
