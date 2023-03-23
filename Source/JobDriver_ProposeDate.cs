@@ -43,7 +43,7 @@ namespace BetterRomance
                         //Create date lead job
                         dateLeadJob = new Job(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead);
                         //Add the path info to the job info
-                        Log.Message("Date walk path found.");
+                        LogUtil.Message("Date walk path found.");
                         dateLeadJob.targetQueueB = new List<LocalTargetInfo>();
                         for (int i = 1; i < list.Count; i++)
                         {
@@ -195,7 +195,7 @@ namespace BetterRomance
             if (list.Count == 0)
             {
                 result = false;
-                Log.Message("No date walk destination found.");
+                LogUtil.Message("No date walk destination found.");
             }
             else
             {
@@ -204,7 +204,7 @@ namespace BetterRomance
                                        select c).ToList();
                 best = list2.FirstOrDefault();
                 list2.Reverse();
-                Log.Message("Date walk destinations found from beauty " + BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " + BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
+                LogUtil.Message("Date walk destinations found from beauty " + BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " + BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
                 result = true;
             }
 

@@ -27,7 +27,7 @@ namespace BetterRomance
             //If not set, default to orientation chances
             if (asexualChance != 0f && aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance == 0f)
             {
-                Log.Warning("Romantic orientation chances for asexual pawns not found. Defaulting to match sexual orientation chances.");
+                LogUtil.Warning("Romantic orientation chances for asexual pawns not found. Defaulting to match sexual orientation chances.");
                 aceAroChance = asexualChance;
                 aceBiChance = bisexualChance;
                 aceHomoChance = gayChance;

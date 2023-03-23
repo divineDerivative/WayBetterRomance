@@ -21,13 +21,13 @@ namespace BetterRomance.HarmonyPatches
             //Make sure parent genders are correct
             if (father != null && father.gender != Gender.Male)
             {
-                Log.Warning(string.Concat("Tried to calculate chance for father with gender \"", father.gender, "\"."));
+                LogUtil.Warning(string.Concat("Tried to calculate chance for father with gender \"", father.gender, "\"."));
                 __result = 0f;
                 return false;
             }
             if (mother != null && mother.gender != Gender.Female)
             {
-                Log.Warning(string.Concat("Tried to calculate chance for mother with gender \"", mother.gender, "\"."));
+                LogUtil.Warning(string.Concat("Tried to calculate chance for mother with gender \"", mother.gender, "\"."));
                 __result = 0f;
                 return false;
             }

@@ -459,7 +459,7 @@ namespace BetterRomance
                 comp = p.TryGetComp<Comp_PartnerList>();
                 if (comp == null)
                 {
-                    Log.Error("Unable to add Comp_PartnerList");
+                    LogUtil.Error("Unable to add Comp_PartnerList");
                 }
             }
             return comp;
