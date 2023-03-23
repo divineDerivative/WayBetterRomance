@@ -52,6 +52,10 @@
     <None Include="..\Common\Defs\**" />
     <None Include="..\Common\Languages\**" />
     <None Include="..\Common\Patches\**" />
+    <Reference Include="TweaksGalore">
+      <HintPath>..\..\..\..\..\workshop\content\294100\2695164414\1.4\Assemblies\TweaksGalore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
@@ -71,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateUtility.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Harmony\Biotech Romance\FloatMenuMakerMap.cs" />
     <Compile Include="Harmony\Biotech Romance\RelationsUtility.cs" />
     <Compile Include="Harmony\Biotech Romance\SocialCardUtility.cs" />
@@ -86,11 +91,13 @@
     <Compile Include="HAR Integration\HAR_Integration.cs" />
     <Compile Include="HAR Integration\HARPatches.cs" />
     <Compile Include="Harmony\TraitSet.cs" />
+    <Compile Include="Harmony\ScenPart_ForcedTrait.cs" />
+    <Compile Include="Harmony\ModCompatibility\TweaksGalore_Patches.cs" />
     <Compile Include="HookupUtility.cs" />
+    <Compile Include="LogUtil.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="StatPart_Asexual.cs" />
     <Compile Include="Comp_PartnerList.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Harmony\ChildRelationUtility.cs" />
     <Compile Include="Harmony\Pregnancy\StatPart_FertilityByGenderAge_AgeFactor.cs" />
     <Compile Include="Harmony\InteractionWorker_Breakup.cs" />

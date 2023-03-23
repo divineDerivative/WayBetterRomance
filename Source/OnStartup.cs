@@ -4,6 +4,7 @@ using RimWorld;
 using System;
 using System.Linq;
 using System.Reflection;
+using BetterRomance.HarmonyPatches;
 
 namespace BetterRomance
 {
@@ -20,10 +21,16 @@ namespace BetterRomance
                 Settings.HARActive = true;
                 HARPatches.PatchHAR();
             }
+
             Harmony harmony = new Harmony(id: "rimworld.divineDerivative.romance");
             harmony.PatchAll();
             MakeFertilityModList();
             Settings.ApplyJoySettings();
+
+            if (ModsConfig.IsActive("Neronix17.TweaksGalore"))
+                harmony.PatchTweaksGalore();
+            else
+                LogUtil.Warning("TweaksGalore mod not loaded, not applying patches");
         }
 
         private static void MakeFertilityModList()
