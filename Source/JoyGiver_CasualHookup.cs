@@ -57,7 +57,7 @@ namespace BetterRomance
                 //Create the lead hookup job with partner and bed info
                 else
                 {
-                    return new Job(def.jobDef, partner, bed);
+                    return JobMaker.MakeJob(def.jobDef, partner, bed);
                 }
             }
         }

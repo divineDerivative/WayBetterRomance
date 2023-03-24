@@ -41,7 +41,7 @@ namespace BetterRomance
                     if (TryFindUnforbiddenDatePath(pawn, TargetPawn, root, out List<IntVec3> list))
                     {
                         //Create date lead job
-                        dateLeadJob = new Job(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead);
+                        dateLeadJob = JobMaker.MakeJob(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead);
                         //Add the path info to the job info
                         Log.Message("Date walk path found.");
                         dateLeadJob.targetQueueB = new List<LocalTargetInfo>();

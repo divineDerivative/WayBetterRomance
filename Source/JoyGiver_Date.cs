@@ -39,7 +39,7 @@ namespace BetterRomance
                 //Create the job based on romance factor
                 else
                 {
-                    return pawn.relations.SecondaryRomanceChanceFactor(partner) > 0.2f ? new Job(RomanceDefOf.ProposeDate, partner) : new Job(RomanceDefOf.ProposeHangout, partner);
+                    return pawn.relations.SecondaryRomanceChanceFactor(partner) > 0.2f ? JobMaker.MakeJob(RomanceDefOf.ProposeDate, partner) : JobMaker.MakeJob(RomanceDefOf.ProposeHangout, partner);
                 }
             }
         }
