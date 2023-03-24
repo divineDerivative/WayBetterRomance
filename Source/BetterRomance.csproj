@@ -84,8 +84,7 @@
     <Compile Include="Harmony\Pregnancy\Recipe_ExtractOvum.cs" />
     <Compile Include="Harmony\Pregnancy\HumanOvum.cs" />
     <Compile Include="Harmony\CompAbilityEffect_WordOfLove.cs" />
-    <Compile Include="HAR Integration\HAR_Integration.cs" />
-    <Compile Include="HAR Integration\HARPatches.cs" />
+    <Compile Include="Mod Integration\HAR_Integration.cs" />
     <Compile Include="Harmony\TraitSet.cs" />
     <Compile Include="HookupUtility.cs" />
     <Compile Include="Settings.cs" />

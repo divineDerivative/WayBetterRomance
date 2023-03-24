@@ -4,6 +4,7 @@ using RimWorld;
 using System;
 using System.Linq;
 using System.Reflection;
+using BetterRomance.HarmonyPatches;
 
 namespace BetterRomance
 {
@@ -14,14 +15,15 @@ namespace BetterRomance
         {
             SettingsUtilities.MakeAdditionalLoveRelationsLists();
             SettingsUtilities.MakeTraitList();
+            Harmony harmony = new Harmony(id: "rimworld.divineDerivative.romance");
+            harmony.PatchAll();
 
             if (ModsConfig.IsActive("erdelf.humanoidalienraces") || ModsConfig.IsActive("erdelf.humanoidalienraces.dev"))
             {
                 Settings.HARActive = true;
-                HARPatches.PatchHAR();
+                harmony.PatchHAR();
             }
-            Harmony harmony = new Harmony(id: "rimworld.divineDerivative.romance");
-            harmony.PatchAll();
+
             MakeFertilityModList();
             Settings.ApplyJoySettings();
         }

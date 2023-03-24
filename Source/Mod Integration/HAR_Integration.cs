@@ -1,4 +1,5 @@
 ﻿using AlienRace;
+using HarmonyLib;
 using RimWorld;
 using System.Runtime.CompilerServices;
 using Verse;
@@ -7,7 +8,6 @@ namespace BetterRomance
 {
     public class HAR_Integration
     {
-
         /// <summary>
         /// Checks HAR settings to see if pawns consider each other aliens.
         /// DO NOT CALL IF HAR IS NOT ACTIVE
@@ -87,6 +87,17 @@ namespace BetterRomance
                 return $"{first.gender} {first.def.LabelCap} can not reproduce with {second.gender} {second.def.LabelCap}";
             }
             return true;
+        }
+    }
+    namespace HarmonyPatches
+    {
+        public static class HARPatches
+        {
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            public static void PatchHAR(this Harmony harmony)
+            {
+                harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), typeof(AlienRace.HarmonyPatches).GetMethod("CompatibilityWithPostfix"));
+            }
         }
     }
 }
