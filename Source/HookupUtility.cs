@@ -68,9 +68,9 @@ namespace BetterRomance
                 return;
             }
             //If target is not free, send warning message and stop
-            if (!RomanceUtilities.IsPawnFree(romanceTarget, true))
+            if (!romanceTarget.IsFree(RomanticActivityType.OrderedHookup, out string reason))
             {
-                Messages.Message("WBR.HookupTargetNotFree".Translate(romanceTarget), MessageTypeDefOf.RejectInput, false);
+                Messages.Message("WBR.HookupTargetNotFreeReason".Translate() + reason, MessageTypeDefOf.RejectInput, false);
                 return;
             }
             //Check if pawns are in a relationship with each other
@@ -140,10 +140,11 @@ namespace BetterRomance
                 return false;
             }
             //Don't allow if initiator can't do hookups at all
-            if (!HookupEligible(initiator, initiator: true, forOpinionExplanation))
+            if (!HookupEligible(initiator, initiator: true))
             {
                 return false;
             }
+            //Start with reasons that are not subject to change
             //Don't allow if target is too young
             if (forOpinionExplanation && target.ageTracker.AgeBiologicalYearsFloat < target.MinAgeForSex())
             {
@@ -175,10 +176,15 @@ namespace BetterRomance
                 return "WBR.CantHookupTargetInfertile".Translate();
             }
             //Next check if target is eligible for hookups
-            AcceptanceReport acceptanceReport = HookupEligible(target, initiator: false, forOpinionExplanation);
+            AcceptanceReport acceptanceReport = HookupEligible(target, initiator: false);
             if (!acceptanceReport)
             {
                 return acceptanceReport;
+            }
+            //Don't allow if target is busy
+            if (!target.IsFree(RomanticActivityType.OrderedHookup, out string reason) && !forOpinionExplanation)
+            {
+                return reason;
             }
             //Don't allow if opinion is too low
             if (initiator.relations.OpinionOf(target) <= initiator.MinOpinionForHookup(true))
@@ -205,9 +211,8 @@ namespace BetterRomance
         /// <param name="initiator">If <paramref name="pawn"/> is initiating the hookup</param>
         /// <param name="forOpinionExplanation">If the report is only for the opinion tooltip</param>
         /// <returns></returns>
-        public static AcceptanceReport HookupEligible(Pawn pawn, bool initiator, bool forOpinionExplanation)
+        public static AcceptanceReport HookupEligible(Pawn pawn, bool initiator)
         {
-
             //Check the basic requirements first
             AcceptanceReport ar = WillPawnTryHookup(pawn, initiator, true);
             if (!ar.Accepted)
@@ -223,18 +228,6 @@ namespace BetterRomance
             if (pawn.IsPrisoner)
             {
                 return initiator ? "WBR.CantHookupInitiateMessagePrisoner".Translate(pawn).CapitalizeFirst() : "WBR.CantHookupTargetPrisoner".Translate();
-            }
-            if (pawn.Downed && !forOpinionExplanation)
-            {
-                return initiator ? "WBR.CantHookupInitiateMessageDowned".Translate(pawn).CapitalizeFirst() : "WBR.CantHookupTargetDowned".Translate();
-            }
-            if (pawn.Drafted && !forOpinionExplanation)
-            {
-                return initiator ? "WBR.CantHookupInitiateMessageDrafted".Translate(pawn).CapitalizeFirst() : "WBR.CantHookupTargetDrafted".Translate();
-            }
-            if (pawn.MentalState != null)
-            {
-                return (initiator && !forOpinionExplanation) ? "WBR.CantHookupInitiateMessageMentalState".Translate(pawn).CapitalizeFirst() : "WBR.CantHookupTargetMentalState".Translate();
             }
             return true;
         }
@@ -437,7 +430,7 @@ namespace BetterRomance
                 text.AppendLine(HookupFactorLine("WBR.HookupChanceNotPartner".Translate(), 2f / 3f));
             }
             //Adjustment for opinion of existing partner
-            if (RomanceUtilities.IsThisCheating(target, initiator , out List<Pawn> partnerList) && !partnerList.NullOrEmpty())
+            if (RomanceUtilities.IsThisCheating(target, initiator, out List<Pawn> partnerList) && !partnerList.NullOrEmpty())
             {
                 //This is specifically based on opinion of a partner
                 float partnerFactor = RomanceUtilities.PartnerFactor(target, partnerList, out _);

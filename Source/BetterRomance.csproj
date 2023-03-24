@@ -70,6 +70,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PawnAvailability.cs" />
     <Compile Include="DateUtility.cs" />
     <Compile Include="Harmony\Biotech Romance\FloatMenuMakerMap.cs" />
     <Compile Include="Harmony\Biotech Romance\RelationsUtility.cs" />

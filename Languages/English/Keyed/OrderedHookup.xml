@@ -4,6 +4,15 @@
 	<WBR.TryHookupNoOptsMessage>Nobody for {0_labelShort} to hook up with.</WBR.TryHookupNoOptsMessage>
 	<WBR.HookupFailedUnexpected>{0_labelShort} was unable to hook up with {1_labelShort}</WBR.HookupFailedUnexpected>
 	<WBR.CantRomanceInitiateMessageAromantic>{0_labelShort} cannot try to romance because {0_pronoun} is aromantic.</WBR.CantRomanceInitiateMessageAromantic>
+
+	<WBR.CantHookupReasonDead>dead</WBR.CantHookupReasonDead>
+	<WBR.CantHookupReasonDanger>in danger</WBR.CantHookupReasonDanger>
+	<WBR.CantHookupReasonNeed>basic need</WBR.CantHookupReasonNeed>
+	<WBR.CantHookupReasonDowned>incapacitated</WBR.CantHookupReasonDowned>
+	<WBR.CantHookupReasonMentalState>mental break</WBR.CantHookupReasonMentalState>
+	<WBR.CantHookupReasonDrafted>drafted</WBR.CantHookupReasonDrafted>
+	<WBR.CantHookupReasonInLabor>in labor</WBR.CantHookupReasonInLabor>
+	<WBR.CantHookupReasonBusy>busy</WBR.CantHookupReasonBusy>
 	
 	<WBR.CantHookupTargetSlave>slave</WBR.CantHookupTargetSlave>
 	<WBR.CantHookupTargetAsexual>asexual</WBR.CantHookupTargetAsexual>
@@ -12,22 +21,15 @@
 	<WBR.CantHookupTargetTrait>missing trait</WBR.CantHookupTargetTrait>
 	<WBR.CantHookupTargetIdeo>{0_name}</WBR.CantHookupTargetIdeo>
 	<WBR.CantHookupTargetUnreachable>unreachable</WBR.CantHookupTargetUnreachable>
-	<WBR.CantHookupTargetDowned>incapacitated</WBR.CantHookupTargetDowned>
-	<WBR.CantHookupTargetDrafted>drafted</WBR.CantHookupTargetDrafted>
-	<WBR.CantHookupTargetMentalState>mental break</WBR.CantHookupTargetMentalState>
 	<WBR.CantHookupTargetIncest>incestuous</WBR.CantHookupTargetIncest>
 	<WBR.CantHookupTargetOpinion>low opinion</WBR.CantHookupTargetOpinion>
 	<WBR.CantHookupTargetPrisoner>prisoner</WBR.CantHookupTargetPrisoner>
 	<WBR.CantHookupTargetYoung>too young</WBR.CantHookupTargetYoung>
 	<WBR.CantHookupTargetZeroChance>zero chance</WBR.CantHookupTargetZeroChance>
 
+	<WBR.CantHookupInitiateBusy>{0_labelShort} is unable to hook up: </WBR.CantHookupInitiateBusy>
 	<WBR.CantHookupInitiateMessagePrisoner>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is a prisoner.</WBR.CantHookupInitiateMessagePrisoner>
-	<WBR.CantHookupInitiateMessageDowned>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is incapacitated.</WBR.CantHookupInitiateMessageDowned>
 	<WBR.CantHookupInitiateMessageAsexual>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is asexual.</WBR.CantHookupInitiateMessageAsexual>
-	<WBR.CantHookupInitiateMessageDrafted>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is drafted.</WBR.CantHookupInitiateMessageDrafted>
-	<WBR.CantHookupInitiateMessageMentalState>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is in an unfit mental state.</WBR.CantHookupInitiateMessageMentalState>
-	<WBR.CantHookupInitiateMessageUninterruptableJob>{0_labelShort} cannot be ordered to hook up because {0_possessive} current job cannot be interrupted.</WBR.CantHookupInitiateMessageUninterruptableJob>
-	<WBR.CantHookupInitiateMessageInLabor>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is in labor.</WBR.CantHookupInitiateMessageInLabor>
 	<WBR.CantHookupInitiateMessageIdeo>{0_labelShort}'s ideoligion does not allow hooking up.</WBR.CantHookupInitiateMessageIdeo>
 	<WBR.CantHookupInitiateMessageFertility>{0_labelShort} cannot be ordered to hook up because {0_pronoun} is infertile.</WBR.CantHookupInitiateMessageFertility>
 	<WBR.CantHookupInitiateMessageTrait>{0_labelShort} cannot be ordered to hook up because {0_pronoun} does not have the {1} trait.</WBR.CantHookupInitiateMessageTrait>
@@ -39,6 +41,7 @@
 	<WBR.TryHookupFailedMessage>{0_labelShort}'s attempt to hook up with {1_labelShort} was unsuccessful.</WBR.TryHookupFailedMessage>
 	<WBR.TryHookupSuccessMessage>{1_labelShort} agreed to hook up with {0_labelShort}.</WBR.TryHookupSuccessMessage>
 	<WBR.CantHookupInitiateMessageCooldown>{0_labelShort} tried hooking up recently and must wait {1} until trying again.</WBR.CantHookupInitiateMessageCooldown>
+	<WBR.HookupTargetNotFreeReason>Target not free: </WBR.HookupTargetNotFreeReason>
 	<WBR.HookupTargetNotFree>Target not free but reason wasn't given.</WBR.HookupTargetNotFree>
 
 	<WBR.CannotHookup>Cannot hook up with {0}</WBR.CannotHookup>

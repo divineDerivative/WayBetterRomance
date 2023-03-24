@@ -58,7 +58,7 @@ namespace BetterRomance
                     {
                         continue;
                     }
-                    if (RomanceUtilities.IsPawnFree(p) && !p.IsForbidden(Pawn))
+                    if (p.IsFree(hookup ? RomanticActivityType.CasualHookup : RomanticActivityType.Date, out _) && !p.IsForbidden(Pawn))
                     {
                         partner = p;
                         break;

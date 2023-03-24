@@ -29,7 +29,7 @@ namespace BetterRomance
 
         private bool DoesTargetPawnAcceptDate()
         {
-            return RomanceUtilities.IsPawnFree(TargetPawn) && (IsDate ? DateUtility.IsDateAppealing(TargetPawn, Actor) : DateUtility.IsHangoutAppealing(TargetPawn, Actor));
+            return TargetPawn.IsFree(IsDate ? RomanticActivityType.Date : RomanticActivityType.Hangout, out _) && (IsDate ? DateUtility.IsDateAppealing(TargetPawn, Actor) : DateUtility.IsHangoutAppealing(TargetPawn, Actor));
         }
 
         private bool TryGetDateJobs(out Job dateLeadJob, out Job dateFollowJob)
@@ -55,11 +55,10 @@ namespace BetterRomance
                         dateLeadJob.targetA = TargetPawn;
 
                         //Create date follow job, with wander and actor info
-                        dateFollowJob = new Job(IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow)
-                        {
-                            locomotionUrgency = LocomotionUrgency.Amble,
-                            targetA = Actor
-                        };
+                        dateFollowJob = JobMaker.MakeJob(IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow);
+                        dateFollowJob.locomotionUrgency = LocomotionUrgency.Amble;
+                        dateFollowJob.targetA = Actor;
+
                         return true;
                     }
                 }

@@ -75,9 +75,10 @@ namespace BetterRomance.HarmonyPatches
         {
             Color color = GUI.color;
             bool isTryHookupOnCooldown = pawn.CheckForPartnerComp().IsOrderedHookupOnCooldown;
-            AcceptanceReport canDoHookup = HookupUtility.HookupEligible(pawn, initiator: true, forOpinionExplanation: false);
+            AcceptanceReport canDoHookup = HookupUtility.HookupEligible(pawn, initiator: true);
+            bool incapacitated = pawn.IsIncapable(out string reason);
             List<FloatMenuOption> list = canDoHookup.Accepted ? HookupOptions(pawn) : null;
-            GUI.color = (!canDoHookup.Accepted || list.NullOrEmpty() || isTryHookupOnCooldown) ? ColoredText.SubtleGrayColor : Color.white;
+            GUI.color = (!canDoHookup.Accepted || list.NullOrEmpty() || isTryHookupOnCooldown || incapacitated) ? ColoredText.SubtleGrayColor : Color.white;
             if (Widgets.ButtonText(buttonRect, "WBR.TryHookupButtonLabel".Translate() + "..."))
             {
                 if (isTryHookupOnCooldown)
@@ -92,6 +93,11 @@ namespace BetterRomance.HarmonyPatches
                     {
                         Messages.Message(canDoHookup.Reason, MessageTypeDefOf.RejectInput, historical: false);
                     }
+                    return;
+                }
+                if (incapacitated)
+                {
+                    Messages.Message("WBR.CantHookupInitiateBusy".Translate(pawn) + reason, MessageTypeDefOf.RejectInput, false);
                     return;
                 }
                 if (list.NullOrEmpty())
