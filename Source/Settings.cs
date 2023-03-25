@@ -41,10 +41,10 @@ namespace BetterRomance
             Scribe_Values.Look(ref gayChance, "gayChance", 20.0f);
             Scribe_Values.Look(ref straightChance, "straightChance", 20.0f);
 
-            Scribe_Values.Look(ref asexualChance, "aceAroChance", 10.0f);
-            Scribe_Values.Look(ref bisexualChance, "acebiChance", 50.0f);
-            Scribe_Values.Look(ref gayChance, "aceHomoChance", 20.0f);
-            Scribe_Values.Look(ref straightChance, "aceHeteroChance", 20.0f);
+            Scribe_Values.Look(ref aceAroChance, "aceAroChance", 10.0f);
+            Scribe_Values.Look(ref aceBiChance, "aceBiChance", 50.0f);
+            Scribe_Values.Look(ref aceHomoChance, "aceHomoChance", 20.0f);
+            Scribe_Values.Look(ref aceHeteroChance, "aceHeteroChance", 20.0f);
 
             Scribe_Values.Look(ref dateRate, "dateRate", 100.0f);
             Scribe_Values.Look(ref hookupRate, "hookupRate", 100.0f);
