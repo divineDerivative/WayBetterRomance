@@ -32,9 +32,10 @@ namespace BetterRomance
         public static bool IsFree(this Pawn pawn, RomanticActivityType activity, out string reason)
         {
             PawnAvailability availability = pawn.Availability();
-            reason = AvailabilityReasons[availability];
+            reason = AvailabilityReasons[PawnAvailability.Free];
             if (AvailabilityPerActivity[activity].Contains(availability))
             {
+                reason = AvailabilityReasons[availability];
                 return false;
             }
             return true;

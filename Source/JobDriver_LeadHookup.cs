@@ -22,9 +22,9 @@ namespace BetterRomance
             return true;
         }
 
-        private bool DoesTargetPawnAcceptAdvance()
+        private bool DoesTargetPawnAcceptAdvance(out string rejectReason)
         {
-            return TargetPawn.IsFree(Ordered ? RomanticActivityType.OrderedHookup : RomanticActivityType.CasualHookup, out _) && HookupUtility.WillPawnTryHookup(TargetPawn, initiator: false, ordered: Ordered) && Rand.Range(0.05f, 1f) < HookupUtility.HookupSuccessChance(TargetPawn, Actor, Ordered);
+            return TargetPawn.IsFree(Ordered ? RomanticActivityType.OrderedHookup : RomanticActivityType.CasualHookup, out rejectReason) && HookupUtility.WillPawnTryHookup(TargetPawn, initiator: false, ordered: Ordered) && Rand.Range(0.05f, 1f) < HookupUtility.HookupSuccessChance(TargetPawn, Actor, Ordered);
         }
 
         private bool IsTargetPawnOkay()
@@ -90,7 +90,7 @@ namespace BetterRomance
                 {
                     List<RulePackDef> list = new List<RulePackDef>();
                     //See if target accepts
-                    successfulPass = DoesTargetPawnAcceptAdvance();
+                    successfulPass = DoesTargetPawnAcceptAdvance(out string rejectReason);
                     if (successfulPass)
                     {
                         //Make hearts and add correct string to the log
@@ -119,7 +119,14 @@ namespace BetterRomance
                         //Send message if job was ordered
                         if (Ordered)
                         {
-                            Messages.Message("WBR.TryHookupFailedMessage".Translate(Actor, TargetPawn), Actor, MessageTypeDefOf.NegativeEvent, historical: false);
+                            if (rejectReason == PawnAvailabilityExtensions.AvailabilityReasons[PawnAvailability.Free])
+                            {
+                                Messages.Message("WBR.TryHookupRejectedMessage".Translate(Actor, TargetPawn), Actor, MessageTypeDefOf.NegativeEvent, historical: false);
+                            }
+                            else
+                            {
+                                Messages.Message("WBR.HookupTargetNotFreeReason".Translate() + rejectReason, Actor, MessageTypeDefOf.NegativeEvent, historical: false);
+                            }
                         }
                     }
                     //Add "tried hookup with" to the log, with the result

@@ -38,7 +38,7 @@
 	<WBR.HookupWarningMonogamous>{0_nameDef} is already in a relationship.</WBR.HookupWarningMonogamous>
 	<WBR.HookupWarningPolygamous>{0_nameDef} already has {1} partners.</WBR.HookupWarningPolygamous>
 	<WBR.NoHookupBedFound>No suitable bed found for {0_labelShort} and {1_labelShort} to hook up in.</WBR.NoHookupBedFound>
-	<WBR.TryHookupFailedMessage>{0_labelShort}'s attempt to hook up with {1_labelShort} was unsuccessful.</WBR.TryHookupFailedMessage>
+	<WBR.TryHookupRejectedMessage>{1_labelShort} rejected {0_labelShort}'s advance.</WBR.TryHookupRejectedMessage>
 	<WBR.TryHookupSuccessMessage>{1_labelShort} agreed to hook up with {0_labelShort}.</WBR.TryHookupSuccessMessage>
 	<WBR.CantHookupInitiateMessageCooldown>{0_labelShort} tried hooking up recently and must wait {1} until trying again.</WBR.CantHookupInitiateMessageCooldown>
 	<WBR.HookupTargetNotFreeReason>Target not free: </WBR.HookupTargetNotFreeReason>
