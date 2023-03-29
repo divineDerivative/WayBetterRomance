@@ -156,12 +156,12 @@ namespace BetterRomance
                 return "WBR.CantHookupTargetIncest".Translate();
             }
             //Don't allow if prisoner status doesn't match
-            if (forOpinionExplanation && target.IsPrisoner != initiator.IsPrisoner)
+            if (target.IsPrisoner != initiator.IsPrisoner)
             {
                 return "WBR.CantHookupTargetPrisoner".Translate();
             }
             //Don't allow if slave status doesn't match
-            if (forOpinionExplanation && target.IsSlave != initiator.IsSlave)
+            if (target.IsSlave != initiator.IsSlave)
             {
                 return "WBR.CantHookupTargetSlave".Translate();
             }
@@ -407,7 +407,7 @@ namespace BetterRomance
                 return initiator ? "WBR.CantHookupInitiateMessageIdeo".Translate(pawn) : "WBR.CantHookupTargetIdeo".Translate(pawn.ideo.Ideo);
             }
             //Check against canLovinTick, except for drawing the ordered hookup menu
-            return Find.TickManager.TicksGame >= pawn.mindState.canLovinTick || ordered;
+            return Find.TickManager.TicksGame >= pawn.mindState?.canLovinTick || ordered;
         }
 
         /// <summary>
