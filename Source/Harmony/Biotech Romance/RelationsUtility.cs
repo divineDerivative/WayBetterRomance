@@ -167,7 +167,6 @@ namespace BetterRomance.HarmonyPatches
                         yield return codes[i + 3];
                         yield return new CodeInstruction(OpCodes.Ldarg_0);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
-                        yield return new CodeInstruction(OpCodes.Conv_I4);
                         i += 4;
                     }
                     else

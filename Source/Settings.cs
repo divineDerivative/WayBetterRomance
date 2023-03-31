@@ -22,8 +22,8 @@ namespace BetterRomance
         public float hookupRate = 100f;
         public float cheatChance = 100f;
         public float alienLoveChance = 33f;
-        public float minOpinionRomance = 5f;
-        public float minOpinionHookup = 5f;
+        public int minOpinionRomance = 5;
+        public int minOpinionHookup = 5;
 
         public string fertilityMod = "None";
         public bool joyOnSlaves = false;
@@ -49,9 +49,9 @@ namespace BetterRomance
             Scribe_Values.Look(ref dateRate, "dateRate", 100.0f);
             Scribe_Values.Look(ref hookupRate, "hookupRate", 100.0f);
             Scribe_Values.Look(ref alienLoveChance, "alienLoveChance", 33.0f);
-            Scribe_Values.Look(ref minOpinionRomance, "minOpinionRomance", 5.0f);
+            Scribe_Values.Look(ref minOpinionRomance, "minOpinionRomance", 5);
             Scribe_Values.Look(ref cheatChance, "cheatChance", 100.0f);
-            Scribe_Values.Look(ref minOpinionHookup, "minOpinionHookup", 0f);
+            Scribe_Values.Look(ref minOpinionHookup, "minOpinionHookup", 0);
 
             Scribe_Values.Look(ref fertilityMod, "fertilityMod", "None");
             Scribe_Values.Look(ref joyOnSlaves, "joyOnSlaves", false);
@@ -134,9 +134,9 @@ namespace BetterRomance
                 settings.dateRate = 100f;
                 settings.hookupRate = 100f;
                 settings.alienLoveChance = 33f;
-                settings.minOpinionRomance = 5f;
+                settings.minOpinionRomance = 5;
                 settings.cheatChance = 100f;
-                settings.minOpinionHookup = 0f;
+                settings.minOpinionHookup = 0;
             }
 
             list.Gap();
@@ -257,10 +257,10 @@ namespace BetterRomance
             settings.cheatChance = list.Slider(settings.cheatChance, 0f, 200.99f);
             list.Label("WBR.AlienLoveChance".Translate() + "  " + (int)settings.alienLoveChance + "%", tooltip: "WBR.AlienLoveChanceTip".Translate());
             settings.alienLoveChance = list.Slider(settings.alienLoveChance, 0f, 100.99f);
-            list.Label("WBR.MinOpinionRomance".Translate() + " " + (int)settings.minOpinionRomance, tooltip: "WBR.MinOpinionRomanceTip".Translate());
-            settings.minOpinionRomance = list.Slider(settings.minOpinionRomance, -100.99f, 100.99f);
-            list.Label("WBR.MinOpinionHookup".Translate() + " " + (int)settings.minOpinionHookup, tooltip: "WBR.MinOpinionHookupTip".Translate());
-            settings.minOpinionHookup = list.Slider(settings.minOpinionHookup, -100.99f, 50.99f);
+            list.Label("WBR.MinOpinionRomance".Translate() + " " + settings.minOpinionRomance, tooltip: "WBR.MinOpinionRomanceTip".Translate());
+            settings.minOpinionRomance = Mathf.RoundToInt(list.Slider(settings.minOpinionRomance, -100f, 100f));
+            list.Label("WBR.MinOpinionHookup".Translate() + " " + settings.minOpinionHookup, tooltip: "WBR.MinOpinionHookupTip".Translate());
+            settings.minOpinionHookup = Mathf.RoundToInt(list.Slider(settings.minOpinionHookup, -100.99f, 50.99f));
             DrawCustomSectionEnd(listing, list, out sectionHeightOther);
         }
     }

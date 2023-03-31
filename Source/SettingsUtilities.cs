@@ -74,7 +74,7 @@ namespace BetterRomance
             return null;
         }
 
-        public static float MinOpinionForHookup(this Pawn pawn, bool ordered = false)
+        public static int MinOpinionForHookup(this Pawn pawn, bool ordered = false)
         {
             HookupTrigger triggers = GetHookupSettings(pawn, ordered);
             return (triggers != null) ? triggers.minOpinion : BetterRomanceMod.settings.minOpinionHookup;
@@ -445,7 +445,7 @@ namespace BetterRomance
             return (settings != null) ? settings.maxChildrenDesired : 3;
         }
 
-        public static float MinOpinionForRomance(this Pawn pawn)
+        public static int MinOpinionForRomance(this Pawn pawn)
         {
             RelationSettings settings = GetRelationSettings(pawn);
             return (settings != null) ? settings.minOpinionRomance : BetterRomanceMod.settings.minOpinionRomance;

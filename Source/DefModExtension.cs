@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Verse;
 using RimWorld;
+using UnityEngine;
 
 namespace BetterRomance
 {
@@ -46,18 +47,26 @@ namespace BetterRomance
         public bool caresAboutCheating = true;
         public bool willDoHookup = true;
         public bool canDoOrderedHookup = true;
-        public float hookupRate = BetterRomanceMod.settings.hookupRate;
-        public float alienLoveChance = BetterRomanceMod.settings.alienLoveChance;
+        public float hookupRate = -1;
+        public float alienLoveChance = -1;
         public HookupTrigger hookupTriggers;
         public HookupTrigger orderedHookupTriggers;
         public override IEnumerable<string> ConfigErrors()
         {
-            if (hookupRate > 200.99)
+            if (hookupRate == -1)
+            {
+                hookupRate = BetterRomanceMod.settings.hookupRate;
+            }
+            else if (hookupRate > 200.99)
             {
                 hookupRate = 200.99f;
                 yield return "Hookup rate cannot be higher than 200";
             }
-            if (alienLoveChance > 100.99)
+            if (alienLoveChance == -1)
+            {
+                alienLoveChance = BetterRomanceMod.settings.alienLoveChance;
+            }
+            else if (alienLoveChance > 100.99)
             {
                 alienLoveChance = 100.99f;
                 yield return "Alien love chance cannot be higher than 100";
@@ -84,12 +93,22 @@ namespace BetterRomance
                 yield return "hasTrait field is being removed. Please add the new HookupTrait setting to the TraitDef.";
             }
 #pragma warning restore CS0612 // Type or member is obsolete
+            if (hookupTriggers != null && (hookupTriggers.minOpinion < -100 || hookupTriggers.minOpinion > 100))
+            {
+                yield return "minOpinion for hookups must be between -100 and 100";
+                hookupTriggers.minOpinion = Mathf.Clamp(hookupTriggers.minOpinion, -100, 100);
+            }
+            if (orderedHookupTriggers != null && (orderedHookupTriggers.minOpinion < -100 || orderedHookupTriggers.minOpinion > 100))
+            {
+                yield return "minOpinion for ordered hookups must be between -100 and 100";
+                orderedHookupTriggers.minOpinion = Mathf.Clamp(orderedHookupTriggers.minOpinion, -100, 100);
+            }
         }
     }
 
     public class HookupTrigger
     {
-        public float minOpinion = BetterRomanceMod.settings.minOpinionHookup;
+        public int minOpinion = BetterRomanceMod.settings.minOpinionHookup;
         [Obsolete]
         public TraitDef hasTrait = null;
         [Obsolete]
@@ -162,7 +181,7 @@ namespace BetterRomance
         public float usualMaleAgeToHaveChildren = 30f;
         public float maxMaleAgeToHaveChildren = 50f;
         public int maxChildrenDesired = 3;
-        public float minOpinionRomance = 5f;
+        public int minOpinionRomance = BetterRomanceMod.settings.minOpinionRomance;
 
         public override IEnumerable<string> ConfigErrors()
         {

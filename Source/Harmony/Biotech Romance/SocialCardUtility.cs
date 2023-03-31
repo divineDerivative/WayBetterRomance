@@ -210,15 +210,16 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
-    //This is to prevent drawing the button since I had to co-opt the bool that usually prevents it
     [HarmonyPatch(typeof(SocialCardUtility), "DrawTryRomance")]
     public static class SocialCardUtility_DrawTryRomance
     {
+        //This is to prevent drawing the button since I had to co-opt the bool that usually prevents it
         public static bool Prefix(Rect buttonRect, Pawn pawn)
         {
             return (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, new object[] { pawn });
         }
 
+        //Adds a custom message when clicking on the disabled romance button for an aromantic pawn
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             Label newLabel = ilg.DefineLabel();

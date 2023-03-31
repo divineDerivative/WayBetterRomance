@@ -58,7 +58,7 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //If opinion is too low, do not allow
-            float minOpinion = initiator.MinOpinionForRomance();
+            int minOpinion = initiator.MinOpinionForRomance();
             int opinionOfTarget = initiator.relations.OpinionOf(recipient);
             if (opinionOfTarget < minOpinion || recipient.relations.OpinionOf(initiator) < minOpinion)
             {
@@ -200,6 +200,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
+                    yield return new CodeInstruction(OpCodes.Conv_R4);
                 }
                 else
                 {
