@@ -25,7 +25,9 @@ namespace BetterRomance
             }
             if (ModsConfig.IsActive("telardo.romanceontherim"))
             {
+                Settings.RotRActive = true;
                 HelperClasses.RotRFillRomanceBar = AccessTools.DeclaredMethod(Type.GetType("RomanceOnTheRim.RomanceUtility,RomanceOnTheRim"), "TryAffectRomanceNeedLevelForPawn");
+                harmony.PatchRotR();
             }
             if (ModsConfig.IsActive("dylan.csl"))
             {

@@ -38,6 +38,10 @@
       <HintPath>..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RomanceOnTheRim">
+      <HintPath>..\..\..\..\..\workshop\content\294100\2654432921\1.4\Assemblies\RomanceOnTheRim.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -70,6 +74,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mod Integration\RotR_Integration.cs" />
     <Compile Include="PawnAvailability.cs" />
     <Compile Include="DateUtility.cs" />
     <Compile Include="Harmony\Biotech Romance\FloatMenuMakerMap.cs" />

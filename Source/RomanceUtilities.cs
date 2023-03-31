@@ -136,6 +136,11 @@ namespace BetterRomance
             {
                 cheatChance *= .25f;
             }
+            //Adjust for RotR precepts
+            if (Settings.RotRActive && pawn.Ideo != null)
+            {
+                cheatChance *= RotR_Integration.RotRCheatChanceModifier(pawn);
+            }
             return cheatChance;
         }
 
