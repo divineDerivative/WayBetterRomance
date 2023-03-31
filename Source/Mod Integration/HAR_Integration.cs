@@ -89,6 +89,7 @@ namespace BetterRomance
             return true;
         }
     }
+
     namespace HarmonyPatches
     {
         public static class HARPatches

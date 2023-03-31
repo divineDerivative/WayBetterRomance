@@ -23,7 +23,14 @@ namespace BetterRomance
                 Settings.HARActive = true;
                 harmony.PatchHAR();
             }
-
+            if (ModsConfig.IsActive("telardo.romanceontherim"))
+            {
+                HelperClasses.RotRFillRomanceBar = AccessTools.DeclaredMethod(Type.GetType("RomanceOnTheRim.RomanceUtility,RomanceOnTheRim"), "TryAffectRomanceNeedLevelForPawn");
+            }
+            if (ModsConfig.IsActive("dylan.csl"))
+            {
+                HelperClasses.CSLLoved = AccessTools.DeclaredMethod(Type.GetType("Children.MorePawnUtilities,ChildrenHelperClasses"), "Loved", new Type[] { typeof(Pawn), typeof(Pawn), typeof(bool) });
+            }
             MakeFertilityModList();
             Settings.ApplyJoySettings();
         }
@@ -54,18 +61,10 @@ namespace BetterRomance
         }
     }
 
-    [StaticConstructorOnStartup]
     public static class HelperClasses
     {
         public static MethodInfo RotRFillRomanceBar;
-
-        static HelperClasses()
-        {
-            if (ModsConfig.IsActive("telardo.romanceontherim"))
-            {
-                RotRFillRomanceBar = AccessTools.DeclaredMethod(Type.GetType("RomanceOnTheRim.RomanceUtility,RomanceOnTheRim"), "TryAffectRomanceNeedLevelForPawn");
-            }
-        }
+        public static MethodInfo CSLLoved;
     }
 
     public class MayRequireHARAttribute : MayRequireAttribute

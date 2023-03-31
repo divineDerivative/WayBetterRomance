@@ -151,6 +151,7 @@ namespace BetterRomance
                     Find.HistoryEventsManager.RecordEvent(new HistoryEvent(def, Actor.Named(HistoryEventArgsNames.Doer)));
                     //Attempt to have hookups behave more like normal lovin, use the same cooldown period based on age
                     Actor.mindState.canLovinTick = Find.TickManager.TicksGame + GenerateRandomMinTicksToNextLovin(Actor);
+                    HelperClasses.CSLLoved?.Invoke(this, new object[] { Actor, Partner, false });
                     //Biotech addition
                     if (ModsConfig.BiotechActive)
                     {
