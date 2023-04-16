@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Harmony\Pawn_AgeTracker.cs" />
+    <Compile Include="Harmony\Pawn_GeneTracker.cs" />
     <Compile Include="Mod Integration\RotR_Integration.cs" />
     <Compile Include="PawnAvailability.cs" />
     <Compile Include="DateUtility.cs" />

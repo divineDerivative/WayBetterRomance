@@ -270,6 +270,10 @@ namespace BetterRomance
 
         public static float MaxAgeForSex(this Pawn pawn)
         {
+            if (pawn.IsNonSenescent())
+            {
+                return pawn.ageTracker.AgeBiologicalYearsFloat + 2f;
+            }
             RegularSexSettings settings = GetSexSettings(pawn);
             return (settings != null) ? settings.maxAgeForSex : 80f;
         }
@@ -282,8 +286,43 @@ namespace BetterRomance
 
         public static float DeclineAtAge(this Pawn pawn)
         {
+            if (pawn.IsNonSenescent())
+            {
+                return pawn.ageTracker.AgeBiologicalYearsFloat + 1f;
+            }
             RegularSexSettings settings = GetSexSettings(pawn);
             return (settings != null) ? settings.declineAtAge : 30f;
+        }
+
+        public static List<Pawn> CachedNonSenescentPawns = new List<Pawn>();
+        public static List<Pawn> CachedSenescentPawns = new List<Pawn>();
+
+        private static bool IsNonSenescent(this Pawn pawn)
+        {
+            if (ModsConfig.BiotechActive && pawn.genes != null)
+            {
+                if (!CachedNonSenescentPawns.Contains(pawn) && !CachedSenescentPawns.Contains(pawn))
+                {
+
+                    foreach (Gene gene in pawn.genes.GenesListForReading)
+                    {
+                        if (gene.def.defName == "DiseaseFree")
+                        {
+                            CachedNonSenescentPawns.Add(pawn);
+                            break;
+                        }
+                    }
+                    if (!CachedNonSenescentPawns.Contains(pawn))
+                    {
+                        CachedSenescentPawns.Add(pawn);
+                    }
+                }
+                if (CachedNonSenescentPawns.Contains(pawn))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         //Relation Settings
