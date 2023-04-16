@@ -146,6 +146,9 @@
 		<thoughtClass>Thought_MemorySocial</thoughtClass>
 		<requiredTraits>
 			<li>Asexual</li>
+			<li>HeteroAce</li>
+			<li>HomoAce</li>
+			<li>BiAce</li>
 		</requiredTraits>
 		<durationDays>3</durationDays>
 		<stackLimit>5</stackLimit>
@@ -163,6 +166,9 @@
 		<thoughtClass>Thought_MemorySocial</thoughtClass>
 		<requiredTraits>
 			<li>Asexual</li>
+			<li>HeteroAce</li>
+			<li>HomoAce</li>
+			<li>BiAce</li>
 		</requiredTraits>
 		<durationDays>3</durationDays>
 		<stackLimit>5</stackLimit>
@@ -180,6 +186,9 @@
 		<thoughtClass>Thought_MemorySocial</thoughtClass>
 		<requiredTraits>
 			<li>Asexual</li>
+			<li>HeteroAce</li>
+			<li>HomoAce</li>
+			<li>BiAce</li>
 		</requiredTraits>
 		<durationDays>3</durationDays>
 		<stackLimit>5</stackLimit>
@@ -197,6 +206,9 @@
 		<thoughtClass>Thought_MemorySocial</thoughtClass>
 		<requiredTraits>
 			<li>Asexual</li>
+			<li>HeteroAce</li>
+			<li>HomoAce</li>
+			<li>BiAce</li>
 		</requiredTraits>
 		<durationDays>3</durationDays>
 		<stackLimit>5</stackLimit>
@@ -214,6 +226,9 @@
 		<thoughtClass>Thought_MemorySocial</thoughtClass>
 		<requiredTraits>
 			<li>Asexual</li>
+			<li>HeteroAce</li>
+			<li>HomoAce</li>
+			<li>BiAce</li>
 		</requiredTraits>
 		<durationDays>3</durationDays>
 		<stackLimit>5</stackLimit>
