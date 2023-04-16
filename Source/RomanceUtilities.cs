@@ -39,7 +39,7 @@ namespace BetterRomance
             foreach (Pawn p in GetAllLoveRelationPawns(pawn, false, false))
             {
                 //If the pawns have different ideos, I think this will check if the partner would feel cheated on per their ideo and settings
-                if (!new HistoryEvent(pawn.GetHistoryEventForLoveRelationCountPlusOne(), p.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo() && p.CaresAboutCheating())
+                if (!new HistoryEvent(pawn.GetHistoryEventForLoveRelationCountPlusOne()).WillingToDoGendered(p, pawn.gender) && p.CaresAboutCheating())
                 {
                     cheaterList.Add(p);
                 }
@@ -407,6 +407,37 @@ namespace BetterRomance
         public static bool HasLoveEnhancer(Pawn pawn)
         {
             return pawn.health?.hediffSet?.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer) ?? false;
+        }
+
+        public static bool WillingToDoGendered(this HistoryEvent ev, Pawn pawnForIdeo, Gender gender)
+        {
+            //We grab the pawn's ideo
+            Ideo ideo = pawnForIdeo.Ideo;
+            //Look at each precept
+            foreach (Precept precept in (List<Precept>)AccessTools.Field(typeof(Ideo), "precepts").GetValue(ideo))
+            {
+                //Look at the comps on the precept
+                foreach (PreceptComp comp in precept.def.comps)
+                {
+                    //We only care if it has a gendered comp
+                    if (comp is PreceptComp_UnwillingToDo_Gendered genderedComp)
+                    {
+                        //First check if this precept is for the event in question
+                        if (genderedComp.eventDef != ev.def)
+                        {
+                            continue;
+                        }
+                        //Now we compare the gender we're asking about with the gender of the comp
+                        //If they the same, then the extra lover is not allowed for the gender in question
+                        if (gender == genderedComp.gender)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            //If nothing got hit, then we're good to go
+            return true;
         }
     }
 
