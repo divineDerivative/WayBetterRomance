@@ -88,6 +88,17 @@ namespace BetterRomance
             }
             return true;
         }
+
+        public static bool UseHARAgeForAdulthood(Pawn pawn, out float age)
+        {
+            if (pawn.def is ThingDef_AlienRace race)
+            {
+                age = race.alienRace.generalSettings.minAgeForAdulthood;
+                return true;
+            }
+            age = 20f;
+            return false;
+        }
     }
 
     namespace HarmonyPatches

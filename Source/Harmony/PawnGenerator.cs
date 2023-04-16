@@ -1,4 +1,6 @@
 ﻿using HarmonyLib;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using Verse;
 
 namespace BetterRomance.HarmonyPatches
@@ -14,6 +16,27 @@ namespace BetterRomance.HarmonyPatches
             pawn.EnsureTraits();
             //Do anything with the allowGay bool?
             return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(PawnGenerator), "GenerateSkills")]
+    public static class PawnGenerator_GenerateSkills
+    {
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.Is(OpCodes.Ldc_I4_S, 13))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Ldc_I4, 2);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMoment));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
         }
     }
 }

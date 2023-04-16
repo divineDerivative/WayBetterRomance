@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using Verse;
@@ -548,6 +549,23 @@ namespace BetterRomance
                 return (int)pawn.ageTracker.AdultMinAge;
             }
             return GrowthUtility.GrowthMomentAges[index];
+        }
+
+        public static float GetGrowthMomentAsFloat(Pawn pawn, int index)
+        {
+            return GetGrowthMoment(pawn, index);
+        }
+
+        public static float GetMinAgeForAdulthood(Pawn pawn)
+        {
+            if (Settings.HARActive)
+            {
+                if (HAR_Integration.UseHARAgeForAdulthood(pawn, out float age))
+                {
+                    return age;
+                }
+            }
+            return (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
         }
     }
 }
