@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Verse;
 using HarmonyLib;
 using System.Reflection.Emit;
-using System.IO;
 
 namespace BetterRomance.HarmonyPatches
 {
@@ -75,7 +72,7 @@ namespace BetterRomance.HarmonyPatches
                 Pawn pawn = ___pawn;
                 ___growthMomentAges = new List<int>
                 {
-                    ChildAge(pawn)
+                   SettingsUtilities.ChildAge(pawn)
                 };
                 ___growthMomentAges.AddRange(GrowthMomentAges(pawn));
             }
@@ -129,17 +126,6 @@ namespace BetterRomance.HarmonyPatches
                     yield return code;
                 }
             }
-        }
-
-        /// <summary>
-        /// Finds the first life stage with a developmental stage of child and returns the minimum age of that stage.
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns>The age at which <paramref name="pawn"/> becomes a child.</returns>
-        private static int ChildAge(Pawn pawn)
-        {
-            float result = pawn.RaceProps.lifeStageAges.FirstOrDefault((LifeStageAge lifeStageAge) => lifeStageAge.def.developmentalStage.Child())?.minAge ?? 0f;
-            return (int)result;
         }
 
         private static int[] GrowthMomentAges(Pawn pawn)

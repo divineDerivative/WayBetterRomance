@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
+using RimWorld;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using UnityEngine;
 using Verse;
 
 namespace BetterRomance.HarmonyPatches
@@ -31,6 +33,32 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Ldc_I4, 2);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMoment));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(PawnGenerator), "GenerateTraits")]
+    public static class PawnGenerator_GenerateTraits
+    {
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(13))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Ldc_I4, 2);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMoment));
+                }
+                else if (code.LoadsConstant(3))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ChildAge));
                 }
                 else
                 {

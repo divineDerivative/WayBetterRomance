@@ -614,5 +614,16 @@ namespace BetterRomance
             }
             return (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
         }
+
+        /// <summary>
+        /// Finds the first life stage with a developmental stage of child and returns the minimum age of that stage.
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <returns>The age at which <paramref name="pawn"/> becomes a child.</returns>
+        public static int ChildAge(Pawn pawn)
+        {
+            float result = pawn.RaceProps.lifeStageAges.FirstOrDefault((LifeStageAge lifeStageAge) => lifeStageAge.def.developmentalStage.Child())?.minAge ?? 0f;
+            return (int)result;
+        }
     }
 }
