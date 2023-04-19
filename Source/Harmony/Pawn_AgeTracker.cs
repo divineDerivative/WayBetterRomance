@@ -82,28 +82,29 @@ namespace BetterRomance.HarmonyPatches
             return true;
         }
 
-        public static void Postfix(Pawn ___pawn, float ___growthPoints, List<int> ___growthMomentAges)
-        {
-            if (___pawn.RaceProps.Humanlike && ___pawn.ageTracker.AgeBiologicalYearsFloat < ___pawn.ageTracker.AdultMinAge)
-            {
-                decimal age = (decimal)Math.Round(___pawn.ageTracker.AgeBiologicalYearsFloat, 3);
-                decimal points = (decimal)Math.Round(___growthPoints, 3);
-                decimal difference = 0m;
-                foreach (int i in ___growthMomentAges)
-                {
-                    if (age > i)
-                    {
-                        difference = age - i;
-                    }
-                }
-                string result = $"{age}, {points}, {difference}";
-                string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\growth numbers.csv";
-                using (StreamWriter writer = new StreamWriter(filePath, true))
-                {
-                    writer.WriteLine(result);
-                }
-            }
-        }
+        //This is for analyzing growth point distribution, saving in case I need it later
+        //public static void Postfix(Pawn ___pawn, float ___growthPoints, List<int> ___growthMomentAges)
+        //{
+        //    if (___pawn.RaceProps.Humanlike && ___pawn.ageTracker.AgeBiologicalYearsFloat < ___pawn.ageTracker.AdultMinAge)
+        //    {
+        //        decimal age = (decimal)Math.Round(___pawn.ageTracker.AgeBiologicalYearsFloat, 3);
+        //        decimal points = (decimal)Math.Round(___growthPoints, 3);
+        //        decimal difference = 0m;
+        //        foreach (int i in ___growthMomentAges)
+        //        {
+        //            if (age > i)
+        //            {
+        //                difference = age - i;
+        //            }
+        //        }
+        //        string result = $"{age}, {points}, {difference}";
+        //        string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\growth numbers.csv";
+        //        using (StreamWriter writer = new StreamWriter(filePath, true))
+        //        {
+        //            writer.WriteLine(result);
+        //        }
+        //    }
+        //}
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
