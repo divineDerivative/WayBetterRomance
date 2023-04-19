@@ -575,6 +575,10 @@ namespace BetterRomance
 
         public static int GetGrowthMoment(Pawn pawn, int index)
         {
+            if (pawn.MechanicalCheck())
+            {
+                return 0;
+            }
             if (Settings.HARActive)
             {
                 int[] array = HAR_Integration.GetGrowthMoments(pawn);
@@ -592,6 +596,10 @@ namespace BetterRomance
 
         public static float GetGrowthMomentAsFloat(Pawn pawn, int index)
         {
+            if (pawn.MechanicalCheck())
+            {
+                return -1f;
+            }
             return GetGrowthMoment(pawn, index);
         }
 

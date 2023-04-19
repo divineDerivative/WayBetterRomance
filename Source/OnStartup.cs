@@ -33,6 +33,13 @@ namespace BetterRomance
             {
                 HelperClasses.CSLLoved = AccessTools.DeclaredMethod(Type.GetType("Children.MorePawnUtilities,ChildrenHelperClasses"), "Loved", new Type[] { typeof(Pawn), typeof(Pawn), typeof(bool) });
             }
+            if (ModsConfig.IsActive("Killathon.AndroidTiersReforged"))
+            {
+                Settings.ATRActive = true;
+                HelperClasses.IsConsideredMechanicalAndroid = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanicalAndroid", new Type[] { typeof(Pawn) });
+                HelperClasses.IsConsideredMechanicalDrone = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanicalDrone", new Type[] { typeof(Pawn) });
+                HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanical", new Type[] { typeof(Pawn) });
+            }
             MakeFertilityModList();
             Settings.ApplyJoySettings();
         }
@@ -67,6 +74,9 @@ namespace BetterRomance
     {
         public static MethodInfo RotRFillRomanceBar;
         public static MethodInfo CSLLoved;
+        public static MethodInfo IsConsideredMechanicalAndroid;
+        public static MethodInfo IsConsideredMechanicalDrone;
+        public static MethodInfo IsConsideredMechanical;
     }
 
     public class MayRequireHARAttribute : MayRequireAttribute

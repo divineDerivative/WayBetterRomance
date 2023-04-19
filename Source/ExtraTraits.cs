@@ -8,7 +8,8 @@ namespace BetterRomance
         public static void EnsureTraits(this Pawn pawn)
         {
             //Don't give orientation to kids, hopefully
-            if (pawn.DevelopmentalStage.Adult())
+            //Don't give them to drones either
+            if (pawn.DevelopmentalStage.Adult() && !pawn.DroneCheck())
             {
                 foreach (Trait trait in pawn.story.traits.allTraits)
                 {
