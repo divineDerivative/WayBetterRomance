@@ -23,7 +23,7 @@ namespace BetterRomance
         public float cheatChance = 100f;
         public float alienLoveChance = 33f;
         public int minOpinionRomance = 5;
-        public int minOpinionHookup = 5;
+        public int minOpinionHookup = 0;
 
         public string fertilityMod = "None";
         public bool joyOnSlaves = false;
@@ -262,7 +262,7 @@ namespace BetterRomance
             list.Label("WBR.MinOpinionRomance".Translate() + " " + settings.minOpinionRomance, tooltip: "WBR.MinOpinionRomanceTip".Translate());
             settings.minOpinionRomance = Mathf.RoundToInt(list.Slider(settings.minOpinionRomance, -100f, 100f));
             list.Label("WBR.MinOpinionHookup".Translate() + " " + settings.minOpinionHookup, tooltip: "WBR.MinOpinionHookupTip".Translate());
-            settings.minOpinionHookup = Mathf.RoundToInt(list.Slider(settings.minOpinionHookup, -100.99f, 50.99f));
+            settings.minOpinionHookup = Mathf.RoundToInt(list.Slider(settings.minOpinionHookup, -100f, 50f));
             DrawCustomSectionEnd(listing, list, out sectionHeightOther);
         }
     }

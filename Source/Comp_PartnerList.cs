@@ -128,7 +128,7 @@ namespace BetterRomance
                             return x.def == (hookup ? RomanceDefOf.RebuffedMyHookupAttempt : RomanceDefOf.RebuffedMyDateAttempt) && x.otherPawn == p;
                         });
                         //Need to also check opinion against setting for a hookup
-                        if ((memory == null && pawn.relations.OpinionOf(p) > pawn.MinOpinionForHookup()) || !hookup)
+                        if ((memory == null && pawn.relations.OpinionOf(p) >= pawn.MinOpinionForHookup()) || !hookup)
                         {
                             //romance factor for hookup, opinion for date
                             num = hookup ? pawn.relations.SecondaryRomanceChanceFactor(p) : pawn.relations.OpinionOf(p);

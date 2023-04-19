@@ -4,6 +4,8 @@ using HarmonyLib;
 using Verse.AI;
 using System.Text;
 using System.Collections.Generic;
+using System;
+using UnityEngine;
 
 namespace BetterRomance
 {
@@ -187,7 +189,7 @@ namespace BetterRomance
                 return reason;
             }
             //Don't allow if opinion is too low
-            if (initiator.relations.OpinionOf(target) <= initiator.MinOpinionForHookup(true))
+            if (initiator.relations.OpinionOf(target) < initiator.MinOpinionForHookup(true))
             {
                 return "WBR.CantHookupTargetOpinion".Translate();
             }
@@ -354,9 +356,10 @@ namespace BetterRomance
             ////Increase if opinion is positive, but on a lesser scale to above
             //opinionFactor *= GenMath.LerpDouble(0, 100f, 1f, 1.5f, target.relations.OpinionOf(asker));
 
-            //This will bottom out at 0.2f at min opinion and max out at 1.5f at 50 opinion
+            //This will bottom out at 0.2f at min opinion and max out at 1.5f at 50 opinion or min opinion + 50, whichever is higher
             //May need to adjust in case min opinion is set higher than 50
-            return GenMath.LerpDoubleClamped(target.MinOpinionForHookup(ordered), 50f, 0.2f, 1.5f, target.relations.OpinionOf(asker));
+            float minOpinion = target.MinOpinionForHookup(ordered);
+            return (float)GenMath.LerpDoubleClamped(minOpinion, (float)Math.Max(50f, minOpinion + 50f), 0.2f, 1.5f, target.relations.OpinionOf(asker));
         }
 
         /// <summary>
