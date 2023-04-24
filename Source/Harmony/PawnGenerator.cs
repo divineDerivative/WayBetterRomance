@@ -67,4 +67,31 @@ namespace BetterRomance.HarmonyPatches
             }
         }
     }
+
+    [HarmonyPatch(typeof(PawnGenerator), "GenerateInitialHediffs")]
+    public static class PawnGenerator_GenerateInitialHediffs
+    {
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(16))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetMinAgeForAdulthood));
+                    yield return new CodeInstruction(OpCodes.Conv_I4);
+                }
+                else if (code.LoadsConstant(20))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetMinAgeForAdulthood));
+                    yield return new CodeInstruction(OpCodes.Conv_I4);
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+    }
 }
