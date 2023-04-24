@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Harmony\Pawn_AgeTracker.cs" />
     <Compile Include="Harmony\Pawn_GeneTracker.cs" />
+    <Compile Include="Harmony\Ideology\ThoughtWorker_AgeReversalDemanded.cs" />
     <Compile Include="Mod Integration\CompatUtility.cs" />
     <Compile Include="Mod Integration\RotR_Integration.cs" />
     <Compile Include="PawnAvailability.cs" />
@@ -129,9 +130,7 @@
     <Compile Include="RomanceUtilities.cs" />
     <Compile Include="SettingsUtilities.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Harmony\Ideology\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>robocopy "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\WayBetterRomance" "C:\RimWorld_Debug\Mods\Way Better Romance" /r:1 /s /xo /xd Source .vs .git /xf *.sln .gitattributes .gitignore .editorconfig *.md || set errorlist=0</PostBuildEvent>

@@ -138,4 +138,28 @@ namespace BetterRomance.HarmonyPatches
             return result;
         }
     }
+
+    [HarmonyPatch(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.ResetAgeReversalDemand))]
+    public static class Pawn_AgeTracker_ResetAgeReversalDemand
+    {
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(90000000L))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.LoadField(typeof(Pawn_AgeTracker), "pawn");
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.AgeReversalDemandAge));
+                    yield return new CodeInstruction(OpCodes.Conv_I8);
+                    yield return new CodeInstruction(OpCodes.Ldc_I8, 3600000L);
+                    yield return new CodeInstruction(OpCodes.Mul);
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+    }
 }

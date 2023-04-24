@@ -625,5 +625,17 @@ namespace BetterRomance
             float result = pawn.RaceProps.lifeStageAges.FirstOrDefault((LifeStageAge lifeStageAge) => lifeStageAge.def.developmentalStage.Child())?.minAge ?? 0f;
             return (int)result;
         }
+
+        public static int AgeReversalDemandAge(Pawn pawn)
+        {
+            float adultAge = GetMinAgeForAdulthood(pawn);
+            float declineAge = pawn.DeclineAtAge();
+            float result = adultAge + 5f;
+            if (declineAge - adultAge < 10f)
+            {
+                result = adultAge + ((declineAge - adultAge) / 2);
+            }
+            return (int)result;
+        }
     }
 }
