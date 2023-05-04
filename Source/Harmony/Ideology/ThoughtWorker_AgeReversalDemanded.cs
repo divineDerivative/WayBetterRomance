@@ -5,7 +5,6 @@ using System.Reflection.Emit;
 
 namespace BetterRomance.HarmonyPatches
 {
-    [HarmonyDebug]
     [HarmonyPatch(typeof(ThoughtWorker_AgeReversalDemanded), "ShouldHaveThought")]
     public static class ThoughtWorker_AgeReversalDemanded_ShouldHaveThought
     {

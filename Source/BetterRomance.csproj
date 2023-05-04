@@ -81,9 +81,9 @@
     <Compile Include="Mod Integration\RotR_Integration.cs" />
     <Compile Include="PawnAvailability.cs" />
     <Compile Include="DateUtility.cs" />
-    <Compile Include="Harmony\Biotech Romance\FloatMenuMakerMap.cs" />
-    <Compile Include="Harmony\Biotech Romance\RelationsUtility.cs" />
-    <Compile Include="Harmony\Biotech Romance\SocialCardUtility.cs" />
+    <Compile Include="Harmony\Biotech\FloatMenuMakerMap.cs" />
+    <Compile Include="Harmony\Biotech\RelationsUtility.cs" />
+    <Compile Include="Harmony\Biotech\SocialCardUtility.cs" />
     <Compile Include="Harmony\ChoiceLetter_GrowthMoment.cs" />
     <Compile Include="Harmony\InteractionWorker_RomanceAttempt.cs" />
     <Compile Include="Harmony\Pawn.cs" />
