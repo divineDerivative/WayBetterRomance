@@ -91,7 +91,7 @@ namespace BetterRomance
 
         public static bool UseHARAgeForAdulthood(Pawn pawn, out float age)
         {
-            if (pawn.MechanicalCheck())
+            if (pawn.HasNoGrowth())
             {
                 age = 0f;
                 return true;

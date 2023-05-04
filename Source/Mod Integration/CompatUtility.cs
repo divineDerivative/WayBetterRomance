@@ -23,9 +23,13 @@ namespace BetterRomance
             return false;
         }
 
-        public static bool MechanicalCheck(this Pawn pawn)
+        public static bool HasNoGrowth(this Pawn pawn)
         {
             if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanical?.Invoke(null, new object[] { pawn }))
+            {
+                return true;
+            }
+            if (Settings.SSSActive && pawn.def.defName == "SSS_Skeleton_Race")
             {
                 return true;
             }

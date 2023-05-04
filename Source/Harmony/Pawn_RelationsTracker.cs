@@ -10,6 +10,7 @@ namespace BetterRomance.HarmonyPatches
 {
     //This determines how likely a pawn is to want to have sex with another pawn
     [HarmonyPatch(typeof(Pawn_RelationsTracker), "SecondaryLovinChanceFactor")]
+    [HarmonyAfter(new string[] { "Pecius.PawnExtensions" })]
     public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
     {
         //Changes from Vanilla:
