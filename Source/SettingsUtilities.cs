@@ -660,5 +660,25 @@ namespace BetterRomance
             }
             return (int)result;
         }
+
+        public static SimpleCurve AgeSkillFactor(Pawn pawn)
+        {
+            return new SimpleCurve
+            {
+                new CurvePoint(ChildAge(pawn), 0.2f),
+                new CurvePoint(pawn.ageTracker.AdultMinAge, 1f),
+            };
+        }
+
+        public static SimpleCurve AgeSkillMaxFactorCurve(Pawn pawn)
+        {
+            return new SimpleCurve
+            {
+                new CurvePoint(0f,0f),
+                new CurvePoint(GetGrowthMoment(pawn, 1), 0.7f),
+                new CurvePoint(pawn.ageTracker.AdultMinAge * 2f, 1f),
+                new CurvePoint(pawn.RaceProps.lifeExpectancy - (pawn.RaceProps.lifeExpectancy/4), 1.6f),
+            };
+        }
     }
 }

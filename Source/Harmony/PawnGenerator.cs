@@ -94,4 +94,29 @@ namespace BetterRomance.HarmonyPatches
             }
         }
     }
+
+    [HarmonyPatch(typeof(PawnGenerator), "FinalLevelOfSkill")]
+    public static class PawnGenerator_FinalLevelOfSkill
+    {
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            foreach (var code in instructions)
+            {
+                if (code.LoadsField(AccessTools.Field(typeof(PawnGenerator), "AgeSkillMaxFactorCurve")))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.AgeSkillMaxFactorCurve));
+                }
+                else if (code.LoadsField(AccessTools.Field(typeof(PawnGenerator), "AgeSkillFactor")))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.AgeSkillFactor));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+    }
 }

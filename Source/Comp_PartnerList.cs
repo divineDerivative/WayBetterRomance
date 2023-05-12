@@ -84,10 +84,11 @@ namespace BetterRomance
                 foreach (Pawn p in RomanceUtilities.GetAllLoveRelationPawns(pawn, false, true))
                 {
                     //Skip pawns they share a bed with except for dates
-                    if (!RomanceUtilities.DoWeShareABed(pawn, p) || !hookup)
+                    if (hookup && RomanceUtilities.DoWeShareABed(pawn, p))
                     {
-                        result.Add(p);
+                        continue;
                     }
+                    result.Add(p);
                 }
             }
             //Stop here if non-spouse lovin' is not allowed
