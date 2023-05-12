@@ -40,6 +40,13 @@ namespace BetterRomance
                 HelperClasses.IsConsideredMechanicalDrone = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanicalDrone", new Type[] { typeof(Pawn) });
                 HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanical", new Type[] { typeof(Pawn) });
             }
+            else if (ModsConfig.IsActive("Killathon.MechHumanlikes.AndroidTiersCore"))
+            {
+                Settings.ATRActive = true;
+                HelperClasses.IsConsideredMechanicalAndroid = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanicalAndroid", new Type[] { typeof(Pawn) });
+                HelperClasses.IsConsideredMechanicalDrone = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanicalDrone", new Type[] { typeof(Pawn) });
+                HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanical", new Type[] { typeof(Pawn) });
+            }
             if (ModsConfig.IsActive("Sovereign.Skeleton"))
             {
                 Settings.SSSActive = true;
