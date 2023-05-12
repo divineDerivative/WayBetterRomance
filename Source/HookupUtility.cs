@@ -263,7 +263,8 @@ namespace BetterRomance
                 {
                     continue;
                 }
-                //This checks if the bed is too far away
+                //This just grabs the first bed of the given def
+                //Need to make this instead look at all beds of that def and find an unowned one
                 Building_Bed building_Bed = (Building_Bed)GenClosest.ClosestThingReachable(first.Position, first.Map,
                     ThingRequest.ForDef(current), PathEndMode.OnCell, TraverseParms.For(first), 9999f, x => true);
                 if (building_Bed == null)

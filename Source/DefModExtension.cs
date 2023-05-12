@@ -150,19 +150,19 @@ namespace BetterRomance
             }
             if (minAgeForSex < 0)
             {
-                yield return "minAgeForSex must be a positve number";
+                yield return "minAgeForSex must be a positive number";
             }
             if (maxAgeForSex < 0)
             {
-                yield return "maxAgeForSex must be a positve number";
+                yield return "maxAgeForSex must be a positive number";
             }
             if (maxAgeGap < 0)
             {
-                yield return "maxAgeGap must be a positve number";
+                yield return "maxAgeGap must be a positive number";
             }
             if (declineAtAge < 0)
             {
-                yield return "declineAtAge must be a positve number";
+                yield return "declineAtAge must be a positive number";
             }
         }
     }
@@ -289,6 +289,15 @@ namespace BetterRomance
             new CurvePoint(18f, 1f),
             new CurvePoint(50f, 1f),
             new CurvePoint(90f, 0f),
+        };
+        public SimpleCurve ageEffectOnChildbirth = new SimpleCurve
+        {
+            new CurvePoint(14f, 0.0f),
+            new CurvePoint(15f, 0.3f),
+            new CurvePoint(20f, 0.5f),
+            new CurvePoint(30f, 0.5f),
+            new CurvePoint(40f, 0.3f),
+            new CurvePoint(65f, 0.0f),
         };
     }
 }

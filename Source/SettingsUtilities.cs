@@ -573,9 +573,28 @@ namespace BetterRomance
             }
         }
 
+        public static SimpleCurve GetChildBirthAgeCurve(this Pawn pawn)
+        {
+            BiotechSettings settings = GetBiotechSettings(pawn);
+            return settings != null ? settings.ageEffectOnChildbirth : GetDefaultChildbirthAgeCurve();
+        }
+
+        private static SimpleCurve GetDefaultChildbirthAgeCurve()
+        {
+            return new SimpleCurve
+            {
+                new CurvePoint(14f, 0.0f),
+                new CurvePoint(15f, 0.3f),
+                new CurvePoint(20f, 0.5f),
+                new CurvePoint(30f, 0.5f),
+                new CurvePoint(40f, 0.3f),
+                new CurvePoint(65f, 0.0f),
+            };
+        }
+
         public static int GetGrowthMoment(Pawn pawn, int index)
         {
-            if (pawn.MechanicalCheck())
+            if (pawn.HasNoGrowth())
             {
                 return 0;
             }
@@ -596,13 +615,14 @@ namespace BetterRomance
 
         public static float GetGrowthMomentAsFloat(Pawn pawn, int index)
         {
-            if (pawn.MechanicalCheck())
+            if (pawn.HasNoGrowth())
             {
                 return -1f;
             }
             return GetGrowthMoment(pawn, index);
         }
 
+        //Miscellaneous age calculations
         public static float GetMinAgeForAdulthood(Pawn pawn)
         {
             if (Settings.HARActive)
@@ -611,6 +631,9 @@ namespace BetterRomance
                 {
                     return age;
                 }
+                //Put something here to calculate a reasonable age?
+                //HAR does the below if min age is not set
+                //Maybe I can co-opt that to do a more reasonable calculation?
             }
             return (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
         }
