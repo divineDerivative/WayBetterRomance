@@ -10,6 +10,7 @@ namespace BetterRomance.HarmonyPatches
 {
     //This determines if a pawn will propose marriage to another pawn
     [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), "RandomSelectionWeight")]
+    [HarmonyAfter(new string[] { "cedaro.NoHopelessRomance"})]
     public static class InteractionWorker_MarriageProposal_RandomSelectionWeight
     {
         //Changes from Vanilla:
@@ -128,7 +129,7 @@ namespace BetterRomance.HarmonyPatches
 
     //This determines if a pawn will accept a marriage proposal
     [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), "AcceptanceChance")]
-    [HarmonyAfter(new string[] { "Telardo.RomanceOnTheRim" })]
+    [HarmonyAfter(new string[] { "Telardo.RomanceOnTheRim", "cedaro.NoHopelessRomance" })]
     public static class InteractionWorker_MarriageProposal_AcceptanceChance
     {
         //Changes from Vanilla:

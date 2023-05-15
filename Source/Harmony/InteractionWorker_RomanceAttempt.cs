@@ -12,6 +12,7 @@ namespace BetterRomance.HarmonyPatches
 {
     //This determines chances of a pawn initiating a romance attempt (not a hookup)
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "RandomSelectionWeight")]
+    [HarmonyAfter(new string[] { "cedaro.NoHopelessRomance" })]
     public class InteractionWorker_RomanceAttempt_RandomSelectionWeight
     {
         //Changes from Vanilla:
