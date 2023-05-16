@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Android Tiers Reforged</li>
+			<li>MH: Android Tiers</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class ="PatchOperationAddModExtension">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="ATR_Tier1Android"]</xpath>
+					<value>
+						<li Class="BetterRomance.RegularSexSettings">
+							<minAgeForSex>997</minAgeForSex>
+							<maxAgeForSex>999</maxAgeForSex>
+							<maxAgeGap>999</maxAgeGap>
+							<declineAtAge>998</declineAtAge>
+						</li>
+					</value>
+				</li>
+				<li Class ="PatchOperationAddModExtension">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="ATR_Tier2Android"]</xpath>
+					<value>
+						<li Class="BetterRomance.RegularSexSettings">
+							<minAgeForSex>0</minAgeForSex>
+							<maxAgeForSex>100</maxAgeForSex>
+							<maxAgeGap>100</maxAgeGap>
+							<declineAtAge>50</declineAtAge>
+						</li>
+					</value>
+				</li>
+				<li Class ="PatchOperationAddModExtension">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="ATR_Tier3Android"]</xpath>
+					<value>
+						<li Class="BetterRomance.RegularSexSettings">
+							<minAgeForSex>0</minAgeForSex>
+							<maxAgeForSex>100</maxAgeForSex>
+							<maxAgeGap>100</maxAgeGap>
+							<declineAtAge>50</declineAtAge>
+						</li>
+					</value>
+				</li>
+				<li Class ="PatchOperationAddModExtension">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="ATR_Tier4Android"]</xpath>
+					<value>
+						<li Class="BetterRomance.RegularSexSettings">
+							<minAgeForSex>0</minAgeForSex>
+							<maxAgeForSex>100</maxAgeForSex>
+							<maxAgeGap>100</maxAgeGap>
+							<declineAtAge>50</declineAtAge>
+						</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>[AP] Skeletons, Skeletons, Skeletons!</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class ="PatchOperationAddModExtension">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="SSS_Skeleton_Race"]</xpath>
+					<value>
+						<li Class="BetterRomance.RegularSexSettings">
+							<minAgeForSex>997</minAgeForSex>
+							<maxAgeForSex>999</maxAgeForSex>
+							<maxAgeGap>999</maxAgeGap>
+							<declineAtAge>998</declineAtAge>
+						</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+	
+</Patch>
