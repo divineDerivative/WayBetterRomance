@@ -649,6 +649,13 @@ namespace BetterRomance
             return (int)result;
         }
 
+        public static int AdultAgeForLearning(Pawn pawn)
+        {
+            float lifeStageMinAge = pawn.ageTracker.AdultMinAge;
+            float backstoryMinAge = GetMinAgeForAdulthood(pawn);
+            return (int)(Math.Round((backstoryMinAge - lifeStageMinAge) * .75f) + lifeStageMinAge);
+        }
+
         public static int AgeReversalDemandAge(Pawn pawn)
         {
             float adultAge = GetMinAgeForAdulthood(pawn);
@@ -666,7 +673,7 @@ namespace BetterRomance
             return new SimpleCurve
             {
                 new CurvePoint(ChildAge(pawn), 0.2f),
-                new CurvePoint(pawn.ageTracker.AdultMinAge, 1f),
+                new CurvePoint(AdultAgeForLearning(pawn), 1f),
             };
         }
 
@@ -676,7 +683,7 @@ namespace BetterRomance
             {
                 new CurvePoint(0f,0f),
                 new CurvePoint(GetGrowthMoment(pawn, 1), 0.7f),
-                new CurvePoint(pawn.ageTracker.AdultMinAge * 2f, 1f),
+                new CurvePoint(AdultAgeForLearning(pawn) * 2f, 1f),
                 new CurvePoint(pawn.RaceProps.lifeExpectancy - (pawn.RaceProps.lifeExpectancy/4), 1.6f),
             };
         }
