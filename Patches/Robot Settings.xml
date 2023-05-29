@@ -76,5 +76,48 @@
 			</operations>
 		</match>
 	</Operation>
+
+	<!--<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Automatons II: Robotic Boogaloo (Continued)</li>
+			<li>Automatons (Continued)</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class ="PatchOperationAddModExtension">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="AIPersonaRace" or defName="AutomatonRace"]</xpath>
+					<value>
+						<li Class="BetterRomance.RegularSexSettings">
+							<minAgeForSex>4</minAgeForSex>
+							<maxAgeForSex>999</maxAgeForSex>
+							<maxAgeGap>999</maxAgeGap>
+							<declineAtAge>998</declineAtAge>
+						</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Persona Mechanoid Pawns</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class ="PatchOperationAddModExtension">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="PersonaMechRace"]</xpath>
+					<value>
+						<li Class="BetterRomance.RegularSexSettings">
+							<minAgeForSex>8</minAgeForSex>
+							<maxAgeForSex>999</maxAgeForSex>
+							<maxAgeGap>999</maxAgeGap>
+							<declineAtAge>998</declineAtAge>
+						</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>-->
 	
 </Patch>

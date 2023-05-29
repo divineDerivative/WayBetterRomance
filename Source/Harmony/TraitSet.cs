@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using Verse;
 using HarmonyLib;
+using System.Collections.Generic;
 
 namespace BetterRomance.HarmonyPatches
 {
@@ -46,5 +47,19 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
+
+        //private static bool HasTraitIncludeSuppressed(Pawn pawn, TraitDef traitDef)
+        //{
+        //    List<Trait> allTraits = pawn.story.traits.allTraits;
+        //    for (int i = 0; i < allTraits.Count; i++)
+        //    {
+        //        if (allTraits[i].def == traitDef)
+        //        {
+        //            Log.Message("Trait found: " + traitDef.label);
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
     }
 }
