@@ -8,15 +8,15 @@ namespace BetterRomance
 {
     public class SexualityChances : DefModExtension
     {
-        public float asexualChance;
-        public float bisexualChance;
-        public float gayChance;
-        public float straightChance;
+        public float? asexualChance;
+        public float? bisexualChance;
+        public float? gayChance;
+        public float? straightChance;
 
-        public float aceAroChance;
-        public float aceBiChance;
-        public float aceHomoChance;
-        public float aceHeteroChance;
+        public float? aceAroChance;
+        public float? aceBiChance;
+        public float? aceHomoChance;
+        public float? aceHeteroChance;
 
         public override IEnumerable<string> ConfigErrors()
         {
@@ -44,11 +44,11 @@ namespace BetterRomance
 
     public class CasualSexSettings : DefModExtension
     {
-        public bool caresAboutCheating = true;
-        public bool willDoHookup = true;
-        public bool canDoOrderedHookup = true;
-        public float hookupRate = -1;
-        public float alienLoveChance = -1;
+        public bool? caresAboutCheating;
+        public bool? willDoHookup;
+        public bool? canDoOrderedHookup;
+        public float? hookupRate;
+        public float? alienLoveChance;
         public HookupTrigger hookupTriggers;
         public HookupTrigger orderedHookupTriggers;
         public override IEnumerable<string> ConfigErrors()
@@ -71,49 +71,34 @@ namespace BetterRomance
                 alienLoveChance = 100.99f;
                 yield return "Alien love chance cannot be higher than 100";
             }
-#pragma warning disable CS0612 // Type or member is obsolete
-            if (hookupTriggers != null && hookupTriggers.mustBeFertile)
-            {
-                yield return "mustBeFertile has been changed to forBreedingOnly, and can only be used for ordered hookups. Please update accordingly.";
-            }
-            if (orderedHookupTriggers != null && orderedHookupTriggers.mustBeFertile)
-            {
-                orderedHookupTriggers.forBreedingOnly = orderedHookupTriggers.mustBeFertile;
-                yield return "mustBeFertile has been changed to forBreedingOnly, please update accordingly. Copying value for orderedHookupTriggers.";
-            }
-#pragma warning restore CS0612 // Type or member is obsolete
-            if (hookupTriggers != null && hookupTriggers.forBreedingOnly)
+            if (hookupTriggers != null && (hookupTriggers.forBreedingOnly ?? false))
             {
                 hookupTriggers.forBreedingOnly = false;
                 yield return "forBreedingOnly is for ordered hookups only. Setting to false.";
             }
-#pragma warning disable CS0612 // Type or member is obsolete
-            if ((hookupTriggers != null && hookupTriggers.hasTrait != null) || (orderedHookupTriggers != null && orderedHookupTriggers.hasTrait != null))
+            if (hookupTriggers != null && hookupTriggers.minOpinion != null)
             {
-                yield return "hasTrait field is being removed. Please add the new HookupTrait setting to the TraitDef.";
+                if (hookupTriggers.minOpinion < -100 || hookupTriggers.minOpinion > 100)
+                {
+                    yield return "minOpinion for hookups must be between -100 and 100";
+                    hookupTriggers.minOpinion = Mathf.Clamp((int)hookupTriggers.minOpinion, -100, 100);
+                }
             }
-#pragma warning restore CS0612 // Type or member is obsolete
-            if (hookupTriggers != null && (hookupTriggers.minOpinion < -100 || hookupTriggers.minOpinion > 100))
+            if (orderedHookupTriggers != null && orderedHookupTriggers.minOpinion != null)
             {
-                yield return "minOpinion for hookups must be between -100 and 100";
-                hookupTriggers.minOpinion = Mathf.Clamp(hookupTriggers.minOpinion, -100, 100);
-            }
-            if (orderedHookupTriggers != null && (orderedHookupTriggers.minOpinion < -100 || orderedHookupTriggers.minOpinion > 100))
-            {
-                yield return "minOpinion for ordered hookups must be between -100 and 100";
-                orderedHookupTriggers.minOpinion = Mathf.Clamp(orderedHookupTriggers.minOpinion, -100, 100);
+                if (orderedHookupTriggers.minOpinion < -100 || orderedHookupTriggers.minOpinion > 100)
+                {
+                    yield return "minOpinion for ordered hookups must be between -100 and 100";
+                    orderedHookupTriggers.minOpinion = Mathf.Clamp((int)orderedHookupTriggers.minOpinion, -100, 100);
+                }
             }
         }
     }
 
     public class HookupTrigger
     {
-        public int minOpinion = BetterRomanceMod.settings.minOpinionHookup;
-        [Obsolete]
-        public TraitDef hasTrait = null;
-        [Obsolete]
-        public bool mustBeFertile = false;
-        public bool forBreedingOnly = false;
+        public int? minOpinion;
+        public bool? forBreedingOnly;
     }
 
     public class HookupTrait : DefModExtension
@@ -133,10 +118,10 @@ namespace BetterRomance
 
     public class RegularSexSettings : DefModExtension
     {
-        public float minAgeForSex = 16f;
-        public float maxAgeForSex = 80f;
-        public float maxAgeGap = 40f;
-        public float declineAtAge = 30f;
+        public float? minAgeForSex;
+        public float? maxAgeForSex;
+        public float? maxAgeGap;
+        public float? declineAtAge;
 
         public override IEnumerable<string> ConfigErrors()
         {

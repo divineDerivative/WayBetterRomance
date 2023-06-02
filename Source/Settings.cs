@@ -39,6 +39,7 @@ namespace BetterRomance
         public static bool AsimovActive;
 
         public static bool LoveRelationsLoaded => !CustomLoveRelationUtility.LoveRelations.EnumerableNullOrEmpty();
+        public static List<RaceSettings> RaceSettingsList = new List<RaceSettings>();
 
         public override void ExposeData()
         {

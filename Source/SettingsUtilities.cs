@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
+//using static BetterRomance.WBR_SettingsComp;
 
 namespace BetterRomance
 {
@@ -13,17 +14,10 @@ namespace BetterRomance
         //Sexuality chances does not have methods, since they're only needed in the AssignOrientation function
 
         //Casual sex settings
-        public static CasualSexSettings GetCasualSexSettings(Pawn pawn)
+        public static CasualSexPawn GetCasualSexSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<CasualSexSettings>())
-            {
-                return pawn.kindDef.GetModExtension<CasualSexSettings>();
-            }
-            else if (pawn.def.HasModExtension<CasualSexSettings>())
-            {
-                return pawn.def.GetModExtension<CasualSexSettings>();
-            }
-            return null;
+            WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            return comp.casualSex;
         }
 
         public static bool CaresAboutCheating(this Pawn pawn)
@@ -32,14 +26,14 @@ namespace BetterRomance
             {
                 return false;
             }
-            CasualSexSettings settings = GetCasualSexSettings(pawn);
-            return settings == null || settings.caresAboutCheating;
+            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            return settings.caresAboutCheating;
         }
 
         public static bool HookupAllowed(this Pawn pawn, bool ordered = false)
         {
-            CasualSexSettings settings = GetCasualSexSettings(pawn);
-            return settings == null || (ordered ? settings.canDoOrderedHookup : settings.willDoHookup);
+            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            return ordered ? settings.canDoOrderedHookup : settings.willDoHookup;
         }
 
         public static float HookupRate(this Pawn pawn)
@@ -48,8 +42,8 @@ namespace BetterRomance
             {
                 return 0f;
             }
-            CasualSexSettings settings = GetCasualSexSettings(pawn);
-            return (settings != null) ? settings.hookupRate : BetterRomanceMod.settings.hookupRate;
+            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            return settings.hookupRate ?? BetterRomanceMod.settings.hookupRate;
         }
 
         public static float AlienLoveChance(this Pawn pawn)
@@ -58,32 +52,14 @@ namespace BetterRomance
             {
                 return 0f;
             }
-            CasualSexSettings settings = GetCasualSexSettings(pawn);
-            return (settings != null) ? settings.alienLoveChance : BetterRomanceMod.settings.alienLoveChance;
-        }
-
-        /// <summary>
-        /// Get settings related to casual hookups
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
-        public static HookupTrigger GetHookupSettings(Pawn pawn, bool ordered = false)
-        {
-            if (pawn.kindDef.HasModExtension<CasualSexSettings>())
-            {
-                return ordered ? pawn.kindDef.GetModExtension<CasualSexSettings>().orderedHookupTriggers : pawn.kindDef.GetModExtension<CasualSexSettings>().hookupTriggers;
-            }
-            else if (pawn.def.HasModExtension<CasualSexSettings>())
-            {
-                return ordered ? pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers : pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers;
-            }
-            return null;
+            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            return settings.alienLoveChance ?? BetterRomanceMod.settings.alienLoveChance;
         }
 
         public static int MinOpinionForHookup(this Pawn pawn, bool ordered = false)
         {
-            HookupTrigger triggers = GetHookupSettings(pawn, ordered);
-            return (triggers != null) ? triggers.minOpinion : BetterRomanceMod.settings.minOpinionHookup;
+            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            return (ordered ? settings.minOpinionForOrderedHookup : settings.minOpinionForHookup) ?? BetterRomanceMod.settings.minOpinionHookup;
         }
 
         /// <summary>
@@ -94,9 +70,9 @@ namespace BetterRomance
         /// <returns></returns>
         public static bool HookupForBreedingOnly(this Pawn pawn)
         {
-            HookupTrigger triggers = GetHookupSettings(pawn, true);
+            CasualSexPawn settings = GetCasualSexSettings(pawn);
             //If triggers are not provided, default is false
-            return triggers != null && triggers.forBreedingOnly;
+            return settings != null && settings.forBreedingOnly;
         }
 
         /// <summary>
@@ -255,23 +231,17 @@ namespace BetterRomance
         }
 
         //Regular sex settings
-        public static RegularSexSettings GetSexSettings(Pawn pawn)
+        public static RegularSexPawn GetSexSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<RegularSexSettings>())
-            {
-                return pawn.kindDef.GetModExtension<RegularSexSettings>();
-            }
-            else if (pawn.def.HasModExtension<RegularSexSettings>())
-            {
-                return pawn.def.GetModExtension<RegularSexSettings>();
-            }
-            return null;
+            WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            return comp?.regularSex;
         }
 
         public static float MinAgeForSex(this Pawn pawn)
         {
-            RegularSexSettings settings = GetSexSettings(pawn);
-            return (settings != null) ? settings.minAgeForSex : 16f;
+            RegularSexPawn settings = GetSexSettings(pawn);
+            //This gets called by GenerateInitialHediffs for all pawns, so needs to be null checked
+            return settings?.minAgeForSex ?? 16f;
         }
 
         public static float MaxAgeForSex(this Pawn pawn)
@@ -280,14 +250,14 @@ namespace BetterRomance
             {
                 return pawn.ageTracker.AgeBiologicalYearsFloat + 2f;
             }
-            RegularSexSettings settings = GetSexSettings(pawn);
-            return (settings != null) ? settings.maxAgeForSex : 80f;
+            RegularSexPawn settings = GetSexSettings(pawn);
+            return settings.maxAgeForSex;
         }
 
         public static float MaxAgeGap(this Pawn pawn)
         {
-            RegularSexSettings settings = GetSexSettings(pawn);
-            return (settings != null) ? settings.maxAgeGap : 40f;
+            RegularSexPawn settings = GetSexSettings(pawn);
+            return settings.maxAgeGap;
         }
 
         public static float DeclineAtAge(this Pawn pawn)
@@ -296,8 +266,8 @@ namespace BetterRomance
             {
                 return pawn.ageTracker.AgeBiologicalYearsFloat + 1f;
             }
-            RegularSexSettings settings = GetSexSettings(pawn);
-            return (settings != null) ? settings.declineAtAge : 30f;
+            RegularSexPawn settings = GetSexSettings(pawn);
+            return settings.declineAtAge;
         }
 
         public static List<Pawn> CachedNonSenescentPawns = new List<Pawn>();
@@ -649,6 +619,11 @@ namespace BetterRomance
         /// <returns></returns>
         public static int AgeReversalDemandAge(Pawn pawn)
         {
+            //This is for animals, which won't have the comp, since this gets called during generation for ALL pawns
+            if (pawn.TryGetComp<WBR_SettingsComp>() is null)
+            {
+                return 25;
+            }
             float adultAge = GetMinAgeForAdulthood(pawn);
             float declineAge = pawn.DeclineAtAge();
             float result = adultAge + 5f;

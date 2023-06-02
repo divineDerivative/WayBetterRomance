@@ -89,6 +89,7 @@
     <Compile Include="Sex Repulsion\CharacterCardUtility.cs" />
     <Compile Include="Sex Repulsion\Comp_SexRepulsion.cs" />
     <Compile Include="CustomLoveRelationUtility.cs" />
+    <Compile Include="Comp_WBRSettings.cs" />
     <Compile Include="Harmony\Biotech\RitualOutcomeComp_PawnAge.cs" />
     <Compile Include="Harmony\GeneDef.cs" />
     <Compile Include="Harmony\Pawn_AgeTracker.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Mod Integration\HAR_Integration.cs" />
     <Compile Include="Harmony\TraitSet.cs" />
     <Compile Include="HookupUtility.cs" />
+    <Compile Include="RaceSettings.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Sex Repulsion\Trait.cs" />
     <Compile Include="SexualityUtility.cs" />

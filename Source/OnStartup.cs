@@ -19,6 +19,7 @@ namespace BetterRomance
             {
                 SettingsUtilities.GrabBiotechStuff();
             }
+            MakeRaceSettingsList();
             Harmony harmony = new Harmony(id: "rimworld.divineDerivative.romance");
             harmony.PatchAll();
 
@@ -104,6 +105,25 @@ namespace BetterRomance
 
             MakeFertilityModList();
             Settings.ApplyJoySettings();
+        }
+
+        public static void MakeRaceSettingsList()
+        {
+            foreach (ThingDef race in DefDatabase<ThingDef>.AllDefsListForReading.Where(td => td.race != null && td.race.Humanlike))
+            {
+                race.comps.Add(new CompProperties(typeof(WBR_SettingsComp)));
+                Settings.RaceSettingsList.Add(InitRaceSettings(race));
+            }
+        }
+
+        private static RaceSettings InitRaceSettings(ThingDef race)
+        {
+            RaceSettings settings = new RaceSettings(race);
+            settings.SetOrientationChances();
+            settings.SetCasualSexSettings();
+            settings.SetRegularSexSettings();
+
+            return settings;
         }
 
         private static void MakeFertilityModList()

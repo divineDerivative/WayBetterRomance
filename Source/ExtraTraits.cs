@@ -30,25 +30,13 @@ namespace BetterRomance
             }
             if (pawn.story != null)
             {
-                float asexualChance = BetterRomanceMod.settings.asexualChance;
-                float bisexualChance = BetterRomanceMod.settings.bisexualChance;
-                float gayChance = BetterRomanceMod.settings.gayChance;
-                float straightChance = BetterRomanceMod.settings.straightChance;
+                WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+                OrientationChancePawn chances = comp.orientation;
+                float asexualChance = chances.asexualChance ?? BetterRomanceMod.settings.asexualChance;
+                float bisexualChance = chances.bisexualChance ?? BetterRomanceMod.settings.bisexualChance;
+                float gayChance = chances.gayChance ?? BetterRomanceMod.settings.gayChance;
+                float straightChance = chances.straightChance ?? BetterRomanceMod.settings.straightChance;
 
-                if (pawn.kindDef.HasModExtension<SexualityChances>())
-                {
-                    asexualChance = pawn.kindDef.GetModExtension<SexualityChances>().asexualChance;
-                    bisexualChance = pawn.kindDef.GetModExtension<SexualityChances>().bisexualChance;
-                    gayChance = pawn.kindDef.GetModExtension<SexualityChances>().gayChance;
-                    straightChance = pawn.kindDef.GetModExtension<SexualityChances>().straightChance;
-                }
-                else if (pawn.def.HasModExtension<SexualityChances>())
-                {
-                    asexualChance = pawn.def.GetModExtension<SexualityChances>().asexualChance;
-                    bisexualChance = pawn.def.GetModExtension<SexualityChances>().bisexualChance;
-                    gayChance = pawn.def.GetModExtension<SexualityChances>().gayChance;
-                    straightChance = pawn.def.GetModExtension<SexualityChances>().straightChance;
-                }
                 //Check for existing partners first
                 bool mightBeStraight = false;
                 if (LovePartnerRelationUtility.HasAnyLovePartnerOfTheOppositeGender(pawn) || LovePartnerRelationUtility.HasAnyExLovePartnerOfTheOppositeGender(pawn))
@@ -78,23 +66,11 @@ namespace BetterRomance
                     else
                     {
                         //Set up romantic orientation chances
-                        float aceAroChance = BetterRomanceMod.settings.aceAroChance;
-                        float aceBiChance = BetterRomanceMod.settings.aceBiChance;
-                        float aceHomoChance = BetterRomanceMod.settings.aceHomoChance;
-                        float aceHeteroChance = BetterRomanceMod.settings.aceHeteroChance;
+                        float aceAroChance = chances.aceAroChance ?? BetterRomanceMod.settings.aceAroChance;
+                        float aceBiChance = chances.aceBiChance ?? BetterRomanceMod.settings.aceBiChance;
+                        float aceHomoChance = chances.aceHomoChance ?? BetterRomanceMod.settings.aceHomoChance;
+                        float aceHeteroChance = chances.aceHeteroChance ?? BetterRomanceMod.settings.aceHeteroChance;
 
-                        if (pawn.kindDef.HasModExtension<SexualityChances>())
-                        {
-                            aceAroChance = pawn.kindDef.GetModExtension<SexualityChances>().aceAroChance;
-                            aceBiChance = pawn.kindDef.GetModExtension<SexualityChances>().aceBiChance;
-                            aceHomoChance = pawn.kindDef.GetModExtension<SexualityChances>().aceHomoChance;
-                        }
-                        else if (pawn.def.HasModExtension<SexualityChances>())
-                        {
-                            aceAroChance = pawn.def.GetModExtension<SexualityChances>().aceAroChance;
-                            aceBiChance = pawn.def.GetModExtension<SexualityChances>().aceBiChance;
-                            aceHomoChance = pawn.def.GetModExtension<SexualityChances>().aceHomoChance;
-                        }
                         if (mightBeGay)
                         {
                             pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HomoAce));
