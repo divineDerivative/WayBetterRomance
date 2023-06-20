@@ -69,7 +69,7 @@ namespace BetterRomance.HarmonyPatches
         //This is to initialize all the age settings on the comp, because this is right after their age has been determined and right before they are needed
         public static void Prefix(Pawn ___pawn, Pawn_AgeTracker.AgeReversalReason reason, bool cancelInitialization = false)
         {
-            if (reason != Pawn_AgeTracker.AgeReversalReason.Initial)
+            if (reason == Pawn_AgeTracker.AgeReversalReason.Initial)
             {
                 WBR_SettingsComp comp = ___pawn.TryGetComp<WBR_SettingsComp>();
                 comp?.ApplySettings();

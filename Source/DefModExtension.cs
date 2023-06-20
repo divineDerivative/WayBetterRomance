@@ -154,23 +154,23 @@ namespace BetterRomance
 
     public class RelationSettings : DefModExtension
     {
-        public bool spousesAllowed = true;
-        public bool childrenAllowed = true;
+        public bool? spousesAllowed;
+        public bool? childrenAllowed;
         public PawnKindDef pawnKindForParentGlobal;
         public PawnKindDef pawnKindForParentFemale;
         public PawnKindDef pawnKindForParentMale;
-        public float minFemaleAgeToHaveChildren = 16f;
-        public float usualFemaleAgeToHaveChildren = 27f;
-        public float maxFemaleAgeToHaveChildren = 45f;
-        public float minMaleAgeToHaveChildren = 14f;
-        public float usualMaleAgeToHaveChildren = 30f;
-        public float maxMaleAgeToHaveChildren = 50f;
-        public int maxChildrenDesired = 3;
-        public int minOpinionRomance = BetterRomanceMod.settings.minOpinionRomance;
+        public float? minFemaleAgeToHaveChildren;
+        public float? usualFemaleAgeToHaveChildren;
+        public float? maxFemaleAgeToHaveChildren;
+        public float? minMaleAgeToHaveChildren;
+        public float? usualMaleAgeToHaveChildren;
+        public float? maxMaleAgeToHaveChildren;
+        public int? maxChildrenDesired;
+        public int? minOpinionRomance;
 
         public override IEnumerable<string> ConfigErrors()
         {
-            if (!childrenAllowed)
+            if (childrenAllowed != null && childrenAllowed == true)
             {
                 if (pawnKindForParentGlobal == null && pawnKindForParentFemale == null && pawnKindForParentMale == null)
                 {

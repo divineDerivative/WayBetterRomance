@@ -122,6 +122,7 @@ namespace BetterRomance
             settings.SetOrientationChances();
             settings.SetCasualSexSettings();
             settings.SetRegularSexSettings();
+            settings.SetRelationSettings();
 
             return settings;
         }

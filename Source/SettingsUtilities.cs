@@ -302,30 +302,23 @@ namespace BetterRomance
         }
 
         //Relation Settings
-        public static RelationSettings GetRelationSettings(Pawn pawn)
+        public static RelationsPawn GetRelationSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<RelationSettings>())
-            {
-                return pawn.kindDef.GetModExtension<RelationSettings>();
-            }
-            else if (pawn.def.HasModExtension<RelationSettings>())
-            {
-                return pawn.def.GetModExtension<RelationSettings>();
-            }
-            return null;
+            WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            return comp.relations;
         }
 
         //Add check for the no spouses precept here
         public static bool SpouseAllowed(this Pawn pawn)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
-            return settings == null || settings.spousesAllowed;
+            RelationsPawn settings = GetRelationSettings(pawn);
+            return settings.spousesAllowed;
         }
 
         public static bool ChildAllowed(this Pawn pawn)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
-            return settings == null || settings.childrenAllowed;
+            RelationsPawn settings = GetRelationSettings(pawn);
+            return settings.childrenAllowed;
         }
 
         /// <summary>
@@ -342,7 +335,7 @@ namespace BetterRomance
             {
                 return pawn.kindDef;
             }
-            RelationSettings settings = GetRelationSettings(pawn);
+            RelationsPawn settings = GetRelationSettings(pawn);
             if (settings.pawnKindForParentGlobal != null)
             {
                 return settings.pawnKindForParentGlobal;
@@ -371,7 +364,7 @@ namespace BetterRomance
             {
                 gender = pawn.gender;
             }
-            RelationSettings settings = GetRelationSettings(pawn);
+            RelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
                 return (settings != null) ? settings.minFemaleAgeToHaveChildren : 16f;
@@ -389,7 +382,7 @@ namespace BetterRomance
             {
                 gender = pawn.gender;
             }
-            RelationSettings settings = GetRelationSettings(pawn);
+            RelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
                 return (settings != null) ? settings.maxFemaleAgeToHaveChildren : 45f;
@@ -407,7 +400,7 @@ namespace BetterRomance
             {
                 gender = pawn.gender;
             }
-            RelationSettings settings = GetRelationSettings(pawn);
+            RelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
                 return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
@@ -421,14 +414,14 @@ namespace BetterRomance
 
         public static int MaxChildren(this Pawn pawn)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
+            RelationsPawn settings = GetRelationSettings(pawn);
             return (settings != null) ? settings.maxChildrenDesired : 3;
         }
 
         public static int MinOpinionForRomance(this Pawn pawn)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
-            return (settings != null) ? settings.minOpinionRomance : BetterRomanceMod.settings.minOpinionRomance;
+            RelationsPawn settings = GetRelationSettings(pawn);
+            return settings.minOpinionRomance ?? BetterRomanceMod.settings.minOpinionRomance;
         }
 
         //Biotech Settings

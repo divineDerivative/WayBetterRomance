@@ -47,19 +47,27 @@ namespace BetterRomance
         public RegularSexRace regularSex;
 
         //Relation Settings
-        public bool? spousesAllowed;
-        public bool? childrenAllowed;
-        public PawnKindDef pawnKindForParentGlobal;
-        public PawnKindDef pawnKindForParentFemale;
-        public PawnKindDef pawnKindForParentMale;
-        public float? minFemaleAgeToHaveChildren;
-        public float? usualFemaleAgeToHaveChildren;
-        public float? maxFemaleAgeToHaveChildren;
-        public float? minMaleAgeToHaveChildren;
-        public float? usualMaleAgeToHaveChildren;
-        public float? maxMaleAgeToHaveChildren;
-        public int? maxChildrenDesired;
-        public int? minOpinionRomance;
+        public class RelationsRace
+        {
+            public bool? spousesAllowed;
+            public bool? childrenAllowed;
+
+            public PawnKindDef pawnKindForParentGlobal;
+            public PawnKindDef pawnKindForParentFemale;
+            public PawnKindDef pawnKindForParentMale;
+
+            public float? minFemaleAgeToHaveChildren;
+            public float? usualFemaleAgeToHaveChildren;
+            public float? maxFemaleAgeToHaveChildren;
+
+            public float? minMaleAgeToHaveChildren;
+            public float? usualMaleAgeToHaveChildren;
+            public float? maxMaleAgeToHaveChildren;
+
+            public int? maxChildrenDesired;
+            public int? minOpinionRomance;
+        }
+        public RelationsRace relations;
 
         //Biotech Settings
         public SimpleCurve maleFertilityAgeFactor;
@@ -82,6 +90,7 @@ namespace BetterRomance
             orientation = new OrientationChanceRace();
             casualSex = new CasualSexRace();
             regularSex = new RegularSexRace();
+            relations = new RelationsRace();
         }
 
         public void SetOrientationChances()
@@ -133,6 +142,31 @@ namespace BetterRomance
                 regularSex.maxAgeForSex = settings.maxAgeForSex;
                 regularSex.maxAgeGap = settings.maxAgeGap;
                 regularSex.declineAtAge = settings.declineAtAge;
+            }
+        }
+
+        public void SetRelationSettings()
+        {
+            if (race.HasModExtension<RelationSettings>())
+            {
+                RelationSettings settings = race.GetModExtension<RelationSettings>();
+                relations.spousesAllowed = settings.spousesAllowed;
+                relations.childrenAllowed = settings.childrenAllowed;
+
+                relations.pawnKindForParentGlobal = settings.pawnKindForParentGlobal;
+                relations.pawnKindForParentFemale = settings.pawnKindForParentFemale;
+                relations.pawnKindForParentMale = settings.pawnKindForParentMale;
+
+                relations.minFemaleAgeToHaveChildren = settings.minFemaleAgeToHaveChildren;
+                relations.usualFemaleAgeToHaveChildren = settings.usualFemaleAgeToHaveChildren;
+                relations.maxFemaleAgeToHaveChildren = settings.maxFemaleAgeToHaveChildren;
+
+                relations.minMaleAgeToHaveChildren = settings.minMaleAgeToHaveChildren;
+                relations.usualMaleAgeToHaveChildren = settings.usualMaleAgeToHaveChildren;
+                relations.maxMaleAgeToHaveChildren = settings.maxMaleAgeToHaveChildren;
+
+                relations.maxChildrenDesired = settings.maxChildrenDesired;
+                relations.minOpinionRomance = settings.minOpinionRomance;
             }
         }
     }

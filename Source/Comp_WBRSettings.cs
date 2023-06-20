@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Verse;
-using static Verse.SpecificApparelRequirement;
+﻿using Verse;
 
 namespace BetterRomance
 {
@@ -15,21 +10,7 @@ namespace BetterRomance
         public OrientationChancePawn orientation;
         public CasualSexPawn casualSex;
         public RegularSexPawn regularSex;
-
-        //Relation Settings
-        public bool spousesAllowed;
-        public bool childrenAllowed;
-        public PawnKindDef pawnKindForParentGlobal;
-        public PawnKindDef pawnKindForParentFemale;
-        public PawnKindDef pawnKindForParentMale;
-        public float minFemaleAgeToHaveChildren;
-        public float usualFemaleAgeToHaveChildren;
-        public float maxFemaleAgeToHaveChildren;
-        public float minMaleAgeToHaveChildren;
-        public float usualMaleAgeToHaveChildren;
-        public float maxMaleAgeToHaveChildren;
-        public int maxChildrenDesired;
-        public int minOpinionRomance;
+        public RelationsPawn relations;
 
         //Biotech Settings
         public SimpleCurve maleFertilityAgeFactor;
@@ -49,8 +30,10 @@ namespace BetterRomance
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
+            orientation = new OrientationChancePawn();
             casualSex = new CasualSexPawn();
             regularSex = new RegularSexPawn();
+            relations = new RelationsPawn();
 
             foreach (RaceSettings rs in Settings.RaceSettingsList)
             {
@@ -69,14 +52,15 @@ namespace BetterRomance
             //Anything that is still null is assigned a default value
             SetOrientationChances();
             SetCasualSexSettings();
-            SexRegularSexSettings();
+            SetRegularSexSettings();
+            SetRelationSettings();
         }
 
         private void SetOrientationChances()
         {
             orientation.asexualChance = raceSettings.orientation.asexualChance;
             orientation.bisexualChance = raceSettings.orientation.bisexualChance;
-            orientation.bisexualChance = raceSettings.orientation.gayChance;
+            orientation.gayChance = raceSettings.orientation.gayChance;
             orientation.straightChance = raceSettings.orientation.straightChance;
 
             orientation.aceAroChance = raceSettings.orientation.aceAroChance;
@@ -98,18 +82,18 @@ namespace BetterRomance
                 }
                 if (chances.gayChance != null)
                 {
-                    orientation.bisexualChance = chances.gayChance;
+                    orientation.gayChance = chances.gayChance;
                 }
                 if (chances.straightChance != null)
                 {
                     orientation.straightChance = chances.straightChance;
                 }
 
-                if (chances.asexualChance != null)
+                if (chances.aceAroChance != null)
                 {
                     orientation.aceAroChance = chances.aceAroChance;
                 }
-                if (chances.bisexualChance != null)
+                if (chances.aceBiChance != null)
                 {
                     orientation.aceBiChance = chances.aceBiChance;
                 }
@@ -121,26 +105,20 @@ namespace BetterRomance
                 {
                     orientation.aceHeteroChance = chances.aceHeteroChance;
                 }
-
             }
         }
 
         private void SetCasualSexSettings()
         {
-            bool? caresAboutCheatingTemp;
-            bool? willDoHookupTemp;
-            bool? canDoOrderedHookupTemp;
-            bool? forBreedingOnlyTemp;
-
             //Take values from the race's settings, these can all be null
-            caresAboutCheatingTemp = raceSettings.casualSex.caresAboutCheating;
-            willDoHookupTemp = raceSettings.casualSex.willDoHookup;
-            canDoOrderedHookupTemp = raceSettings.casualSex.canDoOrderedHookup;
+            bool? caresAboutCheatingTemp = raceSettings.casualSex.caresAboutCheating;
+            bool? willDoHookupTemp = raceSettings.casualSex.willDoHookup;
+            bool? canDoOrderedHookupTemp = raceSettings.casualSex.canDoOrderedHookup;
             casualSex.hookupRate = raceSettings.casualSex.hookupRate;
             casualSex.alienLoveChance = raceSettings.casualSex.alienLoveChance;
             casualSex.minOpinionForHookup = raceSettings.casualSex.minOpinionForHookup;
             casualSex.minOpinionForOrderedHookup = raceSettings.casualSex.minOpinionForOrderedHookup;
-            forBreedingOnlyTemp = raceSettings.casualSex.forBreedingOnly;
+            bool? forBreedingOnlyTemp = raceSettings.casualSex.forBreedingOnly;
 
             //Override with values from the pawnkind's settings
             if (Pawn.kindDef.HasModExtension<CasualSexSettings>())
@@ -190,17 +168,12 @@ namespace BetterRomance
             casualSex.forBreedingOnly = forBreedingOnlyTemp ?? false;
         }
 
-        private void SexRegularSexSettings()
+        private void SetRegularSexSettings()
         {
-            float? minAgeForSexTemp;
-            float? maxAgeForSexTemp;
-            float? maxAgeGapTemp;
-            float? declineAtAgeTemp;
-
-            minAgeForSexTemp = raceSettings.regularSex.minAgeForSex;
-            maxAgeForSexTemp = raceSettings.regularSex.maxAgeForSex;
-            maxAgeGapTemp = raceSettings.regularSex.maxAgeGap;
-            declineAtAgeTemp = raceSettings?.regularSex.declineAtAge;
+            float? minAgeForSexTemp = raceSettings.regularSex.minAgeForSex;
+            float? maxAgeForSexTemp = raceSettings.regularSex.maxAgeForSex;
+            float? maxAgeGapTemp = raceSettings.regularSex.maxAgeGap;
+            float? declineAtAgeTemp = raceSettings?.regularSex.declineAtAge;
 
             if (Pawn.kindDef.HasModExtension<RegularSexSettings>())
             {
@@ -227,6 +200,97 @@ namespace BetterRomance
             regularSex.maxAgeForSex = maxAgeForSexTemp ?? 80f;
             regularSex.maxAgeGap = maxAgeGapTemp ?? 40f;
             regularSex.declineAtAge = declineAtAgeTemp ?? 30f;
+        }
+
+        private void SetRelationSettings()
+        {
+            bool? spousesAllowedTemp = raceSettings.relations.spousesAllowed;
+            bool? childrenAllowedTemp = raceSettings.relations.childrenAllowed;
+
+            relations.pawnKindForParentGlobal = raceSettings.relations.pawnKindForParentGlobal;
+            relations.pawnKindForParentFemale = raceSettings.relations.pawnKindForParentFemale;
+            relations.pawnKindForParentMale = raceSettings.relations.pawnKindForParentMale;
+
+            float? minFemaleAgeToHaveChildrenTemp = raceSettings.relations.minFemaleAgeToHaveChildren;
+            float? usualFemaleAgeToHaveChildrenTemp = raceSettings.relations.usualFemaleAgeToHaveChildren;
+            float? maxFemaleAgeToHaveChildrenTemp = raceSettings.relations.maxFemaleAgeToHaveChildren;
+
+            float? minMaleAgeToHaveChildrenTemp = raceSettings.relations.minMaleAgeToHaveChildren;
+            float? usualMaleAgeToHaveChildrenTemp = raceSettings.relations.usualMaleAgeToHaveChildren;
+            float? maxMaleAgeToHaveChildrenTemp = raceSettings.relations.maxMaleAgeToHaveChildren;
+
+            int? maxChildrenDesiredTemp = raceSettings.relations.maxChildrenDesired;
+            relations.minOpinionRomance = raceSettings.relations.minOpinionRomance;
+
+            if (Pawn.kindDef.HasModExtension<RelationSettings>())
+            {
+                RelationSettings settings = Pawn.kindDef.GetModExtension<RelationSettings>();
+                if (settings.spousesAllowed != null)
+                {
+                    spousesAllowedTemp = settings.spousesAllowed;
+                }
+                if (settings.childrenAllowed != null)
+                {
+                    childrenAllowedTemp = settings.childrenAllowed;
+                }
+                if (settings.pawnKindForParentGlobal != null)
+                {
+                    relations.pawnKindForParentGlobal = settings.pawnKindForParentGlobal;
+                }
+                if (settings.pawnKindForParentFemale != null)
+                {
+                    relations.pawnKindForParentFemale = settings.pawnKindForParentFemale;
+                }
+                if (settings.pawnKindForParentMale != null)
+                {
+                    relations.pawnKindForParentMale = settings.pawnKindForParentMale;
+                }
+                if (settings.minFemaleAgeToHaveChildren != null)
+                {
+                    minFemaleAgeToHaveChildrenTemp = settings.minFemaleAgeToHaveChildren;
+                }
+                if (settings.usualFemaleAgeToHaveChildren != null)
+                {
+                    usualFemaleAgeToHaveChildrenTemp = settings.usualFemaleAgeToHaveChildren;
+                }
+                if (settings.maxFemaleAgeToHaveChildren != null)
+                {
+                    maxFemaleAgeToHaveChildrenTemp = settings.maxFemaleAgeToHaveChildren;
+                }
+                if (settings.minMaleAgeToHaveChildren != null)
+                {
+                    minMaleAgeToHaveChildrenTemp = settings.minMaleAgeToHaveChildren;
+                }
+                if (settings.usualMaleAgeToHaveChildren != null)
+                {
+                    usualMaleAgeToHaveChildrenTemp = settings.usualMaleAgeToHaveChildren;
+                }
+                if (settings.maxMaleAgeToHaveChildren != null)
+                {
+                    maxMaleAgeToHaveChildrenTemp = settings.maxMaleAgeToHaveChildren;
+                }
+                if (settings.maxChildrenDesired != null)
+                {
+                    maxChildrenDesiredTemp = settings.maxChildrenDesired;
+                }
+                if (settings.minOpinionRomance != null)
+                {
+                    relations.minOpinionRomance = settings.minOpinionRomance;
+                }
+            }
+
+            relations.spousesAllowed = spousesAllowedTemp ?? true;
+            relations.childrenAllowed = childrenAllowedTemp ?? true;
+
+            relations.minFemaleAgeToHaveChildren = minFemaleAgeToHaveChildrenTemp ?? 16f;
+            relations.usualFemaleAgeToHaveChildren = usualFemaleAgeToHaveChildrenTemp ?? 27f;
+            relations.maxFemaleAgeToHaveChildren = maxFemaleAgeToHaveChildrenTemp ?? 45f;
+
+            relations.minMaleAgeToHaveChildren = minMaleAgeToHaveChildrenTemp ?? 14f;
+            relations.usualMaleAgeToHaveChildren = usualMaleAgeToHaveChildrenTemp ?? 30f;
+            relations.maxMaleAgeToHaveChildren = maxMaleAgeToHaveChildrenTemp ?? 50f;
+
+            relations.maxChildrenDesired = maxChildrenDesiredTemp ?? 3;
         }
     }
 
@@ -262,5 +326,26 @@ namespace BetterRomance
         public float maxAgeForSex;
         public float maxAgeGap;
         public float declineAtAge;
+    }
+
+    public class RelationsPawn
+    {
+        public bool spousesAllowed;
+        public bool childrenAllowed;
+
+        public PawnKindDef pawnKindForParentGlobal;
+        public PawnKindDef pawnKindForParentFemale;
+        public PawnKindDef pawnKindForParentMale;
+
+        public float minFemaleAgeToHaveChildren;
+        public float usualFemaleAgeToHaveChildren;
+        public float maxFemaleAgeToHaveChildren;
+
+        public float minMaleAgeToHaveChildren;
+        public float usualMaleAgeToHaveChildren;
+        public float maxMaleAgeToHaveChildren;
+
+        public int maxChildrenDesired;
+        public int? minOpinionRomance;
     }
 }
