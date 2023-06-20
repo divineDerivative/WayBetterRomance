@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>Way Better Romance (Dev)</name>
-	<packageId>divineDerivative.RomanceDev</packageId>
+	<name>Way Better Romance</name>
+	<packageId>divineDerivative.Romance</packageId>
 	<author>divineDerivative</author>
 	<url>https://github.com/divineDerivative/WayBetterRomance</url>
 	<supportedVersions>
@@ -33,8 +33,5 @@
 		<li>alexispopcorn.lovinreworked</li>
 		<li>Mlie.EveryoneIsQueer</li>
 	</incompatibleWith>
-	<description>
-Use this for testing.
-Romance overhaul inspired by Rational Romance, with support for race mod authors to customize romance for their race.
-	</description>
+	<description>Romance overhaul inspired by Rational Romance, with support for race mod authors to customize romance for their race.</description>
 </ModMetaData>
