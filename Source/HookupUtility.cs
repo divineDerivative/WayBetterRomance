@@ -183,6 +183,11 @@ namespace BetterRomance
             {
                 return acceptanceReport;
             }
+            //Don't allow if they're not on the same map
+            if (!target.Spawned || target.Map != initiator.Map)
+            {
+                return "WBR.CantHookupTargetUnreachable".Translate();
+            }
             //Don't allow if target is busy
             if (!target.IsFree(RomanticActivityType.OrderedHookup, out string reason) && !forOpinionExplanation)
             {
