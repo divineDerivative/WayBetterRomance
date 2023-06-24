@@ -57,6 +57,10 @@ namespace BetterRomance
         [MayRequireRJW]
         public static PawnCapacityDef RJW_Fertility;
 
+        //Vanilla stuff I need a reference to
+        public static JobDef CastAbilityOnThingUninterruptible;
+        public static JobDef CastAbilityOnWorldTile;
+
         static RomanceDefOf()
         {
             DefOfHelper.EnsureInitializedInCtor(typeof(RomanceDefOf));

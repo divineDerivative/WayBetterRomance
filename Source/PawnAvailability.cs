@@ -74,11 +74,11 @@ namespace BetterRomance
             {
                 return PawnAvailability.InLabor;
             }
-            if (CantInterruptJobs.Contains(pawn.CurJobDef))
+            if (pawn.jobs.IsCurrentJobPlayerInterruptible() || CantInterruptJobs.Contains(pawn.CurJobDef))
             {
                 return PawnAvailability.CantInterruptJob;
             }
-            if (DontInterruptJobs.Contains(pawn.CurJobDef))
+            if (pawn.CanCasuallyInteractNow(true) || DontInterruptJobs.Contains(pawn.CurJobDef))
             {
                 return PawnAvailability.DontInterruptJob;
             }
@@ -146,13 +146,39 @@ namespace BetterRomance
             JobDefOf.Sacrifice,
             JobDefOf.Scarify,
             JobDefOf.Blind,
+            JobDefOf.AcceptRole,
+            JobDefOf.DeliverToAltar,
             //Romance
             RomanceDefOf.DoLovinCasual,
             JobDefOf.Lovin,
             JobDefOf.TryRomance,
+            //Involves another pawn
+            JobDefOf.DeliverToCell,
+            JobDefOf.DeliverToBed,
+            JobDefOf.Steal,
+            JobDefOf.Kidnap,
+            JobDefOf.CarryDownedPawnToExit,
+            JobDefOf.Rescue,
+            JobDefOf.CarryToCryptosleepCasket,
+            JobDefOf.Capture,
+            JobDefOf.Arrest,
+            JobDefOf.CarryToCryptosleepCasketDrafted,
+            JobDefOf.CarryToPrisonerBedDrafted,
+            JobDefOf.RopeToPen,
+            JobDefOf.RopeRoamerToUnenclosedPen,
+            JobDefOf.RopeRoamerToHitchingPost,
+            JobDefOf.Unrope,
+            JobDefOf.ReleaseAnimalToWild,
+            JobDefOf.CarryToBiosculpterPod,
 
             JobDefOf.SocialFight,
-        };
+            RomanceDefOf.CastAbilityOnThingUninterruptible,
+            RomanceDefOf.CastAbilityOnWorldTile,
+            JobDefOf.ManTurret,
+            JobDefOf.GotoMindControlled,
+            JobDefOf.ActivateArchonexusCore,
+            JobDefOf.PruneGauranlenTree,
+    };
 
         //Turn a PawnAvailability into a string for reporting to player
         public static readonly Dictionary<PawnAvailability, string> AvailabilityReasons = new Dictionary<PawnAvailability, string>
