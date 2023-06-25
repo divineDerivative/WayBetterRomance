@@ -74,11 +74,11 @@ namespace BetterRomance
             {
                 return PawnAvailability.InLabor;
             }
-            if (pawn.jobs.IsCurrentJobPlayerInterruptible() || CantInterruptJobs.Contains(pawn.CurJobDef))
+            if (!pawn.jobs.IsCurrentJobPlayerInterruptible() || CantInterruptJobs.Contains(pawn.CurJobDef))
             {
                 return PawnAvailability.CantInterruptJob;
             }
-            if (pawn.CanCasuallyInteractNow(true) || DontInterruptJobs.Contains(pawn.CurJobDef))
+            if (!pawn.CanCasuallyInteractNow(true) || DontInterruptJobs.Contains(pawn.CurJobDef))
             {
                 return PawnAvailability.DontInterruptJob;
             }
