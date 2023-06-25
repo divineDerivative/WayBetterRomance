@@ -78,6 +78,7 @@
     <Compile Include="Harmony\Pawn_AgeTracker.cs" />
     <Compile Include="Harmony\Pawn_GeneTracker.cs" />
     <Compile Include="Harmony\Ideology\ThoughtWorker_AgeReversalDemanded.cs" />
+    <Compile Include="Harmony\ScenPart_ForcedTrait.cs" />
     <Compile Include="Mod Integration\CompatUtility.cs" />
     <Compile Include="Mod Integration\RotR_Integration.cs" />
     <Compile Include="PawnAvailability.cs" />
