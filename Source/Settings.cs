@@ -33,7 +33,6 @@ namespace BetterRomance
         public static bool HARActive = false;
         public static bool RotRActive = false;
         public static bool ATRActive = false;
-        public static bool SSSActive = false;
         public static Dictionary<string, string> FertilityMods = new Dictionary<string, string>();
 
         public override void ExposeData()

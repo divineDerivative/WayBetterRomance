@@ -47,10 +47,6 @@ namespace BetterRomance
                 HelperClasses.IsConsideredMechanicalDrone = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanicalDrone", new Type[] { typeof(Pawn) });
                 HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanical", new Type[] { typeof(Pawn) });
             }
-            if (ModsConfig.IsActive("Sovereign.Skeleton"))
-            {
-                Settings.SSSActive = true;
-            }
             MakeFertilityModList();
             Settings.ApplyJoySettings();
         }

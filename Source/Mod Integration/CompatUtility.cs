@@ -29,7 +29,7 @@ namespace BetterRomance
             {
                 return true;
             }
-            if (Settings.SSSActive && pawn.def.defName == "SSS_Skeleton_Race")
+            if (Settings.HARActive && HAR_Integration.GetGrowthMoments(pawn) == null)
             {
                 return true;
             }
