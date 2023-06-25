@@ -71,8 +71,7 @@ namespace BetterRomance
         public static bool HookupForBreedingOnly(this Pawn pawn)
         {
             CasualSexPawn settings = GetCasualSexSettings(pawn);
-            //If triggers are not provided, default is false
-            return settings != null && settings.forBreedingOnly;
+            return settings.forBreedingOnly;
         }
 
         /// <summary>
@@ -367,11 +366,11 @@ namespace BetterRomance
             RelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
-                return (settings != null) ? settings.minFemaleAgeToHaveChildren : 16f;
+                return settings.minFemaleAgeToHaveChildren;
             }
             else if (gender == Gender.Male)
             {
-                return (settings != null) ? settings.minMaleAgeToHaveChildren : 14f;
+                return settings.minMaleAgeToHaveChildren;
             }
             throw new ArgumentException("No gender provided");
         }
@@ -385,11 +384,11 @@ namespace BetterRomance
             RelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
-                return (settings != null) ? settings.maxFemaleAgeToHaveChildren : 45f;
+                return settings.maxFemaleAgeToHaveChildren;
             }
             else if (gender == Gender.Male)
             {
-                return (settings != null) ? settings.maxMaleAgeToHaveChildren : 50f;
+                return settings.maxMaleAgeToHaveChildren;
             }
             throw new ArgumentException("This pawn has no gender");
         }
@@ -403,11 +402,11 @@ namespace BetterRomance
             RelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
-                return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
+                return settings.usualFemaleAgeToHaveChildren;
             }
             else if (gender == Gender.Male)
             {
-                return (settings != null) ? settings.usualMaleAgeToHaveChildren : 30f;
+                return settings.usualMaleAgeToHaveChildren;
             }
             throw new ArgumentException("No gender provided");
         }
@@ -415,7 +414,7 @@ namespace BetterRomance
         public static int MaxChildren(this Pawn pawn)
         {
             RelationsPawn settings = GetRelationSettings(pawn);
-            return (settings != null) ? settings.maxChildrenDesired : 3;
+            return settings.maxChildrenDesired;
         }
 
         public static int MinOpinionForRomance(this Pawn pawn)
