@@ -123,6 +123,7 @@ namespace BetterRomance
             settings.SetCasualSexSettings();
             settings.SetRegularSexSettings();
             settings.SetRelationSettings();
+            settings.SetBiotechSettings();
 
             return settings;
         }

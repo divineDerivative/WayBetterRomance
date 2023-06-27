@@ -18,7 +18,6 @@ namespace BetterRomance
             public float? aceHomoChance;
             public float? aceHeteroChance;
         }
-        //Sexuality Chances
         public OrientationChanceRace orientation;
 
         public class CasualSexRace
@@ -33,7 +32,6 @@ namespace BetterRomance
             public bool? forBreedingOnly;
             //Maybe put the hookup traits here
         }
-
         public CasualSexRace casualSex;
 
         public class RegularSexRace
@@ -43,10 +41,8 @@ namespace BetterRomance
             public float? maxAgeGap;
             public float? declineAtAge;
         }
-
         public RegularSexRace regularSex;
 
-        //Relation Settings
         public class RelationsRace
         {
             public bool? spousesAllowed;
@@ -70,10 +66,14 @@ namespace BetterRomance
         public RelationsRace relations;
 
         //Biotech Settings
-        public SimpleCurve maleFertilityAgeFactor;
-        public SimpleCurve femaleFertilityAgeFactor;
-        public SimpleCurve noneFertilityAgeFactor;
-        public SimpleCurve ageEffectOnChildbirth;
+        public class BiotechRace
+        {
+            public SimpleCurve maleFertilityAgeFactor;
+            public SimpleCurve femaleFertilityAgeFactor;
+            public SimpleCurve noneFertilityAgeFactor;
+            public SimpleCurve ageEffectOnChildbirth;
+        }
+        public BiotechRace biotech;
         //Growth ages?
 
         //Misc Settings
@@ -91,6 +91,7 @@ namespace BetterRomance
             casualSex = new CasualSexRace();
             regularSex = new RegularSexRace();
             relations = new RelationsRace();
+            biotech = new BiotechRace();
         }
 
         public void SetOrientationChances()
@@ -167,6 +168,19 @@ namespace BetterRomance
 
                 relations.maxChildrenDesired = settings.maxChildrenDesired;
                 relations.minOpinionRomance = settings.minOpinionRomance;
+            }
+        }
+
+        public void SetBiotechSettings()
+        {
+            if (race.HasModExtension<BiotechSettings>())
+            {
+                BiotechSettings settings = race.GetModExtension<BiotechSettings>();
+
+                biotech.maleFertilityAgeFactor = settings.maleFertilityAgeFactor;
+                biotech.femaleFertilityAgeFactor = settings .femaleFertilityAgeFactor;
+                biotech.noneFertilityAgeFactor = settings.noneFertilityAgeFactor;
+                biotech.ageEffectOnChildbirth = settings .ageEffectOnChildbirth;
             }
         }
     }

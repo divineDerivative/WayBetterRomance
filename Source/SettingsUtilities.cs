@@ -424,19 +424,13 @@ namespace BetterRomance
         }
 
         //Biotech Settings
-        public static BiotechSettings GetBiotechSettings(Pawn pawn)
+        public static BiotechPawn GetBiotechSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<BiotechSettings>())
-            {
-                return pawn.kindDef.GetModExtension<BiotechSettings>();
-            }
-            else if (pawn.def.HasModExtension<BiotechSettings>())
-            {
-                return pawn.def.GetModExtension<BiotechSettings>();
-            }
-            return null;
+            WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            return comp?.biotech;
         }
 
+        //This will preserve any xml patches that might be made to the default curves
         internal static void GrabBiotechStuff()
         {
             if (StatDefOf.Fertility.parts != null && StatDefOf.Fertility.parts.OfType<StatPart_FertilityByGenderAge>().Any())
@@ -447,76 +441,31 @@ namespace BetterRomance
             childBirthByAgeCurve = RitualOutcomeEffectDefOf.ChildBirth.comps.Find(c => c is RitualOutcomeComp_PawnAge) as RitualOutcomeComp_PawnAge;
         }
 
+        public static SimpleCurve femaleFertilityAgeFactor;
+        public static SimpleCurve maleFertilityAgeFactor;
+        public static RitualOutcomeComp_PawnAge childBirthByAgeCurve;
+
         public static SimpleCurve GetFertilityAgeCurve(this Pawn pawn)
         {
-            BiotechSettings settings = GetBiotechSettings(pawn);
+            BiotechPawn settings = GetBiotechSettings(pawn);
             if (pawn.gender == Gender.Male)
             {
-                return settings != null ? settings.maleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
+                return settings.maleFertilityAgeFactor;
             }
             else if (pawn.gender == Gender.Female)
             {
-                return settings != null ? settings.femaleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
+                return settings.femaleFertilityAgeFactor;
             }
             else
             {
-                return settings != null ? settings.noneFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
-            }
-        }
-
-        private static SimpleCurve femaleFertilityAgeFactor;
-        private static SimpleCurve maleFertilityAgeFactor;
-        private static SimpleCurve GetDefaultFertilityAgeCurve(Gender gender)
-        {
-            //This will preserve any xml patches that might be made to the default curves
-            if (gender == Gender.Female)
-            {
-                return femaleFertilityAgeFactor ??  new SimpleCurve
-                                                    {
-                                                        new CurvePoint(14f, 0f),
-                                                        new CurvePoint(20f, 1f),
-                                                        new CurvePoint(28f, 1f),
-                                                        new CurvePoint(35f, 0.5f),
-                                                        new CurvePoint(40f, 0.1f),
-                                                        new CurvePoint(45f, 0.02f),
-                                                        new CurvePoint(50f, 0f),
-                                                    };
-            }
-            else
-            {
-                return maleFertilityAgeFactor ??    new SimpleCurve
-                                                    {
-                                                        new CurvePoint(14f, 0f),
-                                                        new CurvePoint(18f, 1f),
-                                                        new CurvePoint(50f, 1f),
-                                                        new CurvePoint(90f, 0f),
-                                                    };
+                return settings.noneFertilityAgeFactor;
             }
         }
 
         public static SimpleCurve GetChildBirthAgeCurve(this Pawn pawn)
         {
-            BiotechSettings settings = GetBiotechSettings(pawn);
-            return settings != null ? settings.ageEffectOnChildbirth : GetDefaultChildbirthAgeCurve();
-        }
-
-        private static RitualOutcomeComp_PawnAge childBirthByAgeCurve;
-        private static SimpleCurve GetDefaultChildbirthAgeCurve()
-        {
-            //This will preserve any xml patches that might be made to the default curve
-            if (RitualOutcomeEffectDefOf.ChildBirth.comps.Find(c => c is RitualOutcomeComp_PawnAge) is RitualOutcomeComp_PawnAge comp)
-            {
-                return comp.curve;
-            }
-            return childBirthByAgeCurve.curve ??    new SimpleCurve
-                                                    {
-                                                        new CurvePoint(14f, 0.0f),
-                                                        new CurvePoint(15f, 0.3f),
-                                                        new CurvePoint(20f, 0.5f),
-                                                        new CurvePoint(30f, 0.5f),
-                                                        new CurvePoint(40f, 0.3f),
-                                                        new CurvePoint(65f, 0.0f),
-                                                    };
+            BiotechPawn settings = GetBiotechSettings(pawn);
+            return settings.ageEffectOnChildbirth;
         }
 
         public static int GetGrowthMoment(Pawn pawn, int index)

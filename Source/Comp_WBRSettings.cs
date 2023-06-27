@@ -11,13 +11,7 @@ namespace BetterRomance
         public CasualSexPawn casualSex;
         public RegularSexPawn regularSex;
         public RelationsPawn relations;
-
-        //Biotech Settings
-        public SimpleCurve maleFertilityAgeFactor;
-        public SimpleCurve femaleFertilityAgeFactor;
-        public SimpleCurve noneFertilityAgeFactor;
-        public SimpleCurve ageEffectOnChildbirth;
-        //Growth ages?
+        public BiotechPawn biotech;
 
         //Misc Settings
         public float minAgeForAdulthood;
@@ -34,6 +28,7 @@ namespace BetterRomance
             casualSex = new CasualSexPawn();
             regularSex = new RegularSexPawn();
             relations = new RelationsPawn();
+            biotech = new BiotechPawn();
 
             foreach (RaceSettings rs in Settings.RaceSettingsList)
             {
@@ -54,6 +49,7 @@ namespace BetterRomance
             SetCasualSexSettings();
             SetRegularSexSettings();
             SetRelationSettings();
+            SetBiotechSettings();
         }
 
         private void SetOrientationChances()
@@ -292,6 +288,82 @@ namespace BetterRomance
 
             relations.maxChildrenDesired = maxChildrenDesiredTemp ?? 3;
         }
+
+        private void SetBiotechSettings()
+        {
+            biotech.maleFertilityAgeFactor = raceSettings.biotech.maleFertilityAgeFactor;
+            biotech.femaleFertilityAgeFactor = raceSettings.biotech.femaleFertilityAgeFactor;
+            biotech.noneFertilityAgeFactor = raceSettings.biotech.noneFertilityAgeFactor;
+            biotech.ageEffectOnChildbirth = raceSettings.biotech.ageEffectOnChildbirth;
+
+            if (Pawn.kindDef.HasModExtension<BiotechSettings>())
+            {
+                BiotechSettings settings = Pawn.kindDef.GetModExtension<BiotechSettings>();
+
+                if (settings.maleFertilityAgeFactor != null)
+                {
+                    biotech.maleFertilityAgeFactor = settings.maleFertilityAgeFactor;
+                }
+                if (settings.femaleFertilityAgeFactor != null)
+                {
+                    biotech.femaleFertilityAgeFactor = settings.femaleFertilityAgeFactor;
+                }
+                if (settings.noneFertilityAgeFactor != null)
+                {
+                    biotech.noneFertilityAgeFactor = settings.noneFertilityAgeFactor;
+                }
+                if (settings.ageEffectOnChildbirth != null)
+                {
+                    biotech.ageEffectOnChildbirth = settings.ageEffectOnChildbirth;
+                }
+            }
+
+            if (biotech.maleFertilityAgeFactor == null)
+            {
+                biotech.maleFertilityAgeFactor = SettingsUtilities.femaleFertilityAgeFactor ?? new SimpleCurve
+                {
+                    new CurvePoint(14f, 0f),
+                    new CurvePoint(20f, 1f),
+                    new CurvePoint(28f, 1f),
+                    new CurvePoint(35f, 0.5f),
+                    new CurvePoint(40f, 0.1f),
+                    new CurvePoint(45f, 0.02f),
+                    new CurvePoint(50f, 0f),
+                };
+            }
+            if (biotech.femaleFertilityAgeFactor == null)
+            {
+                biotech.femaleFertilityAgeFactor = SettingsUtilities.maleFertilityAgeFactor ?? new SimpleCurve
+                {
+                    new CurvePoint(14f, 0f),
+                    new CurvePoint(18f, 1f),
+                    new CurvePoint(50f, 1f),
+                    new CurvePoint(90f, 0f),
+                };
+            }
+            if (biotech.noneFertilityAgeFactor == null)
+            {
+                biotech.noneFertilityAgeFactor = SettingsUtilities.maleFertilityAgeFactor ?? new SimpleCurve
+                {
+                    new CurvePoint(14f, 0f),
+                    new CurvePoint(18f, 1f),
+                    new CurvePoint(50f, 1f),
+                    new CurvePoint(90f, 0f),
+                };
+            }
+            if (biotech.ageEffectOnChildbirth == null)
+            {
+                biotech.ageEffectOnChildbirth = SettingsUtilities.childBirthByAgeCurve.curve ?? new SimpleCurve
+                {
+                    new CurvePoint(14f, 0.0f),
+                    new CurvePoint(15f, 0.3f),
+                    new CurvePoint(20f, 0.5f),
+                    new CurvePoint(30f, 0.5f),
+                    new CurvePoint(40f, 0.3f),
+                    new CurvePoint(65f, 0.0f),
+                };
+            }
+        }
     }
 
     public class OrientationChancePawn
@@ -347,5 +419,14 @@ namespace BetterRomance
 
         public int maxChildrenDesired;
         public int? minOpinionRomance;
+    }
+
+    public class BiotechPawn
+    {
+        public SimpleCurve maleFertilityAgeFactor;
+        public SimpleCurve femaleFertilityAgeFactor;
+        public SimpleCurve noneFertilityAgeFactor;
+        public SimpleCurve ageEffectOnChildbirth;
+        //Growth ages?
     }
 }
