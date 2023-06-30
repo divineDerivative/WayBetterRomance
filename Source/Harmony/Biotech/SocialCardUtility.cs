@@ -47,7 +47,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(SocialCardUtility_DrawRelationsAndOpinions), "SocialCardHelper");
+                    yield return CodeInstruction.Call(typeof(SocialCardUtility_DrawRelationsAndOpinions), nameof(SocialCardHelper));
                 }
                 yield return code;
                 if (code.Calls(CanDrawTryRomance))
@@ -167,7 +167,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = new List<Label> { newLabel } };
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(AccessTools.Inner(typeof(SocialCardUtility), "CachedSocialTabEntry"), "otherPawn");
-                    yield return CodeInstruction.Call(typeof(SocialCardUtility_GetPawnRowTooltip), nameof(SocialCardUtility_GetPawnRowTooltip.HookupExplanation));
+                    yield return CodeInstruction.Call(typeof(SocialCardUtility_GetPawnRowTooltip), nameof(HookupExplanation));
                     yield return new CodeInstruction(OpCodes.Stloc, text);
                     yield return new CodeInstruction(OpCodes.Ldloc, text);
                     yield return CodeInstruction.Call(typeof(GenText), nameof(GenText.NullOrEmpty));
@@ -203,8 +203,7 @@ namespace BetterRomance.HarmonyPatches
                 return "WBR.HookupChanceCant".Translate() + (" (" + ar.Reason + ")\n");
             }
             StringBuilder text = new StringBuilder();
-            float chance = HookupUtility.HookupSuccessChance(target, initiator, ordered: true, forTooltip: true);
-            text.AppendLine(("WBR.HookupChance".Translate() + (": " + chance.ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
+            text.AppendLine(("WBR.HookupChance".Translate() + (": " + (HookupUtility.HookupSuccessChance(target, initiator, ordered: true, forTooltip: true)).ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
             text.Append(HookupUtility.HookupFactors(initiator, target));
             return text.ToString();
         }

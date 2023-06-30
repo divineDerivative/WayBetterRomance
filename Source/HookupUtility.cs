@@ -446,18 +446,7 @@ namespace BetterRomance
                 {
                     text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheating));
                 }
-                //This is specifically based on opinion of a partner
-                //float partnerFactor = RomanceUtilities.PartnerFactor(target, partnerList, out _);
-                //if (partnerFactor != 1f)
-                //{
-                //    text.AppendLine(HookupFactorLine("WBR.HookupChancePartnerFactor".Translate(), partnerFactor));
-                //}
-                ////This is a base chance to cheat based on settings and traits
-                //float cheatChance = RomanceUtilities.CheatingChance(target);
-                //if (cheatChance != 1f)
-                //{
-                //    text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheatChance));
-                //}
+  
             }
             //Effect of target's beauty stat
             float prettyFactor = target.relations.PrettinessFactor(initiator);
