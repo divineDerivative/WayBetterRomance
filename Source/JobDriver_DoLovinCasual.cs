@@ -98,8 +98,8 @@ namespace BetterRomance
                     {
                         foreach (Pawn p in cheatedOnList)
                         {
-                            //Ignore if p has the free love precept
-                            if (p.ideo.Ideo.PreceptsListForReading.Any((Precept x) => x.def == RomanceDefOf.Lovin_FreeApproved))
+                            //Ignore if p doesn't care about cheating
+                            if (!p.CaresAboutCheating())
                             {
                                 continue;
                             }

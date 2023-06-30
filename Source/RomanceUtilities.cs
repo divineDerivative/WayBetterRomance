@@ -114,7 +114,7 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Base chance that a given <paramref name="pawn"/> will cheat. Based on settings and traits. Only call if the partner list from <see cref="IsThisCheating(Pawn, Pawn, out List{Pawn})"/> is not empty.
+        /// Base chance that a given <paramref name="pawn"/> will cheat. Based on settings and traits.
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns></returns>
