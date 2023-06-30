@@ -199,7 +199,7 @@ namespace BetterRomance
                 return "WBR.CantHookupTargetOpinion".Translate();
             }
             //Don't allow if acceptance chance is 0
-            if (!forOpinionExplanation && HookupSuccessChance(target, initiator) <= 0f)
+            if (!forOpinionExplanation && HookupSuccessChance(target, initiator, ordered: true) <= 0f)
             {
                 return "WBR.CantHookupTargetZeroChance".Translate();
             }
@@ -339,7 +339,7 @@ namespace BetterRomance
                 float opinionFactor = OpinionFactor(target, asker, ordered);
                 if (forTooltip && partner != null)
                 {
-                    return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f) * RomanceUtilities.CheatingChance(target);
+                    return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f) * RomanceUtilities.CheatingChance(target) * RomanceUtilities.PartnerFactor(target, new List<Pawn> { partner }, out _);
                 }
                 //Adjust based on opinion and increase chance for forced job
                 return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f);
@@ -441,18 +441,23 @@ namespace BetterRomance
             //Adjustment for opinion of existing partner
             if (RomanceUtilities.IsThisCheating(target, initiator, out List<Pawn> partnerList) && !partnerList.NullOrEmpty())
             {
+                float cheating = RomanceUtilities.PartnerFactor(target, partnerList, out _) * RomanceUtilities.CheatingChance(target);
+                if (cheating != 1f)
+                {
+                    text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheating));
+                }
                 //This is specifically based on opinion of a partner
-                float partnerFactor = RomanceUtilities.PartnerFactor(target, partnerList, out _);
-                if (partnerFactor != 1f)
-                {
-                    text.AppendLine(HookupFactorLine("WBR.HookupChancePartnerFactor".Translate(), partnerFactor));
-                }
-                //This is a base chance to cheat based on settings and traits
-                float cheatChance = RomanceUtilities.CheatingChance(target);
-                if (cheatChance != 1f)
-                {
-                    text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheatChance));
-                }
+                //float partnerFactor = RomanceUtilities.PartnerFactor(target, partnerList, out _);
+                //if (partnerFactor != 1f)
+                //{
+                //    text.AppendLine(HookupFactorLine("WBR.HookupChancePartnerFactor".Translate(), partnerFactor));
+                //}
+                ////This is a base chance to cheat based on settings and traits
+                //float cheatChance = RomanceUtilities.CheatingChance(target);
+                //if (cheatChance != 1f)
+                //{
+                //    text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheatChance));
+                //}
             }
             //Effect of target's beauty stat
             float prettyFactor = target.relations.PrettinessFactor(initiator);

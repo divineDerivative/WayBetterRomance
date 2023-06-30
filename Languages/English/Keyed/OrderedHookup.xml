@@ -56,6 +56,7 @@
 	<WBR.HookupChanceBeautyFactor>Beauty</WBR.HookupChanceBeautyFactor>
 	<WBR.HookupChanceOpinionFactor>Opinion</WBR.HookupChanceOpinionFactor>
 	<WBR.HookupChancePartnerFactor>Opinion of partner</WBR.HookupChancePartnerFactor>
+	<WBR.HookupChanceCheatingChance>Chance of cheating</WBR.HookupChanceCheatingChance>
 
 	<WBR.PawnsHaveSameGender>{PAWN1_nameDef} and {PAWN2_nameDef} are the same gender.</WBR.PawnsHaveSameGender>
 	<WBR.PawnsAreSterile>{PAWN1_nameDef} and {PAWN2_nameDef} are sterile.</WBR.PawnsAreSterile>
