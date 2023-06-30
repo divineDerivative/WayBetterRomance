@@ -37,18 +37,47 @@ namespace BetterRomance.HarmonyPatches
             {
                 yield return gizmo;
             }
-            Comp_PartnerList comp = __instance.TryGetComp<Comp_PartnerList>();
-            if (comp != null && DebugSettings.ShowDevGizmos && comp.IsOrderedHookupOnCooldown)
+            if (DebugSettings.ShowDevGizmos)
             {
-                Command_Action action = new Command_Action
+                Comp_PartnerList comp = __instance.TryGetComp<Comp_PartnerList>();
+                if (comp != null)
                 {
-                    defaultLabel = "DEV: Reset ordered hookup cooldown",
+                    if (comp.IsOrderedHookupOnCooldown)
+                    {
+                        Command_Action action1 = new Command_Action
+                        {
+                            defaultLabel = "DEV: Reset ordered hookup cooldown",
+                            action = delegate
+                            {
+                                comp.orderedHookupTick = -1;
+                            }
+                        };
+                        yield return action1;
+                    }
+
+                    Command_Action action2 = new Command_Action
+                    {
+                        defaultLabel = "DEV: Clear partner lists",
+                        action = delegate
+                        {
+                            comp.Date.list = null;
+                            comp.Date.listMadeEver = false;
+                            comp.Hookup.list = null;
+                            comp.Hookup.listMadeEver = false;
+                        }
+                    };
+                    yield return action2;
+                }
+
+                Command_Action action3 = new Command_Action
+                {
+                    defaultLabel = "DEV: Reset lovin' tick",
                     action = delegate
                     {
-                        comp.orderedHookupTick = -1;
+                        __instance.mindState.canLovinTick = -99999;
                     }
                 };
-                yield return action;
+                yield return action3;
             }
         }
     }
