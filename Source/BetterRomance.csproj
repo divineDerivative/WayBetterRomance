@@ -72,6 +72,10 @@
       <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="VanillaRacesExpandedHighmate">
+      <HintPath>..\..\..\..\..\workshop\content\294100\2995385834\1.4\Assemblies\VanillaRacesExpandedHighmate.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Harmony\Biotech\RitualOutcomeComp_PawnAge.cs" />

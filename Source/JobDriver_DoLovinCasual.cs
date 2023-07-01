@@ -1,3 +1,4 @@
+using BetterRomance.HarmonyPatches;
 using RimWorld;
 using System.Collections.Generic;
 using Verse;
@@ -89,6 +90,11 @@ namespace BetterRomance
                 {
                     ticksLeftThisToil = (RomanceUtilities.HasLoveEnhancer(Actor) || RomanceUtilities.HasLoveEnhancer(Partner)) ? ticksForEnhancer : ticksOtherwise;
 
+                    if (Settings.VREHighmateActive && OtherMod_Methods.HasLovinForPleasureApproach(Actor, Partner))
+                    {
+                        ticksLeftThisToil = (int)(ticksLeftThisToil * 1.25f);
+                    }
+
                     if (RomanceUtilities.IsThisCheating(Actor, Partner, out List<Pawn> cheatedOnList))
                     {
                         //This is really just to grab the list, separate if statement since it can return false even if the list is not empty
@@ -147,6 +153,7 @@ namespace BetterRomance
                         HelperClasses.RotRFillRomanceBar?.Invoke(null, new object[] { Actor, 0.5f });
                     }
                     Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.GotLovin, Actor.Named(HistoryEventArgsNames.Doer)));
+                    //Do I need to account for spouse like custom relations?
                     HistoryEventDef def = Actor.relations.DirectRelationExists(PawnRelationDefOf.Spouse, Partner) ? HistoryEventDefOf.GotLovin_Spouse : HistoryEventDefOf.GotLovin_NonSpouse;
                     Find.HistoryEventsManager.RecordEvent(new HistoryEvent(def, Actor.Named(HistoryEventArgsNames.Doer)));
                     //Attempt to have hookups behave more like normal lovin, use the same cooldown period based on age

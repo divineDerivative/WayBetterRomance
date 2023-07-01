@@ -52,6 +52,11 @@ namespace BetterRomance
                 MethodInfo IsSexualityTrait = AccessTools.DeclaredMethod(Type.GetType("TweaksGalore.Patch_PawnGenerator_GenerateTraits,TweaksGalore"), "IsSexualityTrait");
                 harmony.Patch(IsSexualityTrait, prefix: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.IsSexualityTraitPrefix)));
             }
+            if (ModsConfig.IsActive("vanillaracesexpanded.highmate"))
+            {
+                Settings.VREHighmateActive = true;
+                harmony.PatchVRE();
+            }
             MakeFertilityModList();
             Settings.ApplyJoySettings();
         }
