@@ -57,6 +57,10 @@ namespace BetterRomance
                 Settings.VREHighmateActive = true;
                 harmony.PatchVRE();
             }
+            if (ModsConfig.IsActive("rim.job.world"))
+            {
+                harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.xxx,RJW"), "is_asexual"), postfix: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RJWAsexualPostfix)));
+            }
             MakeFertilityModList();
             Settings.ApplyJoySettings();
         }

@@ -16,6 +16,11 @@ namespace BetterRomance.HarmonyPatches
             __result = RomanceUtilities.OrientationTraits.Contains(trait.def);
             return false;
         }
+
+        public static void RJWAsexualPostfix(ref bool __result, Pawn pawn)
+        {
+            __result = __result || pawn.IsAsexual();
+        }
     }
 
     public static class VREPatches
