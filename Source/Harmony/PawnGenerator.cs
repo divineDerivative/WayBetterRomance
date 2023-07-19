@@ -26,6 +26,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            bool done = false;
             foreach (CodeInstruction code in instructions)
             {
                 if (code.Is(OpCodes.Ldc_I4_S, 13))
@@ -33,6 +34,12 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Ldc_I4, 2);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMoment));
+                }
+                else if (!done && code.LoadsConstant(3))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ChildAge));
+                    done = true;
                 }
                 else
                 {
