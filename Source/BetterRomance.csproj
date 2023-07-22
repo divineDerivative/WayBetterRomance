@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Harmony\Biotech\RitualOutcomeComp_PawnAge.cs" />
+    <Compile Include="Harmony\GeneDef.cs" />
     <Compile Include="Harmony\Pawn_AgeTracker.cs" />
     <Compile Include="Harmony\Pawn_GeneTracker.cs" />
     <Compile Include="Harmony\Ideology\ThoughtWorker_AgeReversalDemanded.cs" />
