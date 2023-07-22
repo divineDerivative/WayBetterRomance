@@ -24,7 +24,7 @@ namespace BetterRomance
         public static void AssignOrientation(Pawn pawn)
         {
             float orientation = Rand.Value;
-            if (pawn.gender == Gender.None)
+            if (pawn.gender == Gender.None && pawn.def.defName != "RE_Asari")
             {
                 return;
             }
