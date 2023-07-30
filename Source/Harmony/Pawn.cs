@@ -3,6 +3,7 @@ using System.Linq;
 using Verse;
 using HarmonyLib;
 using System.Reflection.Emit;
+using RimWorld;
 
 namespace BetterRomance.HarmonyPatches
 {
@@ -64,6 +65,18 @@ namespace BetterRomance.HarmonyPatches
                             comp.Date.listMadeEver = false;
                             comp.Hookup.list = null;
                             comp.Hookup.listMadeEver = false;
+                            comp.Date.ticksSinceMake = 120000;
+                            comp.Hookup.ticksSinceMake = 120000;
+                            //Test this
+                            List<Thought_Memory> memories = __instance.needs.mood.thoughts.memories.Memories.FindAll(delegate (Thought_Memory x)
+                            {
+                                return x.def == RomanceDefOf.RebuffedMyHookupAttempt || x.def == RomanceDefOf.RebuffedMyDateAttempt;
+                            });
+                            foreach (var memory in memories)
+                            {
+                                __instance.needs.mood.thoughts.memories.RemoveMemory(memory);
+                                memory.otherPawn.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(memory.def, __instance);
+                            }
                         }
                     };
                     yield return action2;
