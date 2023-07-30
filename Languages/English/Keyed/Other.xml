@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-	<WBR.AgelessGeneWarning>The above values are for humans and may not be accurate for other races.</WBR.AgelessGeneWarning>
+	<WBR.AgelessGeneWarning>*The above values are for humans and may not be accurate for other races.</WBR.AgelessGeneWarning>
+	<WBR.MinAgeGeneWarning>*This age is for humans and may not be accurate for other races.</WBR.MinAgeGeneWarning>
 </LanguageData>
