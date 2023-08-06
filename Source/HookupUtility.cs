@@ -5,7 +5,7 @@ using Verse.AI;
 using System.Text;
 using System.Collections.Generic;
 using System;
-using UnityEngine;
+using System.Linq;
 
 namespace BetterRomance
 {
@@ -247,50 +247,65 @@ namespace BetterRomance
         /// <returns>A bed with at least two sleeping spots</returns>
         public static Building_Bed FindHookupBed(Pawn first, Pawn second)
         {
-            Building_Bed result;
             //If first owns a suitable bed that no one is currently using, use that
-            if (first.ownership.OwnedBed != null && first.ownership.OwnedBed.SleepingSlotsCount > 1 && !first.ownership.OwnedBed.AnyOccupants)
+            if (first.ownership.OwnedBed is Building_Bed bed1 && bed1 != null && bed1.SleepingSlotsCount > 1 && !bed1.AnyOccupants && CanBothReach(bed1, first, second))
             {
-                result = first.ownership.OwnedBed;
-                return result;
+                if (RestUtility.CanUseBedEver(second, bed1.def))
+                {
+                    return bed1;
+                }
             }
             //If second owns a suitable bed that no one is currently using, use that
-            if (second.ownership.OwnedBed != null && second.ownership.OwnedBed.SleepingSlotsCount > 1 && !second.ownership.OwnedBed.AnyOccupants)
+            if (second.ownership.OwnedBed is Building_Bed bed2 && bed2 != null && bed2.SleepingSlotsCount > 1 && !bed2.AnyOccupants && CanBothReach(bed2, first, second))
             {
-                result = second.ownership.OwnedBed;
-                return result;
+                if (RestUtility.CanUseBedEver(first, bed2.def))
+                {
+                    return bed2;
+                }
             }
             //Otherwise, look through all beds to see if one is usable
-            foreach (ThingDef current in RestUtility.AllBedDefBestToWorst)
+            //Make a list of all beds that meet basic requirements
+            List<Building_Bed> bedList = (from b in first.Map.listerBuildings.AllBuildingsColonistOfClass<Building_Bed>()
+                                              //Has no owners, is for humans, has at least two sleeping spots
+                                          where !b.OwnersForReading.Any() && b.def.building.bed_humanlike && b.SleepingSlotsCount > 1
+                                          //So they'll pick nice beds if available
+                                          orderby b.GetStatValue(StatDefOf.BedRestEffectiveness) descending
+                                          select b).ToList();
+            foreach (Building_Bed bed in bedList)
             {
-                //This checks if it's a human or animal bed
-                if (!RestUtility.CanUseBedEver(first, current))
+                //Is it unoccupied and they both can use it
+                if (CanBothUse(bed, first, second) && !bed.AnyOccupants && CanBothReach(bed, first, second))
                 {
-                    continue;
+                    return bed;
                 }
-                //This just grabs the first bed of the given def
-                //Need to make this instead look at all beds of that def and find an unowned one
-                Building_Bed building_Bed = (Building_Bed)GenClosest.ClosestThingReachable(first.Position, first.Map,
-                    ThingRequest.ForDef(current), PathEndMode.OnCell, TraverseParms.For(first), 9999f, x => true);
-                if (building_Bed == null)
-                {
-                    continue;
-                }
-                //Does it have at least two sleeping spots
-                if (building_Bed.SleepingSlotsCount <= 1)
-                {
-                    continue;
-                }
-                //Is anyone currently using it
-                if (building_Bed.AnyOccupants)
-                {
-                    continue;
-                }
-                //Use that bed
-                result = building_Bed;
-                return result;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Checks that bed is reachable by both pawns and not forbidden to either of them
+        /// </summary>
+        /// <param name="bed"></param>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        private static bool CanBothReach(Building_Bed bed, Pawn first, Pawn second)
+        {
+            //Reachability = is there a valid path to the bed; forbidden = it's not in an allowed area or has been forbidden for colonist use
+            //Nothing is forbidden to pawns of non-player factions
+            return first.Map.reachability.CanReach(first.Position, bed.Position, PathEndMode.OnCell, TraverseParms.For(first)) && second.Map.reachability.CanReach(second.Position, bed.Position, PathEndMode.OnCell, TraverseParms.For(second)) && !bed.IsForbidden(first) && !bed.IsForbidden(second);
+        }
+
+        /// <summary>
+        /// Just a simplified way of calling CanUseBedEver for both pawns at once
+        /// </summary>
+        /// <param name="bed"></param>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        private static bool CanBothUse(Building_Bed bed, Pawn first, Pawn second)
+        {
+            return RestUtility.CanUseBedEver(first, bed.def) && RestUtility.CanUseBedEver(second, bed.def);
         }
 
         /// <summary>
@@ -446,7 +461,6 @@ namespace BetterRomance
                 {
                     text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheating));
                 }
-  
             }
             //Effect of target's beauty stat
             float prettyFactor = target.relations.PrettinessFactor(initiator);
