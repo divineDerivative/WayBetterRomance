@@ -248,9 +248,10 @@ namespace BetterRomance
         public static Building_Bed FindHookupBed(Pawn first, Pawn second)
         {
             //If first owns a suitable bed that no one is currently using, use that
-            if (first.ownership.OwnedBed is Building_Bed bed1 && bed1 != null && bed1.SleepingSlotsCount > 1 && !bed1.AnyOccupants && CanBothReach(bed1, first, second))
+            if (first.ownership.OwnedBed is Building_Bed bed1 && bed1 != null && bed1.SleepingSlotsCount > 1 && CanBothReach(bed1, first, second))
             {
-                if (RestUtility.CanUseBedEver(second, bed1.def))
+                //If they have the same bed just use that one, even if it's occupied
+                if (second.ownership.OwnedBed == bed1 || (!bed1.AnyOccupants && RestUtility.CanUseBedEver(second, bed1.def)))
                 {
                     return bed1;
                 }

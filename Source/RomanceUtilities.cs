@@ -54,7 +54,7 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Whether <paramref name="pawn"/> decides to continue with an interaction with <paramref name="otherPawn"/> Always returns true if interaction is not cheating and is allowed by ideo. Otherwise, finds the partner they would feel the worst about cheating on and decides based on opinion and <paramref name="pawn"/>'s traits.
+        /// Whether <paramref name="pawn"/> decides to continue with an interaction with <paramref name="otherPawn"/>. Always returns true if interaction is not cheating and is allowed by ideo. Otherwise, finds the partner they would feel the worst about cheating on and decides based on opinion and <paramref name="pawn"/>'s traits.
         /// </summary>
         /// <param name="pawn"></param>
         /// <param name="otherPawn"></param>
