@@ -639,8 +639,10 @@ namespace BetterRomance
                 //HAR does the below if min age is not set
                 //Maybe I can co-opt that to do a more reasonable calculation?
             }
-            return (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
+            return defaultMinAgeForAdulthood;
         }
+
+        private static readonly float defaultMinAgeForAdulthood = (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
 
         /// <summary>
         /// Finds the first life stage with a developmental stage of child and returns the minimum age of that stage.
