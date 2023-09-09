@@ -448,6 +448,12 @@ namespace BetterRomance
         public static SimpleCurve GetFertilityAgeCurve(this Pawn pawn)
         {
             BiotechPawn settings = GetBiotechSettings(pawn);
+            //This gets called on animals and mechs even though the stat never gets used
+            //So need to pass something
+            if (settings == null)
+            {
+                return GetDefaultFertilityAgeCurve(pawn.gender);
+            }
             if (pawn.gender == Gender.Male)
             {
                 return settings.maleFertilityAgeFactor;
@@ -459,6 +465,33 @@ namespace BetterRomance
             else
             {
                 return settings.noneFertilityAgeFactor;
+            }
+        }
+
+        private static SimpleCurve GetDefaultFertilityAgeCurve(Gender gender)
+        {
+            if (gender == Gender.Female)
+            {
+                return new SimpleCurve
+                {
+                    new CurvePoint(14f, 0f),
+                    new CurvePoint(20f, 1f),
+                    new CurvePoint(28f, 1f),
+                    new CurvePoint(35f, 0.5f),
+                    new CurvePoint(40f, 0.1f),
+                    new CurvePoint(45f, 0.02f),
+                    new CurvePoint(50f, 0f),
+                };
+            }
+            else
+            {
+                return new SimpleCurve
+                {
+                    new CurvePoint(14f, 0f),
+                    new CurvePoint(18f, 1f),
+                    new CurvePoint(50f, 1f),
+                    new CurvePoint(90f, 0f),
+                };
             }
         }
 

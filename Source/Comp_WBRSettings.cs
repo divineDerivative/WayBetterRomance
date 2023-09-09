@@ -52,6 +52,19 @@ namespace BetterRomance
             SetBiotechSettings();
         }
 
+        private void SetIfNotNull<T>(ref T result, T nullable)
+        {
+            if (nullable != null)
+            {
+                result = nullable;
+            }
+        }
+
+        private void CopySettings<T>(T settings)
+        {
+
+        }
+
         private void SetOrientationChances()
         {
             orientation.asexualChance = raceSettings.orientation.asexualChance;
@@ -68,45 +81,53 @@ namespace BetterRomance
             {
                 SexualityChances chances = Pawn.kindDef.GetModExtension<SexualityChances>();
 
-                if (chances.asexualChance != null)
-                {
-                    orientation.asexualChance = chances.asexualChance;
-                }
-                if (chances.bisexualChance != null)
-                {
-                    orientation.bisexualChance = chances.bisexualChance;
-                }
-                if (chances.gayChance != null)
-                {
-                    orientation.gayChance = chances.gayChance;
-                }
-                if (chances.straightChance != null)
-                {
-                    orientation.straightChance = chances.straightChance;
-                }
+                SetIfNotNull(ref orientation.asexualChance, chances.asexualChance);
+                SetIfNotNull(ref orientation.bisexualChance, chances.bisexualChance);
+                SetIfNotNull(ref orientation.gayChance, chances.gayChance);
+                SetIfNotNull(ref orientation.straightChance, chances.straightChance);
+                //if (chances.asexualChance != null)
+                //{
+                //    orientation.asexualChance = chances.asexualChance;
+                //}
+                //if (chances.bisexualChance != null)
+                //{
+                //    orientation.bisexualChance = chances.bisexualChance;
+                //}
+                //if (chances.gayChance != null)
+                //{
+                //    orientation.gayChance = chances.gayChance;
+                //}
+                //if (chances.straightChance != null)
+                //{
+                //    orientation.straightChance = chances.straightChance;
+                //}
 
-                if (chances.aceAroChance != null)
-                {
-                    orientation.aceAroChance = chances.aceAroChance;
-                }
-                if (chances.aceBiChance != null)
-                {
-                    orientation.aceBiChance = chances.aceBiChance;
-                }
-                if (chances.aceHomoChance != null)
-                {
-                    orientation.aceHomoChance = chances.aceHomoChance;
-                }
-                if (chances.aceHeteroChance != null)
-                {
-                    orientation.aceHeteroChance = chances.aceHeteroChance;
-                }
+                SetIfNotNull(ref orientation.aceAroChance, chances.aceAroChance);
+                SetIfNotNull(ref orientation.aceBiChance, chances.aceBiChance);
+                SetIfNotNull(ref orientation.aceHomoChance, chances.aceHomoChance);
+                SetIfNotNull(ref orientation.aceHeteroChance, chances.aceHeteroChance);
+                //if (chances.aceAroChance != null)
+                //{
+                //    orientation.aceAroChance = chances.aceAroChance;
+                //}
+                //if (chances.aceBiChance != null)
+                //{
+                //    orientation.aceBiChance = chances.aceBiChance;
+                //}
+                //if (chances.aceHomoChance != null)
+                //{
+                //    orientation.aceHomoChance = chances.aceHomoChance;
+                //}
+                //if (chances.aceHeteroChance != null)
+                //{
+                //    orientation.aceHeteroChance = chances.aceHeteroChance;
+                //}
             }
         }
 
         private void SetCasualSexSettings()
         {
-            //Take values from the race's settings, these can all be null
+            //Take values from the race's settings, use temp for values that can't be null at the end
             bool? caresAboutCheatingTemp = raceSettings.casualSex.caresAboutCheating;
             bool? willDoHookupTemp = raceSettings.casualSex.willDoHookup;
             bool? canDoOrderedHookupTemp = raceSettings.casualSex.canDoOrderedHookup;
@@ -120,41 +141,50 @@ namespace BetterRomance
             if (Pawn.kindDef.HasModExtension<CasualSexSettings>())
             {
                 CasualSexSettings settings = Pawn.kindDef.GetModExtension<CasualSexSettings>();
-                if (settings.caresAboutCheating != null)
-                {
-                    caresAboutCheatingTemp = settings.caresAboutCheating;
-                }
-                if (settings.willDoHookup != null)
-                {
-                    willDoHookupTemp = settings.willDoHookup;
-                }
-                if (settings.canDoOrderedHookup != null)
-                {
-                    canDoOrderedHookupTemp = settings.canDoOrderedHookup;
-                }
-                if (settings.hookupRate != null)
-                {
-                    casualSex.hookupRate = settings.hookupRate;
-                }
-                if (settings.alienLoveChance != null)
-                {
-                    casualSex.alienLoveChance = settings.alienLoveChance;
-                }
-                if (settings.hookupTriggers != null && settings.hookupTriggers.minOpinion != null)
-                {
-                    casualSex.minOpinionForHookup = settings.hookupTriggers.minOpinion;
-                }
-                if (settings.orderedHookupTriggers != null)
-                {
-                    if (settings.orderedHookupTriggers.minOpinion != null)
-                    {
-                        casualSex.minOpinionForOrderedHookup = settings.orderedHookupTriggers.minOpinion;
-                    }
-                    if (settings.orderedHookupTriggers.forBreedingOnly != null)
-                    {
-                        forBreedingOnlyTemp = settings.orderedHookupTriggers.forBreedingOnly;
-                    }
-                }
+
+                SetIfNotNull(ref caresAboutCheatingTemp, settings.caresAboutCheating);
+                SetIfNotNull(ref willDoHookupTemp, settings.willDoHookup);
+                SetIfNotNull(ref canDoOrderedHookupTemp, settings.canDoOrderedHookup);
+                SetIfNotNull(ref casualSex.hookupRate, settings.hookupRate);
+                SetIfNotNull(ref casualSex.alienLoveChance, settings.alienLoveChance);
+                SetIfNotNull(ref casualSex.minOpinionForHookup, settings.hookupTriggers?.minOpinion);
+                SetIfNotNull(ref casualSex.minOpinionForOrderedHookup, settings.orderedHookupTriggers?.minOpinion);
+                SetIfNotNull(ref forBreedingOnlyTemp, settings.orderedHookupTriggers?.forBreedingOnly);
+                //if (settings.caresAboutCheating != null)
+                //{
+                //    caresAboutCheatingTemp = settings.caresAboutCheating;
+                //}
+                //if (settings.willDoHookup != null)
+                //{
+                //    willDoHookupTemp = settings.willDoHookup;
+                //}
+                //if (settings.canDoOrderedHookup != null)
+                //{
+                //    canDoOrderedHookupTemp = settings.canDoOrderedHookup;
+                //}
+                //if (settings.hookupRate != null)
+                //{
+                //    casualSex.hookupRate = settings.hookupRate;
+                //}
+                //if (settings.alienLoveChance != null)
+                //{
+                //    casualSex.alienLoveChance = settings.alienLoveChance;
+                //}
+                //if (settings.hookupTriggers != null && settings.hookupTriggers.minOpinion != null)
+                //{
+                //    casualSex.minOpinionForHookup = settings.hookupTriggers.minOpinion;
+                //}
+                //if (settings.orderedHookupTriggers != null)
+                //{
+                //    if (settings.orderedHookupTriggers.minOpinion != null)
+                //    {
+                //        casualSex.minOpinionForOrderedHookup = settings.orderedHookupTriggers.minOpinion;
+                //    }
+                //    if (settings.orderedHookupTriggers.forBreedingOnly != null)
+                //    {
+                //        forBreedingOnlyTemp = settings.orderedHookupTriggers.forBreedingOnly;
+                //    }
+                //}
             }
 
             //Assign default values to anything that can't be null
@@ -174,22 +204,26 @@ namespace BetterRomance
             if (Pawn.kindDef.HasModExtension<RegularSexSettings>())
             {
                 RegularSexSettings settings = Pawn.kindDef.GetModExtension<RegularSexSettings>();
-                if (settings.minAgeForSex != null)
-                {
-                    minAgeForSexTemp = settings.minAgeForSex;
-                }
-                if (settings.maxAgeForSex != null)
-                {
-                    maxAgeForSexTemp = settings.maxAgeForSex;
-                }
-                if (settings.maxAgeGap != null)
-                {
-                    maxAgeGapTemp = settings.maxAgeGap;
-                }
-                if (settings.declineAtAge != null)
-                {
-                    declineAtAgeTemp = settings.declineAtAge;
-                }
+                SetIfNotNull(ref minAgeForSexTemp, settings.minAgeForSex);
+                SetIfNotNull(ref maxAgeForSexTemp, settings.maxAgeForSex);
+                SetIfNotNull(ref maxAgeGapTemp, settings.maxAgeGap);
+                SetIfNotNull(ref declineAtAgeTemp, settings.declineAtAge);
+                //if (settings.minAgeForSex != null)
+                //{
+                //    minAgeForSexTemp = settings.minAgeForSex;
+                //}
+                //if (settings.maxAgeForSex != null)
+                //{
+                //    maxAgeForSexTemp = settings.maxAgeForSex;
+                //}
+                //if (settings.maxAgeGap != null)
+                //{
+                //    maxAgeGapTemp = settings.maxAgeGap;
+                //}
+                //if (settings.declineAtAge != null)
+                //{
+                //    declineAtAgeTemp = settings.declineAtAge;
+                //}
             }
 
             regularSex.minAgeForSex = minAgeForSexTemp ?? 16f;
@@ -221,58 +255,72 @@ namespace BetterRomance
             if (Pawn.kindDef.HasModExtension<RelationSettings>())
             {
                 RelationSettings settings = Pawn.kindDef.GetModExtension<RelationSettings>();
-                if (settings.spousesAllowed != null)
-                {
-                    spousesAllowedTemp = settings.spousesAllowed;
-                }
-                if (settings.childrenAllowed != null)
-                {
-                    childrenAllowedTemp = settings.childrenAllowed;
-                }
-                if (settings.pawnKindForParentGlobal != null)
-                {
-                    relations.pawnKindForParentGlobal = settings.pawnKindForParentGlobal;
-                }
-                if (settings.pawnKindForParentFemale != null)
-                {
-                    relations.pawnKindForParentFemale = settings.pawnKindForParentFemale;
-                }
-                if (settings.pawnKindForParentMale != null)
-                {
-                    relations.pawnKindForParentMale = settings.pawnKindForParentMale;
-                }
-                if (settings.minFemaleAgeToHaveChildren != null)
-                {
-                    minFemaleAgeToHaveChildrenTemp = settings.minFemaleAgeToHaveChildren;
-                }
-                if (settings.usualFemaleAgeToHaveChildren != null)
-                {
-                    usualFemaleAgeToHaveChildrenTemp = settings.usualFemaleAgeToHaveChildren;
-                }
-                if (settings.maxFemaleAgeToHaveChildren != null)
-                {
-                    maxFemaleAgeToHaveChildrenTemp = settings.maxFemaleAgeToHaveChildren;
-                }
-                if (settings.minMaleAgeToHaveChildren != null)
-                {
-                    minMaleAgeToHaveChildrenTemp = settings.minMaleAgeToHaveChildren;
-                }
-                if (settings.usualMaleAgeToHaveChildren != null)
-                {
-                    usualMaleAgeToHaveChildrenTemp = settings.usualMaleAgeToHaveChildren;
-                }
-                if (settings.maxMaleAgeToHaveChildren != null)
-                {
-                    maxMaleAgeToHaveChildrenTemp = settings.maxMaleAgeToHaveChildren;
-                }
-                if (settings.maxChildrenDesired != null)
-                {
-                    maxChildrenDesiredTemp = settings.maxChildrenDesired;
-                }
-                if (settings.minOpinionRomance != null)
-                {
-                    relations.minOpinionRomance = settings.minOpinionRomance;
-                }
+
+                SetIfNotNull(ref spousesAllowedTemp, settings.spousesAllowed);
+                SetIfNotNull(ref childrenAllowedTemp, settings.childrenAllowed);
+                SetIfNotNull(ref relations.pawnKindForParentGlobal, settings.pawnKindForParentGlobal);
+                SetIfNotNull(ref relations.pawnKindForParentFemale, settings.pawnKindForParentFemale);
+                SetIfNotNull(ref relations.pawnKindForParentMale, settings.pawnKindForParentMale);
+                SetIfNotNull(ref minFemaleAgeToHaveChildrenTemp, settings.minFemaleAgeToHaveChildren);
+                SetIfNotNull(ref usualFemaleAgeToHaveChildrenTemp, settings.usualFemaleAgeToHaveChildren);
+                SetIfNotNull(ref maxFemaleAgeToHaveChildrenTemp, settings.maxFemaleAgeToHaveChildren);
+                SetIfNotNull(ref minMaleAgeToHaveChildrenTemp, settings.minMaleAgeToHaveChildren);
+                SetIfNotNull(ref usualMaleAgeToHaveChildrenTemp, settings.usualMaleAgeToHaveChildren);
+                SetIfNotNull(ref maxMaleAgeToHaveChildrenTemp, settings.maxMaleAgeToHaveChildren);
+                SetIfNotNull(ref maxChildrenDesiredTemp, settings.maxChildrenDesired);
+                SetIfNotNull(ref relations.minOpinionRomance, settings.minOpinionRomance);
+                //if (settings.spousesAllowed != null)
+                //{
+                //    spousesAllowedTemp = settings.spousesAllowed;
+                //}
+                //if (settings.childrenAllowed != null)
+                //{
+                //    childrenAllowedTemp = settings.childrenAllowed;
+                //}
+                //if (settings.pawnKindForParentGlobal != null)
+                //{
+                //    relations.pawnKindForParentGlobal = settings.pawnKindForParentGlobal;
+                //}
+                //if (settings.pawnKindForParentFemale != null)
+                //{
+                //    relations.pawnKindForParentFemale = settings.pawnKindForParentFemale;
+                //}
+                //if (settings.pawnKindForParentMale != null)
+                //{
+                //    relations.pawnKindForParentMale = settings.pawnKindForParentMale;
+                //}
+                //if (settings.minFemaleAgeToHaveChildren != null)
+                //{
+                //    minFemaleAgeToHaveChildrenTemp = settings.minFemaleAgeToHaveChildren;
+                //}
+                //if (settings.usualFemaleAgeToHaveChildren != null)
+                //{
+                //    usualFemaleAgeToHaveChildrenTemp = settings.usualFemaleAgeToHaveChildren;
+                //}
+                //if (settings.maxFemaleAgeToHaveChildren != null)
+                //{
+                //    maxFemaleAgeToHaveChildrenTemp = settings.maxFemaleAgeToHaveChildren;
+                //}
+                //if (settings.minMaleAgeToHaveChildren != null)
+                //{
+                //    minMaleAgeToHaveChildrenTemp = settings.minMaleAgeToHaveChildren;
+                //}
+                //if (settings.usualMaleAgeToHaveChildren != null)
+                //{
+                //    usualMaleAgeToHaveChildrenTemp = settings.usualMaleAgeToHaveChildren;
+                //}
+                //if (settings.maxMaleAgeToHaveChildren != null)
+                //{
+                //    maxMaleAgeToHaveChildrenTemp = settings.maxMaleAgeToHaveChildren;
+                //}
+                //if (settings.maxChildrenDesired != null)
+                //{
+                //    maxChildrenDesiredTemp = settings.maxChildrenDesired;
+                //}
+                //if (settings.minOpinionRomance != null)
+                //{
+                //    relations.minOpinionRomance = settings.minOpinionRomance;
+                //}
             }
 
             relations.spousesAllowed = spousesAllowedTemp ?? true;
@@ -300,22 +348,26 @@ namespace BetterRomance
             {
                 BiotechSettings settings = Pawn.kindDef.GetModExtension<BiotechSettings>();
 
-                if (settings.maleFertilityAgeFactor != null)
-                {
-                    biotech.maleFertilityAgeFactor = settings.maleFertilityAgeFactor;
-                }
-                if (settings.femaleFertilityAgeFactor != null)
-                {
-                    biotech.femaleFertilityAgeFactor = settings.femaleFertilityAgeFactor;
-                }
-                if (settings.noneFertilityAgeFactor != null)
-                {
-                    biotech.noneFertilityAgeFactor = settings.noneFertilityAgeFactor;
-                }
-                if (settings.ageEffectOnChildbirth != null)
-                {
-                    biotech.ageEffectOnChildbirth = settings.ageEffectOnChildbirth;
-                }
+                SetIfNotNull(ref biotech.maleFertilityAgeFactor, settings.maleFertilityAgeFactor);
+                SetIfNotNull(ref biotech.femaleFertilityAgeFactor, settings.femaleFertilityAgeFactor);
+                SetIfNotNull(ref biotech.noneFertilityAgeFactor, settings.noneFertilityAgeFactor);
+                SetIfNotNull(ref biotech.ageEffectOnChildbirth, settings.ageEffectOnChildbirth);
+                //if (settings.maleFertilityAgeFactor != null)
+                //{
+                //    biotech.maleFertilityAgeFactor = settings.maleFertilityAgeFactor;
+                //}
+                //if (settings.femaleFertilityAgeFactor != null)
+                //{
+                //    biotech.femaleFertilityAgeFactor = settings.femaleFertilityAgeFactor;
+                //}
+                //if (settings.noneFertilityAgeFactor != null)
+                //{
+                //    biotech.noneFertilityAgeFactor = settings.noneFertilityAgeFactor;
+                //}
+                //if (settings.ageEffectOnChildbirth != null)
+                //{
+                //    biotech.ageEffectOnChildbirth = settings.ageEffectOnChildbirth;
+                //}
             }
 
             if (biotech.maleFertilityAgeFactor == null)

@@ -178,9 +178,9 @@ namespace BetterRomance
                 BiotechSettings settings = race.GetModExtension<BiotechSettings>();
 
                 biotech.maleFertilityAgeFactor = settings.maleFertilityAgeFactor;
-                biotech.femaleFertilityAgeFactor = settings .femaleFertilityAgeFactor;
+                biotech.femaleFertilityAgeFactor = settings.femaleFertilityAgeFactor;
                 biotech.noneFertilityAgeFactor = settings.noneFertilityAgeFactor;
-                biotech.ageEffectOnChildbirth = settings .ageEffectOnChildbirth;
+                biotech.ageEffectOnChildbirth = settings.ageEffectOnChildbirth;
             }
         }
     }
