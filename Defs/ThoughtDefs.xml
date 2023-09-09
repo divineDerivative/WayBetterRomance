@@ -71,7 +71,7 @@
 		<stackedEffectMultiplier>0.9</stackedEffectMultiplier>
 		<stages>
 			<li>
-				<label>turned down by {0}</label>
+				<label>{0} didn't want to have a date with me</label>
 				<description>What, can't even give me a chance??</description>
 				<baseMoodEffect>-1</baseMoodEffect>
 			</li>
