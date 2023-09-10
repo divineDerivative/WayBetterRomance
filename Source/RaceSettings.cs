@@ -1,4 +1,6 @@
-﻿using Verse;
+﻿using RimWorld;
+using System;
+using Verse;
 
 namespace BetterRomance
 {
@@ -65,16 +67,15 @@ namespace BetterRomance
         }
         public RelationsRace relations;
 
-        //Biotech Settings
         public class BiotechRace
         {
             public SimpleCurve maleFertilityAgeFactor;
             public SimpleCurve femaleFertilityAgeFactor;
             public SimpleCurve noneFertilityAgeFactor;
             public SimpleCurve ageEffectOnChildbirth;
+            public int[] growthMoments;
         }
         public BiotechRace biotech;
-        //Growth ages?
 
         //Misc Settings
         public float? minAgeForAdulthood;
@@ -181,6 +182,63 @@ namespace BetterRomance
                 biotech.femaleFertilityAgeFactor = settings.femaleFertilityAgeFactor;
                 biotech.noneFertilityAgeFactor = settings.noneFertilityAgeFactor;
                 biotech.ageEffectOnChildbirth = settings.ageEffectOnChildbirth;
+            }
+            if (Settings.HARActive)
+            {
+                biotech.growthMoments = HAR_Integration.GetGrowthMoments(race);
+            }
+            else
+            {
+                biotech.growthMoments = GrowthUtility.GrowthMomentAges;
+            }
+            //Do some stuff here to make sure the ages are reasonable
+            if (biotech.growthMoments != null)
+            {
+                //We cast to int in case people have used decimals in lifestages, because growth moments should be int
+                int adultAge = (int)Math.Ceiling(race.race.lifeStageAges.FirstOrDefault((LifeStageAge lifeStageAge) => lifeStageAge.def.developmentalStage.Adult())?.minAge ?? 0f);
+                int childAge = (int)Math.Ceiling(race.race.lifeStageAges.FirstOrDefault((LifeStageAge lifeStageAge) => lifeStageAge.def.developmentalStage.Child())?.minAge ?? 0f);
+                if (biotech.growthMoments[2] != adultAge || childAge > biotech.growthMoments[0])
+                {
+                    //Something has gone wrong and growth moments need to be calculated
+                    Log.Warning("Growth moment ages for " + race.defName + " do not make sense. Child at " + childAge + ", adult at " + adultAge + ", growth ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
+                    biotech.growthMoments = GrowthMomentArray(childAge, adultAge);
+                    Log.Warning("New ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
+                }
+            }
+            //We don't assign a default because some races intentionally have null growthAges
+        }
+
+        private int[] GrowthMomentArray(int childAge, int adultAge)
+        {
+            int difference = adultAge - childAge;
+            int interval = difference / 3;
+            if (difference % 3 == 0)
+            {
+                return new int[] {
+                            childAge + interval,
+                            childAge + (interval * 2),
+                            adultAge,
+                        };
+            }
+            else if (difference % 3 == 1)
+            {
+                return new int[] {
+                            childAge + interval + 1,
+                            childAge + (interval * 2) + 1,
+                            adultAge,
+                        };
+            }
+            else if (difference % 3 == 2)
+            {
+                return new int[] {
+                            childAge + interval + 1,
+                            childAge + (interval * 2) + 2,
+                            adultAge,
+                        };
+            }
+            else
+            {
+                throw new Exception("Somehow " + difference + " % 3 does not equal 0, 1, or 2");
             }
         }
     }

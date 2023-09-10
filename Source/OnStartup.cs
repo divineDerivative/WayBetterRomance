@@ -19,7 +19,6 @@ namespace BetterRomance
             {
                 SettingsUtilities.GrabBiotechStuff();
             }
-            MakeRaceSettingsList();
             Harmony harmony = new Harmony(id: "rimworld.divineDerivative.romance");
             harmony.PatchAll();
 
@@ -105,6 +104,7 @@ namespace BetterRomance
 
             MakeFertilityModList();
             Settings.ApplyJoySettings();
+            MakeRaceSettingsList();
         }
 
         public static void MakeRaceSettingsList()

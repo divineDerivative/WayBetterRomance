@@ -22,9 +22,9 @@ namespace BetterRomance
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static int[] GetGrowthMoments(Pawn pawn)
+        public static int[] GetGrowthMoments(ThingDef race)
         {
-            if (pawn.def is ThingDef_AlienRace alienRace)
+            if (race is ThingDef_AlienRace alienRace)
             {
                 if (alienRace.alienRace.generalSettings.GrowthAges.NullOrEmpty())
                 {

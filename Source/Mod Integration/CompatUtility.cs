@@ -40,9 +40,11 @@ namespace BetterRomance
                     return !(bool)HelperClasses.AsimovGrowth.GetValue(pawnSettings);
                 }
             }
-            if (Settings.HARActive && HAR_Integration.GetGrowthMoments(pawn) == null)
+            WBR_SettingsComp settings = pawn.TryGetComp<WBR_SettingsComp>();
+            //For animals
+            if (settings != null)
             {
-                return true;
+                return settings.NoGrowth;
             }
             return false;
         }

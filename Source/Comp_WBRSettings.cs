@@ -13,6 +13,8 @@ namespace BetterRomance
         public RelationsPawn relations;
         public BiotechPawn biotech;
 
+        public bool NoGrowth => biotech.growthMoments == null;
+
         //Misc Settings
         public float minAgeForAdulthood;
         public int childAge;
@@ -343,6 +345,8 @@ namespace BetterRomance
             biotech.femaleFertilityAgeFactor = raceSettings.biotech.femaleFertilityAgeFactor;
             biotech.noneFertilityAgeFactor = raceSettings.biotech.noneFertilityAgeFactor;
             biotech.ageEffectOnChildbirth = raceSettings.biotech.ageEffectOnChildbirth;
+            //Growth moments are at the race level, so don't need to check pawnkinds
+            biotech.growthMoments = raceSettings.biotech.growthMoments;
 
             if (Pawn.kindDef.HasModExtension<BiotechSettings>())
             {
@@ -479,6 +483,6 @@ namespace BetterRomance
         public SimpleCurve femaleFertilityAgeFactor;
         public SimpleCurve noneFertilityAgeFactor;
         public SimpleCurve ageEffectOnChildbirth;
-        //Growth ages?
+        public int[] growthMoments;
     }
 }

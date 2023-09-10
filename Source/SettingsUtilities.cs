@@ -507,19 +507,8 @@ namespace BetterRomance
             {
                 return 0;
             }
-            if (Settings.HARActive)
-            {
-                int[] array = HAR_Integration.GetGrowthMoments(pawn);
-                if (array != null)
-                {
-                    return array[index];
-                }
-            }
-            else if (index == 2)
-            {
-                return (int)pawn.ageTracker.AdultMinAge;
-            }
-            return GrowthUtility.GrowthMomentAges[index];
+            int[] ages = GetBiotechSettings(pawn).growthMoments;
+            return ages[index];
         }
 
         public static float GetGrowthMomentAsFloat(Pawn pawn, int index)
