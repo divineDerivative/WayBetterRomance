@@ -12,16 +12,9 @@ namespace BetterRomance
         public RegularSexPawn regularSex;
         public RelationsPawn relations;
         public BiotechPawn biotech;
+        public RaceSettings.MiscSettings misc;
 
         public bool NoGrowth => biotech.growthMoments == null;
-
-        //Misc Settings
-        public float minAgeForAdulthood;
-        public int childAge;
-        public int adultAgeForLearning;
-        public int ageReversalDemandAge;
-        public SimpleCurve ageSkillFactor;
-        public SimpleCurve ageSkillMaxFactorCurve;
 
         public override void Initialize(CompProperties props)
         {
@@ -31,6 +24,7 @@ namespace BetterRomance
             regularSex = new RegularSexPawn();
             relations = new RelationsPawn();
             biotech = new BiotechPawn();
+            misc = new RaceSettings.MiscSettings();
 
             foreach (RaceSettings rs in Settings.RaceSettingsList)
             {
@@ -52,6 +46,7 @@ namespace BetterRomance
             SetRegularSexSettings();
             SetRelationSettings();
             SetBiotechSettings();
+            SetMiscSettings();
         }
 
         private void SetIfNotNull<T>(ref T result, T nullable)
@@ -418,6 +413,25 @@ namespace BetterRomance
                     new CurvePoint(40f, 0.3f),
                     new CurvePoint(65f, 0.0f),
                 };
+            }
+        }
+
+        private void SetMiscSettings()
+        {
+            //None of this should change at the pawn level, so we just copy directly
+            misc = raceSettings.misc;
+            //Except this one I guess
+            if (regularSex.declineAtAge != raceSettings.regularSex.declineAtAge)
+            {
+                //redo age reversal, but don't account for senescence
+                float adultAge = misc.minAgeForAdulthood;
+                float declineAge = regularSex.declineAtAge;
+                float result = adultAge + 5f;
+                if (declineAge - adultAge < 10f)
+                {
+                    result = adultAge + ((declineAge - adultAge) / 2);
+                }
+                misc.ageReversalDemandAge = (int)result;
             }
         }
     }

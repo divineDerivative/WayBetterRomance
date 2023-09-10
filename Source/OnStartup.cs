@@ -43,14 +43,14 @@ namespace BetterRomance
                 Settings.ATRActive = true;
                 HelperClasses.IsConsideredMechanicalAndroid = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanicalAndroid", new Type[] { typeof(Pawn) });
                 HelperClasses.IsConsideredMechanicalDrone = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanicalDrone", new Type[] { typeof(Pawn) });
-                HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanical", new Type[] { typeof(Pawn) });
+                HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanical", new Type[] { typeof(ThingDef) });
             }
             else if (ModsConfig.IsActive("Killathon.MechHumanlikes.AndroidTiersCore"))
             {
                 Settings.ATRActive = true;
                 HelperClasses.IsConsideredMechanicalAndroid = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanicalAndroid", new Type[] { typeof(Pawn) });
                 HelperClasses.IsConsideredMechanicalDrone = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanicalDrone", new Type[] { typeof(Pawn) });
-                HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanical", new Type[] { typeof(Pawn) });
+                HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanical", new Type[] { typeof(ThingDef) });
             }
             if (ModsConfig.IsActive("Neronix17.TweaksGalore"))
             {
@@ -93,8 +93,8 @@ namespace BetterRomance
             {
                 Settings.AsimovActive = true;
                 HelperClasses.IsHumanlikeAutomaton = AccessTools.DeclaredMethod(Type.GetType("Asimov.AutomatonUtil,Asimov"), "IsHumanlikeAutomaton");
-                Type PawnDef = Type.GetType("Asimov.PawnDef,Asimov");
-                HelperClasses.pawnSettings = AccessTools.Field(PawnDef, "pawnSettings");
+                HelperClasses.PawnDef = Type.GetType("Asimov.PawnDef,Asimov");
+                HelperClasses.pawnSettings = AccessTools.Field(HelperClasses.PawnDef, "pawnSettings");
                 HelperClasses.AsimovGrowth = AccessTools.Field(Type.GetType("Asimov.PawnSettings,Asimov"), "hasGrowthMoments");
             }
             if (ModsConfig.IsActive("RforReload.EdgesOfAcceptence"))
@@ -169,6 +169,7 @@ namespace BetterRomance
         public static MethodInfo IsHumanlikeAutomaton;
         public static FieldInfo AsimovGrowth;
         public static FieldInfo pawnSettings;
+        public static Type PawnDef;
     }
 
     public class MayRequireHARAttribute : MayRequireAttribute

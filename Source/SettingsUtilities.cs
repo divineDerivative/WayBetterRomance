@@ -521,6 +521,11 @@ namespace BetterRomance
         }
 
         //Miscellaneous age calculations
+        public static RaceSettings.MiscSettings GetMiscSettings(Pawn pawn)
+        {
+            WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            return comp?.misc;
+        }
 
         /// <summary>
         /// Age at which a pawn is given an adult backstory. Human default is 20
@@ -529,24 +534,16 @@ namespace BetterRomance
         /// <returns></returns>
         public static float GetMinAgeForAdulthood(Pawn pawn)
         {
-            if (pawn.HasNoGrowth())
+            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            //This can get called on animals/mechs
+            if (settings == null)
             {
-                return 0f;
+                return defaultMinAgeForAdulthood;
             }
-            if (Settings.HARActive)
-            {
-                if (HAR_Integration.UseHARAgeForAdulthood(pawn, out float age))
-                {
-                    return age;
-                }
-                //Put something here to calculate a reasonable age?
-                //HAR does the below if min age is not set
-                //Maybe I can co-opt that to do a more reasonable calculation?
-            }
-            return defaultMinAgeForAdulthood;
+            return settings.minAgeForAdulthood;
         }
 
-        private static readonly float defaultMinAgeForAdulthood = (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
+        public static readonly float defaultMinAgeForAdulthood = (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
 
         /// <summary>
         /// Finds the first life stage with a developmental stage of child and returns the minimum age of that stage. Human default is 3
@@ -555,8 +552,8 @@ namespace BetterRomance
         /// <returns>The age at which <paramref name="pawn"/> becomes a child.</returns>
         public static int ChildAge(Pawn pawn)
         {
-            float result = pawn.RaceProps.lifeStageAges.FirstOrDefault((LifeStageAge lifeStageAge) => lifeStageAge.def.developmentalStage.Child())?.minAge ?? 0f;
-            return (int)result;
+            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            return settings.childAge;
         }
 
         /// <summary>
@@ -566,13 +563,8 @@ namespace BetterRomance
         /// <returns></returns>
         public static int AdultAgeForLearning(Pawn pawn)
         {
-            float lifeStageMinAge = pawn.ageTracker.AdultMinAge;
-            float backstoryMinAge = GetMinAgeForAdulthood(pawn);
-            if (Settings.AsimovActive && (bool)HelperClasses.IsHumanlikeAutomaton?.Invoke(null, new object[] { pawn }) && pawn.HasNoGrowth())
-            {
-                backstoryMinAge = defaultMinAgeForAdulthood;
-            }
-            return (int)(Math.Round((backstoryMinAge - lifeStageMinAge) * .75f) + lifeStageMinAge);
+            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            return settings.adultAgeForLearning;
         }
 
         /// <summary>
@@ -582,39 +574,25 @@ namespace BetterRomance
         /// <returns></returns>
         public static int AgeReversalDemandAge(Pawn pawn)
         {
+            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
             //This is for animals, which won't have the comp, since this gets called during generation for ALL pawns
-            if (pawn.TryGetComp<WBR_SettingsComp>() is null)
+            if (settings == null)
             {
                 return 25;
             }
-            float adultAge = GetMinAgeForAdulthood(pawn);
-            float declineAge = pawn.DeclineAtAge();
-            float result = adultAge + 5f;
-            if (declineAge - adultAge < 10f)
-            {
-                result = adultAge + ((declineAge - adultAge) / 2);
-            }
-            return (int)result;
+            return settings.ageReversalDemandAge;
         }
 
         public static SimpleCurve AgeSkillFactor(Pawn pawn)
         {
-            return new SimpleCurve
-            {
-                new CurvePoint(ChildAge(pawn), 0.2f),
-                new CurvePoint(AdultAgeForLearning(pawn), 1f),
-            };
+            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            return settings.ageSkillFactor;
         }
 
         public static SimpleCurve AgeSkillMaxFactorCurve(Pawn pawn)
         {
-            return new SimpleCurve
-            {
-                new CurvePoint(0f,0f),
-                new CurvePoint(GetGrowthMoment(pawn, 1), 0.7f),
-                new CurvePoint(AdultAgeForLearning(pawn) * 2f, 1f),
-                new CurvePoint(pawn.RaceProps.lifeExpectancy - (pawn.RaceProps.lifeExpectancy/4), 1.6f),
-            };
+            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            return settings.ageSkillMaxFactorCurve;
         }
 
         /// <summary>

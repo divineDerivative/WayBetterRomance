@@ -97,11 +97,11 @@ namespace BetterRomance
             return true;
         }
 
-        public static bool UseHARAgeForAdulthood(Pawn pawn, out float age)
+        public static bool UseHARAgeForAdulthood(ThingDef race, out float age)
         {
-            if (pawn.def is ThingDef_AlienRace race)
+            if (race is ThingDef_AlienRace alienThingDef)
             {
-                age = race.alienRace.generalSettings.minAgeForAdulthood;
+                age = alienThingDef.alienRace.generalSettings.minAgeForAdulthood;
                 return true;
             }
             age = 20f;

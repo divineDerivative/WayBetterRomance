@@ -77,13 +77,16 @@ namespace BetterRomance
         }
         public BiotechRace biotech;
 
-        //Misc Settings
-        public float? minAgeForAdulthood;
-        public int? childAge;
-        public int? adultAgeForLearning;
-        public int? ageReversalDemandAge;
-        public SimpleCurve ageSkillFactor;
-        public SimpleCurve ageSkillMaxFactorCurve;
+        public class MiscSettings
+        {
+            public float minAgeForAdulthood = -1f;
+            public int childAge;
+            public int adultAgeForLearning;
+            public int ageReversalDemandAge;
+            public SimpleCurve ageSkillFactor;
+            public SimpleCurve ageSkillMaxFactorCurve;
+        }
+        public MiscSettings misc;
 
         public RaceSettings(ThingDef race)
         {
@@ -93,6 +96,7 @@ namespace BetterRomance
             regularSex = new RegularSexRace();
             relations = new RelationsRace();
             biotech = new BiotechRace();
+            misc = new MiscSettings();
         }
 
         public void SetOrientationChances()
@@ -183,13 +187,9 @@ namespace BetterRomance
                 biotech.noneFertilityAgeFactor = settings.noneFertilityAgeFactor;
                 biotech.ageEffectOnChildbirth = settings.ageEffectOnChildbirth;
             }
-            if (Settings.HARActive)
+            if (!race.RobotGrowthCheck())
             {
-                biotech.growthMoments = HAR_Integration.GetGrowthMoments(race);
-            }
-            else
-            {
-                biotech.growthMoments = GrowthUtility.GrowthMomentAges;
+                biotech.growthMoments = Settings.HARActive ? HAR_Integration.GetGrowthMoments(race) : GrowthUtility.GrowthMomentAges;
             }
             //Do some stuff here to make sure the ages are reasonable
             if (biotech.growthMoments != null)
@@ -240,6 +240,64 @@ namespace BetterRomance
             {
                 throw new Exception("Somehow " + difference + " % 3 does not equal 0, 1, or 2");
             }
+        }
+
+        public void SetMiscSettings()
+        {
+            //There's no extension for these, they are all directly calculated
+            //Min age for adulthood
+            if (biotech.growthMoments == null)
+            {
+                misc.minAgeForAdulthood = 0f;
+            }
+            else if (Settings.HARActive)
+            {
+                if (HAR_Integration.UseHARAgeForAdulthood(race, out float age))
+                {
+                    misc.minAgeForAdulthood = age;
+                }
+            }
+            //Put something here to calculate a reasonable age?
+            //HAR does the below if min age is not set
+            if (misc.minAgeForAdulthood == -1)
+            {
+                //Calculations to determine a reasonable age would go here, leave as default for now
+                misc.minAgeForAdulthood = SettingsUtilities.defaultMinAgeForAdulthood;
+            }
+
+            //Child age
+            misc.childAge = (int)(race.race.lifeStageAges.FirstOrDefault((LifeStageAge lifeStageAge) => lifeStageAge.def.developmentalStage.Child())?.minAge ?? 0);
+
+            //Adult age for learning
+            float lifeStageMinAge = race.race.lifeStageAges.FirstOrDefault((LifeStageAge lifeStageAge) => lifeStageAge.def.developmentalStage.Adult())?.minAge ?? 0f;
+            float backstoryMinAge = misc.minAgeForAdulthood;
+            misc.adultAgeForLearning = (int)(Math.Round((backstoryMinAge - lifeStageMinAge) * .75f) + lifeStageMinAge);
+
+            //Age reversal demand age
+            float adultAge = misc.minAgeForAdulthood;
+            float declineAge = regularSex.declineAtAge ?? 30f;
+            float result = adultAge + 5f;
+            if (declineAge - adultAge < 10f)
+            {
+                result = adultAge + ((declineAge - adultAge) / 2);
+            }
+            misc.ageReversalDemandAge = (int)result;
+
+            //Effect of age on skill
+            misc.ageSkillFactor = new SimpleCurve
+            {
+                new CurvePoint(misc.childAge, 0.2f),
+                new CurvePoint(misc.adultAgeForLearning, 1f),
+            };
+
+            //A different effect of age on skill
+            misc.ageSkillMaxFactorCurve = new SimpleCurve
+            {
+                new CurvePoint(0f,0f),
+                new CurvePoint(biotech.growthMoments[1], 0.7f),
+                new CurvePoint(misc.adultAgeForLearning * 2f, 1f),
+                new CurvePoint(race.race.lifeExpectancy - (race.race.lifeExpectancy/4), 1.6f),
+            };
         }
     }
 }
