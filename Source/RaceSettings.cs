@@ -92,14 +92,20 @@ namespace BetterRomance
         {
             this.race = race;
             orientation = new OrientationChanceRace();
+            SetOrientationChances();
             casualSex = new CasualSexRace();
+            SetCasualSexSettings();
             regularSex = new RegularSexRace();
+            SetRegularSexSettings();
             relations = new RelationsRace();
+            SetRelationSettings();
             biotech = new BiotechRace();
+            SetBiotechSettings();
             misc = new MiscSettings();
+            SetMiscSettings();
         }
 
-        public void SetOrientationChances()
+        private void SetOrientationChances()
         {
             if (race.HasModExtension<SexualityChances>())
             {
@@ -117,7 +123,7 @@ namespace BetterRomance
             }
         }
 
-        public void SetCasualSexSettings()
+        private void SetCasualSexSettings()
         {
             if (race.HasModExtension<CasualSexSettings>())
             {
@@ -139,7 +145,7 @@ namespace BetterRomance
             }
         }
 
-        public void SetRegularSexSettings()
+        private void SetRegularSexSettings()
         {
             if (race.HasModExtension<RegularSexSettings>())
             {
@@ -151,7 +157,7 @@ namespace BetterRomance
             }
         }
 
-        public void SetRelationSettings()
+        private void SetRelationSettings()
         {
             if (race.HasModExtension<RelationSettings>())
             {
@@ -176,7 +182,7 @@ namespace BetterRomance
             }
         }
 
-        public void SetBiotechSettings()
+        private void SetBiotechSettings()
         {
             if (race.HasModExtension<BiotechSettings>())
             {
@@ -242,7 +248,7 @@ namespace BetterRomance
             }
         }
 
-        public void SetMiscSettings()
+        private void SetMiscSettings()
         {
             //There's no extension for these, they are all directly calculated
             //Min age for adulthood

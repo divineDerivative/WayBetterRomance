@@ -112,20 +112,8 @@ namespace BetterRomance
             foreach (ThingDef race in DefDatabase<ThingDef>.AllDefsListForReading.Where(td => td.race != null && td.race.Humanlike))
             {
                 race.comps.Add(new CompProperties(typeof(WBR_SettingsComp)));
-                Settings.RaceSettingsList.Add(InitRaceSettings(race));
+                Settings.RaceSettingsList.Add(new RaceSettings(race));
             }
-        }
-
-        private static RaceSettings InitRaceSettings(ThingDef race)
-        {
-            RaceSettings settings = new RaceSettings(race);
-            settings.SetOrientationChances();
-            settings.SetCasualSexSettings();
-            settings.SetRegularSexSettings();
-            settings.SetRelationSettings();
-            settings.SetBiotechSettings();
-
-            return settings;
         }
 
         private static void MakeFertilityModList()
