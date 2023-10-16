@@ -91,15 +91,8 @@ namespace BetterRomance.HarmonyPatches
                     if (initiator.relations.DirectRelationExists(rel, recipient))
                     {
                         initiator.relations.RemoveDirectRelation(rel, recipient);
-                        PawnRelationDef exRel = rel.GetModExtension<LoveRelations>().exLoveRelation;
-                        if (exRel == null)
-                        {
-                            initiator.relations.AddDirectRelation(PawnRelationDefOf.ExLover, recipient);
-                        }
-                        else
-                        {
-                            initiator.relations.AddDirectRelation(exRel, recipient);
-                        }
+                        initiator.relations.AddDirectRelation(rel.GetModExtension<LoveRelations>().exLoveRelation ?? PawnRelationDefOf.ExLover, recipient);
+                        //We only want to add the break up thought once
                         if (!thoughtAdded)
                         {
                             recipient.needs.mood?.thoughts.memories.TryGainMemory(ThoughtDefOf.BrokeUpWithMe, initiator);
@@ -107,7 +100,8 @@ namespace BetterRomance.HarmonyPatches
                         }
                     }
                 }
-                if (!initiator.relations.DirectRelationExists(PawnRelationDefOf.Lover, recipient) && !initiator.relations.DirectRelationExists(PawnRelationDefOf.Fiance, recipient))
+                //If they don't have either of the vanilla non-spouse love relations, and we didn't add ex lover, then we need to prevent VRE from adding ex lover
+                if (!initiator.relations.DirectRelationExists(PawnRelationDefOf.Lover, recipient) && !initiator.relations.DirectRelationExists(PawnRelationDefOf.Fiance, recipient) && !initiator.relations.DirectRelationExists(PawnRelationDefOf.ExLover, recipient))
                 {
                     __state = true;
                 }
@@ -117,6 +111,7 @@ namespace BetterRomance.HarmonyPatches
 
         public static void VREProcessBreakupsPostfix(Pawn initiator, Pawn recipient, bool __state)
         {
+            //Remove ex lover if it shouldn't have been added in the first place
             if (__state)
             {
                 initiator.relations.TryRemoveDirectRelation(PawnRelationDefOf.ExLover, recipient);
