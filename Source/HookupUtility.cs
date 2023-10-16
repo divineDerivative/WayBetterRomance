@@ -185,7 +185,7 @@ namespace BetterRomance
             //Don't allow if fertility requirements are not met
             if (!SettingsUtilities.MeetsHookupBreedingRequirement(initiator, target))
             {
-                return "WBR.CantHookupTargetInfertile".Translate();
+                return "WBR.CantHookupTargetPregnancy".Translate();
             }
             //Next check if target is eligible for hookups
             AcceptanceReport acceptanceReport = HookupEligible(target, initiator: false);
