@@ -72,7 +72,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 bool romanceDrawn = (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, new object[] { pawn });
                 //Adjust x position based on if romance button is present
-                float width = romanceDrawn ? rect.width - 150f - ButtonSize.x - padding : rect.width - 150f + (padding*2);
+                float width = romanceDrawn ? rect.width - 150f - ButtonSize.x + padding : rect.width - 150f + (padding * 2);
                 DrawTryHookup(new Rect(width, rect.height - ButtonSize.y, ButtonSize.x, ButtonSize.y), pawn);
             }
         }
