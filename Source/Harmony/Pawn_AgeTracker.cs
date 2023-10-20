@@ -97,18 +97,4 @@ namespace BetterRomance.HarmonyPatches
             }
         }
     }
-
-    [HarmonyPatch(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.ExposeData))]
-    public static class Pawn_AgeTracker_ExposeData
-    {
-        //This will initialize the comp for existing pawns on loading
-        public static void Postfix(Pawn_AgeTracker __instance, Pawn ___pawn)
-        {
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
-            {
-                WBR_SettingsComp comp = ___pawn.TryGetComp<WBR_SettingsComp>();
-                comp?.ApplySettings();
-            }
-        }
-    }
 }
