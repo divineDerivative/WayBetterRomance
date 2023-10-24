@@ -305,14 +305,18 @@ namespace BetterRomance
             return Orientation.None;
         }
 
+        private static List<TraitDef> asexualTraits = new List<TraitDef> { TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce };
+
         public static bool IsAsexual(this Pawn pawn)
         {
             if (pawn.story != null && pawn.story.traits != null)
             {
-                TraitSet traits = pawn.story.traits;
-                if (traits.HasTrait(TraitDefOf.Asexual) || traits.HasTrait(RomanceDefOf.BiAce) || traits.HasTrait(RomanceDefOf.HeteroAce) || traits.HasTrait(RomanceDefOf.HomoAce))
+                foreach (Trait trait in pawn.story.traits.allTraits)
                 {
-                    return true;
+                    if (asexualTraits.Contains(trait.def) && !trait.Suppressed)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
