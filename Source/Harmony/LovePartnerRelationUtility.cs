@@ -54,12 +54,12 @@ namespace BetterRomance.HarmonyPatches
                     sexualityFactor = generated.AsexualRating();
                 }
                 //Separate now that asexuality is a spectrum
-                if (generated.GetOrientation() == Orientation.None)
+                if (generated.IsAro())
                 {
                     __result = 0f;
                     return false;
                 }
-                else if (generated.GetOrientation() == Orientation.Homo)
+                else if (generated.IsHomo())
                 {
                     if (other.gender != generated.gender)
                     {
@@ -67,7 +67,7 @@ namespace BetterRomance.HarmonyPatches
                         return false;
                     }
                 }
-                else if (generated.GetOrientation() == Orientation.Hetero)
+                else if (generated.IsHetero())
                 {
                     if (other.gender == generated.gender)
                     {

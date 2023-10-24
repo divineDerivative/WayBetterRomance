@@ -318,6 +318,26 @@ namespace BetterRomance
             return false;
         }
 
+        public static bool IsHomo(this Pawn pawn)
+        {
+            return pawn.GetOrientation() == Orientation.Homo;
+        }
+
+        public static bool IsHetero(this Pawn pawn)
+        {
+            return pawn.GetOrientation() == Orientation.Hetero;
+        }
+
+        public static bool IsBi(this Pawn pawn)
+        {
+            return pawn.GetOrientation() == Orientation.Bi;
+        }
+
+        public static bool IsAro(this Pawn pawn)
+        {
+            return pawn.GetOrientation() == Orientation.None;
+        }
+
         /// <summary>
         /// Generates points for the lovin age curve based on age settings
         /// </summary>
@@ -388,14 +408,14 @@ namespace BetterRomance
             {
                 factor *= pawn.AsexualRating() / 2;
             }
-            if (pawn.GetOrientation() == Orientation.Homo)
+            if (pawn.IsHomo())
             {
                 if (target.gender != pawn.gender)
                 {
                     factor *= 0.125f;
                 }
             }
-            if (pawn.GetOrientation() == Orientation.Hetero)
+            if (pawn.IsHetero())
             {
                 if (target.gender == pawn.gender)
                 {

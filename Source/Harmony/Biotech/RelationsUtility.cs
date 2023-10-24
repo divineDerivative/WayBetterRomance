@@ -190,20 +190,19 @@ namespace BetterRomance.HarmonyPatches
             pawn.EnsureTraits();
             if (pawn.story != null)
             {
-                Orientation orientation = pawn.GetOrientation();
-                if (orientation == Orientation.None)
+                if (pawn.IsAro())
                 {
                     __result = false;
                 }
-                else if (orientation == Orientation.Homo)
+                else if (pawn.IsHomo())
                 {
                     __result = pawn.gender == gender;
                 }
-                else if (orientation == Orientation.Hetero)
+                else if (pawn.IsHetero())
                 {
                     __result = pawn.gender != gender;
                 }
-                else if (orientation == Orientation.Bi)
+                else if (pawn.IsBi())
                 {
                     __result = true;
                 }

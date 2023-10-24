@@ -13,7 +13,7 @@ namespace BetterRomance.HarmonyPatches
         {
             //This patch only runs if spouses are not allowed by the new parent's race/pawnkind settings or one pawn is gay
             //Pretty sure this will never have two pawns with the same gender
-            if (!generated.SpouseAllowed() || generated.GetOrientation() == Orientation.Homo || other.GetOrientation() == Orientation.Homo)
+            if (!generated.SpouseAllowed() || generated.IsHomo() || other.IsHomo())
             {
                 if (generated.gender == Gender.Male)
                 {
@@ -21,7 +21,7 @@ namespace BetterRomance.HarmonyPatches
                     AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, new object[] { request, other, other.GetMother() });
                     if (other.GetMother() != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && other.GetOrientation() != Orientation.Homo)
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && !other.IsHomo())
                         {
                             generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetMother());
                         }
@@ -37,7 +37,7 @@ namespace BetterRomance.HarmonyPatches
                     AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, new object[] { request, other, other.GetFather() });
                     if (other.GetFather() != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && other.GetOrientation() != Orientation.Homo)
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && !other.IsHomo())
                         {
                             generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetFather());
                         }
