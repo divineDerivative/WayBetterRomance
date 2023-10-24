@@ -39,7 +39,7 @@ namespace BetterRomance
             foreach (Pawn p in GetAllLoveRelationPawns(pawn, false, false))
             {
                 //If the pawns have different ideos, I think this will check if the partner would feel cheated on per their ideo and settings
-                if (!new HistoryEvent(pawn.GetHistoryEventForLoveRelationCountPlusOne()).WillingToDoGendered(p, pawn.gender) && p.CaresAboutCheating())
+                if (!new HistoryEvent(pawn.GetHistoryEventForLoveRelationCountPlusOne()).WillingToDoGendered(p.Ideo, pawn.gender) && p.CaresAboutCheating())
                 {
                     cheaterList.Add(p);
                 }
@@ -410,10 +410,15 @@ namespace BetterRomance
             return pawn.health?.hediffSet?.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer) ?? false;
         }
 
-        public static bool WillingToDoGendered(this HistoryEvent ev, Pawn pawnForIdeo, Gender gender)
+        /// <summary>
+        /// Whether a pawn with the given <paramref name="ideo"/> and <paramref name="gender"/> is able to do an event <paramref name="ev"/>
+        /// </summary>
+        /// <param name="ev"></param>
+        /// <param name="ideo"></param>
+        /// <param name="gender"></param>
+        /// <returns></returns>
+        public static bool WillingToDoGendered(this HistoryEvent ev, Ideo ideo, Gender gender)
         {
-            //We grab the pawn's ideo
-            Ideo ideo = pawnForIdeo.Ideo;
             //Look at each precept
             foreach (Precept precept in (List<Precept>)AccessTools.Field(typeof(Ideo), "precepts").GetValue(ideo))
             {
