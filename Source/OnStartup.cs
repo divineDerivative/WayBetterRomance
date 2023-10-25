@@ -15,6 +15,10 @@ namespace BetterRomance
         {
             SettingsUtilities.MakeAdditionalLoveRelationsLists();
             SettingsUtilities.MakeTraitList();
+            if (ModsConfig.BiotechActive)
+            {
+                SettingsUtilities.GrabBiotechStuff();
+            }
             Harmony harmony = new Harmony(id: "rimworld.divineDerivative.romance");
             harmony.PatchAll();
 

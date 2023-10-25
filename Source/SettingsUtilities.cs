@@ -534,6 +534,13 @@ namespace BetterRomance
             return null;
         }
 
+        internal static void GrabBiotechStuff()
+        {
+            femaleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "femaleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
+            maleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "maleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
+            childBirthByAgeCurve = RitualOutcomeEffectDefOf.ChildBirth.comps.Find(c => c is RitualOutcomeComp_PawnAge) as RitualOutcomeComp_PawnAge;
+        }
+
         public static SimpleCurve GetFertilityAgeCurve(this Pawn pawn)
         {
             BiotechSettings settings = GetBiotechSettings(pawn);
@@ -551,8 +558,8 @@ namespace BetterRomance
             }
         }
 
-        private static SimpleCurve femaleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "femaleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
-        private static SimpleCurve maleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "maleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
+        private static SimpleCurve femaleFertilityAgeFactor;
+        private static SimpleCurve maleFertilityAgeFactor;
         private static SimpleCurve GetDefaultFertilityAgeCurve(Gender gender)
         {
             //This will preserve any xml patches that might be made to the default curves
@@ -587,7 +594,7 @@ namespace BetterRomance
             return settings != null ? settings.ageEffectOnChildbirth : GetDefaultChildbirthAgeCurve();
         }
 
-        private static RitualOutcomeComp_PawnAge childBirthByAgeCurve = RitualOutcomeEffectDefOf.ChildBirth.comps.Find(c => c is RitualOutcomeComp_PawnAge) as RitualOutcomeComp_PawnAge;
+        private static RitualOutcomeComp_PawnAge childBirthByAgeCurve;
         private static SimpleCurve GetDefaultChildbirthAgeCurve()
         {
             //This will preserve any xml patches that might be made to the default curve
