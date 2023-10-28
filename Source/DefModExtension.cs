@@ -8,36 +8,72 @@ namespace BetterRomance
 {
     public class SexualityChances : DefModExtension
     {
-        public float? asexualChance;
-        public float? bisexualChance;
-        public float? gayChance;
-        public float? straightChance;
+        public UnifiedOrientationChances sexual;
+        public UnifiedOrientationChances asexual;
 
-        public float? aceAroChance;
-        public float? aceBiChance;
-        public float? aceHomoChance;
-        public float? aceHeteroChance;
+        public float asexualChance = -999f;
+        public float bisexualChance = -999f;
+        public float gayChance = -999f;
+        public float straightChance = -999f;
 
+        public float aceAroChance = -999f;
+        public float aceBiChance = -999f;
+        public float aceHomoChance = -999f;
+        public float aceHeteroChance = -999f;
+
+        //Need to make sure these all work as expected
         public override IEnumerable<string> ConfigErrors()
         {
-            if (asexualChance + bisexualChance + gayChance + straightChance != 100f)
+            //Convert old values to the new form
+            if (sexual == null)
             {
-                //Do math here to reset rates?
-                yield return "Sexuality chances must add up to 100";
+                if (asexualChance != -999f || bisexualChance != -999f || gayChance != -999f || straightChance != -999f)
+                {
+                    sexual = new UnifiedOrientationChances
+                    {
+                        none = asexualChance,
+                        bi = bisexualChance,
+                        homo = gayChance,
+                        hetero = straightChance,
+                    };
+                }
             }
-            //If not set, default to orientation chances
-            if (asexualChance != 0f && aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance == 0f)
+            if (asexual == null)
             {
-                LogUtil.Warning("Romantic orientation chances for asexual pawns not found. Defaulting to match sexual orientation chances.");
-                aceAroChance = asexualChance;
-                aceBiChance = bisexualChance;
-                aceHomoChance = gayChance;
-                aceHeteroChance = straightChance;
+                if (aceAroChance != -999f || aceBiChance != -999f || aceHomoChance != -999f || aceHeteroChance != -999f)
+                {
+                    asexual = new UnifiedOrientationChances
+                    {
+                        none = aceAroChance,
+                        bi = aceBiChance,
+                        homo = aceHomoChance,
+                        hetero = aceHeteroChance,
+                    };
+                }
             }
-            if (aceAroChance + aceBiChance + aceHomoChance + aceHeteroChance != 100f)
+            if (sexual != null)
             {
-                //Do math here to reset rates?
-                yield return "Asexual romantic orientation chances must add up to 100";
+                if (sexual.AreAnyUnset(out string list))
+                {
+                    yield return "Chances must be set for all sexual orientations. These are missing assignment:" + list;
+                }
+                if (!sexual.TotalCorrect)
+                {
+                    //Do math here to reset rates?
+                    yield return "Sexuality chances must add up to 100";
+                }
+            }
+            if (asexual != null)
+            {
+                if (asexual.AreAnyUnset(out string list))
+                {
+                    yield return "Chances must be set for all asexual romantic orientations. These are missing assignment:" + list;
+                }
+                if (!asexual.TotalCorrect)
+                {
+                    //Do math here to reset rates?
+                    yield return "Asexual romantic orientation chances must add up to 100";
+                }
             }
         }
     }
@@ -51,6 +87,8 @@ namespace BetterRomance
         public float? alienLoveChance;
         public HookupTrigger hookupTriggers;
         public HookupTrigger orderedHookupTriggers;
+
+        //These will all need changed
         public override IEnumerable<string> ConfigErrors()
         {
             if (hookupRate == -1)
@@ -118,11 +156,14 @@ namespace BetterRomance
 
     public class RegularSexSettings : DefModExtension
     {
-        public float? minAgeForSex;
-        public float? maxAgeForSex;
-        public float? maxAgeGap;
-        public float? declineAtAge;
+        //Maybe change these to initialize at -1? That way I wouldn't need two separate classes
+        //Would need to change up the config errors
+        public float minAgeForSex = -999f;
+        public float maxAgeForSex = -999f;
+        public float maxAgeGap = -999f;
+        public float declineAtAge = -999f;
 
+        //Will need to redo the config errors to account for unassigned values
         public override IEnumerable<string> ConfigErrors()
         {
             if (minAgeForSex > declineAtAge)
@@ -149,6 +190,17 @@ namespace BetterRomance
             {
                 yield return "declineAtAge must be a positive number";
             }
+        }
+
+        public CompSettingsRegularSex CopyToRace()
+        {
+            return new CompSettingsRegularSex
+            {
+                minAgeForSex = minAgeForSex,
+                maxAgeForSex= maxAgeForSex,
+                maxAgeGap = maxAgeGap,
+                declineAtAge = declineAtAge,
+            };
         }
     }
 
@@ -238,6 +290,29 @@ namespace BetterRomance
             {
                 yield return "Minimum opinion must be between 100 and -100";
             }
+
+            //I wanna put a thing here to put these values into a CompRaceSettingsRelations object
+            //Or can just do the copy thing like I did for regular sex
+        }
+
+        public CompSettingsRelationsRace CopyToRace()
+        {
+            return new CompSettingsRelationsRace
+            {
+                spousesAllowed = spousesAllowed,
+                childrenAllowed = childrenAllowed,
+                pawnKindForParentGlobal = pawnKindForParentGlobal,
+                pawnKindForParentFemale = pawnKindForParentFemale,
+                pawnKindForParentMale = pawnKindForParentMale,
+                minFemaleAgeToHaveChildren = minFemaleAgeToHaveChildren,
+                usualFemaleAgeToHaveChildren = usualFemaleAgeToHaveChildren,
+                maxFemaleAgeToHaveChildren = maxFemaleAgeToHaveChildren,
+                minMaleAgeToHaveChildren = minMaleAgeToHaveChildren,
+                usualMaleAgeToHaveChildren = usualMaleAgeToHaveChildren,
+                maxMaleAgeToHaveChildren = maxMaleAgeToHaveChildren,
+                maxChildrenDesired = maxChildrenDesired,
+                minOpinionRomance = minOpinionRomance,
+            };
         }
     }
 
@@ -250,39 +325,20 @@ namespace BetterRomance
 
     public class BiotechSettings : DefModExtension
     {
-        public SimpleCurve maleFertilityAgeFactor = new SimpleCurve
-        {
-            new CurvePoint(14f, 0f),
-            new CurvePoint(18f, 1f),
-            new CurvePoint(50f, 1f),
-            new CurvePoint(90f, 0f),
-        };
-        public SimpleCurve femaleFertilityAgeFactor = new SimpleCurve
-        {
-            new CurvePoint(14f, 0f),
-            new CurvePoint(20f, 1f),
-            new CurvePoint(28f, 1f),
-            new CurvePoint(35f, 0.5f),
-            new CurvePoint(40f, 0.1f),
-            new CurvePoint(45f, 0.02f),
-            new CurvePoint(50f, 0f),
+        public SimpleCurve maleFertilityAgeFactor;
+        public SimpleCurve femaleFertilityAgeFactor;
+        public SimpleCurve noneFertilityAgeFactor;
+        public SimpleCurve ageEffectOnChildbirth;
 
-        };
-        public SimpleCurve noneFertilityAgeFactor = new SimpleCurve
+        public CompSettingsBiotech CopyToRace()
         {
-            new CurvePoint(14f, 0f),
-            new CurvePoint(18f, 1f),
-            new CurvePoint(50f, 1f),
-            new CurvePoint(90f, 0f),
-        };
-        public SimpleCurve ageEffectOnChildbirth = new SimpleCurve
-        {
-            new CurvePoint(14f, 0.0f),
-            new CurvePoint(15f, 0.3f),
-            new CurvePoint(20f, 0.5f),
-            new CurvePoint(30f, 0.5f),
-            new CurvePoint(40f, 0.3f),
-            new CurvePoint(65f, 0.0f),
-        };
+            return new CompSettingsBiotech
+            {
+                maleFertilityAgeFactor = maleFertilityAgeFactor,
+                femaleFertilityAgeFactor = femaleFertilityAgeFactor,
+                noneFertilityAgeFactor = noneFertilityAgeFactor,
+                ageEffectOnChildbirth = ageEffectOnChildbirth,
+            };
+        }
     }
 }

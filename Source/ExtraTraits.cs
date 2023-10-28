@@ -30,12 +30,25 @@ namespace BetterRomance
             }
             if (pawn.story != null)
             {
+                //Start with user settings
+                //Actually I can just grab whichever orientation object is relevant
+                //UnifiedOrientationChances sexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.sexual ?? BetterRomanceMod.settings.sexualOrientations;
+                //But I'll save this for later
+                float asexualChance = BetterRomanceMod.settings.sexualOrientations.none;
+                float bisexualChance = BetterRomanceMod.settings.sexualOrientations.bi;
+                float gayChance = BetterRomanceMod.settings.sexualOrientations.homo;
+                float straightChance = BetterRomanceMod.settings.sexualOrientations.hetero;
+
+                //Overwrite if settings exist on comp
                 WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
-                OrientationChancePawn chances = comp.orientation;
-                float asexualChance = chances.asexualChance ?? BetterRomanceMod.settings.asexualChance;
-                float bisexualChance = chances.bisexualChance ?? BetterRomanceMod.settings.bisexualChance;
-                float gayChance = chances.gayChance ?? BetterRomanceMod.settings.gayChance;
-                float straightChance = chances.straightChance ?? BetterRomanceMod.settings.straightChance;
+                UnifiedOrientationChances chances = comp.orientation?.sexual;
+                if (chances != null)
+                {
+                    asexualChance = chances.none;
+                    bisexualChance = chances.bi;
+                    gayChance = chances.homo;
+                    straightChance = chances.hetero;
+                }
 
                 //Check for existing partners first
                 bool mightBeStraight = false;
@@ -66,10 +79,19 @@ namespace BetterRomance
                     else
                     {
                         //Set up romantic orientation chances
-                        float aceAroChance = chances.aceAroChance ?? BetterRomanceMod.settings.aceAroChance;
-                        float aceBiChance = chances.aceBiChance ?? BetterRomanceMod.settings.aceBiChance;
-                        float aceHomoChance = chances.aceHomoChance ?? BetterRomanceMod.settings.aceHomoChance;
-                        float aceHeteroChance = chances.aceHeteroChance ?? BetterRomanceMod.settings.aceHeteroChance;
+                        float aceAroChance = BetterRomanceMod.settings.asexualOrientations.none;
+                        float aceBiChance = BetterRomanceMod.settings.asexualOrientations.bi;
+                        float aceHomoChance = BetterRomanceMod.settings.asexualOrientations.homo;
+                        float aceHeteroChance = BetterRomanceMod.settings.asexualOrientations.hetero;
+
+                        UnifiedOrientationChances asexualChances = comp.orientation?.asexual;
+                        if (asexualChances != null)
+                        {
+                            aceAroChance = asexualChances.none;
+                            aceBiChance = asexualChances.bi;
+                            aceHomoChance = asexualChances.homo;
+                            aceHeteroChance = asexualChances.hetero;
+                        }
 
                         if (mightBeGay)
                         {

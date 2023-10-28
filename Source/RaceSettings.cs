@@ -7,101 +7,27 @@ namespace BetterRomance
     public class RaceSettings
     {
         public ThingDef race;
-
-        public class OrientationChanceRace
-        {
-            public float? asexualChance;
-            public float? bisexualChance;
-            public float? gayChance;
-            public float? straightChance;
-
-            public float? aceAroChance;
-            public float? aceBiChance;
-            public float? aceHomoChance;
-            public float? aceHeteroChance;
-        }
-        public OrientationChanceRace orientation;
-
-        public class CasualSexRace
-        {
-            public bool? caresAboutCheating;
-            public bool? willDoHookup;
-            public bool? canDoOrderedHookup;
-            public float? hookupRate;
-            public float? alienLoveChance;
-            public int? minOpinionForHookup;
-            public int? minOpinionForOrderedHookup;
-            public bool? forBreedingOnly;
-            //Maybe put the hookup traits here
-        }
-        public CasualSexRace casualSex;
-
-        public class RegularSexRace
-        {
-            public float? minAgeForSex;
-            public float? maxAgeForSex;
-            public float? maxAgeGap;
-            public float? declineAtAge;
-        }
-        public RegularSexRace regularSex;
-
-        public class RelationsRace
-        {
-            public bool? spousesAllowed;
-            public bool? childrenAllowed;
-
-            public PawnKindDef pawnKindForParentGlobal;
-            public PawnKindDef pawnKindForParentFemale;
-            public PawnKindDef pawnKindForParentMale;
-
-            public float? minFemaleAgeToHaveChildren;
-            public float? usualFemaleAgeToHaveChildren;
-            public float? maxFemaleAgeToHaveChildren;
-
-            public float? minMaleAgeToHaveChildren;
-            public float? usualMaleAgeToHaveChildren;
-            public float? maxMaleAgeToHaveChildren;
-
-            public int? maxChildrenDesired;
-            public int? minOpinionRomance;
-        }
-        public RelationsRace relations;
-
-        public class BiotechRace
-        {
-            public SimpleCurve maleFertilityAgeFactor;
-            public SimpleCurve femaleFertilityAgeFactor;
-            public SimpleCurve noneFertilityAgeFactor;
-            public SimpleCurve ageEffectOnChildbirth;
-            public int[] growthMoments;
-        }
-        public BiotechRace biotech;
-
-        public class MiscSettings
-        {
-            public float minAgeForAdulthood = -1f;
-            public int childAge;
-            public int adultAgeForLearning;
-            public int ageReversalDemandAge;
-            public SimpleCurve ageSkillFactor;
-            public SimpleCurve ageSkillMaxFactorCurve;
-        }
-        public MiscSettings misc;
+        public CompSettingsOrientation orientation;
+        public CompSettingsCasualSexRace casualSex;
+        public CompSettingsRegularSex regularSex;
+        public CompSettingsRelationsRace relations;
+        public CompSettingsBiotech biotech;
+        public CompSettingsMisc misc;
 
         public RaceSettings(ThingDef race)
         {
             this.race = race;
-            orientation = new OrientationChanceRace();
+            orientation = new CompSettingsOrientation();
             SetOrientationChances();
-            casualSex = new CasualSexRace();
+            casualSex = new CompSettingsCasualSexRace();
             SetCasualSexSettings();
-            regularSex = new RegularSexRace();
+            regularSex = new CompSettingsRegularSex();
             SetRegularSexSettings();
-            relations = new RelationsRace();
+            relations = new CompSettingsRelationsRace();
             SetRelationSettings();
-            biotech = new BiotechRace();
+            biotech = new CompSettingsBiotech();
             SetBiotechSettings();
-            misc = new MiscSettings();
+            misc = new CompSettingsMisc();
             SetMiscSettings();
         }
 
@@ -110,16 +36,8 @@ namespace BetterRomance
             if (race.HasModExtension<SexualityChances>())
             {
                 SexualityChances chances = race.GetModExtension<SexualityChances>();
-
-                orientation.asexualChance = chances.asexualChance;
-                orientation.bisexualChance = chances.bisexualChance;
-                orientation.gayChance = chances.gayChance;
-                orientation.straightChance = chances.straightChance;
-
-                orientation.aceAroChance = chances.aceAroChance;
-                orientation.aceBiChance = chances.aceBiChance;
-                orientation.aceHomoChance = chances.aceHomoChance;
-                orientation.aceHeteroChance = chances.aceHeteroChance;
+                orientation.sexual = chances.sexual?.Copy;
+                orientation.asexual = chances.asexual?.Copy;
             }
         }
 
@@ -149,11 +67,7 @@ namespace BetterRomance
         {
             if (race.HasModExtension<RegularSexSettings>())
             {
-                RegularSexSettings settings = race.GetModExtension<RegularSexSettings>();
-                regularSex.minAgeForSex = settings.minAgeForSex;
-                regularSex.maxAgeForSex = settings.maxAgeForSex;
-                regularSex.maxAgeGap = settings.maxAgeGap;
-                regularSex.declineAtAge = settings.declineAtAge;
+                regularSex = race.GetModExtension<RegularSexSettings>().CopyToRace();
             }
         }
 
@@ -162,23 +76,7 @@ namespace BetterRomance
             if (race.HasModExtension<RelationSettings>())
             {
                 RelationSettings settings = race.GetModExtension<RelationSettings>();
-                relations.spousesAllowed = settings.spousesAllowed;
-                relations.childrenAllowed = settings.childrenAllowed;
-
-                relations.pawnKindForParentGlobal = settings.pawnKindForParentGlobal;
-                relations.pawnKindForParentFemale = settings.pawnKindForParentFemale;
-                relations.pawnKindForParentMale = settings.pawnKindForParentMale;
-
-                relations.minFemaleAgeToHaveChildren = settings.minFemaleAgeToHaveChildren;
-                relations.usualFemaleAgeToHaveChildren = settings.usualFemaleAgeToHaveChildren;
-                relations.maxFemaleAgeToHaveChildren = settings.maxFemaleAgeToHaveChildren;
-
-                relations.minMaleAgeToHaveChildren = settings.minMaleAgeToHaveChildren;
-                relations.usualMaleAgeToHaveChildren = settings.usualMaleAgeToHaveChildren;
-                relations.maxMaleAgeToHaveChildren = settings.maxMaleAgeToHaveChildren;
-
-                relations.maxChildrenDesired = settings.maxChildrenDesired;
-                relations.minOpinionRomance = settings.minOpinionRomance;
+                relations = settings.CopyToRace();
             }
         }
 
@@ -187,11 +85,7 @@ namespace BetterRomance
             if (race.HasModExtension<BiotechSettings>())
             {
                 BiotechSettings settings = race.GetModExtension<BiotechSettings>();
-
-                biotech.maleFertilityAgeFactor = settings.maleFertilityAgeFactor;
-                biotech.femaleFertilityAgeFactor = settings.femaleFertilityAgeFactor;
-                biotech.noneFertilityAgeFactor = settings.noneFertilityAgeFactor;
-                biotech.ageEffectOnChildbirth = settings.ageEffectOnChildbirth;
+                biotech = settings.CopyToRace();
             }
             if (!race.RobotGrowthCheck())
             {
@@ -281,7 +175,7 @@ namespace BetterRomance
 
             //Age reversal demand age
             float adultAge = misc.minAgeForAdulthood;
-            float declineAge = regularSex.declineAtAge ?? 30f;
+            float declineAge = regularSex.declineAtAge == -999f ? 30f : regularSex.declineAtAge;
             float result = adultAge + 5f;
             if (declineAge - adultAge < 10f)
             {

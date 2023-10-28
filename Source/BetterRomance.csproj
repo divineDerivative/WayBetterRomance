@@ -89,6 +89,7 @@
     <Compile Include="Sex Repulsion\CharacterCardUtility.cs" />
     <Compile Include="Sex Repulsion\Comp_SexRepulsion.cs" />
     <Compile Include="CustomLoveRelationUtility.cs" />
+    <Compile Include="CompSettingsClasses.cs" />
     <Compile Include="Comp_WBRSettings.cs" />
     <Compile Include="Harmony\Biotech\RitualOutcomeComp_PawnAge.cs" />
     <Compile Include="Harmony\GeneDef.cs" />

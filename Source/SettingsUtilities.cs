@@ -14,7 +14,7 @@ namespace BetterRomance
         //Sexuality chances does not have methods, since they're only needed in the AssignOrientation function
 
         //Casual sex settings
-        public static CasualSexPawn GetCasualSexSettings(Pawn pawn)
+        public static CompSettingsCasualSexPawn GetCasualSexSettings(Pawn pawn)
         {
             WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
             return comp.casualSex;
@@ -26,13 +26,13 @@ namespace BetterRomance
             {
                 return false;
             }
-            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
             return settings.caresAboutCheating;
         }
 
         public static bool HookupAllowed(this Pawn pawn, bool ordered = false)
         {
-            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
             return ordered ? settings.canDoOrderedHookup : settings.willDoHookup;
         }
 
@@ -42,7 +42,7 @@ namespace BetterRomance
             {
                 return 0f;
             }
-            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
             return settings.hookupRate ?? BetterRomanceMod.settings.hookupRate;
         }
 
@@ -52,13 +52,13 @@ namespace BetterRomance
             {
                 return 0f;
             }
-            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
             return settings.alienLoveChance ?? BetterRomanceMod.settings.alienLoveChance;
         }
 
         public static int MinOpinionForHookup(this Pawn pawn, bool ordered = false)
         {
-            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
             return (ordered ? settings.minOpinionForOrderedHookup : settings.minOpinionForHookup) ?? BetterRomanceMod.settings.minOpinionHookup;
         }
 
@@ -70,7 +70,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static bool HookupForBreedingOnly(this Pawn pawn)
         {
-            CasualSexPawn settings = GetCasualSexSettings(pawn);
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
             return settings.forBreedingOnly;
         }
 
@@ -230,7 +230,7 @@ namespace BetterRomance
         }
 
         //Regular sex settings
-        public static RegularSexPawn GetSexSettings(Pawn pawn)
+        public static CompSettingsRegularSex GetSexSettings(Pawn pawn)
         {
             WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
             return comp?.regularSex;
@@ -238,7 +238,7 @@ namespace BetterRomance
 
         public static float MinAgeForSex(this Pawn pawn)
         {
-            RegularSexPawn settings = GetSexSettings(pawn);
+            CompSettingsRegularSex settings = GetSexSettings(pawn);
             //This gets called by GenerateInitialHediffs for all pawns, so needs to be null checked
             return settings?.minAgeForSex ?? 16f;
         }
@@ -249,13 +249,13 @@ namespace BetterRomance
             {
                 return pawn.ageTracker.AgeBiologicalYearsFloat + 2f;
             }
-            RegularSexPawn settings = GetSexSettings(pawn);
+            CompSettingsRegularSex settings = GetSexSettings(pawn);
             return settings.maxAgeForSex;
         }
 
         public static float MaxAgeGap(this Pawn pawn)
         {
-            RegularSexPawn settings = GetSexSettings(pawn);
+            CompSettingsRegularSex settings = GetSexSettings(pawn);
             return settings.maxAgeGap;
         }
 
@@ -265,7 +265,7 @@ namespace BetterRomance
             {
                 return pawn.ageTracker.AgeBiologicalYearsFloat + 1f;
             }
-            RegularSexPawn settings = GetSexSettings(pawn);
+            CompSettingsRegularSex settings = GetSexSettings(pawn);
             return settings.declineAtAge;
         }
 
@@ -301,7 +301,7 @@ namespace BetterRomance
         }
 
         //Relation Settings
-        public static RelationsPawn GetRelationSettings(Pawn pawn)
+        public static CompSettingsRelationsPawn GetRelationSettings(Pawn pawn)
         {
             WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
             return comp.relations;
@@ -310,13 +310,13 @@ namespace BetterRomance
         //Add check for the no spouses precept here
         public static bool SpouseAllowed(this Pawn pawn)
         {
-            RelationsPawn settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             return settings.spousesAllowed;
         }
 
         public static bool ChildAllowed(this Pawn pawn)
         {
-            RelationsPawn settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             return settings.childrenAllowed;
         }
 
@@ -334,7 +334,7 @@ namespace BetterRomance
             {
                 return pawn.kindDef;
             }
-            RelationsPawn settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             if (settings.pawnKindForParentGlobal != null)
             {
                 return settings.pawnKindForParentGlobal;
@@ -363,7 +363,7 @@ namespace BetterRomance
             {
                 gender = pawn.gender;
             }
-            RelationsPawn settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
                 return settings.minFemaleAgeToHaveChildren;
@@ -381,7 +381,7 @@ namespace BetterRomance
             {
                 gender = pawn.gender;
             }
-            RelationsPawn settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
                 return settings.maxFemaleAgeToHaveChildren;
@@ -399,7 +399,7 @@ namespace BetterRomance
             {
                 gender = pawn.gender;
             }
-            RelationsPawn settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
                 return settings.usualFemaleAgeToHaveChildren;
@@ -413,18 +413,18 @@ namespace BetterRomance
 
         public static int MaxChildren(this Pawn pawn)
         {
-            RelationsPawn settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             return settings.maxChildrenDesired;
         }
 
         public static int MinOpinionForRomance(this Pawn pawn)
         {
-            RelationsPawn settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             return settings.minOpinionRomance ?? BetterRomanceMod.settings.minOpinionRomance;
         }
 
         //Biotech Settings
-        public static BiotechPawn GetBiotechSettings(Pawn pawn)
+        public static CompSettingsBiotech GetBiotechSettings(Pawn pawn)
         {
             WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
             return comp?.biotech;
@@ -447,7 +447,7 @@ namespace BetterRomance
 
         public static SimpleCurve GetFertilityAgeCurve(this Pawn pawn)
         {
-            BiotechPawn settings = GetBiotechSettings(pawn);
+            CompSettingsBiotech settings = GetBiotechSettings(pawn);
             //This gets called on animals and mechs even though the stat never gets used
             //So need to pass something
             if (settings == null)
@@ -468,11 +468,12 @@ namespace BetterRomance
             }
         }
 
-        private static SimpleCurve GetDefaultFertilityAgeCurve(Gender gender)
+        public static SimpleCurve GetDefaultFertilityAgeCurve(Gender gender)
         {
+            //This will preserve any xml patches that might be made to the default curves
             if (gender == Gender.Female)
             {
-                return new SimpleCurve
+                return femaleFertilityAgeFactor ?? new SimpleCurve
                 {
                     new CurvePoint(14f, 0f),
                     new CurvePoint(20f, 1f),
@@ -485,7 +486,7 @@ namespace BetterRomance
             }
             else
             {
-                return new SimpleCurve
+                return maleFertilityAgeFactor ?? new SimpleCurve
                 {
                     new CurvePoint(14f, 0f),
                     new CurvePoint(18f, 1f),
@@ -497,8 +498,22 @@ namespace BetterRomance
 
         public static SimpleCurve GetChildBirthAgeCurve(this Pawn pawn)
         {
-            BiotechPawn settings = GetBiotechSettings(pawn);
+            CompSettingsBiotech settings = GetBiotechSettings(pawn);
             return settings.ageEffectOnChildbirth;
+        }
+
+        public static SimpleCurve GetDefaultChildbirthAgeCurve()
+        {
+            //This will preserve any xml patches that might be made to the default curve
+            return childBirthByAgeCurve?.curve ?? new SimpleCurve
+            {
+                new CurvePoint(14f, 0.0f),
+                new CurvePoint(15f, 0.3f),
+                new CurvePoint(20f, 0.5f),
+                new CurvePoint(30f, 0.5f),
+                new CurvePoint(40f, 0.3f),
+                new CurvePoint(65f, 0.0f),
+            };
         }
 
         public static int GetGrowthMoment(Pawn pawn, int index)
@@ -521,7 +536,7 @@ namespace BetterRomance
         }
 
         //Miscellaneous age calculations
-        public static RaceSettings.MiscSettings GetMiscSettings(Pawn pawn)
+        public static CompSettingsMisc GetMiscSettings(Pawn pawn)
         {
             WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
             return comp?.misc;
@@ -534,7 +549,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static float GetMinAgeForAdulthood(Pawn pawn)
         {
-            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            CompSettingsMisc settings = GetMiscSettings(pawn);
             //This can get called on animals/mechs
             if (settings == null)
             {
@@ -552,7 +567,7 @@ namespace BetterRomance
         /// <returns>The age at which <paramref name="pawn"/> becomes a child.</returns>
         public static int ChildAge(Pawn pawn)
         {
-            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            CompSettingsMisc settings = GetMiscSettings(pawn);
             return settings.childAge;
         }
 
@@ -563,7 +578,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static int AdultAgeForLearning(Pawn pawn)
         {
-            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            CompSettingsMisc settings = GetMiscSettings(pawn);
             return settings.adultAgeForLearning;
         }
 
@@ -574,7 +589,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static int AgeReversalDemandAge(Pawn pawn)
         {
-            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            CompSettingsMisc settings = GetMiscSettings(pawn);
             //This is for animals, which won't have the comp, since this gets called during generation for ALL pawns
             if (settings == null)
             {
@@ -585,13 +600,13 @@ namespace BetterRomance
 
         public static SimpleCurve AgeSkillFactor(Pawn pawn)
         {
-            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            CompSettingsMisc settings = GetMiscSettings(pawn);
             return settings.ageSkillFactor;
         }
 
         public static SimpleCurve AgeSkillMaxFactorCurve(Pawn pawn)
         {
-            RaceSettings.MiscSettings settings = GetMiscSettings(pawn);
+            CompSettingsMisc settings = GetMiscSettings(pawn);
             return settings.ageSkillMaxFactorCurve;
         }
 
