@@ -103,10 +103,10 @@ namespace BetterRomance
 
     public class CompSettingsRegularSex
     {
-        public float minAgeForSex;
-        public float maxAgeForSex;
-        public float maxAgeGap;
-        public float declineAtAge;
+        public float minAgeForSex = -999f;
+        public float maxAgeForSex = -999f;
+        public float maxAgeGap = -999f;
+        public float declineAtAge = -999f;
         public CompSettingsRegularSex Copy()
         {
             return (CompSettingsRegularSex)this.MemberwiseClone();
