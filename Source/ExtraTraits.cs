@@ -41,7 +41,7 @@ namespace BetterRomance
 
                 //Overwrite if settings exist on comp
                 WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
-                UnifiedOrientationChances chances = comp.orientation?.sexual;
+                OrientationChances chances = comp.orientation?.sexual;
                 if (chances != null)
                 {
                     asexualChance = chances.none;
@@ -84,7 +84,7 @@ namespace BetterRomance
                         float aceHomoChance = BetterRomanceMod.settings.asexualOrientations.homo;
                         float aceHeteroChance = BetterRomanceMod.settings.asexualOrientations.hetero;
 
-                        UnifiedOrientationChances asexualChances = comp.orientation?.asexual;
+                        OrientationChances asexualChances = comp.orientation?.asexual;
                         if (asexualChances != null)
                         {
                             aceAroChance = asexualChances.none;

@@ -119,19 +119,19 @@ namespace BetterRomance
             }
 
             //Assign default values to everything that's still unassigned
-            if (regularSex.minAgeForSex == -999f)
+            if (regularSex.minAgeForSex.IsUnset())
             {
                 regularSex.minAgeForSex = 16f;
             }
-            if (regularSex.maxAgeForSex == -999f)
+            if (regularSex.maxAgeForSex.IsUnset())
             {
                 regularSex.maxAgeForSex = 80f;
             }
-            if (regularSex.maxAgeGap == -999f)
+            if (regularSex.maxAgeGap.IsUnset())
             {
                 regularSex.maxAgeGap = 40f;
             }
-            if (regularSex.declineAtAge == -999f)
+            if (regularSex.declineAtAge.IsUnset())
             {
                 regularSex.declineAtAge = 30f;
             }
@@ -202,7 +202,9 @@ namespace BetterRomance
                 SetIfNotNull(ref biotech.noneFertilityAgeFactor, settings.noneFertilityAgeFactor);
                 SetIfNotNull(ref biotech.ageEffectOnChildbirth, settings.ageEffectOnChildbirth);
             }
-            //But none of it is allowed to be null, so assign default values
+            //But none of it is allowed to be null, so assign default values.
+            //Do the same checks as we do for race
+            //I think I'm making it so that the curves can't be null on the race setting; so I shouldn't need to do anything other than overwrite it with the pawnkind ones
             biotech.maleFertilityAgeFactor = biotech.maleFertilityAgeFactor ?? SettingsUtilities.GetDefaultFertilityAgeCurve(Gender.Male);
             biotech.femaleFertilityAgeFactor = biotech.femaleFertilityAgeFactor ?? SettingsUtilities.GetDefaultFertilityAgeCurve(Gender.Female);
             biotech.noneFertilityAgeFactor = biotech.noneFertilityAgeFactor ?? SettingsUtilities.GetDefaultFertilityAgeCurve(Gender.None);

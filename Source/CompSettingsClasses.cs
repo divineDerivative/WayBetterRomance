@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,12 +8,10 @@ using Verse;
 
 namespace BetterRomance
 {
-    //I think this needs to be changed so that nothing is nullable, and the field on the comp is simply null if nothing is provided
-    //I'm worried about the possibility of a missing setting combining with user settings to result in chances that don't add up to 100
     public class CompSettingsOrientation
     {
-        public UnifiedOrientationChances sexual;
-        public UnifiedOrientationChances asexual;
+        public OrientationChances sexual;
+        public OrientationChances asexual;
 
         public CompSettingsOrientation Copy()
         {
@@ -24,39 +23,38 @@ namespace BetterRomance
         }
     }
 
-    public class UnifiedOrientationChances
+    public class OrientationChances
     {
         public float hetero = -999f;
         public float homo = -999f;
         public float bi = -999f;
         public float none = -999f;
 
-        public UnifiedOrientationChances Copy => (UnifiedOrientationChances)this.MemberwiseClone();
+        public OrientationChances Copy => (OrientationChances)this.MemberwiseClone();
 
-        private bool IsUnset(float? value) => value == 999f;
-        public bool AreAnyUnset(out string list, bool asexual = false)
+        public bool AreAnyUnset(out string list, bool asexual)
         {
             //Need to make these strings match the old variable names I think
             list = "";
             bool result = false;
-            if (IsUnset(hetero))
+            if (hetero.IsUnset())
             {
                 list += asexual ? " aceHeteroChance" : " straightChance";
                 result = true;
             }
-            if (IsUnset(homo))
+            if (homo.IsUnset())
             {
-                list += " homo";
+                list += asexual ? " aceHomoChance" : " gayChance";
                 result = true;
             }
-            if (IsUnset(bi))
+            if (bi.IsUnset())
             {
-                list += " bi";
+                list += asexual ? " aceBiChance" : " bisexualChance"; ;
                 result = true;
             }
-            if (IsUnset(none))
+            if (none.IsUnset())
             {
-                list += " none";
+                list += asexual ? " aceAroChance" : " asexualChance"; ;
                 result = true;
             }
             return result;
@@ -110,6 +108,22 @@ namespace BetterRomance
         public CompSettingsRegularSex Copy()
         {
             return (CompSettingsRegularSex)this.MemberwiseClone();
+        }
+
+        public CompSettingsRegularSex Default()
+        {
+            return new CompSettingsRegularSex
+            {
+                minAgeForSex = 16f,
+                maxAgeForSex = 80f,
+                maxAgeGap = 40f,
+                declineAtAge = 30f,
+            };
+        }
+
+        public bool IsEmpty()
+        {
+            return minAgeForSex.IsUnset() && maxAgeForSex.IsUnset() && maxAgeGap.IsUnset() && declineAtAge.IsUnset();
         }
     }
 

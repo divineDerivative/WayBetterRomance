@@ -636,7 +636,7 @@ namespace BetterRomance
                 case 13f:
                     return pawn.ageTracker.AdultMinAge;
                 case 14f:
-                    return pawn.ageTracker.AdultMinAge+1;
+                    return pawn.ageTracker.AdultMinAge + 1;
                 case 16f:
                     return pawn.MinAgeForSex();
                 case 18f:
@@ -649,6 +649,24 @@ namespace BetterRomance
                     LogUtil.Warning($"Unable to translate {age} to appropriate age for race {pawn.def.defName}");
                     return age;
             }
+        }
+        public static bool IsUnset(this float value) => value == -999f;
+        public static bool IsUnset(this int value) => value == -999;
+
+        public static bool IsEquivalentTo(this SimpleCurve first,  SimpleCurve second)
+        {
+            if (first.PointsCount != second.PointsCount)
+            {
+                return false;
+            }
+            for (int i = 0; i < first.PointsCount; i++)
+            {
+                if (first.Points[i].Loc != second.Points[i].Loc)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

@@ -8,8 +8,8 @@ namespace BetterRomance
 {
     public class SexualityChances : DefModExtension
     {
-        public UnifiedOrientationChances sexual;
-        public UnifiedOrientationChances asexual;
+        public OrientationChances sexual;
+        public OrientationChances asexual;
 
         public float asexualChance = -999f;
         public float bisexualChance = -999f;
@@ -21,39 +21,32 @@ namespace BetterRomance
         public float aceHomoChance = -999f;
         public float aceHeteroChance = -999f;
 
-        //Need to make sure these all work as expected
         public override IEnumerable<string> ConfigErrors()
         {
             //Convert old values to the new form
-            if (sexual == null)
+            if (sexual == null && (!asexualChance.IsUnset() || !bisexualChance.IsUnset() || !gayChance.IsUnset() || !straightChance.IsUnset()))
             {
-                if (asexualChance != -999f || bisexualChance != -999f || gayChance != -999f || straightChance != -999f)
+                sexual = new OrientationChances
                 {
-                    sexual = new UnifiedOrientationChances
-                    {
-                        none = asexualChance,
-                        bi = bisexualChance,
-                        homo = gayChance,
-                        hetero = straightChance,
-                    };
-                }
+                    none = asexualChance,
+                    bi = bisexualChance,
+                    homo = gayChance,
+                    hetero = straightChance,
+                };
             }
-            if (asexual == null)
+            if (asexual == null && (!aceAroChance.IsUnset() || !aceBiChance.IsUnset() || !aceHomoChance.IsUnset() || !aceHeteroChance.IsUnset()))
             {
-                if (aceAroChance != -999f || aceBiChance != -999f || aceHomoChance != -999f || aceHeteroChance != -999f)
+                asexual = new OrientationChances
                 {
-                    asexual = new UnifiedOrientationChances
-                    {
-                        none = aceAroChance,
-                        bi = aceBiChance,
-                        homo = aceHomoChance,
-                        hetero = aceHeteroChance,
-                    };
-                }
+                    none = aceAroChance,
+                    bi = aceBiChance,
+                    homo = aceHomoChance,
+                    hetero = aceHeteroChance,
+                };
             }
             if (sexual != null)
             {
-                if (sexual.AreAnyUnset(out string list))
+                if (sexual.AreAnyUnset(out string list, false))
                 {
                     yield return "Chances must be set for all sexual orientations. These are missing assignment:" + list;
                 }
@@ -65,7 +58,7 @@ namespace BetterRomance
             }
             if (asexual != null)
             {
-                if (asexual.AreAnyUnset(out string list))
+                if (asexual.AreAnyUnset(out string list, true))
                 {
                     yield return "Chances must be set for all asexual romantic orientations. These are missing assignment:" + list;
                 }
@@ -91,30 +84,22 @@ namespace BetterRomance
         //These will all need changed
         public override IEnumerable<string> ConfigErrors()
         {
-            if (hookupRate == -1)
+            if (hookupRate != null && hookupRate > 200f)
             {
-                hookupRate = BetterRomanceMod.settings.hookupRate;
-            }
-            else if (hookupRate > 200.99)
-            {
-                hookupRate = 200.99f;
+                hookupRate = 200f;
                 yield return "Hookup rate cannot be higher than 200";
             }
-            if (alienLoveChance == -1)
+            if (alienLoveChance != null && alienLoveChance > 100f)
             {
-                alienLoveChance = BetterRomanceMod.settings.alienLoveChance;
-            }
-            else if (alienLoveChance > 100.99)
-            {
-                alienLoveChance = 100.99f;
+                alienLoveChance = 100f;
                 yield return "Alien love chance cannot be higher than 100";
             }
-            if (hookupTriggers != null && (hookupTriggers.forBreedingOnly ?? false))
+            if (hookupTriggers?.forBreedingOnly != null)
             {
                 hookupTriggers.forBreedingOnly = false;
                 yield return "forBreedingOnly is for ordered hookups only. Setting to false.";
             }
-            if (hookupTriggers != null && hookupTriggers.minOpinion != null)
+            if (hookupTriggers?.minOpinion != null)
             {
                 if (hookupTriggers.minOpinion < -100 || hookupTriggers.minOpinion > 100)
                 {
@@ -122,7 +107,7 @@ namespace BetterRomance
                     hookupTriggers.minOpinion = Mathf.Clamp((int)hookupTriggers.minOpinion, -100, 100);
                 }
             }
-            if (orderedHookupTriggers != null && orderedHookupTriggers.minOpinion != null)
+            if (orderedHookupTriggers?.minOpinion != null)
             {
                 if (orderedHookupTriggers.minOpinion < -100 || orderedHookupTriggers.minOpinion > 100)
                 {
@@ -130,6 +115,21 @@ namespace BetterRomance
                     orderedHookupTriggers.minOpinion = Mathf.Clamp((int)orderedHookupTriggers.minOpinion, -100, 100);
                 }
             }
+        }
+
+        public CompSettingsCasualSexRace CopyToRace()
+        {
+            return new CompSettingsCasualSexRace
+            {
+                caresAboutCheating = caresAboutCheating,
+                willDoHookup = willDoHookup,
+                canDoOrderedHookup = canDoOrderedHookup,
+                hookupRate = hookupRate,
+                alienLoveChance = alienLoveChance,
+                minOpinionForHookup = hookupTriggers?.minOpinion,
+                minOpinionForOrderedHookup = orderedHookupTriggers?.minOpinion,
+                forBreedingOnly = orderedHookupTriggers?.forBreedingOnly,
+            };
         }
     }
 
@@ -156,8 +156,6 @@ namespace BetterRomance
 
     public class RegularSexSettings : DefModExtension
     {
-        //Maybe change these to initialize at -1? That way I wouldn't need two separate classes
-        //Would need to change up the config errors
         public float minAgeForSex = -999f;
         public float maxAgeForSex = -999f;
         public float maxAgeGap = -999f;
@@ -166,33 +164,39 @@ namespace BetterRomance
         //Will need to redo the config errors to account for unassigned values
         public override IEnumerable<string> ConfigErrors()
         {
-            if (minAgeForSex > declineAtAge)
+            if (!minAgeForSex.IsUnset())
             {
-                yield return "minAgeForSex must be lower than declineAtAge";
+                if (minAgeForSex < 0)
+                {
+                    yield return "minAgeForSex must be a positive number";
+                }
+                if (!declineAtAge.IsUnset() && minAgeForSex > declineAtAge)
+                {
+                    yield return "minAgeForSex must be lower than declineAtAge";
+                }
             }
-            if (declineAtAge > maxAgeForSex)
+            if (!maxAgeForSex.IsUnset())
             {
-                yield return "declineAtAge must be lower than maxAgeForSex";
+                if (maxAgeForSex < 0)
+                {
+                    yield return "maxAgeForSex must be a positive number";
+                }
+                if (!declineAtAge.IsUnset() && declineAtAge > maxAgeForSex)
+                {
+                    yield return "declineAtAge must be lower than maxAgeForSex";
+                }
             }
-            if (minAgeForSex < 0)
-            {
-                yield return "minAgeForSex must be a positive number";
-            }
-            if (maxAgeForSex < 0)
-            {
-                yield return "maxAgeForSex must be a positive number";
-            }
-            if (maxAgeGap < 0)
-            {
-                yield return "maxAgeGap must be a positive number";
-            }
-            if (declineAtAge < 0)
+            if (!declineAtAge.IsUnset() && declineAtAge < 0)
             {
                 yield return "declineAtAge must be a positive number";
             }
+            if (!maxAgeGap.IsUnset() && maxAgeGap < 0)
+            {
+                yield return "maxAgeGap must be a positive number";
+            }
         }
 
-        public CompSettingsRegularSex CopyToRace()
+        public CompSettingsRegularSex Copy()
         {
             return new CompSettingsRegularSex
             {
@@ -242,57 +246,72 @@ namespace BetterRomance
                     yield return "Please provide both a male and female pawnkind";
                 }
             }
-            if (minFemaleAgeToHaveChildren < 0)
+
+            if (minFemaleAgeToHaveChildren != null || usualFemaleAgeToHaveChildren != null || maxFemaleAgeToHaveChildren != null)
             {
-                yield return "minFemaleAgeToHaveChildren must be a positive number";
+                if (AnyMissing(Gender.Female))
+                {
+                    yield return "Please provide all three ages for female childbearing";
+                    //Do I need to set defaults here?
+                }
+                //We're going to assume they're all provided while I decide what to do if they're not
+                if (minFemaleAgeToHaveChildren < 0)
+                {
+                    yield return "minFemaleAgeToHaveChildren must be a positive number";
+                }
+                if (usualFemaleAgeToHaveChildren < 0)
+                {
+                    yield return "usualFemaleAgeToHaveChildren must be a positive number";
+                }
+                if (maxFemaleAgeToHaveChildren < 0)
+                {
+                    yield return "maxFemaleAgeToHaveChildren must be a positive number";
+                }
+                if (minFemaleAgeToHaveChildren > usualFemaleAgeToHaveChildren)
+                {
+                    yield return "minFemaleAgeToHaveChildren must be lower than usualFemaleAgeToHaveChildren";
+                }
+                if (usualFemaleAgeToHaveChildren > maxFemaleAgeToHaveChildren)
+                {
+                    yield return "usualFemaleAgeToHaveChildren must be lower than maxFemaleAgeToHaveChildren";
+                }
             }
-            if (usualFemaleAgeToHaveChildren < 0)
+            if (minMaleAgeToHaveChildren != null || usualMaleAgeToHaveChildren != null || maxMaleAgeToHaveChildren != null)
             {
-                yield return "usualFemaleAgeToHaveChildren must be a positive number";
+                if (AnyMissing(Gender.Male))
+                {
+                    yield return "Please provide all three ages for male childbearing";
+                }
+                if (minMaleAgeToHaveChildren < 0)
+                {
+                    yield return "minMaleAgeToHaveChildren must be a positive number";
+                }
+                if (usualMaleAgeToHaveChildren < 0)
+                {
+                    yield return "usualMaleAgeToHaveChildren must be a positive number";
+                }
+                if (maxMaleAgeToHaveChildren < 0)
+                {
+                    yield return "maxMaleAgeToHaveChildren must be a positive number";
+                }
+                if (minMaleAgeToHaveChildren > usualMaleAgeToHaveChildren)
+                {
+                    yield return "minMaleAgeToHaveChildren must be lower than usualMaleAgeToHaveChildren";
+                }
+                if (usualMaleAgeToHaveChildren > maxMaleAgeToHaveChildren)
+                {
+                    yield return "usualMaleAgeToHaveChildren must be lower than maxMaleAgeToHaveChildren";
+                }
             }
-            if (maxFemaleAgeToHaveChildren < 0)
-            {
-                yield return "maxFemaleAgeToHaveChildren must be a positive number";
-            }
-            if (minMaleAgeToHaveChildren < 0)
-            {
-                yield return "minMaleAgeToHaveChildren must be a positive number";
-            }
-            if (usualMaleAgeToHaveChildren < 0)
-            {
-                yield return "usualMaleAgeToHaveChildren must be a positive number";
-            }
-            if (maxMaleAgeToHaveChildren < 0)
-            {
-                yield return "maxMaleAgeToHaveChildren must be a positive number";
-            }
-            if (maxChildrenDesired < 0)
+            if (maxChildrenDesired != null && maxChildrenDesired < 0)
             {
                 yield return "maxChildrenDesired must be a positive number";
-            }
-            if (minFemaleAgeToHaveChildren > usualFemaleAgeToHaveChildren)
-            {
-                yield return "minFemaleAgeToHaveChildren must be lower than usualFemaleAgeToHaveChildren";
-            }
-            if (usualFemaleAgeToHaveChildren > maxFemaleAgeToHaveChildren)
-            {
-                yield return "usualFemaleAgeToHaveChildren must be lower than maxFemaleAgeToHaveChildren";
-            }
-            if (minMaleAgeToHaveChildren > usualMaleAgeToHaveChildren)
-            {
-                yield return "minMaleAgeToHaveChildren must be lower than usualMaleAgeToHaveChildren";
-            }
-            if (usualMaleAgeToHaveChildren > maxMaleAgeToHaveChildren)
-            {
-                yield return "usualMaleAgeToHaveChildren must be lower than maxMaleAgeToHaveChildren";
-            }
-            if (minOpinionRomance > 100.99f || minOpinionRomance < -100.99f)
+            }    
+            if (minOpinionRomance != null && (minOpinionRomance > 100f || minOpinionRomance < -100f))
             {
                 yield return "Minimum opinion must be between 100 and -100";
+                minOpinionRomance = Mathf.Clamp((int)minOpinionRomance, -100, 100);
             }
-
-            //I wanna put a thing here to put these values into a CompRaceSettingsRelations object
-            //Or can just do the copy thing like I did for regular sex
         }
 
         public CompSettingsRelationsRace CopyToRace()
@@ -313,6 +332,19 @@ namespace BetterRomance
                 maxChildrenDesired = maxChildrenDesired,
                 minOpinionRomance = minOpinionRomance,
             };
+        }
+        
+        private bool AnyMissing(Gender gender)
+        {
+            if (gender == Gender.Female)
+            {
+                return minFemaleAgeToHaveChildren == null || usualFemaleAgeToHaveChildren == null || maxFemaleAgeToHaveChildren == null;
+            }
+            if (gender == Gender.Male)
+            {
+                return minMaleAgeToHaveChildren == null || usualMaleAgeToHaveChildren == null || maxMaleAgeToHaveChildren == null;
+            }
+            return false;
         }
     }
 

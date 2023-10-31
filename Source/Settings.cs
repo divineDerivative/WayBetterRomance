@@ -8,14 +8,14 @@ namespace BetterRomance
 {
     public class Settings : ModSettings
     {
-        public UnifiedOrientationChances sexualOrientations = new UnifiedOrientationChances
+        public OrientationChances sexualOrientations = new OrientationChances
         {
             hetero = 20f,
             homo = 20f,
             bi = 50f,
             none = 10f,
         };
-        public UnifiedOrientationChances asexualOrientations = new UnifiedOrientationChances
+        public OrientationChances asexualOrientations = new OrientationChances
         {
             hetero = 20f,
             homo = 20f,
