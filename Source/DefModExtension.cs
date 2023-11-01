@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Verse;
 using RimWorld;
 using UnityEngine;
@@ -84,12 +83,12 @@ namespace BetterRomance
         //These will all need changed
         public override IEnumerable<string> ConfigErrors()
         {
-            if (hookupRate != null && hookupRate > 200f)
+            if (hookupRate > 200f)
             {
                 hookupRate = 200f;
                 yield return "Hookup rate cannot be higher than 200";
             }
-            if (alienLoveChance != null && alienLoveChance > 100f)
+            if (alienLoveChance > 100f)
             {
                 alienLoveChance = 100f;
                 yield return "Alien love chance cannot be higher than 100";
@@ -99,21 +98,15 @@ namespace BetterRomance
                 hookupTriggers.forBreedingOnly = false;
                 yield return "forBreedingOnly is for ordered hookups only. Setting to false.";
             }
-            if (hookupTriggers?.minOpinion != null)
+            if (hookupTriggers?.minOpinion < -100 || hookupTriggers?.minOpinion > 100)
             {
-                if (hookupTriggers.minOpinion < -100 || hookupTriggers.minOpinion > 100)
-                {
-                    yield return "minOpinion for hookups must be between -100 and 100";
-                    hookupTriggers.minOpinion = Mathf.Clamp((int)hookupTriggers.minOpinion, -100, 100);
-                }
+                yield return "minOpinion for hookups must be between -100 and 100";
+                hookupTriggers.minOpinion = Mathf.Clamp((int)hookupTriggers.minOpinion, -100, 100);
             }
-            if (orderedHookupTriggers?.minOpinion != null)
+            if (orderedHookupTriggers?.minOpinion < -100 || orderedHookupTriggers?.minOpinion > 100)
             {
-                if (orderedHookupTriggers.minOpinion < -100 || orderedHookupTriggers.minOpinion > 100)
-                {
-                    yield return "minOpinion for ordered hookups must be between -100 and 100";
-                    orderedHookupTriggers.minOpinion = Mathf.Clamp((int)orderedHookupTriggers.minOpinion, -100, 100);
-                }
+                yield return "minOpinion for ordered hookups must be between -100 and 100";
+                orderedHookupTriggers.minOpinion = Mathf.Clamp((int)orderedHookupTriggers.minOpinion, -100, 100);
             }
         }
 
@@ -201,7 +194,7 @@ namespace BetterRomance
             return new CompSettingsRegularSex
             {
                 minAgeForSex = minAgeForSex,
-                maxAgeForSex= maxAgeForSex,
+                maxAgeForSex = maxAgeForSex,
                 maxAgeGap = maxAgeGap,
                 declineAtAge = declineAtAge,
             };
@@ -226,7 +219,7 @@ namespace BetterRomance
 
         public override IEnumerable<string> ConfigErrors()
         {
-            if (childrenAllowed != null && childrenAllowed == true)
+            if (childrenAllowed == true)
             {
                 if (pawnKindForParentGlobal == null && pawnKindForParentFemale == null && pawnKindForParentMale == null)
                 {
@@ -247,67 +240,53 @@ namespace BetterRomance
                 }
             }
 
-            if (minFemaleAgeToHaveChildren != null || usualFemaleAgeToHaveChildren != null || maxFemaleAgeToHaveChildren != null)
+            if (minFemaleAgeToHaveChildren < 0)
             {
-                if (AnyMissing(Gender.Female))
-                {
-                    yield return "Please provide all three ages for female childbearing";
-                    //Do I need to set defaults here?
-                }
-                //We're going to assume they're all provided while I decide what to do if they're not
-                if (minFemaleAgeToHaveChildren < 0)
-                {
-                    yield return "minFemaleAgeToHaveChildren must be a positive number";
-                }
-                if (usualFemaleAgeToHaveChildren < 0)
-                {
-                    yield return "usualFemaleAgeToHaveChildren must be a positive number";
-                }
-                if (maxFemaleAgeToHaveChildren < 0)
-                {
-                    yield return "maxFemaleAgeToHaveChildren must be a positive number";
-                }
-                if (minFemaleAgeToHaveChildren > usualFemaleAgeToHaveChildren)
-                {
-                    yield return "minFemaleAgeToHaveChildren must be lower than usualFemaleAgeToHaveChildren";
-                }
-                if (usualFemaleAgeToHaveChildren > maxFemaleAgeToHaveChildren)
-                {
-                    yield return "usualFemaleAgeToHaveChildren must be lower than maxFemaleAgeToHaveChildren";
-                }
+                yield return "minFemaleAgeToHaveChildren must be a positive number";
             }
-            if (minMaleAgeToHaveChildren != null || usualMaleAgeToHaveChildren != null || maxMaleAgeToHaveChildren != null)
+            if (usualFemaleAgeToHaveChildren < 0)
             {
-                if (AnyMissing(Gender.Male))
-                {
-                    yield return "Please provide all three ages for male childbearing";
-                }
-                if (minMaleAgeToHaveChildren < 0)
-                {
-                    yield return "minMaleAgeToHaveChildren must be a positive number";
-                }
-                if (usualMaleAgeToHaveChildren < 0)
-                {
-                    yield return "usualMaleAgeToHaveChildren must be a positive number";
-                }
-                if (maxMaleAgeToHaveChildren < 0)
-                {
-                    yield return "maxMaleAgeToHaveChildren must be a positive number";
-                }
-                if (minMaleAgeToHaveChildren > usualMaleAgeToHaveChildren)
-                {
-                    yield return "minMaleAgeToHaveChildren must be lower than usualMaleAgeToHaveChildren";
-                }
-                if (usualMaleAgeToHaveChildren > maxMaleAgeToHaveChildren)
-                {
-                    yield return "usualMaleAgeToHaveChildren must be lower than maxMaleAgeToHaveChildren";
-                }
+                yield return "usualFemaleAgeToHaveChildren must be a positive number";
             }
-            if (maxChildrenDesired != null && maxChildrenDesired < 0)
+            if (maxFemaleAgeToHaveChildren < 0)
+            {
+                yield return "maxFemaleAgeToHaveChildren must be a positive number";
+            }
+            if (minFemaleAgeToHaveChildren > usualFemaleAgeToHaveChildren)
+            {
+                yield return "minFemaleAgeToHaveChildren must be lower than usualFemaleAgeToHaveChildren";
+            }
+            if (usualFemaleAgeToHaveChildren > maxFemaleAgeToHaveChildren)
+            {
+                yield return "usualFemaleAgeToHaveChildren must be lower than maxFemaleAgeToHaveChildren";
+            }
+
+            if (minMaleAgeToHaveChildren < 0)
+            {
+                yield return "minMaleAgeToHaveChildren must be a positive number";
+            }
+            if (usualMaleAgeToHaveChildren < 0)
+            {
+                yield return "usualMaleAgeToHaveChildren must be a positive number";
+            }
+            if (maxMaleAgeToHaveChildren < 0)
+            {
+                yield return "maxMaleAgeToHaveChildren must be a positive number";
+            }
+            if (minMaleAgeToHaveChildren > usualMaleAgeToHaveChildren)
+            {
+                yield return "minMaleAgeToHaveChildren must be lower than usualMaleAgeToHaveChildren";
+            }
+            if (usualMaleAgeToHaveChildren > maxMaleAgeToHaveChildren)
+            {
+                yield return "usualMaleAgeToHaveChildren must be lower than maxMaleAgeToHaveChildren";
+            }
+
+            if (maxChildrenDesired < 0)
             {
                 yield return "maxChildrenDesired must be a positive number";
-            }    
-            if (minOpinionRomance != null && (minOpinionRomance > 100f || minOpinionRomance < -100f))
+            }
+            if (minOpinionRomance > 100f || minOpinionRomance < -100f)
             {
                 yield return "Minimum opinion must be between 100 and -100";
                 minOpinionRomance = Mathf.Clamp((int)minOpinionRomance, -100, 100);
@@ -332,19 +311,6 @@ namespace BetterRomance
                 maxChildrenDesired = maxChildrenDesired,
                 minOpinionRomance = minOpinionRomance,
             };
-        }
-        
-        private bool AnyMissing(Gender gender)
-        {
-            if (gender == Gender.Female)
-            {
-                return minFemaleAgeToHaveChildren == null || usualFemaleAgeToHaveChildren == null || maxFemaleAgeToHaveChildren == null;
-            }
-            if (gender == Gender.Male)
-            {
-                return minMaleAgeToHaveChildren == null || usualMaleAgeToHaveChildren == null || maxMaleAgeToHaveChildren == null;
-            }
-            return false;
         }
     }
 
