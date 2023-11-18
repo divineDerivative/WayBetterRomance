@@ -2,6 +2,7 @@
 using RimWorld;
 using Verse;
 using HarmonyLib;
+using VFECore;
 using VanillaRacesExpandedHighmate;
 using System.Reflection.Emit;
 using System.Reflection;
@@ -120,13 +121,13 @@ namespace BetterRomance.HarmonyPatches
 
         public static void PatchVRE(this Harmony harmony)
         {
-            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", new Type[] { typeof(LocalTargetInfo), typeof(bool) }), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod("VREMinAgeTranspiler")));
-            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", new Type[] { typeof(LocalTargetInfo), typeof(bool) }), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod("VREAsexualTranspiler")));
-            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("GetLovers"), prefix: new HarmonyMethod(typeof(VREPatches).GetMethod("VREGetLoversPrefix")));
-            harmony.Patch(typeof(JobDriver_InitiateLovin).GetMethod("GetLovers"), prefix: new HarmonyMethod(typeof(VREPatches).GetMethod("VREGetLoversPrefix")));
-            harmony.Patch(typeof(JobDriver_InitiateLovin).GetMethod("ProcessBreakups"), prefix: new HarmonyMethod(typeof(VREPatches).GetMethod("VREProcessBreakupsPrefix")), postfix: new HarmonyMethod(typeof(VREPatches).GetMethod("VREProcessBreakupsPostfix")));
-            harmony.Patch(typeof(Need_Lovin).GetMethod("get_ShowOnNeedList"), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod("VREMinAgeTranspiler")));
-            harmony.Patch(typeof(Need_Lovin).GetMethod("get_IsFrozen"), transpiler: new HarmonyMethod(typeof(VREPatches), "VREMinAgeTranspiler"));
+            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", new Type[] { typeof(LocalTargetInfo), typeof(bool) }), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
+            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", new Type[] { typeof(LocalTargetInfo), typeof(bool) }), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREAsexualTranspiler))));
+            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("GetLovers"), prefix: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREGetLoversPrefix))));
+            harmony.Patch(typeof(JobDriver_InitiateLovin).GetMethod("GetLovers"), prefix: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREGetLoversPrefix))));
+            harmony.Patch(typeof(JobDriver_InitiateLovin).GetMethod("ProcessBreakups"), prefix: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREProcessBreakupsPrefix))), postfix: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREProcessBreakupsPostfix))));
+            harmony.Patch(typeof(Need_Lovin).GetMethod("get_ShowOnNeedList"), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
+            harmony.Patch(typeof(Need_Lovin).GetMethod("get_IsFrozen"), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
             harmony.Patch(AccessTools.Method(typeof(JobDriver_DoLovinCasual), "GenerateRandomMinTicksToNextLovin"), postfix: new HarmonyMethod(typeof(VanillaRacesExpandedHighmate_JobDriver_Lovin_GenerateRandomMinTicksToNextLovin_Patch), "PawnFucks"));
         }
     }
@@ -134,11 +135,23 @@ namespace BetterRomance.HarmonyPatches
 
 namespace BetterRomance
 {
-    public static class OtherMod_Methods
+    internal static class OtherMod_Methods
     {
-        public static bool HasLovinForPleasureApproach(Pawn pawn1, Pawn pawn2)
+        internal static int AdjustLovinTicks(int ticks, Pawn pawn1, Pawn pawn2)
         {
-            return pawn1.relations.GetAdditionalPregnancyApproachData().pawnsWithLovinForPleasure.Contains(pawn2);
+            if (pawn1.relations.GetAdditionalPregnancyApproachData().partners.TryGetValue(pawn2, out PregnancyApproachDef def))
+            {
+                ticks = (int)(ticks * def.lovinDurationMultiplier);
+            }
+            return ticks;
+        }
+
+        internal static void DoLovinResult(Pawn actor, Pawn partner)
+        {
+            if (actor.relations.GetAdditionalPregnancyApproachData().partners.TryGetValue(partner, out PregnancyApproachDef def))
+            {
+                def.Worker.PostLovinEffect(actor, partner);
+            }
         }
     }
 }

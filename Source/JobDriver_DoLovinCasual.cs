@@ -90,9 +90,9 @@ namespace BetterRomance
                 {
                     ticksLeftThisToil = (RomanceUtilities.HasLoveEnhancer(Actor) || RomanceUtilities.HasLoveEnhancer(Partner)) ? ticksForEnhancer : ticksOtherwise;
 
-                    if (Settings.VREHighmateActive && OtherMod_Methods.HasLovinForPleasureApproach(Actor, Partner))
+                    if (Settings.VREHighmateActive)
                     {
-                        ticksLeftThisToil = (int)(ticksLeftThisToil * 1.25f);
+                        ticksLeftThisToil = OtherMod_Methods.AdjustLovinTicks(ticksLeftThisToil, Actor, Partner);
                     }
 
                     if (RomanceUtilities.IsThisCheating(Actor, Partner, out List<Pawn> cheatedOnList))
@@ -142,6 +142,10 @@ namespace BetterRomance
                 initAction = delegate
                 {
                     Thought_Memory thought_Memory = (Thought_Memory)ThoughtMaker.MakeThought(ThoughtDefOf.GotSomeLovin);
+                    if (Settings.VREHighmateActive)
+                    {
+                        OtherMod_Methods.DoLovinResult(Actor, Partner);
+                    }
                     //Increase mood power if either pawn had a love enhancer
                     if (RomanceUtilities.HasLoveEnhancer(Actor) || RomanceUtilities.HasLoveEnhancer(Partner))
                     {

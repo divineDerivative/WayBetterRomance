@@ -76,6 +76,10 @@
       <HintPath>..\..\..\..\..\workshop\content\294100\2995385834\1.4\Assemblies\VanillaRacesExpandedHighmate.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="VFECore">
+      <HintPath>..\..\..\..\..\workshop\content\294100\2023507013\1.4\Assemblies\VFECore.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Harmony\Biotech\RitualOutcomeComp_PawnAge.cs" />
