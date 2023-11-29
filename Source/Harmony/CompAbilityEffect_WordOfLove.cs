@@ -17,6 +17,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                    firstFound = true;
                 }
                 else if (instruction.Is(OpCodes.Ldc_R4, 16f))
                 {
