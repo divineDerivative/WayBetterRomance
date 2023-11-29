@@ -7,6 +7,7 @@ using VanillaRacesExpandedHighmate;
 using System.Reflection.Emit;
 using System.Reflection;
 using System;
+using System.Linq;
 
 namespace BetterRomance.HarmonyPatches
 {
@@ -21,6 +22,46 @@ namespace BetterRomance.HarmonyPatches
         public static void RJWAsexualPostfix(ref bool __result, Pawn pawn)
         {
             __result = __result || pawn.IsAsexual();
+        }
+
+        public static IEnumerable<CodeInstruction> VanillaTraitCheckTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            int startIndex = -1;
+            int endIndex = -1;
+            List<CodeInstruction> codes = instructions.ToList();
+            for (int i = 0; i < codes.Count; i++)
+            {
+                CodeInstruction code = codes[i];
+                if (code.LoadsField(AccessTools.Field(typeof(Pawn), nameof(Pawn.story))))
+                {
+                    startIndex = i;
+                }
+                if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), parameters: new Type[] { typeof(TraitDef) })))
+                {
+                    endIndex = i;
+                }
+                if (startIndex != -1 && endIndex != -1)
+                {
+                    break;
+                }
+            }
+
+            for (int i = 0; i < codes.Count; i++)
+            {
+                CodeInstruction code = codes[i];
+                if (i < startIndex)
+                {
+                    yield return code;
+                }
+                else if (i == startIndex)
+                {
+                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.IsAsexual));
+                }
+                else if (i > endIndex)
+                {
+                    yield return code;
+                }
+            }
         }
     }
 

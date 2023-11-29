@@ -64,6 +64,7 @@ namespace BetterRomance
             if (ModsConfig.IsActive("rim.job.world") || ModsConfig.IsActive("safe.job.world"))
             {
                 harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.xxx,RJW"), "is_asexual"), postfix: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RJWAsexualPostfix)));
+                harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.CompRJW,RJW"), "VanillaTraitCheck"), transpiler: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.VanillaTraitCheckTranspiler)));
             }
             MakeFertilityModList();
             Settings.ApplyJoySettings();
