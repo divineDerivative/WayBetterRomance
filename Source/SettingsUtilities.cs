@@ -138,6 +138,7 @@ namespace BetterRomance
                     case "dylan.csl":
                         return pawn.health.capacities.GetLevel(RomanceDefOf.Fertility);
                     case "rim.job.world":
+                    case "safe.job.world":
                         return pawn.health.capacities.GetLevel(RomanceDefOf.RJW_Fertility);
                 }
                 Log.ErrorOnce("Unexpected value of fertilityMod: " + mod, 1798621);
@@ -578,7 +579,7 @@ namespace BetterRomance
             }
             else
             {
-                return maleFertilityAgeFactor ??     new SimpleCurve
+                return maleFertilityAgeFactor ??    new SimpleCurve
                                                     {
                                                         new CurvePoint(14f, 0f),
                                                         new CurvePoint(18f, 1f),

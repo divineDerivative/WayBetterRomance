@@ -61,7 +61,7 @@ namespace BetterRomance
                 Settings.VREHighmateActive = true;
                 harmony.PatchVRE();
             }
-            if (ModsConfig.IsActive("rim.job.world"))
+            if (ModsConfig.IsActive("rim.job.world") || ModsConfig.IsActive("safe.job.world"))
             {
                 harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.xxx,RJW"), "is_asexual"), postfix: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RJWAsexualPostfix)));
             }
@@ -82,6 +82,10 @@ namespace BetterRomance
             if (ModsConfig.IsActive("rim.job.world"))
             {
                 Settings.FertilityMods.Add("rim.job.world", "RJW");
+            }
+            if (ModsConfig.IsActive("safe.job.world"))
+            {
+                Settings.FertilityMods.Add("safe.job.world", "SJW");
             }
             //Try to auto set if there's only one choice
             if (Settings.FertilityMods.Count == 1 && (BetterRomanceMod.settings.fertilityMod == "None" || !Settings.FertilityMods.ContainsKey(BetterRomanceMod.settings.fertilityMod)))
