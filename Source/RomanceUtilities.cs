@@ -393,7 +393,7 @@ namespace BetterRomance
                 comp = p.TryGetComp<Comp_PartnerList>();
                 if (comp == null)
                 {
-                    Log.Error("Unable to add Comp_PartnerList");
+                    LogUtil.Error("Unable to add Comp_PartnerList");
                 }
             }
             return comp;
@@ -477,5 +477,16 @@ namespace BetterRomance
         Hetero,
         Bi,
         None,
+    }
+
+    internal static class LogUtil
+    {
+        private static string WrapMessage(string message) => $"<color=#1116e4>[WayBetterRomance]</color> {message}";
+
+        internal static void Message(string message) => Log.Message(WrapMessage(message));
+        internal static void Warning(string message) => Log.Warning(WrapMessage(message));
+        internal static void WarningOnce(string message, int key) => Log.WarningOnce(WrapMessage(message), key);
+        internal static void Error(string message) => Log.Error(WrapMessage(message));
+        internal static void ErrorOnce(string message, int key) => Log.ErrorOnce(WrapMessage(message), key);
     }
 }

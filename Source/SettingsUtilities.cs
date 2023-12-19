@@ -141,10 +141,10 @@ namespace BetterRomance
                     case "safe.job.world":
                         return pawn.health.capacities.GetLevel(RomanceDefOf.RJW_Fertility);
                 }
-                Log.ErrorOnce("Unexpected value of fertilityMod: " + mod, 1798621);
+                LogUtil.ErrorOnce("Unexpected value of fertilityMod: " + mod, 1798621);
                 return 100f;
             }
-            Log.Message("If you are using a mod that adds fertility/pregnancy, please set it in the mod options for Way Better Romance. Otherwise, ignore this message.");
+            LogUtil.Message("If you are using a mod that adds fertility/pregnancy, please set it in the mod options for Way Better Romance. Otherwise, ignore this message.");
             return 100f;
         }
 
@@ -465,7 +465,7 @@ namespace BetterRomance
             }
             else
             {
-                Log.Message("Pawn has no gender, defaulting to female setting");
+                LogUtil.Message("Pawn has no gender, defaulting to female setting");
                 return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
             }
         }
