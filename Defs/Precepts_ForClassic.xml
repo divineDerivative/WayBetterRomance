@@ -35,7 +35,7 @@
 				<eventDef>TookLover_LoverCount_OneOrFewer</eventDef>
 				<gender>Male</gender>
 			</li>
-			<li Class="PreceptComp_UnwillingToDo_Gendered">
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>TookLover_LoverCount_Two</eventDef>
 				<gender>Male</gender>
 			</li>
@@ -72,7 +72,7 @@
 				<eventDef>TookLover_LoverCount_OneOrFewer</eventDef>
 				<gender>Female</gender>
 			</li>
-			<li Class="PreceptComp_UnwillingToDo_Gendered">
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>TookLover_LoverCount_Two</eventDef>
 				<gender>Female</gender>
 			</li>

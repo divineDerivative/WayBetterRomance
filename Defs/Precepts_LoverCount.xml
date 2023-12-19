@@ -35,17 +35,17 @@
 				<eventDef>TookLover_LoverCount_Two</eventDef>
 				<gender>Male</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>TookLover_LoverCount_Three</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Male</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>TookLover_LoverCount_Four</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Male</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Male</gender>
@@ -66,17 +66,17 @@
 				<eventDef>TookLover_LoverCount_Two</eventDef>
 				<gender>Female</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>TookLover_LoverCount_Three</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Female</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>TookLover_LoverCount_Four</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Female</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Female</gender>
@@ -241,7 +241,7 @@
 		</associatedMemes>
 	</PreceptDef>
 
-	<PreceptDef>
+	<PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
 		<defName>LoverCount_Female_Unlimited</defName>
 		<issue>LoverCount_Female</issue>
 		<description>Women may have as many lovers as they like.</description>

@@ -18,17 +18,17 @@
 				<eventDef>GotMarried_SpouseCount_Two</eventDef>
 				<gender>Male</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>GotMarried_SpouseCount_Three</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Male</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>GotMarried_SpouseCount_Four</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Male</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>GotMarried_SpouseCount_FiveOrMore</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Male</gender>
@@ -53,17 +53,17 @@
 				<eventDef>GotMarried_SpouseCount_Two</eventDef>
 				<gender>Female</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>GotMarried_SpouseCount_Three</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Female</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>GotMarried_SpouseCount_Four</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Female</gender>
 			</li>
-			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
 				<eventDef>GotMarried_SpouseCount_FiveOrMore</eventDef>
 				<displayDescription>false</displayDescription>
 				<gender>Female</gender>
