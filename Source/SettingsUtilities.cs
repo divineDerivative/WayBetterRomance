@@ -465,7 +465,7 @@ namespace BetterRomance
             }
             else
             {
-                LogUtil.Message("Pawn has no gender, defaulting to female setting");
+                LogUtil.WarningOnce($"Pawn {pawn.Label} has no gender, defaulting to female setting", pawn.thingIDNumber);
                 return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
             }
         }
