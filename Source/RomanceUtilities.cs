@@ -39,13 +39,13 @@ namespace BetterRomance
             foreach (Pawn p in GetAllLoveRelationPawns(pawn, false, false))
             {
                 //If the pawns have different ideos, I think this will check if the partner would feel cheated on per their ideo and settings
-                if (!new HistoryEvent(pawn.GetHistoryEventForLoveRelationCountPlusOne()).WillingToDoGendered(p.Ideo, pawn.gender) && p.CaresAboutCheating())
+                if (!pawn.GetHistoryEventForLoveRelationCountPlusOne().WillingToDoGendered(p.Ideo, pawn.gender) && p.CaresAboutCheating())
                 {
                     cheaterList.Add(p);
                 }
             }
             //The cheater list is for use later, initiator will only look at their ideo and settings to decide if they're cheating
-            if (new HistoryEvent(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo() || !pawn.CaresAboutCheating())
+            if (pawn.IsEventAllowed(pawn.GetHistoryEventForLoveRelationCountPlusOne()) || !pawn.CaresAboutCheating())
             {
                 //Faithful pawns will respect their partner's ideo
                 return !cheaterList.NullOrEmpty() && pawn.story.traits.HasTrait(RomanceDefOf.Faithful);
@@ -435,13 +435,13 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Whether a pawn with the given <paramref name="ideo"/> and <paramref name="gender"/> is able to do an event <paramref name="ev"/>
+        /// Whether a pawn with the given <paramref name="ideo"/> and <paramref name="gender"/> is able to do an event of <paramref name="def"/>
         /// </summary>
-        /// <param name="ev"></param>
+        /// <param name="def"></param>
         /// <param name="ideo"></param>
         /// <param name="gender"></param>
         /// <returns></returns>
-        public static bool WillingToDoGendered(this HistoryEvent ev, Ideo ideo, Gender gender)
+        public static bool WillingToDoGendered(this HistoryEventDef def, Ideo ideo, Gender gender)
         {
             //Look at each precept
             foreach (Precept precept in (List<Precept>)AccessTools.Field(typeof(Ideo), "precepts").GetValue(ideo))
@@ -453,12 +453,12 @@ namespace BetterRomance
                     if (comp is PreceptComp_UnwillingToDo_Gendered genderedComp)
                     {
                         //First check if this precept is for the event in question
-                        if (genderedComp.eventDef != ev.def)
+                        if (genderedComp.eventDef != def)
                         {
                             continue;
                         }
                         //Now we compare the gender we're asking about with the gender of the comp
-                        //If they the same, then the extra lover is not allowed for the gender in question
+                        //If they are the same, then the extra lover is not allowed for the gender in question
                         if (gender == genderedComp.gender)
                         {
                             return false;

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<!-- Issues -->
+	<IssueDef>
+		<defName>LoverCount_Male</defName>
+		<label>Men's lovers</label>
+		<iconPath>UI/Issues/SpouseCountMale</iconPath> <!--Probably need a new icon-->
+	</IssueDef>
+
+	<IssueDef>
+		<defName>LoverCount_Female</defName>
+		<label>Women's lovers</label>
+		<iconPath>UI/Issues/SpouseCountFemale</iconPath>
+	</IssueDef>
+
+	<!-- History events -->
+	<HistoryEventDef>
+		<defName>TookLover_LoverCount_OneOrFewer</defName>
+		<label>has one or fewer lovers</label>
+	</HistoryEventDef>
+
+	<!-- Precepts -->
+	<PreceptDef>
+		<defName>LoverCount_Male_None</defName>
+		<issue>LoverCount_Male</issue>
+		<label>none</label>
+		<description>Men may not have any lovers.</description>
+		<impact>Low</impact>
+		<displayOrderInIssue>0</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<defaultSelectionWeight>1</defaultSelectionWeight>
+		<classic>true</classic>
+		<comps>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_OneOrFewer</eventDef>
+				<gender>Male</gender>
+			</li>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Two</eventDef>
+				<gender>Male</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Three</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Male</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Four</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Male</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Male</gender>
+			</li>
+		</comps>
+	</PreceptDef>
+
+	<PreceptDef>
+		<defName>LoverCount_Female_None</defName>
+		<issue>LoverCount_Female</issue>
+		<label>none</label>
+		<description>Women not may have any lovers.</description>
+		<impact>Low</impact>
+		<displayOrderInIssue>0</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<defaultSelectionWeight>1</defaultSelectionWeight>
+		<classic>true</classic>
+		<comps>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_OneOrFewer</eventDef>
+				<gender>Female</gender>
+			</li>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Two</eventDef>
+				<gender>Female</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Three</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Female</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Four</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Female</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Female</gender>
+			</li>
+		</comps>
+	</PreceptDef>
+</Defs>

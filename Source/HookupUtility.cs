@@ -119,7 +119,8 @@ namespace BetterRomance
             bool maxPartners = count >= 1;
             if (maxPartners && ModsConfig.IdeologyActive)
             {
-                maxPartners = !new HistoryEvent(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo();
+                maxPartners = !pawn.IsEventAllowed(pawn.GetHistoryEventForLoveRelationCountPlusOne());
+                LogUtil.Message($"{pawn.LabelShort} is {(maxPartners ? "not " : "")}allowed to take a new lover");
             }
             if (!maxPartners || !pawn.CaresAboutCheating())
             {
@@ -427,7 +428,7 @@ namespace BetterRomance
                 return initiator ? "WBR.CantHookupInitiateMessageTrait".Translate(pawn) : "WBR.CantHookupTargetTrait".Translate();
             }
             //If their ideo prohibits all lovin', do not allow
-            if (!new HistoryEvent(HistoryEventDefOf.SharedBed, pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo())
+            if (!pawn.IsEventAllowed(HistoryEventDefOf.SharedBed))
             {
                 return initiator ? "WBR.CantHookupInitiateMessageIdeo".Translate(pawn) : "WBR.CantHookupTargetIdeo".Translate(pawn.ideo.Ideo);
             }

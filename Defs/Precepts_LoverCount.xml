@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<!-- History events -->
+	<HistoryEventDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>TookLover_LoverCount_Two</defName>
+		<label>has two or more lovers</label>
+	</HistoryEventDef>
+
+	<HistoryEventDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>TookLover_LoverCount_Three</defName>
+		<label>has three or more lovers</label>
+	</HistoryEventDef>
+
+	<HistoryEventDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>TookLover_LoverCount_Four</defName>
+		<label>has four or more lovers</label>
+	</HistoryEventDef>
+
+	<HistoryEventDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>TookLover_LoverCount_FiveOrMore</defName>
+		<label>has five or more lovers</label>
+	</HistoryEventDef>
+
+	<!-- Precepts -->
+	<PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>LoverCount_Male_MaxOne</defName>
+		<issue>LoverCount_Male</issue>
+		<label>one only</label>
+		<description>Men may have one lover only.</description>
+		<impact>Medium</impact>
+		<displayOrderInIssue>0</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<comps>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Two</eventDef>
+				<gender>Male</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Three</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Male</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Four</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Male</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Male</gender>
+			</li>
+		</comps>
+	</PreceptDef>
+
+	<PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>LoverCount_Female_MaxOne</defName>
+		<issue>LoverCount_Female</issue>
+		<label>one only</label>
+		<description>Women may have one lover only.</description>
+		<impact>Medium</impact>
+		<displayOrderInIssue>0</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<comps>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Two</eventDef>
+				<gender>Female</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Three</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Female</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Four</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Female</gender>
+			</li>
+			<li MayRequire="Ludeon.RimWorld.Ideology" Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Female</gender>
+			</li>
+		</comps>
+	</PreceptDef>
+
+	<PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>LoverCount_Male_MaxTwo</defName>
+		<issue>LoverCount_Male</issue>
+		<label>two or fewer</label>
+		<description>Men may have up to two lovers.</description>
+		<impact>Medium</impact>
+		<displayOrderInIssue>70</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<associatedMemes>
+			<li>MaleSupremacy</li>
+		</associatedMemes>
+		<comps>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Three</eventDef>
+				<gender>Male</gender>
+			</li>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Four</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Male</gender>
+			</li>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Male</gender>
+			</li>
+		</comps>
+	</PreceptDef>
+
+	<PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>LoverCount_Female_MaxTwo</defName>
+		<issue>LoverCount_Female</issue>
+		<label>two or fewer</label>
+		<description>Women may have up to two lovers.</description>
+		<impact>Medium</impact>
+		<displayOrderInIssue>60</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<associatedMemes>
+			<li>FemaleSupremacy</li>
+		</associatedMemes>
+		<comps>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Three</eventDef>
+				<gender>Female</gender>
+			</li>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Four</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Female</gender>
+			</li>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Female</gender>
+			</li>
+		</comps>
+	</PreceptDef>
+
+	<PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>LoverCount_Male_MaxThree</defName>
+		<issue>LoverCount_Male</issue>
+		<label>three or fewer</label>
+		<description>Men may have up to three lovers.</description>
+		<impact>Medium</impact>
+		<displayOrderInIssue>50</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<associatedMemes>
+			<li>MaleSupremacy</li>
+		</associatedMemes>
+		<comps>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Four</eventDef>
+				<gender>Male</gender>
+			</li>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Male</gender>
+			</li>
+		</comps>
+	</PreceptDef>
+
+	<PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>LoverCount_Female_MaxThree</defName>
+		<issue>LoverCount_Female</issue>
+		<label>three or fewer</label>
+		<description>Women may have up to three lovers.</description>
+		<impact>Medium</impact>
+		<displayOrderInIssue>40</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<associatedMemes>
+			<li>FemaleSupremacy</li>
+		</associatedMemes>
+		<comps>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_Four</eventDef>
+				<gender>Female</gender>
+			</li>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
+				<displayDescription>false</displayDescription>
+				<gender>Female</gender>
+			</li>
+		</comps>
+	</PreceptDef>
+
+	<PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>LoverCount_Male_MaxFour</defName>
+		<issue>LoverCount_Male</issue>
+		<label>four or fewer</label>
+		<description>Men may have up to four lovers.</description>
+		<impact>Medium</impact>
+		<displayOrderInIssue>30</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<associatedMemes>
+			<li>MaleSupremacy</li>
+		</associatedMemes>
+		<comps>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
+				<gender>Male</gender>
+			</li>
+		</comps>
+	</PreceptDef>
+
+	<PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>LoverCount_Female_MaxFour</defName>
+		<issue>LoverCount_Female</issue>
+		<label>four or fewer</label>
+		<description>Women may have up to four lovers.</description>
+		<impact>Medium</impact>
+		<displayOrderInIssue>20</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<associatedMemes>
+			<li>FemaleSupremacy</li>
+		</associatedMemes>
+		<comps>
+			<li Class="PreceptComp_UnwillingToDo_Gendered">
+				<eventDef>TookLover_LoverCount_FiveOrMore</eventDef>
+				<gender>Female</gender>
+			</li>
+		</comps>
+	</PreceptDef>
+
+	<PreceptDef MayRequire="Ludeon.RimWorld.Ideology">
+		<defName>LoverCount_Male_Unlimited</defName>
+		<issue>LoverCount_Male</issue>
+		<description>Men may have as many lovers as they like.</description>
+		<label>unlimited</label>
+		<impact>Medium</impact>
+		<displayOrderInIssue>10</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<associatedMemes>
+			<li>MaleSupremacy</li>
+		</associatedMemes>
+	</PreceptDef>
+
+	<PreceptDef>
+		<defName>LoverCount_Female_Unlimited</defName>
+		<issue>LoverCount_Female</issue>
+		<description>Women may have as many lovers as they like.</description>
+		<label>unlimited</label>
+		<impact>Medium</impact>
+		<displayOrderInIssue>0</displayOrderInIssue>
+		<displayOrderInImpact>-100</displayOrderInImpact>
+		<associatedMemes>
+			<li>FemaleSupremacy</li>
+		</associatedMemes>
+	</PreceptDef>
+</Defs>

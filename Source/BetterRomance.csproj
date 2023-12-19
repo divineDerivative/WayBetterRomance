@@ -91,6 +91,9 @@
     <Compile Include="Mod Integration\CompatUtility.cs" />
     <Compile Include="Mod Integration\OtherMods.cs" />
     <Compile Include="Mod Integration\RotR_Integration.cs" />
+    <Compile Include="New Precepts\PreceptUtility.cs" />
+    <Compile Include="New Precepts\LovePartnerRelationUtility.cs" />
+    <Compile Include="New Precepts\SpouseRelationUtility.cs" />
     <Compile Include="PawnAvailability.cs" />
     <Compile Include="DateUtility.cs" />
     <Compile Include="Harmony\Biotech\FloatMenuMakerMap.cs" />

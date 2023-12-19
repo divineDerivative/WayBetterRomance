@@ -56,6 +56,38 @@ namespace BetterRomance
         public static PawnCapacityDef Fertility;
         [MayRequireRJW]
         public static PawnCapacityDef RJW_Fertility;
+        [MayRequireIdeology]
+        public static HistoryEventDef TookLover_LoverCount_OneOrFewer;
+        [MayRequireIdeology]
+        public static HistoryEventDef TookLover_LoverCount_Two;
+        [MayRequireIdeology]
+        public static HistoryEventDef TookLover_LoverCount_Three;
+        [MayRequireIdeology]
+        public static HistoryEventDef TookLover_LoverCount_Four;
+        [MayRequireIdeology]
+        public static HistoryEventDef TookLover_LoverCount_FiveOrMore;
+        [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Male_None;
+        [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Female_None;
+        public static PreceptDef SpouseCount_Male_MaxOne;
+        public static PreceptDef SpouseCount_Female_MaxOne;
+        [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Male_MaxTwo;
+        [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Female_MaxTwo;
+        [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Male_MaxThree;
+        [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Female_MaxThree;
+        [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Male_MaxFour;
+        [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Female_MaxFour;
+        [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Male_Unlimited;
+        [MayRequireIdeology]
+        public static PreceptDef SpouseCount_Female_Unlimited;
 
         //Vanilla stuff I need a reference to
         public static JobDef CastAbilityOnThingUninterruptible;

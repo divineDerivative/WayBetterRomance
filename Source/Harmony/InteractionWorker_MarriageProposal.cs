@@ -10,7 +10,7 @@ namespace BetterRomance.HarmonyPatches
 {
     //This determines if a pawn will propose marriage to another pawn
     [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), "RandomSelectionWeight")]
-    [HarmonyAfter(new string[] { "cedaro.NoHopelessRomance"})]
+    [HarmonyAfter(new string[] { "cedaro.NoHopelessRomance" })]
     public static class InteractionWorker_MarriageProposal_RandomSelectionWeight
     {
         //Changes from Vanilla:
@@ -28,6 +28,7 @@ namespace BetterRomance.HarmonyPatches
             }
             //If pawns are not already in a lover relationship, do not allow
             DirectPawnRelation directRelation = initiator.relations.GetDirectRelation(PawnRelationDefOf.Lover, recipient);
+
             if (directRelation == null)
             {
                 //Check for additional love relations
@@ -55,9 +56,7 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
             //This is vanilla code for checking if ideology allows for the new spouse relation
-            HistoryEvent ev = new HistoryEvent(initiator.GetHistoryEventForSpouseAndFianceCountPlusOne(), initiator.Named(HistoryEventArgsNames.Doer));
-            HistoryEvent ev2 = new HistoryEvent(recipient.GetHistoryEventForSpouseAndFianceCountPlusOne(), recipient.Named(HistoryEventArgsNames.Doer));
-            if (!ev.DoerWillingToDo() || !ev2.DoerWillingToDo())
+            if (!initiator.IsEventAllowed(initiator.GetHistoryEventForSpouseAndFianceCountPlusOne()) || !recipient.IsEventAllowed(recipient.GetHistoryEventForSpouseAndFianceCountPlusOne()))
             {
                 __result = 0f;
                 return false;
