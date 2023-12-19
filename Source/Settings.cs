@@ -25,7 +25,7 @@ namespace BetterRomance
         public int minOpinionRomance = 5;
         public int minOpinionHookup = 0;
 
-        public string fertilityMod = "None";
+        public static string fertilityMod = "None";
         public bool joyOnSlaves = false;
         public bool joyOnPrisoners = false;
 
@@ -144,22 +144,22 @@ namespace BetterRomance
             }
 
             list.Gap();
-            if (Settings.FertilityMods.Count == 1 && (settings.fertilityMod == "None" || !Settings.FertilityMods.ContainsKey(settings.fertilityMod)))
+            if (Settings.FertilityMods.Count == 1 && (Settings.fertilityMod == "None" || !Settings.FertilityMods.ContainsKey(Settings.fertilityMod)))
             {
-                settings.fertilityMod = Settings.FertilityMods.First().Key;
+                Settings.fertilityMod = Settings.FertilityMods.First().Key;
             }
-            else if (!Settings.FertilityMods.ContainsKey(settings.fertilityMod))
+            else if (!Settings.FertilityMods.ContainsKey(Settings.fertilityMod))
             {
-                settings.fertilityMod = "None";
+                Settings.fertilityMod = "None";
             }
-            if (list.ButtonTextLabeled("Fertility Mod", settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(settings.fertilityMod) : "None"))
+            if (list.ButtonTextLabeled("Fertility Mod", Settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(Settings.fertilityMod) : "None"))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 foreach (KeyValuePair<string, string> item in Settings.FertilityMods)
                 {
                     options.Add(new FloatMenuOption(item.Value, delegate
                     {
-                        settings.fertilityMod = item.Key;
+                        Settings.fertilityMod = item.Key;
                     }));
                 }
                 if (!options.NullOrEmpty())

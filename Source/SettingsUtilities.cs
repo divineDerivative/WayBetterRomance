@@ -109,9 +109,9 @@ namespace BetterRomance
         {
             if (asker.HookupForBreedingOnly() || target.HookupForBreedingOnly())
             {
-                if (BetterRomanceMod.settings.fertilityMod != "None")
+                if (Settings.fertilityMod != "None")
                 {
-                    string mod = BetterRomanceMod.settings.fertilityMod;
+                    string mod = Settings.fertilityMod;
                     if (ModsConfig.BiotechActive && mod == "ludeon.rimworld.biotech")
                     {
                         return PregnancyUtility.CanEverProduceChild(asker, target);
@@ -128,9 +128,9 @@ namespace BetterRomance
 
         public static float GetFertilityLevel(this Pawn pawn)
         {
-            if (BetterRomanceMod.settings.fertilityMod != "None")
+            if (Settings.fertilityMod != "None")
             {
-                string mod = BetterRomanceMod.settings.fertilityMod;
+                string mod = Settings.fertilityMod;
                 switch (mod)
                 {
                     case "ludeon.rimworld.biotech":
