@@ -182,6 +182,10 @@ namespace BetterRomance.HarmonyPatches
             {
                 ___pawn.CheckForPartnerComp();
             }
+            if (___pawn.IsAsexual())
+            {
+                ___pawn.CheckForAsexualComp();
+            }
         }
     }
 }

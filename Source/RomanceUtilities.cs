@@ -268,11 +268,29 @@ namespace BetterRomance
         /// <returns>float between 0 and 1</returns>
         public static float AsexualRating(this Pawn pawn)
         {
-            Rand.PushState();
-            Rand.Seed = pawn.thingIDNumber;
-            float rating = Rand.Range(0f, 1f);
-            Rand.PopState();
-            return rating;
+            Comp_SexRepulsion comp = pawn.CheckForAsexualComp();
+            return comp.rating;
+        }
+
+        public static Comp_SexRepulsion CheckForAsexualComp(this Pawn p)
+        {
+            Comp_SexRepulsion comp = p.TryGetComp<Comp_SexRepulsion>();
+            if (comp == null)
+            {
+                FieldInfo field = AccessTools.Field(typeof(ThingWithComps), "comps");
+                List<ThingComp> compList = (List<ThingComp>)field.GetValue(p);
+                ThingComp newComp = (ThingComp)Activator.CreateInstance(typeof(Comp_SexRepulsion));
+                newComp.parent = p;
+                compList.Add(newComp);
+                newComp.Initialize(new CompProperties());
+                newComp.PostExposeData();
+                comp = p.TryGetComp<Comp_SexRepulsion>();
+                if (comp == null)
+                {
+                    LogUtil.Error("Unable to add Comp_SexRepulsion");
+                }
+            }
+            return comp;
         }
 
         /// <summary>
