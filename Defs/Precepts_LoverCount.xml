@@ -26,7 +26,7 @@
 		<defName>LoverCount_Male_MaxOne</defName>
 		<issue>LoverCount_Male</issue>
 		<label>one only</label>
-		<description>Men may have one lover only.</description>
+		<description>Men may have one lover, in addition to spouses.</description>
 		<impact>Medium</impact>
 		<displayOrderInIssue>0</displayOrderInIssue>
 		<displayOrderInImpact>-100</displayOrderInImpact>
@@ -57,7 +57,7 @@
 		<defName>LoverCount_Female_MaxOne</defName>
 		<issue>LoverCount_Female</issue>
 		<label>one only</label>
-		<description>Women may have one lover only.</description>
+		<description>Women may have one lover, in addition to spouses.</description>
 		<impact>Medium</impact>
 		<displayOrderInIssue>0</displayOrderInIssue>
 		<displayOrderInImpact>-100</displayOrderInImpact>
@@ -88,7 +88,7 @@
 		<defName>LoverCount_Male_MaxTwo</defName>
 		<issue>LoverCount_Male</issue>
 		<label>two or fewer</label>
-		<description>Men may have up to two lovers.</description>
+		<description>Men may have up to two lovers, in addition to spouses.</description>
 		<impact>Medium</impact>
 		<displayOrderInIssue>70</displayOrderInIssue>
 		<displayOrderInImpact>-100</displayOrderInImpact>
@@ -117,7 +117,7 @@
 		<defName>LoverCount_Female_MaxTwo</defName>
 		<issue>LoverCount_Female</issue>
 		<label>two or fewer</label>
-		<description>Women may have up to two lovers.</description>
+		<description>Women may have up to two lovers, in addition to spouses.</description>
 		<impact>Medium</impact>
 		<displayOrderInIssue>60</displayOrderInIssue>
 		<displayOrderInImpact>-100</displayOrderInImpact>
@@ -146,7 +146,7 @@
 		<defName>LoverCount_Male_MaxThree</defName>
 		<issue>LoverCount_Male</issue>
 		<label>three or fewer</label>
-		<description>Men may have up to three lovers.</description>
+		<description>Men may have up to three lovers, in addition to spouses.</description>
 		<impact>Medium</impact>
 		<displayOrderInIssue>50</displayOrderInIssue>
 		<displayOrderInImpact>-100</displayOrderInImpact>
@@ -170,7 +170,7 @@
 		<defName>LoverCount_Female_MaxThree</defName>
 		<issue>LoverCount_Female</issue>
 		<label>three or fewer</label>
-		<description>Women may have up to three lovers.</description>
+		<description>Women may have up to three lovers, in addition to spouses.</description>
 		<impact>Medium</impact>
 		<displayOrderInIssue>40</displayOrderInIssue>
 		<displayOrderInImpact>-100</displayOrderInImpact>
@@ -194,7 +194,7 @@
 		<defName>LoverCount_Male_MaxFour</defName>
 		<issue>LoverCount_Male</issue>
 		<label>four or fewer</label>
-		<description>Men may have up to four lovers.</description>
+		<description>Men may have up to four lovers, in addition to spouses.</description>
 		<impact>Medium</impact>
 		<displayOrderInIssue>30</displayOrderInIssue>
 		<displayOrderInImpact>-100</displayOrderInImpact>
@@ -213,7 +213,7 @@
 		<defName>LoverCount_Female_MaxFour</defName>
 		<issue>LoverCount_Female</issue>
 		<label>four or fewer</label>
-		<description>Women may have up to four lovers.</description>
+		<description>Women may have up to four lovers, in addition to spouses.</description>
 		<impact>Medium</impact>
 		<displayOrderInIssue>20</displayOrderInIssue>
 		<displayOrderInImpact>-100</displayOrderInImpact>

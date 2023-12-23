@@ -8,11 +8,20 @@
 		<match Class="PatchOperationSequence">
 			<operations>
 				<li Class="PatchOperationAdd">
-					<xpath>/Defs/PreceptDef[defName="Lovin_Horrible" or defName="Lovin_SpouseOnly_Strict"]/comps</xpath>
+					<xpath>/Defs/PreceptDef[defName="Lovin_Horrible"]/comps</xpath>
 					<value>
 						<li Class="PreceptComp_UnwillingToDo_Chance">
 							<eventDef>GotLovin_NonSpouse</eventDef>
-							<chance>0.9</chance>
+							<chance>0.99</chance>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAdd">
+					<xpath>/Defs/PreceptDef[defName="Lovin_SpouseOnly_Strict"]/comps</xpath>
+					<value>
+						<li Class="PreceptComp_UnwillingToDo_Chance">
+							<eventDef>GotLovin_NonSpouse</eventDef>
+							<chance>0.90</chance>
 						</li>
 					</value>
 				</li>
@@ -21,7 +30,7 @@
 					<value>
 						<li Class="PreceptComp_UnwillingToDo_Chance">
 							<eventDef>GotLovin_NonSpouse</eventDef>
-							<chance>0.75</chance>
+							<chance>0.80</chance>
 						</li>
 					</value>
 				</li>
@@ -30,7 +39,7 @@
 					<value>
 						<li Class="PreceptComp_UnwillingToDo_Chance">
 							<eventDef>GotLovin_NonSpouse</eventDef>
-							<chance>0.5</chance>
+							<chance>0.6</chance>
 						</li>
 					</value>
 				</li>

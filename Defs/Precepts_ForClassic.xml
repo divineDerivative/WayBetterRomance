@@ -24,7 +24,7 @@
 		<defName>LoverCount_Male_None</defName>
 		<issue>LoverCount_Male</issue>
 		<label>none</label>
-		<description>Men may not have any lovers.</description>
+		<description>Men may not have any lovers in addition to spouses.</description>
 		<impact>Low</impact>
 		<displayOrderInIssue>0</displayOrderInIssue>
 		<displayOrderInImpact>-100</displayOrderInImpact>
@@ -61,7 +61,7 @@
 		<defName>LoverCount_Female_None</defName>
 		<issue>LoverCount_Female</issue>
 		<label>none</label>
-		<description>Women not may have any lovers.</description>
+		<description>Women not may have any lovers in addition to spouses.</description>
 		<impact>Low</impact>
 		<displayOrderInIssue>0</displayOrderInIssue>
 		<displayOrderInImpact>-100</displayOrderInImpact>
