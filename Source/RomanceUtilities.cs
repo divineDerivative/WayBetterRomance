@@ -118,7 +118,7 @@ namespace BetterRomance
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns></returns>
-        public static float CheatingChance(Pawn pawn)
+        public static float CheatingChance(Pawn pawn, bool excludePrecept = false)
         {
             //If they are faithful, don't do it
             if (pawn.story.traits.HasTrait(RomanceDefOf.Faithful))
@@ -137,7 +137,7 @@ namespace BetterRomance
                 cheatChance *= .25f;
             }
             //Adjust for RotR precepts
-            if (Settings.RotRActive && pawn.Ideo != null)
+            if (Settings.RotRActive && pawn.Ideo != null && !excludePrecept)
             {
                 cheatChance *= RotR_Integration.RotRCheatChanceModifier(pawn);
             }

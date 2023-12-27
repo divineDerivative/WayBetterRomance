@@ -458,10 +458,18 @@ namespace BetterRomance
             //Adjustment for opinion of existing partner
             if (RomanceUtilities.IsThisCheating(target, initiator, out List<Pawn> partnerList) && !partnerList.NullOrEmpty())
             {
-                float cheating = RomanceUtilities.PartnerFactor(target, partnerList, out _) * RomanceUtilities.CheatingChance(target);
+                float cheating = RomanceUtilities.PartnerFactor(target, partnerList, out _) * RomanceUtilities.CheatingChance(target, true);
                 if (cheating != 1f)
                 {
                     text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheating));
+                }
+                if (Settings.RotRActive && target.Ideo != null)
+                {
+                    string precept = RotR_Integration.RotRCheatingPreceptExplanation(target);
+                    if (!precept.NullOrEmpty())
+                    {
+                        text.AppendLine(precept);
+                    }
                 }
             }
             //Effect of target's beauty stat

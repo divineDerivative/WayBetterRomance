@@ -31,6 +31,7 @@ namespace BetterRomance
             {
                 Settings.RotRActive = true;
                 HelperClasses.RotRFillRomanceBar = AccessTools.DeclaredMethod(Type.GetType("RomanceOnTheRim.RomanceUtility,RomanceOnTheRim"), "TryAffectRomanceNeedLevelForPawn");
+                HelperClasses.RotRPreceptExplanation = AccessTools.Method(Type.GetType("RomanceOnTheRim.HarmonyPatch_SocialCardUtility_RomanceExplanation,RomanceOnTheRim"), "PreceptExplanation");
                 harmony.PatchRotR();
             }
             if (ModsConfig.IsActive("dylan.csl"))
@@ -103,6 +104,7 @@ namespace BetterRomance
     public static class HelperClasses
     {
         public static MethodInfo RotRFillRomanceBar;
+        public static MethodInfo RotRPreceptExplanation;
         public static MethodInfo CSLLoved;
         public static MethodInfo IsConsideredMechanicalAndroid;
         public static MethodInfo IsConsideredMechanicalDrone;
