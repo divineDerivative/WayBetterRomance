@@ -2,6 +2,7 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace BetterRomance
@@ -537,8 +538,11 @@ namespace BetterRomance
 
         internal static void GrabBiotechStuff()
         {
-            femaleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "femaleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
-            maleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "maleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
+            if (StatDefOf.Fertility.parts != null && StatDefOf.Fertility.parts.OfType<StatPart_FertilityByGenderAge>().Any())
+            {
+                femaleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "femaleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
+                maleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "maleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
+            }
             childBirthByAgeCurve = RitualOutcomeEffectDefOf.ChildBirth.comps.Find(c => c is RitualOutcomeComp_PawnAge) as RitualOutcomeComp_PawnAge;
         }
 
