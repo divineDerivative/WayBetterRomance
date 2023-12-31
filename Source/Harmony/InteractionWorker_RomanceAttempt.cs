@@ -13,7 +13,7 @@ namespace BetterRomance.HarmonyPatches
     //This determines chances of a pawn initiating a romance attempt (not a hookup)
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "RandomSelectionWeight")]
     [HarmonyAfter(new string[] { "cedaro.NoHopelessRomance" })]
-    public class InteractionWorker_RomanceAttempt_RandomSelectionWeight
+    public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
     {
         //Changes from Vanilla:
         //Updated with new orientation options and traits.
@@ -97,7 +97,7 @@ namespace BetterRomance.HarmonyPatches
 
     //This breaks up with existing lovers/fiances if pawn cares about cheating and a new lover is not allowed by ideo
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "BreakLoverAndFianceRelations")]
-    public class InteractionWorker_RomanceAttempt_BreakLoverAndFianceRelations
+    public static class InteractionWorker_RomanceAttempt_BreakLoverAndFianceRelations
     {
         //Changes from Vanilla:
         //Accounts for cheating settings
@@ -180,7 +180,7 @@ namespace BetterRomance.HarmonyPatches
 
     //This just skips the method if the pawn that was cheated on doesn't care about cheating
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "TryAddCheaterThought")]
-    public class InteractionWorker_RomanceAttempt_TryAddCheaterThought
+    public static class InteractionWorker_RomanceAttempt_TryAddCheaterThought
     {
         //Changes from Vanilla:
         //Checks if pawn cares about cheating
@@ -193,7 +193,7 @@ namespace BetterRomance.HarmonyPatches
     //Determines factors based on opinion of other pawn, used by SuccessChance
     //Needs patched to use min romance setting instead of static 5f from vanilla
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "OpinionFactor")]
-    public class InteractionWorker_RomanceAttempt_OpinionFactor
+    public static class InteractionWorker_RomanceAttempt_OpinionFactor
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -216,13 +216,14 @@ namespace BetterRomance.HarmonyPatches
     //Determines factors based on relationships with other pawns, used by SuccessChance
     //Needs patched to use my smarter methods of looking at existing partners
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "PartnerFactor")]
-    public class InteractionWorker_RomanceAttempt_PartnerFactor
+    public static class InteractionWorker_RomanceAttempt_PartnerFactor
     {
+        internal static bool forTooltip;
         public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
         {
             float relationFactor = 1f;
             //Check if this is cheating and whether they decide to do it anyways, also grabs the partner they would feel worst about cheating on
-            if (!RomanceUtilities.WillPawnContinue(recipient, initiator, out Pawn partnerToConsider))
+            if (!RomanceUtilities.WillPawnContinue(recipient, initiator, out Pawn partnerToConsider) && !forTooltip)
             {
                 __result = 0f;
                 return false;
@@ -232,56 +233,84 @@ namespace BetterRomance.HarmonyPatches
                 //There is a partner they would be cheating on, adjustments to factor are taken from vanilla
                 if (partnerToConsider != null)
                 {
-                    if (recipient.relations.DirectRelationExists(PawnRelationDefOf.Lover, partnerToConsider))
-                    {
-                        relationFactor = 0.6f;
-                    }
-                    else if (recipient.relations.DirectRelationExists(PawnRelationDefOf.Fiance, partnerToConsider))
-                    {
-                        relationFactor = 0.1f;
-                    }
-                    else if (recipient.relations.DirectRelationExists(PawnRelationDefOf.Spouse, partnerToConsider))
-                    {
-                        relationFactor = 0.3f;
-                    }
-                    //Check for custom relations and use same adjustment as lover
-                    else if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
-                    {
-                        foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
-                        {
-                            if (recipient.relations.DirectRelationExists(rel, partnerToConsider))
-                            {
-                                relationFactor = 0.6f;
-                                break;
-                            }
-                        }
-                    }
-                    //This checks opinion of existing relation
-                    //0 at 100 opinion, 1 at 0 opinion
-                    relationFactor *= Mathf.InverseLerp(100f, 0f, recipient.relations.OpinionOf(partnerToConsider));
-                    if (recipient.story.traits.HasTrait(RomanceDefOf.Philanderer))
-                    {
-                        //Increase for philanderer trait
-                        relationFactor *= 1.6f;
-                        //Super increase if their current partner is not on the map
-                        if (partnerToConsider.Map != recipient.Map)
-                        {
-                            relationFactor *= 2f;
-                        }
-                    }
-                    //Adjust based on romance chance factor of existing relation
-                    relationFactor *= Mathf.Clamp01(1f - recipient.relations.SecondaryRomanceChanceFactor(partnerToConsider));
+                    relationFactor = PartnerRelationFactor(recipient, partnerToConsider);
                 }
                 //If there's no parnter they're cheating on, then factor remains unchanged
                 __result = relationFactor;
                 return false;
             }
         }
+
+        /// <summary>
+        /// Factor based on the type of relationship <paramref name="pawn"/> has with <paramref name="partner"/>
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <param name="partner"></param>
+        /// <returns></returns>
+        public static float PartnerRelationFactor(Pawn pawn, Pawn partner)
+        {
+            float relationFactor = 1f;
+            if (pawn.relations.DirectRelationExists(PawnRelationDefOf.Lover, partner))
+            {
+                relationFactor = 0.6f;
+            }
+            else if (pawn.relations.DirectRelationExists(PawnRelationDefOf.Fiance, partner))
+            {
+                relationFactor = 0.1f;
+            }
+            else if (pawn.relations.DirectRelationExists(PawnRelationDefOf.Spouse, partner))
+            {
+                relationFactor = 0.3f;
+            }
+            //Check for custom relations and use same adjustment as lover
+            else if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
+            {
+                foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
+                {
+                    if (pawn.relations.DirectRelationExists(rel, partner))
+                    {
+                        relationFactor = 0.6f;
+                        break;
+                    }
+                }
+            }
+            //This checks opinion of existing relation
+            //0 at 100 opinion, 1 at 0 opinion
+            relationFactor *= Mathf.InverseLerp(100f, 0f, pawn.relations.OpinionOf(partner));
+            if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
+            {
+                //Increase for philanderer trait
+                relationFactor *= 1.6f;
+                //Super increase if their current partner is not on the map
+                if (partner.Map != pawn.Map)
+                {
+                    relationFactor *= 2f;
+                }
+            }
+            //Adjust based on romance chance factor of existing relation
+            float rcFactor = pawn.relations.SecondaryLovinChanceFactor(partner);
+            float clamped = Mathf.Clamp01(1f - rcFactor);
+            relationFactor *= clamped;
+            return relationFactor;
+        }
+
+        //Reset when done
+        public static void Postfix()
+        {
+            forTooltip = false;
+        }
     }
 
+    //Adds a sexuality factor to the romance success chance tooltip
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.RomanceFactors))]
     public static class InteractionWorker_RomanceAttempt_RomanceFactors
     {
+        //Lets the PartnerFactor patch know I don't care about the result of WillPawnContinue
+        public static void Prefix()
+        {
+            InteractionWorker_RomanceAttempt_PartnerFactor.forTooltip = true;
+        }
+
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             MethodInfo PrettinessFactor = AccessTools.Method(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.PrettinessFactor));
