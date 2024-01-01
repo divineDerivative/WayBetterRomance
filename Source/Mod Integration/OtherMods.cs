@@ -15,7 +15,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static bool IsSexualityTraitPrefix(Trait trait, ref bool __result)
         {
-            __result = RomanceUtilities.OrientationTraits.Contains(trait.def);
+            __result = SexualityUtility.OrientationTraits.Contains(trait.def);
             return false;
         }
 
@@ -55,7 +55,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else if (i == startIndex)
                 {
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.IsAsexual));
+                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.IsAsexual));
                 }
                 else if (i > endIndex)
                 {
@@ -105,7 +105,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else if (asexualFound)
                 {
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.IsAsexual));
+                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.IsAsexual));
                     asexualFound = false;
                 }
                 else

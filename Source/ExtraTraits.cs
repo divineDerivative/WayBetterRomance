@@ -13,7 +13,7 @@ namespace BetterRomance
             {
                 foreach (Trait trait in pawn.story.traits.allTraits)
                 {
-                    if (RomanceUtilities.OrientationTraits.Contains(trait.def))
+                    if (SexualityUtility.OrientationTraits.Contains(trait.def))
                     {
                         return;
                     }

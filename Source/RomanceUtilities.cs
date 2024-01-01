@@ -262,87 +262,6 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// A rating to use for determining sex aversion for asexual pawns. Seed is based on pawn's ID, so it will always return the same number for a given pawn.
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns>float between 0 and 1</returns>
-        public static float AsexualRating(this Pawn pawn)
-        {
-            Rand.PushState();
-            Rand.Seed = pawn.thingIDNumber;
-            float rating = Rand.Range(0f, 1f);
-            Rand.PopState();
-            return rating;
-        }
-
-        /// <summary>
-        /// Determines the romantic <see cref="Orientation"/> of a <paramref name="pawn"/> based on their traits
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
-        public static Orientation GetOrientation(this Pawn pawn)
-        {
-            if (pawn.story != null && pawn.story.traits != null)
-            {
-                TraitSet traits = pawn.story.traits;
-                if (traits.HasTrait(TraitDefOf.Gay) || traits.HasTrait(RomanceDefOf.HomoAce))
-                {
-                    return Orientation.Homo;
-                }
-                else if (traits.HasTrait(RomanceDefOf.Straight) || traits.HasTrait(RomanceDefOf.HeteroAce))
-                {
-                    return Orientation.Hetero;
-                }
-                else if (traits.HasTrait(TraitDefOf.Bisexual) || traits.HasTrait(RomanceDefOf.BiAce))
-                {
-                    return Orientation.Bi;
-                }
-                else if (traits.HasTrait(TraitDefOf.Asexual))
-                {
-                    return Orientation.None;
-                }
-            }
-            return Orientation.None;
-        }
-
-        private static List<TraitDef> asexualTraits = new List<TraitDef> { TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce };
-
-        public static bool IsAsexual(this Pawn pawn)
-        {
-            if (pawn.story != null && pawn.story.traits != null)
-            {
-                foreach (Trait trait in pawn.story.traits.allTraits)
-                {
-                    if (asexualTraits.Contains(trait.def) && !trait.Suppressed)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public static bool IsHomo(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Homo;
-        }
-
-        public static bool IsHetero(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Hetero;
-        }
-
-        public static bool IsBi(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Bi;
-        }
-
-        public static bool IsAro(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.None;
-        }
-
-        /// <summary>
         /// Generates points for the lovin age curve based on age settings
         /// </summary>
         /// <returns>List<CurvePoint></returns>
@@ -361,17 +280,6 @@ namespace BetterRomance
             };
             return new SimpleCurve(points);
         }
-
-        public static readonly List<TraitDef> OrientationTraits = new List<TraitDef>()
-        {
-            TraitDefOf.Gay,
-            TraitDefOf.Bisexual,
-            RomanceDefOf.Straight,
-            TraitDefOf.Asexual,
-            RomanceDefOf.HeteroAce,
-            RomanceDefOf.HomoAce,
-            RomanceDefOf.BiAce,
-        };
 
         /// <summary>
         /// Checks if a <see cref="Comp_PartnerList"/> already exists on <paramref name="p"/>, adds it if needed, and then returns the comp
@@ -469,14 +377,6 @@ namespace BetterRomance
             //If nothing got hit, then we're good to go
             return true;
         }
-    }
-
-    public enum Orientation
-    {
-        Homo,
-        Hetero,
-        Bi,
-        None,
     }
 
     internal static class LogUtil

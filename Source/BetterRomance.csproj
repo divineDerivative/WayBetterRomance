@@ -112,6 +112,7 @@
     <Compile Include="Harmony\TraitSet.cs" />
     <Compile Include="HookupUtility.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SexualityUtility.cs" />
     <Compile Include="StatPart_Asexual.cs" />
     <Compile Include="Comp_PartnerList.cs" />
     <Compile Include="GlobalSuppressions.cs" />
