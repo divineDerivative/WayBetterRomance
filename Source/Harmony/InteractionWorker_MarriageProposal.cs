@@ -56,7 +56,7 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
             //This is vanilla code for checking if ideology allows for the new spouse relation
-            if (!initiator.IsEventAllowed(initiator.GetHistoryEventForSpouseAndFianceCountPlusOne()) || !recipient.IsEventAllowed(recipient.GetHistoryEventForSpouseAndFianceCountPlusOne()))
+            if (!IdeoUtility.DoerWillingToDo(initiator.GetHistoryEventForSpouseAndFianceCountPlusOne(), initiator) || !IdeoUtility.DoerWillingToDo(recipient.GetHistoryEventForSpouseAndFianceCountPlusOne(), recipient))
             {
                 __result = 0f;
                 return false;

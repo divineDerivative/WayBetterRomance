@@ -45,7 +45,7 @@ namespace BetterRomance
                 }
             }
             //The cheater list is for use later, initiator will only look at their ideo and settings to decide if they're cheating
-            if (pawn.IsEventAllowed(pawn.GetHistoryEventForLoveRelationCountPlusOne()) || !pawn.CaresAboutCheating())
+            if (IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn) || !pawn.CaresAboutCheating())
             {
                 //Faithful pawns will respect their partner's ideo
                 return !cheaterList.NullOrEmpty() && pawn.story.traits.HasTrait(RomanceDefOf.Faithful);

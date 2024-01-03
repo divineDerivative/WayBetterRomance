@@ -92,7 +92,7 @@ namespace BetterRomance
                 }
             }
             //Stop here if non-spouse lovin' is not allowed
-            if (!pawn.IsEventAllowed(HistoryEventDefOf.GotLovin_NonSpouse) && hookup)
+            if (!IdeoUtility.DoerWillingToDo(HistoryEventDefOf.GotLovin_NonSpouse, pawn) && hookup)
             {
                 return result;
             }
