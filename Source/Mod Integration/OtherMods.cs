@@ -172,6 +172,59 @@ namespace BetterRomance.HarmonyPatches
             harmony.Patch(AccessTools.Method(typeof(JobDriver_DoLovinCasual), "GenerateRandomMinTicksToNextLovin"), postfix: new HarmonyMethod(typeof(VanillaRacesExpandedHighmate_JobDriver_Lovin_GenerateRandomMinTicksToNextLovin_Patch), "PawnFucks"));
         }
     }
+
+    public static class VSIEPatches
+    {
+        //Check for custom love relations
+        public static void GetSpouseOrLoverOrFiancePostfix(ref Pawn __result, Pawn pawn)
+        {
+            if (__result == null && !SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
+            {
+                foreach (PawnRelationDef relation in SettingsUtilities.LoveRelations)
+                {
+                    Pawn result = pawn.relations.GetFirstDirectRelationPawn(relation);
+                    if (result != null)
+                    {
+                        __result = result;
+                        return;
+                    }
+                }
+            }
+        }
+
+        public static Type CompilerType;
+
+        public static IEnumerable<CodeInstruction> AddDirectRelation_PrefixTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            //make this use LovePartnerRelationUtility.IsLovePartnerRelation instead of just looking for each def individually
+            bool skip = false;
+            bool labelFound = false;
+            Label? label = new Label();
+            foreach (CodeInstruction code in instructions)
+            {
+                if (!labelFound && code.Branches(out label))
+                {
+                    labelFound = true;
+                }
+                if (skip && code.LoadsField(AccessTools.Field(CompilerType, "___pawn")))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    skip = false;
+                }
+                
+                if (code.LoadsField(AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Lover))))
+                {
+                    yield return CodeInstruction.Call(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.IsLovePartnerRelation));
+                    yield return new CodeInstruction(OpCodes.Brfalse, label);
+                    skip = true;
+                }
+                if (!skip)
+                {
+                    yield return code;
+                }
+            }
+        }
+    }
 }
 
 namespace BetterRomance

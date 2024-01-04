@@ -345,6 +345,7 @@ namespace BetterRomance.HarmonyPatches
         public static void Postfix(Pawn first, Pawn second, ref bool __result)
         {
             if (!__result)
+            {
                 if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
                 {
                     foreach (PawnRelationDef relation in SettingsUtilities.LoveRelations)
@@ -356,6 +357,7 @@ namespace BetterRomance.HarmonyPatches
                         }
                     }
                 }
+            }
         }
     }
 
