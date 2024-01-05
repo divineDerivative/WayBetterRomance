@@ -13,7 +13,7 @@ namespace BetterRomance
     {
         static OnStartup()
         {
-            SettingsUtilities.MakeAdditionalLoveRelationsLists();
+            CustomLoveRelationUtility.MakeAdditionalLoveRelationsLists();
             SettingsUtilities.MakeTraitList();
             if (ModsConfig.BiotechActive)
             {

@@ -27,33 +27,11 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //If pawns are not already in a lover relationship, do not allow
-            DirectPawnRelation directRelation = initiator.relations.GetDirectRelation(PawnRelationDefOf.Lover, recipient);
-
+            DirectPawnRelation directRelation = initiator.relations.GetDirectRelation(PawnRelationDefOf.Lover, recipient) ?? CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient);
             if (directRelation == null)
             {
-                //Check for additional love relations
-                if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
-                {
-                    foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
-                    {
-                        DirectPawnRelation tempRel = initiator.relations.GetDirectRelation(rel, recipient);
-                        if (tempRel != null)
-                        {
-                            directRelation = tempRel;
-                            break;
-                        }
-                    }
-                    if (directRelation == null)
-                    {
-                        __result = 0f;
-                        return false;
-                    }
-                }
-                else
-                {
-                    __result = 0f;
-                    return false;
-                }
+                __result = 0f;
+                return false;
             }
             //This is vanilla code for checking if ideology allows for the new spouse relation
             if (!IdeoUtility.DoerWillingToDo(initiator.GetHistoryEventForSpouseAndFianceCountPlusOne(), initiator) || !IdeoUtility.DoerWillingToDo(recipient.GetHistoryEventForSpouseAndFianceCountPlusOne(), recipient))
@@ -182,109 +160,91 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Pawn initiator, Pawn recipient, List<RulePackDef> extraSentencePacks, out string letterText, out string letterLabel, out LetterDef letterDef, out LookTargets lookTargets, InteractionWorker_MarriageProposal __instance)
         {
             //First check for a custom relation
-            if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
+            DirectPawnRelation relation = CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient);
+            //Only run patch if a custom relation exists
+            if (relation != null)
             {
-                PawnRelationDef relation = null;
-                foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
+                bool accepted = Rand.Value < __instance.AcceptanceChance(initiator, recipient);
+                bool breakup = false;
+                if (accepted)
                 {
-                    if (initiator.relations.DirectRelationExists(rel, recipient))
+                    initiator.relations.RemoveDirectRelation(relation);
+                    initiator.relations.AddDirectRelation(PawnRelationDefOf.Fiance, recipient);
+                    //Remove any thoughts related to a previous rejected proposal
+                    if (recipient.needs.mood != null)
                     {
-                        relation = rel;
-                        break;
+                        recipient.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.RejectedMyProposal, initiator);
+                        recipient.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.RejectedMyProposalMood, initiator);
+                        recipient.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.IRejectedTheirProposal, initiator);
+                    }
+                    if (initiator.needs.mood != null)
+                    {
+                        initiator.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.RejectedMyProposalMood, recipient);
+                        initiator.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.IRejectedTheirProposal, recipient);
+                        initiator.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.RejectedMyProposal, recipient);
+                    }
+                    extraSentencePacks.Add(RulePackDefOf.Sentence_MarriageProposalAccepted);
+                }
+                else
+                {
+                    initiator.needs.mood?.thoughts.memories.TryGainMemory(ThoughtDefOf.RejectedMyProposal, recipient);
+                    recipient.needs.mood?.thoughts.memories.TryGainMemory(ThoughtDefOf.IRejectedTheirProposal, initiator);
+                    extraSentencePacks.Add(RulePackDefOf.Sentence_MarriageProposalRejected);
+                    //Determine if they break up due to the rejection
+                    if (Rand.Value < 0.4f)
+                    {
+                        initiator.relations.RemoveDirectRelation(relation);
+                        //Add custom ex relation if it exists, otherwise add ex lover
+                        initiator.relations.AddDirectRelation(relation.def.GetModExtension<LoveRelations>().exLoveRelation ?? PawnRelationDefOf.ExLover, recipient);
+
+                        breakup = true;
+                        extraSentencePacks.Add(RulePackDefOf.Sentence_MarriageProposalRejectedBrokeUp);
                     }
                 }
-                //Only run patch if a custom relation exists
-                if (relation != null)
+                if (PawnUtility.ShouldSendNotificationAbout(initiator) || PawnUtility.ShouldSendNotificationAbout(recipient))
                 {
-                    bool accepted = Rand.Value < __instance.AcceptanceChance(initiator, recipient);
-                    bool breakup = false;
+                    StringBuilder stringBuilder = new StringBuilder();
                     if (accepted)
                     {
-                        initiator.relations.RemoveDirectRelation(relation, recipient);
-                        initiator.relations.AddDirectRelation(PawnRelationDefOf.Fiance, recipient);
-                        //Remove any thoughts related to a previous rejected proposal
-                        if (recipient.needs.mood != null)
+                        letterLabel = "LetterLabelAcceptedProposal".Translate();
+                        letterDef = LetterDefOf.PositiveEvent;
+                        stringBuilder.AppendLine("LetterAcceptedProposal".Translate(initiator.Named("INITIATOR"), recipient.Named("RECIPIENT")));
+                        if (initiator.relations.nextMarriageNameChange != 0)
                         {
-                            recipient.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.RejectedMyProposal, initiator);
-                            recipient.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.RejectedMyProposalMood, initiator);
-                            recipient.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.IRejectedTheirProposal, initiator);
-                        }
-                        if (initiator.needs.mood != null)
-                        {
-                            initiator.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.RejectedMyProposalMood, recipient);
-                            initiator.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.IRejectedTheirProposal, recipient);
-                            initiator.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(ThoughtDefOf.RejectedMyProposal, recipient);
-                        }
-                        extraSentencePacks.Add(RulePackDefOf.Sentence_MarriageProposalAccepted);
-                    }
-                    else
-                    {
-                        initiator.needs.mood?.thoughts.memories.TryGainMemory(ThoughtDefOf.RejectedMyProposal, recipient);
-                        recipient.needs.mood?.thoughts.memories.TryGainMemory(ThoughtDefOf.IRejectedTheirProposal, initiator);
-                        extraSentencePacks.Add(RulePackDefOf.Sentence_MarriageProposalRejected);
-                        //Determine if they break up due to the rejection
-                        if (Rand.Value < 0.4f)
-                        {
-                            initiator.relations.RemoveDirectRelation(relation, recipient);
-                            //Add custom ex relation if it exists, otherwise add ex lover
-                            PawnRelationDef exRel = relation.GetModExtension<LoveRelations>().exLoveRelation;
-                            if (exRel == null)
+                            SpouseRelationUtility.DetermineManAndWomanSpouses(initiator, recipient, out Pawn man, out Pawn woman);
+                            stringBuilder.AppendLine();
+                            if (initiator.relations.nextMarriageNameChange == MarriageNameChange.MansName)
                             {
-                                initiator.relations.AddDirectRelation(PawnRelationDefOf.ExLover, recipient);
+                                stringBuilder.AppendLine("LetterAcceptedProposal_NameChange".Translate(woman.Named("PAWN"), (man.Name as NameTriple).Last));
                             }
                             else
                             {
-                                initiator.relations.AddDirectRelation(exRel, recipient);
-                            }
-                            breakup = true;
-                            extraSentencePacks.Add(RulePackDefOf.Sentence_MarriageProposalRejectedBrokeUp);
-                        }
-                    }
-                    if (PawnUtility.ShouldSendNotificationAbout(initiator) || PawnUtility.ShouldSendNotificationAbout(recipient))
-                    {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        if (accepted)
-                        {
-                            letterLabel = "LetterLabelAcceptedProposal".Translate();
-                            letterDef = LetterDefOf.PositiveEvent;
-                            stringBuilder.AppendLine("LetterAcceptedProposal".Translate(initiator.Named("INITIATOR"), recipient.Named("RECIPIENT")));
-                            if (initiator.relations.nextMarriageNameChange != 0)
-                            {
-                                SpouseRelationUtility.DetermineManAndWomanSpouses(initiator, recipient, out Pawn man, out Pawn woman);
-                                stringBuilder.AppendLine();
-                                if (initiator.relations.nextMarriageNameChange == MarriageNameChange.MansName)
-                                {
-                                    stringBuilder.AppendLine("LetterAcceptedProposal_NameChange".Translate(woman.Named("PAWN"), (man.Name as NameTriple).Last));
-                                }
-                                else
-                                {
-                                    stringBuilder.AppendLine("LetterAcceptedProposal_NameChange".Translate(man.Named("PAWN"), (woman.Name as NameTriple).Last));
-                                }
+                                stringBuilder.AppendLine("LetterAcceptedProposal_NameChange".Translate(man.Named("PAWN"), (woman.Name as NameTriple).Last));
                             }
                         }
-                        else
-                        {
-                            letterLabel = "LetterLabelRejectedProposal".Translate();
-                            letterDef = LetterDefOf.NegativeEvent;
-                            stringBuilder.AppendLine("LetterRejectedProposal".Translate(initiator.Named("INITIATOR"), recipient.Named("RECIPIENT")));
-                            if (breakup)
-                            {
-                                stringBuilder.AppendLine();
-                                stringBuilder.AppendLine("LetterNoLongerLovers".Translate(initiator.Named("PAWN1"), recipient.Named("PAWN2")));
-                            }
-                        }
-                        letterText = stringBuilder.ToString().TrimEndNewlines();
-                        lookTargets = new LookTargets(initiator, recipient);
-                        return false;
                     }
                     else
                     {
-                        letterLabel = null;
-                        letterText = null;
-                        letterDef = null;
-                        lookTargets = null;
-                        return false;
+                        letterLabel = "LetterLabelRejectedProposal".Translate();
+                        letterDef = LetterDefOf.NegativeEvent;
+                        stringBuilder.AppendLine("LetterRejectedProposal".Translate(initiator.Named("INITIATOR"), recipient.Named("RECIPIENT")));
+                        if (breakup)
+                        {
+                            stringBuilder.AppendLine();
+                            stringBuilder.AppendLine("LetterNoLongerLovers".Translate(initiator.Named("PAWN1"), recipient.Named("PAWN2")));
+                        }
                     }
+                    letterText = stringBuilder.ToString().TrimEndNewlines();
+                    lookTargets = new LookTargets(initiator, recipient);
+                    return false;
+                }
+                else
+                {
+                    letterLabel = null;
+                    letterText = null;
+                    letterDef = null;
+                    lookTargets = null;
+                    return false;
                 }
             }
             letterLabel = null;

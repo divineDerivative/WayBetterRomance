@@ -298,19 +298,9 @@ namespace BetterRomance.HarmonyPatches
     {
         public static void Postfix(PawnRelationDef relation, ref bool __result)
         {
-            if (!__result)
+            if (!__result && Settings.LoveRelationsLoaded)
             {
-                if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
-                {
-                    foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
-                    {
-                        if (relation == rel)
-                        {
-                            __result = true;
-                            return;
-                        }
-                    }
-                }
+                __result = CustomLoveRelationUtility.LoveRelations.Contains(relation);
             }
         }
     }
@@ -321,19 +311,9 @@ namespace BetterRomance.HarmonyPatches
     {
         public static void Postfix(PawnRelationDef relation, ref bool __result)
         {
-            if (!__result)
+            if (!__result && !CustomLoveRelationUtility.ExLoveRelations.EnumerableNullOrEmpty())
             {
-                if (!SettingsUtilities.ExLoveRelations.EnumerableNullOrEmpty())
-                {
-                    foreach (PawnRelationDef rel in SettingsUtilities.ExLoveRelations)
-                    {
-                        if (relation == rel)
-                        {
-                            __result = true;
-                            return;
-                        }
-                    }
-                }
+                __result = CustomLoveRelationUtility.ExLoveRelations.Contains(relation);
             }
         }
     }
@@ -346,17 +326,7 @@ namespace BetterRomance.HarmonyPatches
         {
             if (!__result)
             {
-                if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
-                {
-                    foreach (PawnRelationDef relation in SettingsUtilities.LoveRelations)
-                    {
-                        if (first.relations.DirectRelationExists(relation, second))
-                        {
-                            __result = true;
-                            return;
-                        }
-                    }
-                }
+                __result = CustomLoveRelationUtility.CheckCustomLoveRelations(first, second) != null;
             }
         }
     }
@@ -369,17 +339,7 @@ namespace BetterRomance.HarmonyPatches
         {
             if (!__result)
             {
-                if (!SettingsUtilities.ExLoveRelations.EnumerableNullOrEmpty())
-                {
-                    foreach (PawnRelationDef relation in SettingsUtilities.ExLoveRelations)
-                    {
-                        if (first.relations.DirectRelationExists(relation, second))
-                        {
-                            __result = true;
-                            return;
-                        }
-                    }
-                }
+                __result = CustomLoveRelationUtility.CheckCustomLoveRelations(first, second, true) != null;
             }
         }
     }

@@ -138,9 +138,9 @@ namespace BetterRomance.HarmonyPatches
                         continue;
                     }
                     //If no fiances found, look through other love relations
-                    if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
+                    if (Settings.LoveRelationsLoaded)
                     {
-                        foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
+                        foreach (PawnRelationDef rel in CustomLoveRelationUtility.LoveRelations)
                         {
                             Pawn leastLikedOther = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn, (DirectPawnRelation r) => r.def == rel);
                             if (leastLikedOther != null && rel.GetModExtension<LoveRelations>().shouldBreakForNewLover)
@@ -263,16 +263,9 @@ namespace BetterRomance.HarmonyPatches
                 relationFactor = 0.3f;
             }
             //Check for custom relations and use same adjustment as lover
-            else if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
+            else if (CustomLoveRelationUtility.CheckCustomLoveRelations(pawn, partner) != null)
             {
-                foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
-                {
-                    if (pawn.relations.DirectRelationExists(rel, partner))
-                    {
-                        relationFactor = 0.6f;
-                        break;
-                    }
-                }
+                relationFactor = 0.6f;
             }
             //This checks opinion of existing relation
             //0 at 100 opinion, 1 at 0 opinion

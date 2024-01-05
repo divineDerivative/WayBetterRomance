@@ -181,7 +181,7 @@ namespace BetterRomance
                 {
                     list.Add(rel.otherPawn);
                 }
-                else if (SettingsUtilities.LoveRelations.Contains(rel.def) && (includeDead || !rel.otherPawn.Dead))
+                else if (CustomLoveRelationUtility.LoveRelations.Contains(rel.def) && (includeDead || !rel.otherPawn.Dead))
                 {
                     list.Add(rel.otherPawn);
                 }

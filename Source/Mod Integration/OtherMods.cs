@@ -125,10 +125,10 @@ namespace BetterRomance.HarmonyPatches
         //prefix to remove custom relations first, then return true
         public static bool VREProcessBreakupsPrefix(Pawn initiator, Pawn recipient, ref bool __state)
         {
-            if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
+            if (Settings.LoveRelationsLoaded)
             {
                 bool thoughtAdded = false;
-                foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
+                foreach (PawnRelationDef rel in CustomLoveRelationUtility.LoveRelations)
                 {
                     if (initiator.relations.DirectRelationExists(rel, recipient))
                     {
@@ -178,17 +178,9 @@ namespace BetterRomance.HarmonyPatches
         //Check for custom love relations
         public static void GetSpouseOrLoverOrFiancePostfix(ref Pawn __result, Pawn pawn)
         {
-            if (__result == null && !SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
+            if (__result == null)
             {
-                foreach (PawnRelationDef relation in SettingsUtilities.LoveRelations)
-                {
-                    Pawn result = pawn.relations.GetFirstDirectRelationPawn(relation);
-                    if (result != null)
-                    {
-                        __result = result;
-                        return;
-                    }
-                }
+                __result = pawn.FirstCustomLoveRelation()?.otherPawn;
             }
         }
 
