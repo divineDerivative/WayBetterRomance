@@ -15,7 +15,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static bool IsSexualityTraitPrefix(Trait trait, ref bool __result)
         {
-            __result = RomanceUtilities.OrientationTraits.Contains(trait.def);
+            __result = SexualityUtility.OrientationTraits.Contains(trait.def);
             return false;
         }
 
@@ -55,7 +55,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else if (i == startIndex)
                 {
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.IsAsexual));
+                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.IsAsexual));
                 }
                 else if (i > endIndex)
                 {
@@ -105,7 +105,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else if (asexualFound)
                 {
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.IsAsexual));
+                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.IsAsexual));
                     asexualFound = false;
                 }
                 else
@@ -125,10 +125,10 @@ namespace BetterRomance.HarmonyPatches
         //prefix to remove custom relations first, then return true
         public static bool VREProcessBreakupsPrefix(Pawn initiator, Pawn recipient, ref bool __state)
         {
-            if (!SettingsUtilities.LoveRelations.EnumerableNullOrEmpty())
+            if (Settings.LoveRelationsLoaded)
             {
                 bool thoughtAdded = false;
-                foreach (PawnRelationDef rel in SettingsUtilities.LoveRelations)
+                foreach (PawnRelationDef rel in CustomLoveRelationUtility.LoveRelations)
                 {
                     if (initiator.relations.DirectRelationExists(rel, recipient))
                     {
@@ -170,6 +170,51 @@ namespace BetterRomance.HarmonyPatches
             harmony.Patch(typeof(Need_Lovin).GetMethod("get_ShowOnNeedList"), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
             harmony.Patch(typeof(Need_Lovin).GetMethod("get_IsFrozen"), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
             harmony.Patch(AccessTools.Method(typeof(JobDriver_DoLovinCasual), "GenerateRandomMinTicksToNextLovin"), postfix: new HarmonyMethod(typeof(VanillaRacesExpandedHighmate_JobDriver_Lovin_GenerateRandomMinTicksToNextLovin_Patch), "PawnFucks"));
+        }
+    }
+
+    public static class VSIEPatches
+    {
+        //Check for custom love relations
+        public static void GetSpouseOrLoverOrFiancePostfix(ref Pawn __result, Pawn pawn)
+        {
+            if (__result == null)
+            {
+                __result = pawn.FirstCustomLoveRelation()?.otherPawn;
+            }
+        }
+
+        public static Type CompilerType;
+
+        public static IEnumerable<CodeInstruction> AddDirectRelation_PrefixTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            //make this use LovePartnerRelationUtility.IsLovePartnerRelation instead of just looking for each def individually
+            bool skip = false;
+            bool labelFound = false;
+            Label? label = new Label();
+            foreach (CodeInstruction code in instructions)
+            {
+                if (!labelFound && code.Branches(out label))
+                {
+                    labelFound = true;
+                }
+                if (skip && code.LoadsField(AccessTools.Field(CompilerType, "___pawn")))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    skip = false;
+                }
+                
+                if (code.LoadsField(AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Lover))))
+                {
+                    yield return CodeInstruction.Call(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.IsLovePartnerRelation));
+                    yield return new CodeInstruction(OpCodes.Brfalse, label);
+                    skip = true;
+                }
+                if (!skip)
+                {
+                    yield return code;
+                }
+            }
         }
     }
 }

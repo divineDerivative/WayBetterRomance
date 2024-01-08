@@ -2,6 +2,7 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Verse;
 
 namespace BetterRomance
@@ -497,30 +498,6 @@ namespace BetterRomance
             return (settings != null) ? settings.minOpinionRomance : BetterRomanceMod.settings.minOpinionRomance;
         }
 
-        //Love Relation Settings
-        public static HashSet<PawnRelationDef> LoveRelations = new HashSet<PawnRelationDef>();
-        public static HashSet<PawnRelationDef> ExLoveRelations = new HashSet<PawnRelationDef>();
-
-        public static void MakeAdditionalLoveRelationsLists()
-        {
-            List<PawnRelationDef> relationList = DefDatabase<PawnRelationDef>.AllDefsListForReading;
-            foreach (PawnRelationDef def in relationList)
-            {
-                if (def.HasModExtension<LoveRelations>())
-                {
-                    LoveRelations extension = def.GetModExtension<LoveRelations>();
-                    if (extension.isLoveRelation)
-                    {
-                        LoveRelations.Add(def);
-                        if (extension.exLoveRelation != null)
-                        {
-                            ExLoveRelations.Add(extension.exLoveRelation);
-                        }
-                    }
-                }
-            }
-        }
-
         //Biotech Settings
         public static BiotechSettings GetBiotechSettings(Pawn pawn)
         {
@@ -537,8 +514,11 @@ namespace BetterRomance
 
         internal static void GrabBiotechStuff()
         {
-            femaleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "femaleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
-            maleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "maleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
+            if (StatDefOf.Fertility.parts != null && StatDefOf.Fertility.parts.OfType<StatPart_FertilityByGenderAge>().Any())
+            {
+                femaleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "femaleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
+                maleFertilityAgeFactor = (SimpleCurve)AccessTools.Field(typeof(StatPart_FertilityByGenderAge), "maleFertilityAgeFactor").GetValue(StatDefOf.Fertility.GetStatPart<StatPart_FertilityByGenderAge>());
+            }
             childBirthByAgeCurve = RitualOutcomeEffectDefOf.ChildBirth.comps.Find(c => c is RitualOutcomeComp_PawnAge) as RitualOutcomeComp_PawnAge;
         }
 

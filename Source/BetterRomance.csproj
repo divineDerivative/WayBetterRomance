@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comp_SexRepulsion.cs" />
+    <Compile Include="CustomLoveRelationUtility.cs" />
     <Compile Include="Harmony\Biotech\RitualOutcomeComp_PawnAge.cs" />
     <Compile Include="Harmony\GeneDef.cs" />
     <Compile Include="Harmony\Pawn_AgeTracker.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Harmony\TraitSet.cs" />
     <Compile Include="HookupUtility.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SexualityUtility.cs" />
     <Compile Include="StatPart_Asexual.cs" />
     <Compile Include="Comp_PartnerList.cs" />
     <Compile Include="GlobalSuppressions.cs" />

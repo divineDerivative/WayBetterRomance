@@ -119,7 +119,7 @@ namespace BetterRomance
             bool maxPartners = count >= 1;
             if (maxPartners && ModsConfig.IdeologyActive)
             {
-                maxPartners = !pawn.IsEventAllowed(pawn.GetHistoryEventForLoveRelationCountPlusOne());
+                maxPartners = !IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn);
                 LogUtil.Message($"{pawn.LabelShort} is {(maxPartners ? "not " : "")}allowed to take a new lover");
             }
             if (!maxPartners || !pawn.CaresAboutCheating())
@@ -428,7 +428,7 @@ namespace BetterRomance
                 return initiator ? "WBR.CantHookupInitiateMessageTrait".Translate(pawn) : "WBR.CantHookupTargetTrait".Translate();
             }
             //If their ideo prohibits all lovin', do not allow
-            if (!pawn.IsEventAllowed(HistoryEventDefOf.SharedBed))
+            if (!IdeoUtility.DoerWillingToDo(HistoryEventDefOf.SharedBed, pawn))
             {
                 return initiator ? "WBR.CantHookupInitiateMessageIdeo".Translate(pawn) : "WBR.CantHookupTargetIdeo".Translate(pawn.ideo.Ideo);
             }
@@ -458,10 +458,18 @@ namespace BetterRomance
             //Adjustment for opinion of existing partner
             if (RomanceUtilities.IsThisCheating(target, initiator, out List<Pawn> partnerList) && !partnerList.NullOrEmpty())
             {
-                float cheating = RomanceUtilities.PartnerFactor(target, partnerList, out _) * RomanceUtilities.CheatingChance(target);
+                float cheating = RomanceUtilities.PartnerFactor(target, partnerList, out _) * RomanceUtilities.CheatingChance(target, true);
                 if (cheating != 1f)
                 {
                     text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheating));
+                }
+                if (Settings.RotRActive && target.Ideo != null)
+                {
+                    string precept = RotR_Integration.RotRCheatingPreceptExplanation(target);
+                    if (!precept.NullOrEmpty())
+                    {
+                        text.AppendLine(precept);
+                    }
                 }
             }
             //Effect of target's beauty stat

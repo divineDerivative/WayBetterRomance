@@ -246,13 +246,13 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1)
                     {
-                        labels= new List<Label> { newLabel }
+                        labels = new List<Label> { newLabel }
                     };
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.IsAsexual));
+                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.IsAsexual));
                     yield return new CodeInstruction(OpCodes.Brfalse_S, oldLabel);
 
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetOrientation));
+                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.GetOrientation));
                     yield return new CodeInstruction(OpCodes.Ldc_I4_3);
                     yield return new CodeInstruction(OpCodes.Bne_Un_S, oldLabel);
 
@@ -260,7 +260,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(NamedArgument), "op_Implicit", new Type[] { typeof(Thing) });
                     yield return CodeInstruction.Call(typeof(TranslatorFormattedStringExtensions), nameof(TranslatorFormattedStringExtensions.Translate), new Type[] { typeof(string), typeof(NamedArgument) });
-                    yield return CodeInstruction.Call(typeof(TaggedString), "op_Implicit", new Type[] {typeof(TaggedString)});
+                    yield return CodeInstruction.Call(typeof(TaggedString), "op_Implicit", new Type[] { typeof(TaggedString) });
                     yield return CodeInstruction.LoadField(typeof(MessageTypeDefOf), nameof(MessageTypeDefOf.RejectInput));
                     yield return new CodeInstruction(OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(Messages), nameof(Messages.Message), new Type[] { typeof(string), typeof(MessageTypeDef), typeof(bool) });
@@ -269,6 +269,16 @@ namespace BetterRomance.HarmonyPatches
 
                 yield return code;
             }
+        }
+    }
+
+    //Lets the PartnerFactor patch know I don't care about the result of WillPawnContinue
+    [HarmonyPatch(typeof(SocialCardUtility), "RomanceExplanation")]
+    public static class SocialCardUtility_RomanceExplanation
+    {
+        public static void Prefix()
+        {
+            InteractionWorker_RomanceAttempt_PartnerFactor.forTooltip = true;
         }
     }
 }

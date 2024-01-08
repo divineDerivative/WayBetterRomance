@@ -33,6 +33,29 @@ namespace BetterRomance
             }
             return 1f;
         }
+
+        public static string RotRCheatingPreceptExplanation(Pawn pawn)
+        {
+            string result = string.Empty;
+            if (pawn.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Forbidden))
+            {
+                result = PreceptExplanation(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Forbidden, 0f);
+            }
+            else if (pawn.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Discouraged))
+            {
+                result = PreceptExplanation(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Discouraged, 0.5f);
+            }
+            else if (pawn.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Encouraged))
+            {
+                result = PreceptExplanation(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Encouraged, 1.5f);
+            }
+            return result;
+        }
+
+        private static string PreceptExplanation(PreceptDef preceptDef, float value)
+        {
+            return (string)HelperClasses.RotRPreceptExplanation.Invoke(null, new object[] { preceptDef, value });
+        }
     }
 
     namespace HarmonyPatches
@@ -47,6 +70,11 @@ namespace BetterRomance
                     harmony.Unpatch(typeof(InteractionWorker_RomanceAttempt).GetMethod("RandomSelectionWeight"), typeof(HarmonyPatch_InteractionWorker_RomanceAttempt).GetMethod("RandomSelectionWeightPostfix"));
                     //Add my version of the patch
                     harmony.Patch(typeof(InteractionWorker_RomanceAttempt).GetMethod("RandomSelectionWeight"), postfix: new HarmonyMethod(typeof(RotRPatches).GetMethod("RomanceAttempt_RandomSelectionWeight_Patch")));
+
+                    harmony.Unpatch(typeof(InteractionWorker_RomanceAttempt).GetMethod("SuccessChance"), typeof(HarmonyPatch_InteractionWorker_RomanceAttempt).GetMethod(nameof(HarmonyPatch_InteractionWorker_RomanceAttempt.SuccessChancePostfix)));
+                    harmony.Patch(typeof(InteractionWorker_RomanceAttempt).GetMethod("SuccessChance"), postfix: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(SuccessChancePostfix))));
+
+                    harmony.Patch(typeof(HarmonyPatch_SocialCardUtility_RomanceExplanation).GetMethod("AddPreceptExplanation"), transpiler: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(AddPreceptExplanationTranspiler))));
                 }
             }
 
@@ -72,6 +100,57 @@ namespace BetterRomance
                 else if (initiator.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Encouraged))
                 {
                     __result = Mathf.Clamp01(__result * 1.5f);
+                }
+            }
+
+            //This is the same as the original patch with the cheating section removed
+            public static void SuccessChancePostfix(ref float __result, Pawn initiator, Pawn recipient)
+            {
+                if (recipient.Ideo == null)
+                {
+                    return;
+                }
+                if (recipient.HasLoverFastFromRomanceNeed())
+                {
+                    if (initiator.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Arranged) && recipient.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Arranged))
+                    {
+                        return;
+                    }
+                }
+                if (recipient.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Forbidden))
+                {
+                    __result = 0f;
+                }
+                else if (recipient.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Discouraged))
+                {
+                    __result = Mathf.Clamp01(__result * 0.5f);
+                }
+                else if (recipient.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Encouraged))
+                {
+                    __result = Mathf.Clamp01(__result * 1.5f);
+                }
+            }
+
+            //Removes the check against the romancer's romance need
+            public static IEnumerable<CodeInstruction> AddPreceptExplanationTranspiler(IEnumerable<CodeInstruction> instructions)
+            {
+                bool skip = false;
+                foreach (CodeInstruction code in instructions)
+                {
+                    if (code.IsLdarg(1))
+                    {
+                        skip = true;
+                    }
+
+                    if (!skip)
+                    {
+                        yield return code;
+                    }
+
+                    if (skip && code.Branches(out _))
+                    {
+                        skip = false;
+                    }
                 }
             }
         }

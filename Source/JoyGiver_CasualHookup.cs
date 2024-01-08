@@ -43,7 +43,7 @@ namespace BetterRomance
                 }
 
                 //Also check ideo for non spouse lovin' thoughts
-                if (!pawn.IsEventAllowed(HistoryEventDefOf.GotLovin_NonSpouse) && !pawn.relations.DirectRelationExists(PawnRelationDefOf.Spouse, partner))
+                if (!IdeoUtility.DoerWillingToDo(HistoryEventDefOf.GotLovin_NonSpouse, pawn) && !pawn.relations.DirectRelationExists(PawnRelationDefOf.Spouse, partner))
                 {
                     return null;
                 }

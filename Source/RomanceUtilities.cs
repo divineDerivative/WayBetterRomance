@@ -45,7 +45,7 @@ namespace BetterRomance
                 }
             }
             //The cheater list is for use later, initiator will only look at their ideo and settings to decide if they're cheating
-            if (pawn.IsEventAllowed(pawn.GetHistoryEventForLoveRelationCountPlusOne()) || !pawn.CaresAboutCheating())
+            if (IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn) || !pawn.CaresAboutCheating())
             {
                 //Faithful pawns will respect their partner's ideo
                 return !cheaterList.NullOrEmpty() && pawn.story.traits.HasTrait(RomanceDefOf.Faithful);
@@ -118,7 +118,7 @@ namespace BetterRomance
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns></returns>
-        public static float CheatingChance(Pawn pawn)
+        public static float CheatingChance(Pawn pawn, bool excludePrecept = false)
         {
             //If they are faithful, don't do it
             if (pawn.story.traits.HasTrait(RomanceDefOf.Faithful))
@@ -137,7 +137,7 @@ namespace BetterRomance
                 cheatChance *= .25f;
             }
             //Adjust for RotR precepts
-            if (Settings.RotRActive && pawn.Ideo != null)
+            if (Settings.RotRActive && pawn.Ideo != null && !excludePrecept)
             {
                 cheatChance *= RotR_Integration.RotRCheatChanceModifier(pawn);
             }
@@ -181,7 +181,7 @@ namespace BetterRomance
                 {
                     list.Add(rel.otherPawn);
                 }
-                else if (SettingsUtilities.LoveRelations.Contains(rel.def) && (includeDead || !rel.otherPawn.Dead))
+                else if (CustomLoveRelationUtility.LoveRelations.Contains(rel.def) && (includeDead || !rel.otherPawn.Dead))
                 {
                     list.Add(rel.otherPawn);
                 }
@@ -262,105 +262,6 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// A rating to use for determining sex aversion for asexual pawns. Seed is based on pawn's ID, so it will always return the same number for a given pawn.
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns>float between 0 and 1</returns>
-        public static float AsexualRating(this Pawn pawn)
-        {
-            Comp_SexRepulsion comp = pawn.CheckForAsexualComp();
-            return comp.rating;
-        }
-
-        public static Comp_SexRepulsion CheckForAsexualComp(this Pawn p)
-        {
-            Comp_SexRepulsion comp = p.TryGetComp<Comp_SexRepulsion>();
-            if (comp == null)
-            {
-                FieldInfo field = AccessTools.Field(typeof(ThingWithComps), "comps");
-                List<ThingComp> compList = (List<ThingComp>)field.GetValue(p);
-                ThingComp newComp = (ThingComp)Activator.CreateInstance(typeof(Comp_SexRepulsion));
-                newComp.parent = p;
-                compList.Add(newComp);
-                newComp.Initialize(new CompProperties());
-                newComp.PostExposeData();
-                comp = p.TryGetComp<Comp_SexRepulsion>();
-                if (comp == null)
-                {
-                    LogUtil.Error("Unable to add Comp_SexRepulsion");
-                }
-            }
-            return comp;
-        }
-
-        /// <summary>
-        /// Determines the romantic <see cref="Orientation"/> of a <paramref name="pawn"/> based on their traits
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
-        public static Orientation GetOrientation(this Pawn pawn)
-        {
-            if (pawn.story != null && pawn.story.traits != null)
-            {
-                TraitSet traits = pawn.story.traits;
-                if (traits.HasTrait(TraitDefOf.Gay) || traits.HasTrait(RomanceDefOf.HomoAce))
-                {
-                    return Orientation.Homo;
-                }
-                else if (traits.HasTrait(RomanceDefOf.Straight) || traits.HasTrait(RomanceDefOf.HeteroAce))
-                {
-                    return Orientation.Hetero;
-                }
-                else if (traits.HasTrait(TraitDefOf.Bisexual) || traits.HasTrait(RomanceDefOf.BiAce))
-                {
-                    return Orientation.Bi;
-                }
-                else if (traits.HasTrait(TraitDefOf.Asexual))
-                {
-                    return Orientation.None;
-                }
-            }
-            return Orientation.None;
-        }
-
-        public static List<TraitDef> asexualTraits = new List<TraitDef> { TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce };
-
-        public static bool IsAsexual(this Pawn pawn)
-        {
-            if (pawn.story != null && pawn.story.traits != null)
-            {
-                foreach (Trait trait in pawn.story.traits.allTraits)
-                {
-                    if (asexualTraits.Contains(trait.def) && !trait.Suppressed)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public static bool IsHomo(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Homo;
-        }
-
-        public static bool IsHetero(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Hetero;
-        }
-
-        public static bool IsBi(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Bi;
-        }
-
-        public static bool IsAro(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.None;
-        }
-
-        /// <summary>
         /// Generates points for the lovin age curve based on age settings
         /// </summary>
         /// <returns>List<CurvePoint></returns>
@@ -379,17 +280,6 @@ namespace BetterRomance
             };
             return new SimpleCurve(points);
         }
-
-        public static readonly List<TraitDef> OrientationTraits = new List<TraitDef>()
-        {
-            TraitDefOf.Gay,
-            TraitDefOf.Bisexual,
-            RomanceDefOf.Straight,
-            TraitDefOf.Asexual,
-            RomanceDefOf.HeteroAce,
-            RomanceDefOf.HomoAce,
-            RomanceDefOf.BiAce,
-        };
 
         /// <summary>
         /// Checks if a <see cref="Comp_PartnerList"/> already exists on <paramref name="p"/>, adds it if needed, and then returns the comp
@@ -487,14 +377,6 @@ namespace BetterRomance
             //If nothing got hit, then we're good to go
             return true;
         }
-    }
-
-    public enum Orientation
-    {
-        Homo,
-        Hetero,
-        Bi,
-        None,
     }
 
     internal static class LogUtil

@@ -43,7 +43,7 @@ namespace BetterRomance
         public static void Postfix(ref Rect r, Trait trait)
         {
             Pawn pawn = trait.pawn;
-            if (pawn.IsAsexual() && RomanceUtilities.asexualTraits.Contains(trait.def))
+            if (pawn.IsAsexual() && SexualityUtility.asexualTraits.Contains(trait.def))
             {
                 if (Widgets.ButtonInvisible(r))
                 {

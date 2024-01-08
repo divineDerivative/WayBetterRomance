@@ -13,7 +13,7 @@ namespace BetterRomance
     {
         static OnStartup()
         {
-            SettingsUtilities.MakeAdditionalLoveRelationsLists();
+            CustomLoveRelationUtility.MakeAdditionalLoveRelationsLists();
             SettingsUtilities.MakeTraitList();
             if (ModsConfig.BiotechActive)
             {
@@ -31,6 +31,7 @@ namespace BetterRomance
             {
                 Settings.RotRActive = true;
                 HelperClasses.RotRFillRomanceBar = AccessTools.DeclaredMethod(Type.GetType("RomanceOnTheRim.RomanceUtility,RomanceOnTheRim"), "TryAffectRomanceNeedLevelForPawn");
+                HelperClasses.RotRPreceptExplanation = AccessTools.Method(Type.GetType("RomanceOnTheRim.HarmonyPatch_SocialCardUtility_RomanceExplanation,RomanceOnTheRim"), "PreceptExplanation");
                 harmony.PatchRotR();
             }
             if (ModsConfig.IsActive("dylan.csl"))
@@ -60,6 +61,29 @@ namespace BetterRomance
             {
                 Settings.VREHighmateActive = true;
                 harmony.PatchVRE();
+            }
+            
+            if (ModsConfig.IsActive("VanillaExpanded.VanillaSocialInteractionsExpanded"))
+            {
+                MethodInfo GetSpouseOrLoverOrFiance = Type.GetType("VanillaSocialInteractionsExpanded.VSIE_Utils, VanillaSocialInteractionsExpanded").GetMethod("GetSpouseOrLoverOrFiance");
+                MethodInfo prefixDelegate = null;
+                foreach (Type t in Type.GetType("VanillaSocialInteractionsExpanded.AddDirectRelation_Patch, VanillaSocialInteractionsExpanded").GetNestedTypes(AccessTools.all).Where((Type t) => t.GetCustomAttribute<System.Runtime.CompilerServices.CompilerGeneratedAttribute>() != null))
+                {
+                    foreach (MethodInfo method in t.GetMethods(AccessTools.all))
+                    {
+                        if (method.ReturnType == typeof(void) && method.Name != "Finalize")
+                        {
+                            if (prefixDelegate != null)
+                            {
+                                LogUtil.Error($"Multiple matching methods found: {prefixDelegate.Name} and {method.Name}");
+                            }
+                            prefixDelegate = method;
+                            VSIEPatches.CompilerType = t;
+                        }
+                    }
+                }
+                harmony.Patch(GetSpouseOrLoverOrFiance, postfix: new HarmonyMethod(typeof(VSIEPatches), nameof(VSIEPatches.GetSpouseOrLoverOrFiancePostfix)));
+                harmony.Patch(prefixDelegate, transpiler: new HarmonyMethod(typeof(VSIEPatches), nameof(VSIEPatches.AddDirectRelation_PrefixTranspiler)));
             }
             if (ModsConfig.IsActive("rim.job.world") || ModsConfig.IsActive("safe.job.world"))
             {
@@ -103,6 +127,7 @@ namespace BetterRomance
     public static class HelperClasses
     {
         public static MethodInfo RotRFillRomanceBar;
+        public static MethodInfo RotRPreceptExplanation;
         public static MethodInfo CSLLoved;
         public static MethodInfo IsConsideredMechanicalAndroid;
         public static MethodInfo IsConsideredMechanicalDrone;

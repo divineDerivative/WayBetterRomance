@@ -57,11 +57,6 @@ namespace BetterRomance
             return RomanceDefOf.TookLover_LoverCount_FiveOrMore;
         }
 
-        public static bool IsEventAllowed(this Pawn pawn, HistoryEventDef def)
-        {
-            return new HistoryEvent(def, pawn.Named(HistoryEventArgsNames.Doer)).DoerWillingToDo();
-        }
-
         public static SpouseCountComparison CompareSpouseAndLoverCount(this Pawn pawn)
         {
             int allowed = AllowedSpouseCount(pawn.ideo.Ideo, pawn.gender);
