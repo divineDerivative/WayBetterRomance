@@ -323,7 +323,7 @@ namespace BetterRomance
             return Orientation.None;
         }
 
-        private static List<TraitDef> asexualTraits = new List<TraitDef> { TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce };
+        public static List<TraitDef> asexualTraits = new List<TraitDef> { TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce };
 
         public static bool IsAsexual(this Pawn pawn)
         {
@@ -500,7 +500,6 @@ namespace BetterRomance
     internal static class LogUtil
     {
         private static string WrapMessage(string message) => $"<color=#1116e4>[WayBetterRomance]</color> {message}";
-
         internal static void Message(string message) => Log.Message(WrapMessage(message));
         internal static void Warning(string message) => Log.Warning(WrapMessage(message));
         internal static void WarningOnce(string message, int key) => Log.WarningOnce(WrapMessage(message), key);

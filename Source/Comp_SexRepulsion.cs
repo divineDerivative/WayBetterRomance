@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RimWorld;
 using Verse;
 using HarmonyLib;
+using UnityEngine;
 
 namespace BetterRomance
 {
@@ -23,10 +24,32 @@ namespace BetterRomance
             return rating;
         }
 
+        public override void Initialize(CompProperties props)
+        {
+            base.Initialize(props);
+            rating = InitialRating();
+        }
+
         public override void PostExposeData()
         {
             base.PostExposeData();
-            Scribe_Values.Look(ref rating, "asexualRating", InitialRating());
+            Scribe_Values.Look(ref rating, "asexualRating", -1f);
+        }
+    }
+
+    [HarmonyPatch("<>c__DisplayClass42_2", "<DoLeftSection>b__7")]
+    public static class TraitShit
+    {
+        public static void Postfix(ref Rect r, Trait trait)
+        {
+            Pawn pawn = trait.pawn;
+            if (pawn.IsAsexual() && RomanceUtilities.asexualTraits.Contains(trait.def))
+            {
+                if (Widgets.ButtonInvisible(r))
+                {
+                    InspectPaneUtility.OpenTab(typeof(ITab_Sexuality));
+                }
+            }
         }
     }
 }
