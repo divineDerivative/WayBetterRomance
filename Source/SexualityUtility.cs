@@ -12,6 +12,7 @@ namespace BetterRomance
 {
     public static class SexualityUtility
     {
+        public static bool editRepulsion;
         public static readonly List<TraitDef> OrientationTraits = new List<TraitDef>()
         {
             TraitDefOf.Gay,
@@ -32,11 +33,7 @@ namespace BetterRomance
         /// <returns>float between 0 and 1</returns>
         public static float AsexualRating(this Pawn pawn)
         {
-            Rand.PushState();
-            Rand.Seed = pawn.thingIDNumber;
-            float rating = Rand.Range(0f, 1f);
-            Rand.PopState();
-            return rating;
+            return pawn.CheckForAsexualComp().rating;
         }
 
         public static Comp_SexRepulsion CheckForAsexualComp(this Pawn p)
