@@ -54,7 +54,7 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
-        
+
         public static MethodBase TargetMethod()
         {
             //[HarmonyPatch("<>c__DisplayClass42_2", "<DoLeftSection>b__7")]

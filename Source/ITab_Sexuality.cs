@@ -20,6 +20,7 @@ namespace BetterRomance
                 return SelPawn.RaceProps.Humanlike;
             }
         }
+
         protected override void FillTab()
         {
             Rect rect = new Rect(0f, 0f, size.x, size.y).ContractedBy(10f);
@@ -38,27 +39,26 @@ namespace BetterRomance
             switch (orientation)
             {
                 case Orientation.Hetero:
-                    text = "This person is heteroromantic";
+                    text = "WBR.Heteroromantic";
                     break;
                 case Orientation.Homo:
-                    text = "This person is homoromantic";
+                    text = "WBR.Homoromantic";
                     break;
                 case Orientation.Bi:
-                    text = "This person is biromantic";
+                    text = "WBR.Biromantic";
                     break;
                 case Orientation.None:
                 default:
-                    text = "This person is aromantic";
+                    text = "WBR.Aromantic";
                     break;
             }
-            list.Label(text);
+            list.Label(text.Translate(SelPawn));
             //Display sex repulsion, describe the effects of their specific rating.
             if (SelPawn.IsAsexual())
             {
-                list.Label($"{SelPawn.LabelShort} is asexual. This means she will never initiate lovin', which includes asking someone to hook up.");
                 float repulsion = SelPawn.GetStatValue(StatDef.Named("AsexualRating"));
                 string repulsionString = StatDef.Named("AsexualRating").ValueToString(repulsion);
-                list.Label($"Their sex repulsion is {repulsionString}. The lower their sex repulsion, the more likely they are to agree to lovin' when someone else initiates.");
+                list.Label("WBR.AsexualExplanation".Translate(SelPawn, repulsionString));
                 if (SexualityUtility.editRepulsion)
                 {
                     Comp_SexRepulsion comp = SelPawn.CheckForAsexualComp();
@@ -66,19 +66,19 @@ namespace BetterRomance
                 }
                 if (repulsion >= 0.8f)
                 {
-                    list.Label($"At {repulsionString} they will never agree to lovin' no matter who asks them. They will only agree to marry an asexual person.");
+                    list.Label("WBR.Repulsion08".Translate(SelPawn, repulsionString));
                 }
                 else if (repulsion >= 0.5f)
                 {
-                    list.Label($"At {repulsionString} they will only agree to lovin' with existing partners. They will have negative thoughts about any lovin'.");
+                    list.Label("WBR.Repulsion05".Translate(SelPawn, repulsionString));
                 }
                 else if (repulsion >= 0.4f)
                 {
-                    list.Label($"At {repulsionString} they can agree to lovin' with anyone, but will have slightly negative thoughts about it.");
+                    list.Label("WBR.Repulsion04".Translate(SelPawn, repulsionString));
                 }
                 else
                 {
-                    list.Label($"At {repulsionString} they can agree to lovin' with anyone, and will have positive thoughts about it.");
+                    list.Label("WBR.Repulsion00".Translate(SelPawn, repulsionString));
                 }
             }
             list.End();
