@@ -16,4 +16,10 @@
 		<assemblyVersion>1.2.0</assemblyVersion>
 		<content>&lt;b&gt;New precepts added!&lt;/b&gt;|One addition to the spouse count precepts, no spouses, so that no one will ever get married. And then a new issue, lover count, to supplement spouses.|Previously, all love relationships (spouse, fiance, lover, and any custom relations) were limited by the spouse count precept.|Now, only spouse and fiance are limited by the spouse count precept, and then the lover count precept is added to that. So an individual whose ideoligion allows two spouses and three lovers can have five love relations total, but can only marry two of them. This enables an additional way to make people not care about cheating without having to use Lovin' - free and approved. Just allow unlimited lovers!|To keep the previous behavior, just set the lover count to zero, which is the default.</content>
 	</HugsLib.UpdateFeatureDef>
+
+	<HugsLib.UpdateFeatureDef ParentName="WBR_UpdateFeatureBase">
+		<defName>WBR_EditSexRepulsion</defName>
+		<assemblyVersion>1.2.1</assemblyVersion>
+		<content>&lt;b&gt;New orientation info pane, plus changing sex repulsion in dev mode!&lt;/b&gt;|First off, there's now a place in game to get detailed information about a pawn's orientation. Access it by simply clicking on the trait in the Bio tab.|img:Images/OrientationPane1|Here you'll see an explanation of the exact effect of the pawn's sex repulsion. Right now this is only available for asexual orientations, but some day it may be added to the others.|img:Images/OrientationPane2|If you have dev mode enabled, you'll see a very special option at the top of this pane.|img:Images/OrientationPane3|Using the slider you can change the pawn's sex repulsion. Enjoy!</content>
+	</HugsLib.UpdateFeatureDef>
 </Defs>

@@ -82,6 +82,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Sex Repulsion\CharacterCardUtility.cs" />
+    <Compile Include="Sex Repulsion\Comp_SexRepulsion.cs" />
     <Compile Include="CustomLoveRelationUtility.cs" />
     <Compile Include="Harmony\Biotech\RitualOutcomeComp_PawnAge.cs" />
     <Compile Include="Harmony\GeneDef.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Harmony\Pawn_GeneTracker.cs" />
     <Compile Include="Harmony\Ideology\ThoughtWorker_AgeReversalDemanded.cs" />
     <Compile Include="Harmony\ScenPart_ForcedTrait.cs" />
+    <Compile Include="Sex Repulsion\ITab_Sexuality.cs" />
     <Compile Include="Mod Integration\CompatUtility.cs" />
     <Compile Include="Mod Integration\OtherMods.cs" />
     <Compile Include="Mod Integration\RotR_Integration.cs" />
@@ -113,8 +116,9 @@
     <Compile Include="Harmony\TraitSet.cs" />
     <Compile Include="HookupUtility.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Sex Repulsion\Trait.cs" />
     <Compile Include="SexualityUtility.cs" />
-    <Compile Include="StatPart_Asexual.cs" />
+    <Compile Include="Sex Repulsion\StatPart_Asexual.cs" />
     <Compile Include="Comp_PartnerList.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Harmony\ChildRelationUtility.cs" />

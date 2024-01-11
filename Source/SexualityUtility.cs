@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using RimWorld;
 using Verse;
 using HarmonyLib;
+using System.Reflection;
 
 namespace BetterRomance
 {
     public static class SexualityUtility
     {
+        public static bool editRepulsion;
         public static readonly List<TraitDef> OrientationTraits = new List<TraitDef>()
         {
             TraitDefOf.Gay,
@@ -22,7 +24,7 @@ namespace BetterRomance
             RomanceDefOf.BiAce,
         };
 
-        private static List<TraitDef> asexualTraits = new List<TraitDef> { TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce };
+        public static List<TraitDef> asexualTraits = new List<TraitDef> { TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce };
 
         /// <summary>
         /// A rating to use for determining sex aversion for asexual pawns. Seed is based on pawn's ID, so it will always return the same number for a given pawn.
@@ -31,11 +33,28 @@ namespace BetterRomance
         /// <returns>float between 0 and 1</returns>
         public static float AsexualRating(this Pawn pawn)
         {
-            Rand.PushState();
-            Rand.Seed = pawn.thingIDNumber;
-            float rating = Rand.Range(0f, 1f);
-            Rand.PopState();
-            return rating;
+            return pawn.CheckForAsexualComp().rating;
+        }
+
+        public static Comp_SexRepulsion CheckForAsexualComp(this Pawn p)
+        {
+            Comp_SexRepulsion comp = p.TryGetComp<Comp_SexRepulsion>();
+            if (comp == null)
+            {
+                FieldInfo field = AccessTools.Field(typeof(ThingWithComps), "comps");
+                List<ThingComp> compList = (List<ThingComp>)field.GetValue(p);
+                ThingComp newComp = (ThingComp)Activator.CreateInstance(typeof(Comp_SexRepulsion));
+                newComp.parent = p;
+                compList.Add(newComp);
+                newComp.Initialize(new CompProperties());
+                newComp.PostExposeData();
+                comp = p.TryGetComp<Comp_SexRepulsion>();
+                if (comp == null)
+                {
+                    LogUtil.Error("Unable to add Comp_SexRepulsion");
+                }
+            }
+            return comp;
         }
 
         /// <summary>

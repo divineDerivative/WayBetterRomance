@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+	<Operation Class="PatchOperationAdd">
+			<xpath>Defs/ThingDef[@Name="BasePawn"]/inspectorTabs</xpath>
+			<value>
+				<li>BetterRomance.ITab_Sexuality</li>
+			</value>
+	</Operation>
+</Patch>

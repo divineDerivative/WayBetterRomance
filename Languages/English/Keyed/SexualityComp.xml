@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+	<WBR.AsexualExplanation>{0_labelShort} is asexual. This means {0_pronoun} will never initiate lovin', which includes asking someone to hook up.\n\n{0_possessive} sex repulsion is {1}. The lower {0_possessive} sex repulsion, the more likely {0_pronoun} is to agree to lovin' when someone else initiates.</WBR.AsexualExplanation>
+	<WBR.Repulsion08>At {1} {0_pronoun} will never agree to lovin' no matter who asks {0_objective}. {0_pronoun} will only agree to marry another asexual person.</WBR.Repulsion08>
+	<WBR.Repulsion05>At {1} {0_pronoun} will only agree to lovin' with existing partners. {0_pronoun} will have negative thoughts about any lovin'.</WBR.Repulsion05>
+	<WBR.Repulsion04>At {1} {0_pronoun} can agree to lovin' with anyone, but will have slightly negative thoughts about it.</WBR.Repulsion04>
+	<WBR.Repulsion00>At {1} {0_pronoun} can agree to lovin' with anyone, and will have positive thoughts about it.</WBR.Repulsion00>
+	<WBR.Heteroromantic>{0_labelShort} is heteroromantic, which means {0_pronoun} is romantically attracted to people of the opposite gender.</WBR.Heteroromantic>
+	<WBR.Homoromantic>{0_labelShort} is homoromantic, which means {0_pronoun} is romantically attracted to people of the same gender.</WBR.Homoromantic>
+	<WBR.Biromantic>{0_labelShort} is biromantic, which means {0_pronoun} is romantically attracted to both men and women.</WBR.Biromantic>
+	<WBR.Aromantic>{0_labelShort} is aromantic, which means {0_pronoun} is not interested in any romantic engagements.</WBR.Aromantic>
+	<WBR.MoreInfo>&lt;i&gt;Click for more info&lt;/i&gt;</WBR.MoreInfo>
+</LanguageData>
