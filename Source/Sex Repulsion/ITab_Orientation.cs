@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BetterRomance
 {
-    public class ITab_Sexuality : ITab
+    public class ITab_Orientation : ITab
     {
         public override bool Hidden => true;
 
@@ -59,6 +59,7 @@ namespace BetterRomance
                 float repulsion = SelPawn.GetStatValue(StatDef.Named("AsexualRating"));
                 string repulsionString = StatDef.Named("AsexualRating").ValueToString(repulsion);
                 list.Label("WBR.AsexualExplanation".Translate(SelPawn, repulsionString));
+                //Insert a slider if edit option is selected
                 if (SexualityUtility.editRepulsion)
                 {
                     Comp_SexRepulsion comp = SelPawn.CheckForAsexualComp();
@@ -84,7 +85,7 @@ namespace BetterRomance
             list.End();
         }
 
-        public ITab_Sexuality()
+        public ITab_Orientation()
         {
             size = new Vector2(400f, 300f);
         }

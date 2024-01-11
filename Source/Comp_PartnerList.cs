@@ -171,6 +171,7 @@ namespace BetterRomance
 }
 
 //This is the patch to apply the comp only to pawns with the joy need, since it's only used for joy activities
+//Also adds the asexual comp to asexual pawns
 namespace BetterRomance.HarmonyPatches
 {
     [HarmonyPatch(typeof(Pawn_NeedsTracker), "AddOrRemoveNeedsAsAppropriate")]

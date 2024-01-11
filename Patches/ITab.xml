@@ -2,9 +2,9 @@
 
 <Patch>
 	<Operation Class="PatchOperationAdd">
-			<xpath>Defs/ThingDef[@Name="BasePawn"]/inspectorTabs</xpath>
-			<value>
-				<li>BetterRomance.ITab_Sexuality</li>
-			</value>
+		<xpath>Defs/ThingDef[@Name="BasePawn"]/inspectorTabs</xpath>
+		<value>
+			<li>BetterRomance.ITab_Orientation</li>
+		</value>
 	</Operation>
 </Patch>

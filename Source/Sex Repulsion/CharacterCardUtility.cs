@@ -13,6 +13,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch]
     public static class CharacterCardUtility_DoLeftSection
     {
+        //Turns the asexual trait rect into a button that opens the sexuality tab
         public static void Postfix(ref Rect r, Trait trait)
         {
             Pawn pawn = trait.pawn;
@@ -20,7 +21,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (Widgets.ButtonInvisible(r))
                 {
-                    InspectPaneUtility.OpenTab(typeof(ITab_Sexuality));
+                    InspectPaneUtility.OpenTab(typeof(ITab_Orientation));
                 }
             }
         }
@@ -36,8 +37,8 @@ namespace BetterRomance.HarmonyPatches
                 {
                     foreach (MethodInfo method in methods)
                     {
-                        ParameterInfo[] adds = method.GetParameters();
-                        if (adds.Length == 2 && adds[0].ParameterType == typeof(Rect) && adds[1].ParameterType == typeof(Trait))
+                        ParameterInfo[] parameters = method.GetParameters();
+                        if (parameters.Length == 2 && parameters[0].ParameterType == typeof(Rect) && parameters[1].ParameterType == typeof(Trait))
                         {
                             return method;
                         }

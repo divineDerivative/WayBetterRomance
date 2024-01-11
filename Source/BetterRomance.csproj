@@ -91,7 +91,7 @@
     <Compile Include="Harmony\Pawn_GeneTracker.cs" />
     <Compile Include="Harmony\Ideology\ThoughtWorker_AgeReversalDemanded.cs" />
     <Compile Include="Harmony\ScenPart_ForcedTrait.cs" />
-    <Compile Include="Sex Repulsion\ITab_Sexuality.cs" />
+    <Compile Include="Sex Repulsion\ITab_Orientation.cs" />
     <Compile Include="Mod Integration\CompatUtility.cs" />
     <Compile Include="Mod Integration\OtherMods.cs" />
     <Compile Include="Mod Integration\RotR_Integration.cs" />
