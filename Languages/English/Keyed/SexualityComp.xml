@@ -9,4 +9,5 @@
 	<WBR.Homoromantic>{0_labelShort} is homoromantic, which means {0_pronoun} is romantically attracted to people of the same gender.</WBR.Homoromantic>
 	<WBR.Biromantic>{0_labelShort} is biromantic, which means {0_pronoun} is romantically attracted to both men and women.</WBR.Biromantic>
 	<WBR.Aromantic>{0_labelShort} is aromantic, which means {0_pronoun} is not interested in any romantic engagements.</WBR.Aromantic>
+	<WBR.MoreInfo>&lt;i&gt;Click for more info&lt;/i&gt;</WBR.MoreInfo>
 </LanguageData>
