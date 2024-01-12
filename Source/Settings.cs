@@ -44,6 +44,7 @@ namespace BetterRomance
         public static bool ATRActive = false;
         public static bool VREHighmateActive = false;
         public static bool VREAndroidActive = false;
+        internal static bool NonBinaryActive = false;
         public static Dictionary<string, string> FertilityMods = new();
         public static bool debugLogging = false;
         public static bool AsimovActive;
