@@ -1,25 +1,13 @@
-﻿using HarmonyLib;
+﻿using System.Collections.Generic;
 using RimWorld;
-using System.Collections.Generic;
-using Verse;
+using HarmonyLib;
 using Verse.AI;
 
 namespace BetterRomance.HarmonyPatches
 {
-    //This stops asexual pawns from initiating lovin' while in bed with a partner
-    [HarmonyPatch(typeof(JobGiver_DoLovin), "TryGiveJob")]
-    public static class JobGiver_DoLovin_TryGiveJob
+    [HarmonyPatch(typeof(ThinkNode_ChancePerHour_Lovin), "MtbHours")]
+    public static class ThinkNode_ChancePerHour_Lovin_MtbHours
     {
-        public static bool Prefix(Pawn pawn, ref Job __result)
-        {
-            if (pawn.IsAsexual())
-            {
-                __result = null;
-                return false;
-            }
-            return true;
-        }
-
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             foreach (CodeInstruction code in instructions)

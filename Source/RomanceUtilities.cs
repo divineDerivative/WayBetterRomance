@@ -377,6 +377,35 @@ namespace BetterRomance
             //If nothing got hit, then we're good to go
             return true;
         }
+
+        public static Pawn GetPartnerInMyBedForLovin(Pawn pawn)
+        {
+            Building_Bed bed = pawn.CurrentBed();
+            if (bed == null)
+            {
+                return null;
+            }
+            if (bed.SleepingSlotsCount <= 1)
+            {
+                return null;
+            }
+            if (!LovePartnerRelationUtility.HasAnyLovePartner(pawn))
+            {
+                return null;
+            }
+            foreach (Pawn curOccupant in bed.CurOccupants)
+            {
+                if (curOccupant != pawn && LovePartnerRelationUtility.LovePartnerRelationExists(pawn, curOccupant))
+                {
+                    if (curOccupant.IsAsexual() && curOccupant.AsexualRating() < 0.2f)
+                    {
+                        continue;
+                    }
+                    return curOccupant;
+                }
+            }
+            return null;
+        }
     }
 
     internal static class LogUtil
