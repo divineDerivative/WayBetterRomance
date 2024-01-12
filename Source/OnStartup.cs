@@ -112,6 +112,10 @@ namespace BetterRomance
                 harmony.PatchPawnmorpher();
                 HelperClasses.IsHumanlikePM = AccessTools.Method(Type.GetType("Pawnmorph.FormerHumanUtilities, Pawnmorph"), "IsHumanlike");
             }
+            if (ModsConfig.IsActive("divineDerivative.NonBinaryGender"))
+            {
+                Settings.NonBinaryActive = true;
+            }
 
             MakeFertilityModList();
             Settings.ApplyJoySettings();
