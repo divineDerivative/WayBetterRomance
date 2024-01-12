@@ -203,6 +203,10 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Simple Trans: {ex}");
                 }
             }
+            if (ModsConfig.IsActive("divineDerivative.NonBinaryGender"))
+            {
+                Settings.NonBinaryActive = true;
+            }
 
             MakeFertilityModList();
             Settings.JoyNeed = DefDatabase<NeedDef>.GetNamed("Joy");
