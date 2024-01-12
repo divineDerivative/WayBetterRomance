@@ -277,6 +277,10 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Tweaks Galore: {ex}");
                 }
             }
+            if (ModsConfig.IsActive("divineDerivative.NonBinaryGender"))
+            {
+                Settings.NonBinaryActive = true;
+            }
         }
 
         public static void MakeRaceSettingsList()
