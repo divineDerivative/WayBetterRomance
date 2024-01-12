@@ -189,6 +189,10 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Pawnmorpher: {ex}");
                 }
             }
+            if (ModsConfig.IsActive("divineDerivative.NonBinaryGender"))
+            {
+                Settings.NonBinaryActive = true;
+            }
 
             MakeFertilityModList();
             Settings.ApplyJoySettings();
