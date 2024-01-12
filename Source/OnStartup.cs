@@ -196,6 +196,10 @@ namespace BetterRomance
                 HelperClasses.CanSire = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanSire");
                 HelperClasses.CanCarry = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanCarry");
             }
+            if (ModsConfig.IsActive("divineDerivative.NonBinaryGender"))
+            {
+                Settings.NonBinaryActive = true;
+            }
 
             MakeFertilityModList();
             Settings.JoyNeed = DefDatabase<NeedDef>.GetNamed("Joy");
