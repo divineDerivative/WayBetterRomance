@@ -66,6 +66,8 @@ namespace BetterRomance
         public static HistoryEventDef TookLover_LoverCount_Four;
         [MayRequireIdeology]
         public static HistoryEventDef TookLover_LoverCount_FiveOrMore;
+        public static PreceptDef LoverCount_Male_None;
+        public static PreceptDef LoverCount_Female_None;
         [MayRequireIdeology]
         public static PreceptDef SpouseCount_Male_None;
         [MayRequireIdeology]

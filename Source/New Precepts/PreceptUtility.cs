@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using System.Collections.Generic;
 using Verse;
 
 namespace BetterRomance
@@ -15,6 +16,7 @@ namespace BetterRomance
         //These should only be called if the total love relations is at or above the spouse count precept
         public static HistoryEventDef GetHistoryEventLoverCount(this Pawn pawn)
         {
+            CheckIdeo(pawn.ideo.Ideo);
             int count = pawn.GetLoveRelations(includeDead: false).Count - AllowedSpouseCount(pawn.ideo.Ideo, pawn.gender);
             if (count <= 1)
             {
@@ -37,6 +39,7 @@ namespace BetterRomance
 
         public static HistoryEventDef GetHistoryEventLoverCountPlusOne(this Pawn pawn)
         {
+            CheckIdeo(pawn.ideo.Ideo);
             int count = pawn.GetLoveRelations(includeDead: false).Count - AllowedSpouseCount(pawn.ideo.Ideo, pawn.gender);
             if (count == 0)
             {
@@ -132,6 +135,28 @@ namespace BetterRomance
                     return 0;
                 default:
                     return -1;
+            }
+        }
+
+        private static HashSet<Ideo> IdeosChecked = new HashSet<Ideo>();
+
+        /// <summary>
+        /// Checks if an <paramref name="ideo"/> has lover count precepts, and if not, adds them
+        /// </summary>
+        /// <param name="ideo"></param>
+        public static void CheckIdeo(Ideo ideo)
+        {
+            if (ideo != null && !IdeosChecked.Contains(ideo))
+            {
+                if (!ideo.HasMaxPreceptsForIssue(DefDatabase<IssueDef>.GetNamed("LoverCount_Male")))
+                {
+                    ideo.AddPrecept(PreceptMaker.MakePrecept(RomanceDefOf.LoverCount_Male_None));
+                }
+                if (!ideo.HasMaxPreceptsForIssue(DefDatabase<IssueDef>.GetNamed("LoverCount_Female")))
+                {
+                    ideo.AddPrecept(PreceptMaker.MakePrecept(RomanceDefOf.LoverCount_Female_None));
+                }
+                IdeosChecked.Add(ideo);
             }
         }
     }
