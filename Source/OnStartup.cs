@@ -102,6 +102,10 @@ namespace BetterRomance
                 harmony.PatchForceLoveHate();
             }
 
+            if (ModsConfig.IsActive("divineDerivative.NonBinaryGender"))
+            {
+                Settings.NonBinaryActive = true;
+            }
             MakeFertilityModList();
             Settings.ApplyJoySettings();
             MakeRaceSettingsList();
