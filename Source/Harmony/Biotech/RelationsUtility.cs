@@ -104,33 +104,8 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Pawn pawn, Gender gender, ref bool __result)
         {
             pawn.EnsureTraits();
-            if (pawn.story != null)
-            {
-                if (pawn.IsAro())
-                {
-                    __result = false;
-                }
-                else if (pawn.IsHomo())
-                {
-                    __result = pawn.gender == gender;
-                }
-                else if (pawn.IsHetero())
-                {
-                    __result = pawn.gender != gender;
-                }
-                else if (pawn.IsBi())
-                {
-                    __result = true;
-                }
-                else
-                {
-                    //If they don't have an orientation trait, they are probably a child
-                    __result = false;
-                }
-                return false;
-            }
-            //Not really sure what it means to not have a story tracker
-            __result = false;
+            Comp_Orientation comp = pawn.CheckForComp<Comp_Orientation>();
+            __result = comp.RomanticallyAttractedToGender(gender);
             return false;
         }
     }

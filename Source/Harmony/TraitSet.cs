@@ -13,6 +13,11 @@ namespace BetterRomance.HarmonyPatches
             if (SexualityUtility.OrientationTraits.Contains(trait.def))
             {
                 //Check if pawn already has one
+                if (___pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
+                {
+                    __state = ___pawn.story.traits.GetTrait(RomanceDefOf.DynamicOrientation);
+                    return true;
+                }
                 foreach (TraitDef traitDef in SexualityUtility.OrientationTraits)
                 {
                     if (___pawn.story.traits.HasTrait(traitDef))
@@ -28,9 +33,9 @@ namespace BetterRomance.HarmonyPatches
             return true;
         }
 
-        public static void Postfix(ref Trait __state, Pawn ___pawn)
+        public static void Postfix(Trait trait, ref Trait __state, Pawn ___pawn)
         {
-            if (__state != null)
+            if (__state != null && __state.def != RomanceDefOf.DynamicOrientation)
             {
                 //Check if a second orientation trait got added
                 int traitCount = 0;
@@ -46,6 +51,11 @@ namespace BetterRomance.HarmonyPatches
                 {
                     ___pawn.story.traits.RemoveTrait(__state, true);
                 }
+            }
+            //Convert the new trait
+            if (SexualityUtility.OrientationTraits.Contains(trait.def))
+            {
+                Comp_Orientation.ConvertOrientation(___pawn, true);
             }
         }
     }
