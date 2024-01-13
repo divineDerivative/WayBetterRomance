@@ -62,7 +62,7 @@ namespace BetterRomance
                 //Insert a slider if edit option is selected
                 if (SexualityUtility.editRepulsion)
                 {
-                    Comp_SexRepulsion comp = SelPawn.CheckForAsexualComp();
+                    Comp_SexRepulsion comp = SelPawn.CheckForComp<Comp_SexRepulsion>();
                     comp.rating = 1f - list.Slider(repulsion, 0f, 1f);
                 }
                 if (repulsion >= 0.8f)

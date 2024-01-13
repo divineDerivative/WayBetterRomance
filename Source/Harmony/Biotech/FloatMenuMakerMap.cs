@@ -13,7 +13,7 @@ namespace BetterRomance.HarmonyPatches
 
         public static void Postfix(Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
         {
-            if (!pawn.Drafted && pawn.ageTracker.AgeBiologicalYearsFloat > pawn.MinAgeForSex() && !pawn.CheckForPartnerComp().IsOrderedHookupOnCooldown)
+            if (!pawn.Drafted && pawn.ageTracker.AgeBiologicalYearsFloat > pawn.MinAgeForSex() && !pawn.CheckForComp<Comp_PartnerList>().IsOrderedHookupOnCooldown)
             {
                 foreach (LocalTargetInfo target in GenUI.TargetsAt(clickPos, TargetingParameters.ForRomance(pawn), thingsOnly: true))
                 {

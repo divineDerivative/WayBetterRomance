@@ -74,7 +74,7 @@ namespace BetterRomance
                     FleckMaker.ThrowMetaIcon(Actor.Position, Actor.Map, FleckDefOf.Heart);
                     if (Ordered)
                     {
-                        Actor.CheckForPartnerComp().orderedHookupTick = Find.TickManager.TicksGame + orderedHookupInterval;
+                        Actor.CheckForComp<Comp_PartnerList>().orderedHookupTick = Find.TickManager.TicksGame + orderedHookupInterval;
                     }
                 },
             };

@@ -1,13 +1,12 @@
-﻿using Verse;
-using System.Collections.Generic;
+﻿using HarmonyLib;
 using RimWorld;
-using HarmonyLib;
+using System.Collections.Generic;
+using Verse;
 
 namespace BetterRomance
 {
     public class Comp_PartnerList : ThingComp
     {
-        public CompProperties_PartnerList Props => (CompProperties_PartnerList)props;
         public Pawn Pawn => (Pawn)parent;
         public CompListVars Date;
         public CompListVars Hookup;
@@ -154,14 +153,6 @@ namespace BetterRomance
         }
     }
 
-    public class CompProperties_PartnerList : CompProperties
-    {
-        public CompProperties_PartnerList()
-        {
-            compClass = typeof(Comp_PartnerList);
-        }
-    }
-
     public class CompListVars
     {
         public List<Pawn> list;
@@ -181,11 +172,11 @@ namespace BetterRomance.HarmonyPatches
         {
             if (__instance.joy != null)
             {
-                ___pawn.CheckForPartnerComp();
+                ___pawn.CheckForComp<Comp_PartnerList>();
             }
             if (___pawn.IsAsexual())
             {
-                ___pawn.CheckForAsexualComp();
+                ___pawn.CheckForComp<Comp_SexRepulsion>();
             }
         }
     }

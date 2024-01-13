@@ -74,7 +74,7 @@ namespace BetterRomance.HarmonyPatches
         private static void DrawTryHookup(Rect buttonRect, Pawn pawn)
         {
             Color color = GUI.color;
-            bool isTryHookupOnCooldown = pawn.CheckForPartnerComp().IsOrderedHookupOnCooldown;
+            bool isTryHookupOnCooldown = pawn.CheckForComp<Comp_PartnerList>().IsOrderedHookupOnCooldown;
             AcceptanceReport canDoHookup = HookupUtility.HookupEligible(pawn, initiator: true);
             bool incapacitated = pawn.IsIncapable(out string reason);
             List<FloatMenuOption> list = canDoHookup.Accepted ? HookupOptions(pawn) : null;
@@ -83,7 +83,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (isTryHookupOnCooldown)
                 {
-                    int numTicks = pawn.CheckForPartnerComp().orderedHookupTick - Find.TickManager.TicksGame;
+                    int numTicks = pawn.CheckForComp<Comp_PartnerList>().orderedHookupTick - Find.TickManager.TicksGame;
                     Messages.Message("WBR.CantHookupInitiateMessageCooldown".Translate(pawn, numTicks.ToStringTicksToPeriod()), MessageTypeDefOf.RejectInput, historical: false);
                     return;
                 }
@@ -203,7 +203,7 @@ namespace BetterRomance.HarmonyPatches
                 return "WBR.HookupChanceCant".Translate() + (" (" + ar.Reason + ")\n");
             }
             StringBuilder text = new StringBuilder();
-            text.AppendLine(("WBR.HookupChance".Translate() + (": " + (HookupUtility.HookupSuccessChance(target, initiator, ordered: true, forTooltip: true)).ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
+            text.AppendLine(("WBR.HookupChance".Translate() + (": " + HookupUtility.HookupSuccessChance(target, initiator, ordered: true, forTooltip: true).ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
             text.Append(HookupUtility.HookupFactors(initiator, target));
             return text.ToString();
         }
@@ -229,7 +229,7 @@ namespace BetterRomance.HarmonyPatches
             List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
             for (int i = 0; i < codes.Count; i++)
             {
-                var code = codes[i];
+                CodeInstruction code = codes[i];
 
                 if (code.opcode == OpCodes.Ldstr && (string)code.operand == "CantRomanceInitiateMessageCooldown")
                 {

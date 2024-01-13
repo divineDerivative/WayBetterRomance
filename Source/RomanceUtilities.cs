@@ -282,26 +282,26 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Checks if a <see cref="Comp_PartnerList"/> already exists on <paramref name="p"/>, adds it if needed, and then returns the comp
+        /// Checks if a <typeparamref name="T"/> already exists on <paramref name="p"/>, adds it if needed, and then returns the comp
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static Comp_PartnerList CheckForPartnerComp(this Pawn p)
+        public static T CheckForComp<T>(this Pawn p) where T : ThingComp
         {
-            Comp_PartnerList comp = p.TryGetComp<Comp_PartnerList>();
+            T comp = p.TryGetComp<T>();
             if (comp == null)
             {
                 FieldInfo field = AccessTools.Field(typeof(ThingWithComps), "comps");
                 List<ThingComp> compList = (List<ThingComp>)field.GetValue(p);
-                ThingComp newComp = (ThingComp)Activator.CreateInstance(typeof(Comp_PartnerList));
+                ThingComp newComp = (ThingComp)Activator.CreateInstance(typeof(T));
                 newComp.parent = p;
                 compList.Add(newComp);
-                newComp.Initialize(new CompProperties_PartnerList());
+                newComp.Initialize(new CompProperties());
                 newComp.PostExposeData();
-                comp = p.TryGetComp<Comp_PartnerList>();
+                comp = p.TryGetComp<T>();
                 if (comp == null)
                 {
-                    LogUtil.Error("Unable to add Comp_PartnerList");
+                    LogUtil.Error($"Unable to add {typeof(T).GetType().Name}");
                 }
             }
             return comp;
