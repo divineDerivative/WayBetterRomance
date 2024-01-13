@@ -1,5 +1,13 @@
-﻿using RimWorld;
+﻿using HarmonyLib;
+using RimWorld;
+using System.Collections.Generic;
+using System.Reflection;
+using System;
 using Verse;
+#if !v1_4
+using LudeonTK;
+#endif
+using static BetterRomance.WBRLogger;
 
 namespace BetterRomance.Orientation_Comp
 {
@@ -15,6 +23,37 @@ namespace BetterRomance.Orientation_Comp
         public AttractionVars sexual;
         public AttractionVars romantic;
         public Pawn Pawn => parent as Pawn;
+        public Gender Gender => Pawn.gender;
+
+        public bool SexuallyAttractedToGender(Gender gender)
+        {
+            switch (gender)
+            {
+                case Gender.Male:
+                    return sexual.men;
+                case Gender.Female:
+                    return sexual.women;
+                case (Gender)3:
+                    return sexual.enby;
+                default:
+                    return false;
+            }
+        }
+
+        public bool RomanticallyAttractedToGender(Gender gender)
+        {
+            switch (gender)
+            {
+                case Gender.Male:
+                    return romantic.men;
+                case Gender.Female:
+                    return romantic.women;
+                case (Gender)3:
+                    return romantic.enby;
+                default:
+                    return false;
+            }
+        }
 
         public override void Initialize(CompProperties props)
         {
@@ -23,6 +62,7 @@ namespace BetterRomance.Orientation_Comp
             romantic = new AttractionVars();
         }
 
+        [DebugAction("WBR", name: "Convert orientation", actionType = DebugActionType.ToolMapForPawns)]
         public static void ConvertOrientation(Pawn pawn)
         {
             Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
@@ -62,6 +102,7 @@ namespace BetterRomance.Orientation_Comp
                     comp.SetAttraction((Gender)3, false, true, true);
                 }
             }
+            LogUtil.Error($"{pawn.LabelShort} is {comp.GetLabel()}");
             //Remove the orientation trait here probably
         }
 
@@ -98,6 +139,24 @@ namespace BetterRomance.Orientation_Comp
                 }
                 this.romantic.women = result;
             }
+        }
+
+        public string GetLabel()
+        {
+            //Bisexual, pansexual, straight, gay, asexual
+            if (sexual.men && sexual.women && sexual.enby)
+            {
+                return "Pansexual";
+            }
+            if (sexual.men && sexual.women)
+            {
+                return "Bisexual";
+            }
+            if (!sexual.men && !sexual.women && (!Settings.NonBinaryActive || !sexual.enby))
+            {
+                return "Asexual";
+            }
+            return SexuallyAttractedToGender(Gender) ? "Gay" : "Straight";
         }
     }
 }
