@@ -105,7 +105,7 @@ namespace BetterRomance.HarmonyPatches
         {
             pawn.EnsureTraits();
             Comp_Orientation comp = pawn.CheckForComp<Comp_Orientation>();
-            __result = comp.RomanticallyAttractedToGender(gender);
+            __result = comp.RomanticallyAttractedTo(gender);
             return false;
         }
     }

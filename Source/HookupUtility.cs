@@ -22,7 +22,7 @@ namespace BetterRomance
         public static bool HookupOption(Pawn initiator, Pawn hookupTarget, out FloatMenuOption option, out float chance)
         {
             //Do not allow if target's gender does not match initiator's orientation
-            if (!RelationsUtility.AttractedToGender(initiator, hookupTarget.gender))
+            if (!initiator.CheckForComp<Comp_Orientation>().SexuallyAttractedTo(hookupTarget))
             {
                 option = null;
                 chance = 0f;
@@ -172,7 +172,7 @@ namespace BetterRomance
                 return "WBR.CantHookupTargetSlave".Translate();
             }
             //Don't allow if target's gender does not match initiator's orientation
-            if (!RelationsUtility.AttractedToGender(initiator, target.gender))
+            if (!initiator.CheckForComp<Comp_Orientation>().SexuallyAttractedTo(target))
             {
                 return "WBR.CantHookupTargetGender".Translate();
             }
