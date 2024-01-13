@@ -1,15 +1,12 @@
-﻿using HarmonyLib;
-using RimWorld;
+﻿using RimWorld;
 using System.Collections.Generic;
-using System.Reflection;
-using System;
 using Verse;
 #if !v1_4
 using LudeonTK;
 #endif
 using static BetterRomance.WBRLogger;
 
-namespace BetterRomance.Orientation_Comp
+namespace BetterRomance
 {
     public class Comp_Orientation : ThingComp
     {
@@ -22,6 +19,7 @@ namespace BetterRomance.Orientation_Comp
 
         public AttractionVars sexual;
         public AttractionVars romantic;
+        public bool converted;
         public Pawn Pawn => parent as Pawn;
         public Gender Gender => Pawn.gender;
 
@@ -62,48 +60,78 @@ namespace BetterRomance.Orientation_Comp
             romantic = new AttractionVars();
         }
 
-        [DebugAction("WBR", name: "Convert orientation", actionType = DebugActionType.ToolMapForPawns)]
-        public static void ConvertOrientation(Pawn pawn)
+        public override void PostExposeData()
         {
-            Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
+            base.PostExposeData();
+            Scribe_Values.Look(ref sexual.men, "sexuallyAttractedToMen", false);
+            Scribe_Values.Look(ref sexual.women, "sexuallyAttractedToWomen", false);
+            Scribe_Values.Look(ref sexual.enby, "sexuallyAttractedToEnby", false);
+            Scribe_Values.Look(ref romantic.men, "romanticallyAttractedToMen", false);
+            Scribe_Values.Look(ref romantic.women, "romanticallyAttractedToWomen", false);
+            Scribe_Values.Look(ref romantic.enby, "romanticallyAttractedToEnby", false);
+            Scribe_Values.Look(ref converted, "orientationConverted", false);
+        }
+
+        public static void ConvertOrientation(Pawn pawn, bool force = false)
+        {
             Gender gender = pawn.gender;
-            if (comp == null)
+            Comp_Orientation comp = pawn.CheckForComp<Comp_Orientation>();
+            if (!comp.converted || force)
             {
                 if (pawn.IsAro())
                 {
                     comp.SetAttraction(Gender.Male, false, true, true);
                     comp.SetAttraction(Gender.Female, false, true, true);
                     comp.SetAttraction((Gender)3, false, true, true);
-                    return;
                 }
-                if (pawn.IsBi())
+                else
                 {
-                    comp.SetAttraction(Gender.Male, true, true, true);
-                    comp.SetAttraction(Gender.Female, true, true, true);
+                    if (pawn.IsBi())
+                    {
+                        comp.SetAttraction(Gender.Male, true, true, true);
+                        comp.SetAttraction(Gender.Female, true, true, true);
+                    }
+                    else if (pawn.IsHetero())
+                    {
+                        comp.SetAttraction(gender, false, true, true);
+                        comp.SetAttraction(gender.Opposite(), true, true, true);
+                    }
+                    else if (pawn.IsHomo())
+                    {
+                        comp.SetAttraction(gender, true, true, true);
+                        comp.SetAttraction(gender.Opposite(), false, true, true);
+                    }
+                    if (pawn.IsAsexual())
+                    {
+                        comp.SetAttraction(Gender.Male, false, true, false);
+                        comp.SetAttraction(Gender.Female, false, true, false);
+                        comp.SetAttraction((Gender)3, false, true, false);
+                    }
+                    if (!Settings.NonBinaryActive)
+                    {
+                        comp.SetAttraction((Gender)3, false, true, true);
+                    }
                 }
-                if (pawn.IsHetero())
+                //Remove the orientation trait here probably
+                List<Trait> toRemove = new List<Trait>();
+                foreach (Trait trait in pawn.story.traits.allTraits)
                 {
-                    comp.SetAttraction(gender, false, true, true);
-                    comp.SetAttraction(gender.Opposite(), true, true, true);
+                    if (SexualityUtility.OrientationTraits.Contains(trait.def))
+                    {
+                        toRemove.Add(trait);
+                    }
                 }
-                if (pawn.IsHomo())
+                foreach (Trait trait in toRemove)
                 {
-                    comp.SetAttraction(gender, true, true, true);
-                    comp.SetAttraction(gender.Opposite(), false, true, true);
+                    LogUtil.Message($"Removing {trait.Label} from {pawn.LabelShort}");
+                    pawn.story.traits.RemoveTrait(trait);
                 }
-                if (pawn.IsAsexual())
+                if (!pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
                 {
-                    comp.SetAttraction(Gender.Male, false, true, false);
-                    comp.SetAttraction(Gender.Female, false, true, false);
-                    comp.SetAttraction((Gender)3, false, true, false);
+                    pawn.story.traits.GainTrait(new Trait(RomanceDefOf.DynamicOrientation));
                 }
-                if (!Settings.NonBinaryActive)
-                {
-                    comp.SetAttraction((Gender)3, false, true, true);
-                }
+                comp.converted = true;
             }
-            LogUtil.Error($"{pawn.LabelShort} is {comp.GetLabel()}");
-            //Remove the orientation trait here probably
         }
 
         private void SetAttraction(Gender gender, bool result, bool sexual, bool romantic)
@@ -137,7 +165,6 @@ namespace BetterRomance.Orientation_Comp
                         this.romantic.enby = result;
                         break;
                 }
-                this.romantic.women = result;
             }
         }
 

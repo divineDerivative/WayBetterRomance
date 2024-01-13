@@ -15,10 +15,14 @@ namespace BetterRomance
                 {
                     if (SexualityUtility.OrientationTraits.Contains(trait.def))
                     {
+                        Comp_Orientation.ConvertOrientation(pawn);
                         return;
                     }
                 }
-                AssignOrientation(pawn);
+                if (pawn.TryGetComp<Comp_Orientation>() == null)
+                {
+                    AssignOrientation(pawn);
+                }
             }
         }
 
