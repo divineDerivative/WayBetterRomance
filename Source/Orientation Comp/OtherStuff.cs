@@ -9,8 +9,6 @@ using HarmonyLib;
 
 namespace BetterRomance
 {
-    //Make a new trait for orientation
-    //Make a method on the comp to determine the correct label
     //Then make a patch for TraitDegreeData.GetLabelFor and GetLabelForCap to pass that label
     //Make a method on the comp to determine the correct description
     //Then make a patch for Trait.TipString to pass the correct description
