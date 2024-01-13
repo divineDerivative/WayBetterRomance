@@ -93,6 +93,7 @@ namespace BetterRomance
         [MayRequireBiotech]
         public static GeneDef DiseaseFree;
         public static IssueDef Lovin;
+        public static TraitDef DynamicOrientation;
 
         //Vanilla stuff I need a reference to
         public static JobDef CastAbilityOnThingUninterruptible;
