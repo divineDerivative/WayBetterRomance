@@ -318,26 +318,23 @@ namespace BetterRomance
         }
 
         /// <summary>Adjustment to success chance based on <paramref name="pawn"/>'s orientation and <paramref name="target"/>'s gender.</summary>
-        public static float SexualityFactor(Pawn pawn, Pawn target)
+        public static float SexualityFactor(Pawn pawn, Pawn target, bool romantic = false)
         {
             float factor = 1f;
+            var comp = pawn.CheckForComp<Comp_Orientation>();
             if (pawn.IsAsexual() && !target.IsAsexual())
             {
                 factor *= pawn.AsexualRating() / 2;
-            }
-            if (pawn.IsHomo())
-            {
-                if (target.gender != pawn.gender)
+                if (!comp.RomanticallyAttractedTo(target.gender))
                 {
                     factor *= 0.125f;
                 }
+                //Exit here because otherwise they could get deducted again for no sexual attraction
+                return factor;
             }
-            if (pawn.IsHetero())
+            if (romantic ? !comp.RomanticallyAttractedTo(target.gender) : !comp.SexuallyAttractedTo(target.gender))
             {
-                if (target.gender == pawn.gender)
-                {
-                    factor *= 0.125f;
-                }
+                factor *= 0.125f;
             }
             return factor;
         }
