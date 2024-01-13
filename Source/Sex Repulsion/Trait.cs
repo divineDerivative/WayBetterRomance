@@ -9,7 +9,8 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Trait), nameof(Trait.TipString))]
     public static class Trait_TipString
     {
-        public static void Postfix(ref string __result, Trait __instance)
+        [HarmonyPostfix]
+        public static void AsexualPostfix(Pawn pawn, ref string __result, Trait __instance)
         {
             if (SexualityUtility.asexualTraits.Contains(__instance.def) && Current.ProgramState == ProgramState.Playing)
             {
@@ -18,6 +19,16 @@ namespace BetterRomance.HarmonyPatches
                 str.AppendLine();
                 str.AppendLine("WBR.MoreInfo".Translate().Colorize(ColoredText.SubtleGrayColor));
                 __result = str.ToString();
+            }
+        }
+
+        [HarmonyPostfix]
+        public static void DescriptionPostfix(Pawn pawn, ref string __result, Trait __instance)
+        {
+            if (__instance.def == RomanceDefOf.DynamicOrientation)
+            {
+                //var text = new StringBuilder(__result);
+                __result = __result.Replace("REPLACE THIS", "is replaced");
             }
         }
     }
