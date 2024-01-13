@@ -18,8 +18,10 @@ namespace BetterRomance
         public bool converted;
         public Pawn Pawn => parent as Pawn;
         public Gender Gender => Pawn.gender;
+        public bool Asexual => !sexual.men && !sexual.women && (!Settings.NonBinaryActive || !sexual.enby);
+        public bool Aromantic => !romantic.men && !romantic.women && (!Settings.NonBinaryActive || !romantic.enby);
 
-        public bool SexuallyAttractedToGender(Gender gender)
+        public bool SexuallyAttractedTo(Gender gender)
         {
             switch (gender)
             {
@@ -34,7 +36,12 @@ namespace BetterRomance
             }
         }
 
-        public bool RomanticallyAttractedToGender(Gender gender)
+        public bool SexuallyAttractedTo(Pawn other)
+        {
+            return SexuallyAttractedTo(other.gender);
+        }
+
+        public bool RomanticallyAttractedTo(Gender gender)
         {
             switch (gender)
             {
@@ -47,6 +54,11 @@ namespace BetterRomance
                 default:
                     return false;
             }
+        }
+
+        public bool RomanticallyAttractedTo(Pawn other)
+        {
+            return RomanticallyAttractedTo(other.gender);
         }
 
         public override void Initialize(CompProperties props)
@@ -179,7 +191,7 @@ namespace BetterRomance
             {
                 return "Asexual";
             }
-            return SexuallyAttractedToGender(Gender) ? "Gay" : "Straight";
+            return SexuallyAttractedTo(Gender) ? "Gay" : "Straight";
         }
     }
 }
