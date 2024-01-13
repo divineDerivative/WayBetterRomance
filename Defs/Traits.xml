@@ -83,4 +83,18 @@
       <li>Faithful</li>
     </conflictingTraits>
   </TraitDef>
+
+	<TraitDef>
+		<defName>DynamicOrientation</defName>
+		<commonality>0</commonality>
+		<degreeDatas>
+			<li>
+				<label>dynamic orientation</label>
+				<description>REPLACE THIS</description>
+			</li>
+		</degreeDatas>
+		<exclusionTags>
+			<li>SexualOrientation</li>
+		</exclusionTags>
+	</TraitDef>
 </Defs>
