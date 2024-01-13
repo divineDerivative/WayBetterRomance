@@ -9,8 +9,7 @@ using HarmonyLib;
 
 namespace BetterRomance
 {
-    //Then make a patch for TraitDegreeData.GetLabelFor and GetLabelForCap to pass that label
     //Make a method on the comp to determine the correct description
-    //Then make a patch for Trait.TipString to pass the correct description
+    //Then put that in the patch to pass the correct description
     //Postfix that finds the description from the xml and replaces it
 }
