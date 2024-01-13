@@ -90,6 +90,7 @@ namespace BetterRomance
         public static PreceptDef SpouseCount_Male_Unlimited;
         [MayRequireIdeology]
         public static PreceptDef SpouseCount_Female_Unlimited;
+        public static TraitDef DynamicOrientation;
 
         //Vanilla stuff I need a reference to
         public static JobDef CastAbilityOnThingUninterruptible;
