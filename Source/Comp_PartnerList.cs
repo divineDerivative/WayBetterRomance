@@ -193,6 +193,10 @@ namespace BetterRomance.HarmonyPatches
             {
                 ___pawn.CheckForComp<Comp_PartnerList>();
             }
+            if (___pawn.story?.traits?.HasTrait(RomanceDefOf.DynamicOrientation) ?? false)
+            {
+                ___pawn.CheckForComp<Comp_Orientation>();
+            }
             if (___pawn.IsAsexual())
             {
                 ___pawn.CheckForComp<Comp_SexRepulsion>();
