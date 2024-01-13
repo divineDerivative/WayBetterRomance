@@ -176,6 +176,7 @@
         <Compile Include="Mod Integration\PhobiaPatches.cs" />
         <Compile Include="Orientation Comp\Comp_Orientation.cs" />
         <Compile Include="Orientation Comp\OtherStuff.cs" />
+        <Compile Include="Orientation Comp\TraitDegreeData.cs" />
         <Compile Include="Sex Repulsion\CharacterCardUtility.cs" />
         <Compile Include="Sex Repulsion\Comp_SexRepulsion.cs" />
         <Compile Include="CustomLoveRelationUtility.cs" />
