@@ -24,7 +24,7 @@ namespace BetterRomance.HarmonyPatches
                 existingParentNoSpouse = !other.GetFather().SpouseAllowed();
             }
 
-            if (!generated.SpouseAllowed() || generated.IsHomo() || existingParentNoSpouse)
+            if (!generated.SpouseAllowed() || !generated.CheckForComp<Comp_Orientation>().SexuallyAttractedTo(generated.gender.Opposite()) || existingParentNoSpouse)
             {
                 if (generated.gender == Gender.Male)
                 {
@@ -32,7 +32,7 @@ namespace BetterRomance.HarmonyPatches
                     AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, other.GetMother()]);
                     if (other.GetMother() != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && !generated.IsHomo() && !other.GetMother().IsHomo())
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && generated.CheckForComp<Comp_Orientation>().SexuallyAttractedTo(other.GetMother().gender) && other.GetMother().CheckForComp<Comp_Orientation>().SexuallyAttractedTo(generated.gender))
                         {
                             generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetMother());
                         }
@@ -48,7 +48,7 @@ namespace BetterRomance.HarmonyPatches
                     AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, other.GetFather()]);
                     if (other.GetFather() != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && !generated.IsHomo() && !other.GetFather().IsHomo())
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && generated.CheckForComp<Comp_Orientation>().SexuallyAttractedTo(other.GetFather().gender) && other.GetFather().CheckForComp<Comp_Orientation>().SexuallyAttractedTo(generated.gender))
                         {
                             generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetFather());
                         }

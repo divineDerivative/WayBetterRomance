@@ -26,18 +26,7 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //If genders are incorrect for initiator's sexuality, do not allow
-            if (initiator.gender == recipient.gender && initiator.IsHetero())
-            {
-                __result = 0f;
-                return false;
-            }
-            if (initiator.gender != recipient.gender && initiator.IsHomo())
-            {
-                __result = 0f;
-                return false;
-            }
-            //Don't allow for ace/aro pawns
-            if (initiator.IsAro())
+            if (!initiator.CheckForComp<Comp_Orientation>().RomanticallyAttractedTo(recipient.gender))
             {
                 __result = 0f;
                 return false;
@@ -90,18 +79,7 @@ namespace BetterRomance.HarmonyPatches
             //If they don't have a sexuality trait, assign one.
             recipient.EnsureTraits();
             //If pawns are the wrong gender, they will not accept
-            if (initiator.gender == recipient.gender && recipient.IsHetero())
-            {
-                __result = 0f;
-                return;
-            }
-            if (initiator.gender != recipient.gender && recipient.IsHomo())
-            {
-                __result = 0f;
-                return;
-            }
-            //Don't allow for ace/aro pawns
-            if (initiator.IsAro())
+            if (!recipient.CheckForComp<Comp_Orientation>().RomanticallyAttractedTo(initiator.gender))
             {
                 __result = 0f;
                 return;
