@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using RimWorld;
 using Verse;
 using HarmonyLib;
-using BetterRomance.Orientation_Comp;
 
 namespace BetterRomance.HarmonyPatches
 {
