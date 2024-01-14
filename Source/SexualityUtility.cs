@@ -111,7 +111,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static bool WouldConsiderMarriage(this Pawn first, Pawn second)
         {
-            if (!first.SpouseAllowed() || !first.CheckForComp<Comp_Orientation>().RomanticallyAttractedTo(second.gender) || first.SexRepulsed(second))
+            if (!first.SpouseAllowed() || !first.CheckForComp<Comp_Orientation>().AttractedTo(second, true) || first.SexRepulsed(second))
             {
                 return false;
             }
