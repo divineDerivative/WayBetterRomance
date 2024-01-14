@@ -321,18 +321,17 @@ namespace BetterRomance
         public static float SexualityFactor(Pawn pawn, Pawn target, bool romantic = false)
         {
             float factor = 1f;
-            var comp = pawn.CheckForComp<Comp_Orientation>();
             if (pawn.IsAsexual() && !target.IsAsexual())
             {
                 factor *= pawn.AsexualRating() / 2;
-                if (!comp.AttractedTo(target, true))
+                if (!pawn.AttractedTo(target, true))
                 {
                     factor *= 0.125f;
                 }
                 //Exit here because otherwise they could get deducted again for no sexual attraction
                 return factor;
             }
-            if (romantic ? !comp.AttractedTo(target, true) : !comp.AttractedTo(target, false))
+            if (romantic ? !pawn.AttractedTo(target, true) : !pawn.AttractedTo(target, false))
             {
                 factor *= 0.125f;
             }
