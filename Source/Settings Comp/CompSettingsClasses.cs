@@ -1,10 +1,4 @@
-﻿using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Verse;
+﻿using Verse;
 
 namespace BetterRomance
 {
@@ -30,7 +24,7 @@ namespace BetterRomance
         public float bi = -999f;
         public float none = -999f;
 
-        public OrientationChances Copy => (OrientationChances)this.MemberwiseClone();
+        public OrientationChances Copy => (OrientationChances)MemberwiseClone();
 
         public bool AreAnyUnset(out string list, bool asexual)
         {
@@ -107,7 +101,7 @@ namespace BetterRomance
         public float declineAtAge = -999f;
         public CompSettingsRegularSex Copy()
         {
-            return (CompSettingsRegularSex)this.MemberwiseClone();
+            return (CompSettingsRegularSex)MemberwiseClone();
         }
 
         public CompSettingsRegularSex Default()
@@ -190,7 +184,7 @@ namespace BetterRomance
 
         public CompSettingsBiotech Copy()
         {
-            return (CompSettingsBiotech)this.MemberwiseClone();
+            return (CompSettingsBiotech)MemberwiseClone();
         }
     }
 
@@ -205,7 +199,7 @@ namespace BetterRomance
 
         public CompSettingsMisc Copy()
         {
-            return (CompSettingsMisc)this.MemberwiseClone();
+            return (CompSettingsMisc)MemberwiseClone();
         }
     }
 }
