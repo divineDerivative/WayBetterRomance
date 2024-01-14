@@ -18,6 +18,7 @@ namespace BetterRomance
 
         public AttractionVars sexual;
         public AttractionVars romantic;
+        //Not sure if I'll need this, it's not being used right now
         public bool converted;
         public Pawn Pawn => parent as Pawn;
         public Gender Gender => Pawn.gender;
@@ -50,48 +51,42 @@ namespace BetterRomance
 
             if (trait.def == TraitDefOf.Asexual)
             {
-                comp.SetAttraction(Gender.Male, false, true, true);
-                comp.SetAttraction(Gender.Female, false, true, true);
-                comp.SetAttraction((Gender)3, false, true, true);
+                comp.SetAttraction(Gender.Male, false, false);
+                comp.SetAttraction(Gender.Female, false, false);
+                comp.SetAttraction((Gender)3, false, false);
             }
             else
             {
                 if (trait.def == TraitDefOf.Bisexual)
                 {
-                    comp.SetAttraction(Gender.Male, true, true, true);
-                    comp.SetAttraction(Gender.Female, true, true, true);
+                    comp.SetAttraction(Gender.Male, true, true);
+                    comp.SetAttraction(Gender.Female, true, true);
                 }
                 else if (trait.def == RomanceDefOf.Straight)
                 {
-                    comp.SetAttraction(gender, false, true, true);
-                    comp.SetAttraction(gender.Opposite(), true, true, true);
+                    comp.SetAttraction(gender, false, false);
+                    comp.SetAttraction(gender.Opposite(), true, true);
                 }
                 else if (trait.def == TraitDefOf.Gay)
                 {
-                    comp.SetAttraction(gender, true, true, true);
-                    comp.SetAttraction(gender.Opposite(), false, true, true);
+                    comp.SetAttraction(gender, true, true);
+                    comp.SetAttraction(gender.Opposite(), false, false);
                 }
                 else if (trait.def == RomanceDefOf.BiAce)
                 {
-                    comp.SetAttraction(Gender.Male, true, false, true);
-                    comp.SetAttraction(Gender.Female, true, false, true);
-                    comp.SetAttraction(Gender.Male, false, true, false);
-                    comp.SetAttraction(Gender.Female, false, true, false);
+                    comp.SetAttraction(Gender.Male, false, true);
+                    comp.SetAttraction(Gender.Female, false, true);
                 }
                 else if (trait.def == RomanceDefOf.HeteroAce)
                 {
-                    comp.SetAttraction(gender, false, false, true);
-                    comp.SetAttraction(gender.Opposite(), true, false, true);
-                    comp.SetAttraction(Gender.Male, false, true, false);
-                    comp.SetAttraction(Gender.Female, false, true, false);
+                    comp.SetAttraction(gender, false, false);
+                    comp.SetAttraction(gender.Opposite(), false, true);
 
                 }
                 else if (trait.def == RomanceDefOf.HomoAce)
                 {
-                    comp.SetAttraction(gender, true, false, true);
-                    comp.SetAttraction(gender.Opposite(), false, false, true);
-                    comp.SetAttraction(Gender.Male, false, true, false);
-                    comp.SetAttraction(Gender.Female, false, true, false);
+                    comp.SetAttraction(gender, false, true);
+                    comp.SetAttraction(gender.Opposite(), false, false);
                 }
             }
 
@@ -104,37 +99,23 @@ namespace BetterRomance
             comp.converted = true;
         }
 
-        private void SetAttraction(Gender gender, bool result, bool sexual, bool romantic)
+        private void SetAttraction(Gender gender, bool sexual, bool romantic)
         {
-            if (sexual)
+
+            switch (gender)
             {
-                switch (gender)
-                {
-                    case Gender.Male:
-                        this.sexual.men = result;
-                        break;
-                    case Gender.Female:
-                        this.sexual.women = result;
-                        break;
-                    default:
-                        this.sexual.enby = result;
-                        break;
-                }
-            }
-            if (romantic)
-            {
-                switch (gender)
-                {
-                    case Gender.Male:
-                        this.romantic.men = result;
-                        break;
-                    case Gender.Female:
-                        this.romantic.women = result;
-                        break;
-                    default:
-                        this.romantic.enby = result;
-                        break;
-                }
+                case Gender.Male:
+                    this.sexual.men = sexual;
+                    this.romantic.men = romantic;
+                    break;
+                case Gender.Female:
+                    this.sexual.women = sexual;
+                    this.romantic.women = romantic;
+                    break;
+                default:
+                    this.sexual.enby = sexual;
+                    this.romantic.enby = romantic;
+                    break;
             }
         }
 
