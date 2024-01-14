@@ -15,14 +15,20 @@ namespace BetterRomance.HarmonyPatches
         //This is a postfix since the only difference was adding the orientation match
         public static void Postfix(Pawn initiator, Pawn recipient, ref float __result)
         {
-            //This increases chances if gender does not match sexuality
-            if (!initiator.AttractedTo(recipient, true))
+            //If it's already been ruled out don't do anything
+            if (__result != 0f)
             {
-                __result *= 2f;
-            }
-            if (initiator.IsAsexual() && !recipient.IsAsexual())
-            {
-                __result *= 1.5f;
+                //If initiator does not have sexuality trait, add one
+                initiator.EnsureTraits();
+                //This increases chances if gender does not match sexuality
+                if (!initiator.AttractedTo(recipient, true))
+                {
+                    __result *= 2f;
+                }
+                if (initiator.IsAsexual() && !recipient.IsAsexual())
+                {
+                    __result *= 1.5f;
+                }
             }
         }
     }
