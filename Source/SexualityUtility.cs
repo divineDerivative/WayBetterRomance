@@ -30,69 +30,9 @@ namespace BetterRomance
             return pawn.CheckForComp<Comp_SexRepulsion>().rating;
         }
 
-        /// <summary>
-        /// Determines the romantic <see cref="Orientation"/> of a <paramref name="pawn"/> based on their traits
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
-        public static Orientation GetOrientation(this Pawn pawn)
-        {
-            if (pawn.story?.traits != null)
-            {
-                TraitSet traits = pawn.story.traits;
-                if (traits.HasTrait(TraitDefOf.Gay) || traits.HasTrait(RomanceDefOf.HomoAce))
-                {
-                    return Orientation.Homo;
-                }
-                else if (traits.HasTrait(RomanceDefOf.Straight) || traits.HasTrait(RomanceDefOf.HeteroAce))
-                {
-                    return Orientation.Hetero;
-                }
-                else if (traits.HasTrait(TraitDefOf.Bisexual) || traits.HasTrait(RomanceDefOf.BiAce))
-                {
-                    return Orientation.Bi;
-                }
-                else if (traits.HasTrait(TraitDefOf.Asexual))
-                {
-                    return Orientation.None;
-                }
-            }
-            return Orientation.None;
-        }
-
         public static bool IsAsexual(this Pawn pawn)
         {
-            if (pawn.story?.traits != null)
-            {
-                foreach (Trait trait in pawn.story.traits.allTraits)
-                {
-                    if (asexualTraits.Contains(trait.def) && !trait.Suppressed)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public static bool IsAro(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.None;
-        }
-
-        public static bool IsBi(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Bi;
-        }
-
-        public static bool IsHetero(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Hetero;
-        }
-
-        public static bool IsHomo(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Homo;
+            return pawn.TryGetComp<Comp_Orientation>()?.Asexual ?? false;
         }
 
         /// <summary>
@@ -186,13 +126,5 @@ namespace BetterRomance
         {
             return pawn.AttractedTo(other.gender, romance);
         }
-    }
-
-    public enum Orientation
-    {
-        Homo,
-        Hetero,
-        Bi,
-        None,
     }
 }
