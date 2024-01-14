@@ -55,7 +55,7 @@ namespace BetterRomance.HarmonyPatches
             //Convert the new trait
             if (SexualityUtility.OrientationTraits.Contains(trait.def))
             {
-                Comp_Orientation.ConvertOrientation(___pawn, true);
+                Comp_Orientation.ConvertOrientation(___pawn, trait);
             }
         }
     }

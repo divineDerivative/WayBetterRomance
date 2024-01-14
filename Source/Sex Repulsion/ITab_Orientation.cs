@@ -34,14 +34,28 @@ namespace BetterRomance
                 list.CheckboxLabeled(str, ref SexualityUtility.editRepulsion, labelPct: pct);
             }
             //This will just display information, maybe a more detailed explanation of their orientation and the gender attraction comp stuff if/when I implement that
-            Orientation orientation = SelPawn.GetOrientation();
-            string text = orientation switch
+            string text;
+            Comp_Orientation comp = SelPawn.CheckForComp<Comp_Orientation>();
+            if (comp.Aromantic)
             {
-                Orientation.Hetero => "WBR.Heteroromantic",
-                Orientation.Homo => "WBR.Homoromantic",
-                Orientation.Bi => "WBR.Biromantic",
-                _ => "WBR.Aromantic",
-            };
+                text = "WBR.Aromantic";
+            }
+            else if (comp.romantic.men && comp.romantic.women)
+            {
+                text = "WBR.Biromantic";
+            }
+            else if (SelPawn.AttractedTo(SelPawn.gender, true))
+            {
+                text = "WBR.Homoromantic";
+            }
+            else if (SelPawn.AttractedTo(SelPawn.gender.Opposite(), true))
+            {
+                text = "WBR.Heteroromantic";
+            }
+            else
+            {
+                text = "Error determining orientation";
+            }
             list.Label(text.Translate(SelPawn));
             //Display sex repulsion, describe the effects of their specific rating.
             if (SelPawn.IsAsexual())
@@ -52,8 +66,7 @@ namespace BetterRomance
                 //Insert a slider if edit option is selected
                 if (SexualityUtility.editRepulsion)
                 {
-                    Comp_SexRepulsion comp = SelPawn.CheckForComp<Comp_SexRepulsion>();
-                    comp.rating = 1f - list.Slider(repulsion, 0f, 1f);
+                    SelPawn.CheckForComp<Comp_SexRepulsion>().rating = 1f - list.Slider(repulsion, 0f, 1f);
                 }
                 if (repulsion >= 0.8f)
                 {
