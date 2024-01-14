@@ -104,8 +104,7 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Pawn pawn, Gender gender, ref bool __result)
         {
             pawn.EnsureTraits();
-            Comp_Orientation comp = pawn.CheckForComp<Comp_Orientation>();
-            __result = comp.AttractedTo(gender, true);
+            __result = pawn.AttractedTo(gender, true);
             return false;
         }
     }

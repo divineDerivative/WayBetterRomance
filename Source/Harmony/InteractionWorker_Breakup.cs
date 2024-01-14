@@ -16,7 +16,7 @@ namespace BetterRomance.HarmonyPatches
         public static void Postfix(Pawn initiator, Pawn recipient, ref float __result)
         {
             //This increases chances if gender does not match sexuality
-            if (!initiator.CheckForComp<Comp_Orientation>().AttractedTo(recipient, true))
+            if (!initiator.AttractedTo(recipient, true))
             {
                 __result *= 2f;
             }

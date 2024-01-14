@@ -25,25 +25,6 @@ namespace BetterRomance
         public bool Asexual => !sexual.men && !sexual.women && (!Settings.NonBinaryActive || !sexual.enby);
         public bool Aromantic => !romantic.men && !romantic.women && (!Settings.NonBinaryActive || !romantic.enby);
 
-        public bool AttractedTo(Gender gender, bool romance)
-        {
-            switch (gender)
-            {
-                case Gender.Male:
-                    return romance ? romantic.men : sexual.men;
-                case Gender.Female:
-                    return romance ? romantic.women : sexual.women;
-                case (Gender)3:
-                    return romance ? romantic.enby : sexual.enby;
-                default:
-                    return false;
-            }
-        }
-        public bool AttractedTo(Pawn other, bool romance)
-        {
-            return AttractedTo(other.gender, romance);
-        }
-
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
@@ -114,7 +95,6 @@ namespace BetterRomance
                 }
                 foreach (Trait trait in toRemove)
                 {
-                    LogUtil.Message($"Removing {trait.Label} from {pawn.LabelShort}");
                     pawn.story.traits.RemoveTrait(trait);
                 }
                 if (!pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
@@ -174,7 +154,7 @@ namespace BetterRomance
             {
                 return "Asexual";
             }
-            return AttractedTo(Gender, false) ? "Gay" : "Straight";
+            return Pawn.AttractedTo(Gender, false) ? "Gay" : "Straight";
         }
     }
 }
