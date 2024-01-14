@@ -252,13 +252,10 @@ namespace BetterRomance.HarmonyPatches
                     {
                         labels = [newLabel]
                     };
-                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.IsAsexual));
+                    //pawn.CheckForComp<Comp_Orientation>().Aromantic
+                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.CheckForComp), generics: new Type[] { typeof(Comp_Orientation) });
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Comp_Orientation), nameof(Comp_Orientation.Aromantic)));
                     yield return new CodeInstruction(OpCodes.Brfalse_S, oldLabel);
-
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.GetOrientation));
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_3);
-                    yield return new CodeInstruction(OpCodes.Bne_Un_S, oldLabel);
 
                     yield return new CodeInstruction(OpCodes.Ldstr, "WBR.CantRomanceInitiateMessageAromantic");
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
