@@ -24,7 +24,7 @@ namespace BetterRomance.HarmonyPatches
                 existingParentNoSpouse = !other.GetFather().SpouseAllowed();
             }
 
-            if (!generated.SpouseAllowed() || !generated.CheckForComp<Comp_Orientation>().AttractedTo(generated.gender.Opposite(), false) || existingParentNoSpouse)
+            if (!generated.SpouseAllowed() || !generated.AttractedTo(generated.gender.Opposite(), false) || existingParentNoSpouse)
             {
                 if (generated.gender == Gender.Male)
                 {
@@ -32,7 +32,7 @@ namespace BetterRomance.HarmonyPatches
                     AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, other.GetMother()]);
                     if (other.GetMother() != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && generated.CheckForComp<Comp_Orientation>().AttractedTo(other.GetMother(), false) && other.GetMother().CheckForComp<Comp_Orientation>().AttractedTo(generated, false))
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && generated.AttractedTo(other.GetMother(), false) && other.GetMother().AttractedTo(generated, false))
                         {
                             generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetMother());
                         }
@@ -48,7 +48,7 @@ namespace BetterRomance.HarmonyPatches
                     AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, other.GetFather()]);
                     if (other.GetFather() != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && generated.CheckForComp<Comp_Orientation>().AttractedTo(other.GetFather(), false) && other.GetFather().CheckForComp<Comp_Orientation>().AttractedTo(generated, false))
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && generated.AttractedTo(other.GetFather(), false) && other.GetFather().AttractedTo(generated, false))
                         {
                             generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetFather());
                         }

@@ -26,7 +26,7 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //If genders are incorrect for initiator's sexuality, do not allow
-            if (!initiator.CheckForComp<Comp_Orientation>().AttractedTo(recipient, true))
+            if (!initiator.AttractedTo(recipient, true))
             {
                 __result = 0f;
                 return false;
@@ -79,7 +79,7 @@ namespace BetterRomance.HarmonyPatches
             //If they don't have a sexuality trait, assign one.
             recipient.EnsureTraits();
             //If pawns are the wrong gender, they will not accept
-            if (!recipient.CheckForComp<Comp_Orientation>().AttractedTo(initiator, true))
+            if (!recipient.AttractedTo(initiator, true))
             {
                 __result = 0f;
                 return;

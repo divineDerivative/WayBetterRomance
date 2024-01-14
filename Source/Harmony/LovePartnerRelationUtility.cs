@@ -53,7 +53,7 @@ namespace BetterRomance.HarmonyPatches
                     sexualityFactor = generated.AsexualRating();
                 }
                 //Separate now that asexuality is a spectrum
-                if (!generated.CheckForComp<Comp_Orientation>().AttractedTo(other, true))
+                if (!generated.AttractedTo(other, true))
                 {
                     __result = 0f;
                     return false;

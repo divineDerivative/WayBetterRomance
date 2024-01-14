@@ -94,6 +94,26 @@ namespace BetterRomance
         {
             return pawn.GetOrientation() == Orientation.Homo;
         }
+
+        public static bool AttractedTo(this Pawn pawn, Gender gender, bool romance)
+        {
+            var comp = pawn.TryGetComp<Comp_Orientation>();
+            switch (gender)
+            {
+                case Gender.Male:
+                    return romance ? comp.romantic.men : comp.sexual.men;
+                case Gender.Female:
+                    return romance ? comp.romantic.women : comp.sexual.women;
+                case (Gender)3:
+                    return romance ? comp.romantic.enby : comp.sexual.enby;
+                default:
+                    return false;
+            }
+        }
+        public static bool AttractedTo(this Pawn pawn, Pawn other, bool romance)
+        {
+            return pawn.AttractedTo(other.gender, romance);
+        }
     }
 
     public enum Orientation

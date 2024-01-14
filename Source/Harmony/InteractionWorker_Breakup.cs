@@ -19,7 +19,7 @@ namespace BetterRomance.HarmonyPatches
             //If initiator does not have sexuality trait, add one
             initiator.EnsureTraits();
             //This increases chances if gender does not match sexuality
-            if (!initiator.CheckForComp<Comp_Orientation>().AttractedTo(recipient, true))
+            if (!initiator.AttractedTo(recipient, true))
             {
                 __result *= 2f;
             }
