@@ -126,7 +126,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static bool WouldConsiderMarriage(this Pawn first, Pawn second)
         {
-            if (!first.SpouseAllowed() || !first.CheckForComp<Comp_Orientation>().AttractedTo(second, true) || first.SexRepulsed(second))
+            if (!first.SpouseAllowed() || !first.AttractedTo(second, true) || first.SexRepulsed(second))
             {
                 return false;
             }
@@ -164,6 +164,27 @@ namespace BetterRomance
         public static bool SexAverse(this Pawn pawn, Pawn other = null)
         {
             return pawn.IsAsexual() && pawn.AsexualRating() < 0.5f && (other == null || !LovePartnerRelationUtility.LovePartnerRelationExists(pawn, other));
+        }
+
+        public static bool AttractedTo(this Pawn pawn, Gender gender, bool romance)
+        {
+            var comp = pawn.TryGetComp<Comp_Orientation>();
+            switch (gender)
+            {
+                case Gender.Male:
+                    return romance ? comp.romantic.men : comp.sexual.men;
+                case Gender.Female:
+                    return romance ? comp.romantic.women : comp.sexual.women;
+                case (Gender)3:
+                    return romance ? comp.romantic.enby : comp.sexual.enby;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool AttractedTo(this Pawn pawn, Pawn other, bool romance)
+        {
+            return pawn.AttractedTo(other.gender, romance);
         }
     }
 
