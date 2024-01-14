@@ -25,44 +25,23 @@ namespace BetterRomance
         public bool Asexual => !sexual.men && !sexual.women && (!Settings.NonBinaryActive || !sexual.enby);
         public bool Aromantic => !romantic.men && !romantic.women && (!Settings.NonBinaryActive || !romantic.enby);
 
-        public bool SexuallyAttractedTo(Gender gender)
+        public bool AttractedTo(Gender gender, bool romance)
         {
             switch (gender)
             {
                 case Gender.Male:
-                    return sexual.men;
+                    return romance ? romantic.men : sexual.men;
                 case Gender.Female:
-                    return sexual.women;
+                    return romance ? romantic.women : sexual.women;
                 case (Gender)3:
-                    return sexual.enby;
+                    return romance ? romantic.enby : sexual.enby;
                 default:
                     return false;
             }
         }
-
-        public bool SexuallyAttractedTo(Pawn other)
+        public bool AttractedTo(Pawn other, bool romance)
         {
-            return SexuallyAttractedTo(other.gender);
-        }
-
-        public bool RomanticallyAttractedTo(Gender gender)
-        {
-            switch (gender)
-            {
-                case Gender.Male:
-                    return romantic.men;
-                case Gender.Female:
-                    return romantic.women;
-                case (Gender)3:
-                    return romantic.enby;
-                default:
-                    return false;
-            }
-        }
-
-        public bool RomanticallyAttractedTo(Pawn other)
-        {
-            return RomanticallyAttractedTo(other.gender);
+            return AttractedTo(other.gender, romance);
         }
 
         public override void Initialize(CompProperties props)
@@ -195,7 +174,7 @@ namespace BetterRomance
             {
                 return "Asexual";
             }
-            return SexuallyAttractedTo(Gender) ? "Gay" : "Straight";
+            return AttractedTo(Gender, false) ? "Gay" : "Straight";
         }
     }
 }

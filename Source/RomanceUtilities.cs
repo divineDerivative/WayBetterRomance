@@ -325,14 +325,14 @@ namespace BetterRomance
             if (pawn.IsAsexual() && !target.IsAsexual())
             {
                 factor *= pawn.AsexualRating() / 2;
-                if (!comp.RomanticallyAttractedTo(target.gender))
+                if (!comp.AttractedTo(target, true))
                 {
                     factor *= 0.125f;
                 }
                 //Exit here because otherwise they could get deducted again for no sexual attraction
                 return factor;
             }
-            if (romantic ? !comp.RomanticallyAttractedTo(target.gender) : !comp.SexuallyAttractedTo(target.gender))
+            if (romantic ? !comp.AttractedTo(target, true) : !comp.AttractedTo(target, false))
             {
                 factor *= 0.125f;
             }
