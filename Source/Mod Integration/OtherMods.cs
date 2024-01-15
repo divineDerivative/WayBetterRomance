@@ -18,9 +18,11 @@ namespace BetterRomance.HarmonyPatches
 {
     public static class OtherMod_Patches
     {
+        //Check if this is still needed. Probably just need to check for the dynamic trait
+        //Hard to test because the trait part of tweaks galore doesn't work anymore for lowering trait amount
         public static bool IsSexualityTraitPrefix(Trait trait, ref bool __result)
         {
-            __result = OrientationUtility.OrientationTraits.Contains(trait.def);
+            __result = trait.def == RomanceDefOf.DynamicOrientation || OrientationUtility.OrientationTraits.Contains(trait.def);
             return false;
         }
 
