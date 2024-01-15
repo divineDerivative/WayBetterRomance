@@ -9,11 +9,12 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(PawnRelationWorker_Child), "CreateRelation")]
     public static class PawnRelationWorker_Child_CreateRelation
     {
+        //generated is the parent, other is the child
         public static bool Prefix(Pawn generated, Pawn other, ref PawnGenerationRequest request, PawnRelationWorker_Child __instance)
         {
-            //This patch only runs if spouses are not allowed by the new parent's race/pawnkind settings or one pawn is gay
+            //This patch only runs if spouses are not allowed by the new parent's race/pawnkind settings or they're gay
             //Pretty sure this will never have two pawns with the same gender
-            if (!generated.SpouseAllowed() || generated.IsHomo() || other.IsHomo())
+            if (!generated.SpouseAllowed() || generated.IsHomo())
             {
                 if (generated.gender == Gender.Male)
                 {
@@ -21,7 +22,7 @@ namespace BetterRomance.HarmonyPatches
                     AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, new object[] { request, other, other.GetMother() });
                     if (other.GetMother() != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && !other.IsHomo())
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && !generated.IsHomo() && !other.GetMother().IsHomo())
                         {
                             generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetMother());
                         }
@@ -37,7 +38,7 @@ namespace BetterRomance.HarmonyPatches
                     AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, new object[] { request, other, other.GetFather() });
                     if (other.GetFather() != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && !other.IsHomo())
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && !generated.IsHomo() && !other.GetFather().IsHomo())
                         {
                             generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetFather());
                         }
