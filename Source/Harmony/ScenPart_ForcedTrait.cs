@@ -11,7 +11,7 @@ namespace BetterRomance.HarmonyPatches
             //If it's already true, then it's a Backstory trait and can't be removed anyway
             if (!__result)
             {
-                __result = OrientationUtility.OrientationTraits.Contains(trait);
+                __result = trait == RomanceDefOf.DynamicOrientation;
             }
         }
     }
