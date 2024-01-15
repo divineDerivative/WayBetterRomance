@@ -10,7 +10,7 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Trait trait, ref Trait __state, Pawn ___pawn)
         {
             //Only care about orientation traits
-            if (SexualityUtility.OrientationTraits.Contains(trait.def))
+            if (OrientationUtility.OrientationTraits.Contains(trait.def))
             {
                 //Check if pawn already has one
                 if (___pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
@@ -37,7 +37,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 //Check if a second orientation trait got added
                 int traitCount = 0;
-                foreach (TraitDef traitDef in SexualityUtility.OrientationTraits)
+                foreach (TraitDef traitDef in OrientationUtility.OrientationTraits)
                 {
                     if (___pawn.story.traits.HasTrait(traitDef))
                     {
@@ -51,7 +51,7 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
             //Convert the new trait
-            if (SexualityUtility.OrientationTraits.Contains(trait.def))
+            if (OrientationUtility.OrientationTraits.Contains(trait.def))
             {
                 Comp_Orientation.ConvertOrientation(___pawn, trait);
             }

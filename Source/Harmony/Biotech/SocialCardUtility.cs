@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 using System.Reflection;
 using UnityEngine;
 using System.Text;
+using System;
 
 namespace BetterRomance.HarmonyPatches
 {
