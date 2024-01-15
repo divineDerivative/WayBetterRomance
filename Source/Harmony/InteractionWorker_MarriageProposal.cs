@@ -58,6 +58,7 @@ namespace BetterRomance.HarmonyPatches
         //Will not accept if race/pawnkind settings don't allow spouses
         public static void Postfix(Pawn initiator, Pawn recipient, ref float __result)
         {
+            recipient.EnsureTraits();
             if (!recipient.WouldConsiderMarriage(initiator))
             {
                 __result = 0f;
