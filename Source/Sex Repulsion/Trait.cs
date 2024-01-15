@@ -12,7 +12,7 @@ namespace BetterRomance.HarmonyPatches
         [HarmonyPostfix]
         public static void AsexualPostfix(Pawn pawn, ref string __result, Trait __instance)
         {
-            if (SexualityUtility.asexualTraits.Contains(__instance.def) && Current.ProgramState == ProgramState.Playing)
+            if (OrientationUtility.asexualTraits.Contains(__instance.def) && Current.ProgramState == ProgramState.Playing)
             {
                 StringBuilder str = new(__result);
                 str.AppendLine();
