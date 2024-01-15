@@ -32,10 +32,10 @@ namespace BetterRomance.HarmonyPatches
                 {
                     //Removing wrong orientation matches for randomly generated relationships, since this is used for both spouses and lovers
                     //if (!generated.CouldWeBeLovers(other)) { return 0f; }
-                    yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code).WithLabels(firstLabel);
+                    yield return new(OpCodes.Ldarg_0).MoveLabelsFrom(code).WithLabels(firstLabel);
                     code.labels.Add(secondLabel);
                     yield return new(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.CouldWeBeLovers));
+                    yield return CodeInstruction.Call(typeof(OrientationUtility), nameof(OrientationUtility.CouldWeBeLovers));
                     yield return new(OpCodes.Brtrue, secondLabel);
                     yield return new(OpCodes.Ldc_R4, 0f);
                     yield return new(OpCodes.Ret);

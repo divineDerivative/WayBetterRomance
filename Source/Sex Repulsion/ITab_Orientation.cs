@@ -31,7 +31,7 @@ namespace BetterRomance
             {
                 string str = "DEV: Edit Repulsion";
                 float pct = (Text.CalcSize(str).x + 24f) / size.x;
-                list.CheckboxLabeled(str, ref SexualityUtility.editRepulsion, labelPct: pct);
+                list.CheckboxLabeled(str, ref OrientationUtility.editRepulsion, labelPct: pct);
             }
             //This will just display information, maybe a more detailed explanation of their orientation and the gender attraction comp stuff if/when I implement that
             string text;
@@ -64,7 +64,7 @@ namespace BetterRomance
                 string repulsionString = StatDef.Named("AsexualRating").ValueToString(repulsion);
                 list.Label("WBR.AsexualExplanation".Translate(SelPawn, repulsionString));
                 //Insert a slider if edit option is selected
-                if (SexualityUtility.editRepulsion)
+                if (OrientationUtility.editRepulsion)
                 {
                     SelPawn.CheckForComp<Comp_SexRepulsion>().rating = 1f - list.Slider(repulsion, 0f, 1f);
                 }

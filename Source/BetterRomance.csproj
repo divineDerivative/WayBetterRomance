@@ -213,7 +213,7 @@
         <Compile Include="Settings Comp\RaceSettings.cs" />
         <Compile Include="Settings.cs" />
         <Compile Include="Sex Repulsion\Trait.cs" />
-        <Compile Include="SexualityUtility.cs" />
+        <Compile Include="OrientationUtility.cs" />
         <Compile Include="Sex Repulsion\StatPart_Asexual.cs" />
         <Compile Include="Comp_PartnerList.cs" />
         <Compile Include="GlobalSuppressions.cs" />
