@@ -331,7 +331,7 @@ namespace BetterRomance
                 //Exit here because otherwise they could get deducted again for no sexual attraction
                 return factor;
             }
-            if (romantic ? !pawn.AttractedTo(target, true) : !pawn.AttractedTo(target, false))
+            if (!pawn.AttractedTo(target, romantic))
             {
                 factor *= 0.125f;
             }
