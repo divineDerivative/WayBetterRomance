@@ -13,7 +13,7 @@ namespace BetterRomance
             {
                 foreach (Trait trait in pawn.story.traits.allTraits)
                 {
-                    if (SexualityUtility.OrientationTraits.Contains(trait.def))
+                    if (OrientationUtility.OrientationTraits.Contains(trait.def))
                     {
                         Comp_Orientation.ConvertOrientation(pawn, trait);
                         return;
