@@ -4,7 +4,7 @@ using Verse;
 
 namespace BetterRomance
 {
-    public static class SexualityUtility
+    public static class OrientationUtility
     {
         public static bool editRepulsion;
         public static readonly List<TraitDef> OrientationTraits =
@@ -17,8 +17,6 @@ namespace BetterRomance
             RomanceDefOf.HomoAce,
             RomanceDefOf.BiAce,
         ];
-
-        public static List<TraitDef> asexualTraits = [TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce];
 
         /// <summary>
         /// A rating to use for determining sex repulsion for asexual pawns.

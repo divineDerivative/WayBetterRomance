@@ -131,9 +131,9 @@ namespace BetterRomance
             //This stops orientation traits from being displayed for former humans with animal sapience
             public static void TraitSetPostfix(Pawn ___pawn, ref List<Trait> ___tmpTraits)
             {
-                if (___tmpTraits.Any(x => SexualityUtility.OrientationTraits.Contains(x.def)) && !FormerHumanUtilities.IsHumanlike(___pawn))
+                if (___tmpTraits.Any(x => OrientationUtility.OrientationTraits.Contains(x.def)) && !FormerHumanUtilities.IsHumanlike(___pawn))
                 {
-                    ___tmpTraits.RemoveAll(x => SexualityUtility.OrientationTraits.Contains(x.def));
+                    ___tmpTraits.RemoveAll(x => OrientationUtility.OrientationTraits.Contains(x.def));
                 }
             }
         }
