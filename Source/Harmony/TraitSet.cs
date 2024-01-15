@@ -16,8 +16,8 @@ namespace BetterRomance.HarmonyPatches
                 if (___pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
                 {
                     __state = ___pawn.story.traits.GetTrait(RomanceDefOf.DynamicOrientation);
-                    return true;
                 }
+                //Keep going just in case they somehow ended up with two orientation traits
                 foreach (TraitDef traitDef in OrientationUtility.OrientationTraits)
                 {
                     if (___pawn.story.traits.HasTrait(traitDef))
