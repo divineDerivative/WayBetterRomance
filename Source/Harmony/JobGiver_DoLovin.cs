@@ -20,7 +20,7 @@ namespace BetterRomance.HarmonyPatches
             return true;
         }
 
-        //This stop sex repulsed pawns from being considered by partners for regular lovin'
+        //This stops a pawn from initiating lovin' while in bed with an asexual partner
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             foreach (CodeInstruction code in instructions)

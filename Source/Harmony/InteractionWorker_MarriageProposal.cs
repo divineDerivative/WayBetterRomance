@@ -85,7 +85,6 @@ namespace BetterRomance.HarmonyPatches
                 return;
             }
             //If pawn is asexual and sex repulsed, they will only accept from another asexual pawn
-            //Not sure about this
             if (recipient.IsAsexual() && recipient.AsexualRating() < 0.2f)
             {
                 if (!initiator.IsAsexual())

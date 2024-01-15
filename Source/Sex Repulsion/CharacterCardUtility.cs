@@ -13,10 +13,10 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch]
     public static class CharacterCardUtility_DoLeftSection
     {
-        //Turns the asexual trait rect into a button that opens the sexuality tab
+        //Turns the dynamic trait rect into a button that opens the orientation tab
         public static void Postfix(ref Rect r, Trait trait)
         {
-            if (SexualityUtility.asexualTraits.Contains(trait.def))
+            if (trait.def == RomanceDefOf.DynamicOrientation)
             {
                 if (Widgets.ButtonInvisible(r))
                 {

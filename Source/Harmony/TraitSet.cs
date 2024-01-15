@@ -16,9 +16,9 @@ namespace BetterRomance.HarmonyPatches
                 if (___pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
                 {
                     __state = ___pawn.story.traits.GetTrait(RomanceDefOf.DynamicOrientation);
-                    return true;
                 }
-                foreach (TraitDef traitDef in SexualityUtility.OrientationTraits)
+                //Keep going just in case they somehow ended up with two orientation traits
+                foreach (TraitDef traitDef in OrientationUtility.OrientationTraits)
                 {
                     if (___pawn.story.traits.HasTrait(traitDef))
                     {
@@ -56,7 +56,7 @@ namespace BetterRomance.HarmonyPatches
                 Comp_Orientation.ConvertOrientation(___pawn, trait);
             }
         }
-
+        //Need to figure out how to prevent Biotech from just suppressing the trait and then the above doesn't remove it
         //private static bool HasTraitIncludeSuppressed(Pawn pawn, TraitDef traitDef)
         //{
         //    List<Trait> allTraits = pawn.story.traits.allTraits;

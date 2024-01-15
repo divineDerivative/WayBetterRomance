@@ -43,20 +43,18 @@ namespace BetterRomance.HarmonyPatches
                     return false;
                 }
             }
-            //Removing wrong orientation matches for randomly generated relationships, since this is used for both spouses and lovers
-            //Do not allow if gender and sexuality do not match
+            //Do not allow if gender and romantic orientation do not match, reduce for asexual
             float sexualityFactor = 1f;
             if (generated.RaceProps.Humanlike)
             {
-                if (generated.IsAsexual())
-                {
-                    sexualityFactor = generated.AsexualRating();
-                }
-                //Separate now that asexuality is a spectrum
                 if (!generated.AttractedTo(other, true))
                 {
                     __result = 0f;
                     return false;
+                }
+                if (generated.IsAsexual())
+                {
+                    sexualityFactor = generated.AsexualRating();
                 }
             }
             float exFactor = 1f;
