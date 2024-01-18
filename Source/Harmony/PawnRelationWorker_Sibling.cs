@@ -42,7 +42,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     Pawn mother = other.GetMother();
                     Pawn father = other.GetFather();
-                    if (tryMakeLovers && !mother.IsHomo() && !father.IsHomo())
+                    if (tryMakeLovers && !mother.AttractedTo(mother.gender.Opposite(), false) && !father.AttractedTo(father.gender.Opposite(), false))
                     {
                         father.relations.AddDirectRelation(PawnRelationDefOf.Lover, mother);
                     }
