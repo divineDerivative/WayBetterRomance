@@ -53,5 +53,20 @@ namespace BetterRomance
         {
             return pawn.AttractedTo(other.gender, romance);
         }
+
+        //Might need to adjust this for HAR races that can reproduce differently
+        public static bool CouldMarryOtherParent(this Pawn pawn)
+        {
+            Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
+            switch (pawn.gender)
+            {
+                case Gender.Male:
+                    return comp.sexual.women;
+                case Gender.Female:
+                    return comp.sexual.men;
+                default:
+                    return false;
+            }
+        }
     }
 }

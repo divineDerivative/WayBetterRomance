@@ -24,7 +24,7 @@ namespace BetterRomance.HarmonyPatches
                 existingParentNoSpouse = !other.GetFather().SpouseAllowed();
             }
 
-            if (!generated.SpouseAllowed() || !generated.AttractedTo(generated.gender.Opposite(), false) || existingParentNoSpouse)
+            if (!generated.SpouseAllowed() || !generated.CouldMarryOtherParent() || existingParentNoSpouse)
             {
                 if (generated.gender == Gender.Male)
                 {
