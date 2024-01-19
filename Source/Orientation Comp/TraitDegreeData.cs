@@ -16,7 +16,7 @@ namespace BetterRomance.HarmonyPatches
         {
             if (__instance.label == "dynamic orientation")
             {
-                __result = pawn.CheckForComp<Comp_Orientation>().GetLabel().ToLower();
+                __result = pawn.CheckForComp<Comp_Orientation>().Label.ToLower();
                 return false;
             }
             return true;
@@ -30,7 +30,7 @@ namespace BetterRomance.HarmonyPatches
         {
             if (__instance.label == "dynamic orientation")
             {
-                __result = pawn.CheckForComp<Comp_Orientation>().GetLabel();
+                __result = pawn.CheckForComp<Comp_Orientation>().Label;
                 return false;
             }
             return true;
