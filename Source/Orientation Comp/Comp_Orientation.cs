@@ -1,4 +1,6 @@
 ﻿using RimWorld;
+using System;
+using System.Security.Policy;
 using Verse;
 #if !v1_4
 using LudeonTK;
@@ -14,6 +16,54 @@ namespace BetterRomance
             public bool men;
             public bool women;
             public bool enby;
+            public bool Pan => men && women && enby;
+            internal bool None => !men && !women && !enby;
+
+            internal string GenderString()
+            {
+                if (Pan)
+                {
+                    return "WBR.TraitDescPan".Translate();
+                }
+                if (None)
+                {
+                    return null;
+                }
+                string firstGender = null;
+                string secondGender = null;
+                if (men)
+                {
+                     firstGender = "WBR.TraitDescMen".Translate();
+                }
+                if (women)
+                {
+                    if (firstGender == null)
+                    {
+                        firstGender = "WBR.TraitDescWomen".Translate();
+                    }
+                    else
+                    {
+                        secondGender = "WBR.TraitDescWomen".Translate();
+                    }
+                }
+                if (enby)
+                {
+                    if (firstGender == null)
+                    {
+                        firstGender = "WBR.TraitDescEnby".Translate();
+                    }
+                    else
+                    {
+                        secondGender = "WBR.TraitDescEnby".Translate();
+                    }
+                }
+                string result = firstGender;
+                if (secondGender != null)
+                {
+                    result += "WBR.TraitDescAnd".Translate() + secondGender;
+                }
+                return result;
+            }
         }
 
         public AttractionVars sexual;
@@ -22,8 +72,60 @@ namespace BetterRomance
         public bool converted;
         public Pawn Pawn => parent as Pawn;
         public Gender Gender => Pawn.gender;
-        public bool Asexual => !sexual.men && !sexual.women && (!Settings.NonBinaryActive || !sexual.enby);
-        public bool Aromantic => !romantic.men && !romantic.women && (!Settings.NonBinaryActive || !romantic.enby);
+        public bool Asexual => sexual.None;
+        public bool Aromantic => romantic.None;
+        private string cachedDesc;
+        public string Desc
+        {
+            get
+            {
+                if (cachedDesc == null)
+                {
+                    cachedDesc = BuildDescription();
+                }
+                return cachedDesc;
+            }
+        }
+        private string cachedLabel;
+        public string Label
+        {
+            get
+            {
+                if (cachedLabel == null)
+                {
+                    cachedLabel = GetLabel();
+                }
+                return cachedLabel;
+            }
+        }
+
+        private string BuildDescription()
+        {
+            //Just have two sentences
+            //Well, just one sentence if they would basically be the same
+            if (Asexual && Aromantic)
+            {
+                return "WBR.TraitDescAceAro".Translate(Pawn).CapitalizeFirst();
+            }
+            string sexualGenders = sexual.GenderString();
+            string romanticGenders = romantic.GenderString();
+            if (sexualGenders == romanticGenders)
+            {
+                return "WBR.TraitDescBoth".Translate(Pawn, sexualGenders).CapitalizeFirst();
+            }
+            else if (Asexual)
+            {
+                return "WBR.TraitDescAsexual".Translate(Pawn, romanticGenders).CapitalizeFirst();
+            }
+            else if (Aromantic)
+            {
+                return "WBR.TraitDescAromantic".Translate(Pawn, sexualGenders).CapitalizeFirst();
+            }
+            else
+            {
+                return "WBR.TraitDescDifferent".Translate(Pawn, sexualGenders, romanticGenders).CapitalizeFirst();
+            }
+        }
 
         public override void Initialize(CompProperties props)
         {
@@ -97,6 +199,8 @@ namespace BetterRomance
                 pawn.story.traits.GainTrait(new Trait(RomanceDefOf.DynamicOrientation));
             }
             comp.converted = true;
+            comp.cachedLabel = null;
+            comp.cachedDesc = null;
         }
 
         private void SetAttraction(Gender gender, bool sexual, bool romantic)
@@ -119,22 +223,43 @@ namespace BetterRomance
             }
         }
 
-        public string GetLabel()
+        private string GetLabel()
         {
-            //Bisexual, pansexual, straight, gay, asexual
-            if (sexual.men && sexual.women && sexual.enby)
+            string sexualPrefix = Prefix(sexual);
+            string romanticPrefix = Prefix(romantic);
+            if (sexualPrefix == romanticPrefix)
             {
-                return "Pansexual";
+                switch (sexualPrefix)
+                {
+                    case "Homo":
+                        return "Gay";
+                    case "Hetero":
+                        return "Straight";
+                }
+                return Aromantic ? romanticPrefix +"romantic": sexualPrefix + "sexual";
             }
-            if (sexual.men && sexual.women)
+            if (Asexual)
             {
-                return "Bisexual";
+                return $"{sexualPrefix}sexual ({romanticPrefix})";
             }
-            if (!sexual.men && !sexual.women && (!Settings.NonBinaryActive || !sexual.enby))
+            return $"{sexualPrefix}sexual\\{romanticPrefix}romantic";
+        }
+
+        internal string Prefix(AttractionVars type)
+        {
+            if (type.Pan)
             {
-                return "Asexual";
+                return "Pan";
             }
-            return Pawn.AttractedTo(Gender, false) ? "Gay" : "Straight";
+            if (type.None)
+            {
+                return "A";
+            }
+            if (type.men && type.women)
+            {
+                return "Bi";
+            }
+            return Pawn.AttractedTo(Gender, type == romantic) ? "Homo" : "Hetero";
         }
     }
 }
