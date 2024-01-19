@@ -27,34 +27,9 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(typeof(Gene), "pawn");
-                    yield return CodeInstruction.Call(typeof(Gene_Active), nameof(ConvertAge));
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ConvertAge));
                 }
             }
-        }
-
-        private static float ConvertAge(float age, Pawn pawn)
-        {
-            if (age == 3f)
-            {
-                return SettingsUtilities.ChildAge(pawn);
-            }
-            if (age == 7f)
-            {
-                return SettingsUtilities.GetGrowthMomentAsFloat(pawn, 0);
-            }
-            if (age == 10f)
-            {
-                return SettingsUtilities.GetGrowthMomentAsFloat(pawn, 1);
-            }
-            if (age == 13f)
-            {
-                return pawn.ageTracker.AdultMinAge;
-            }
-            if (age == 18f)
-            {
-                return SettingsUtilities.AdultAgeForLearning(pawn);
-            }
-            return age;
         }
     }
 }

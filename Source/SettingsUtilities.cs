@@ -625,6 +625,12 @@ namespace BetterRomance
         }
 
         //Miscellaneous age calculations
+
+        /// <summary>
+        /// Age at which a pawn is given an adult backstory. Human default is 20
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <returns></returns>
         public static float GetMinAgeForAdulthood(Pawn pawn)
         {
             if (Settings.HARActive)
@@ -643,7 +649,7 @@ namespace BetterRomance
         private static readonly float defaultMinAgeForAdulthood = (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
 
         /// <summary>
-        /// Finds the first life stage with a developmental stage of child and returns the minimum age of that stage.
+        /// Finds the first life stage with a developmental stage of child and returns the minimum age of that stage. Human default is 3
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns>The age at which <paramref name="pawn"/> becomes a child.</returns>
@@ -653,6 +659,11 @@ namespace BetterRomance
             return (int)result;
         }
 
+        /// <summary>
+        /// The age at which a pawn is considered an adult for the purposes of adjusting learning speed. Human default is 18
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <returns></returns>
         public static int AdultAgeForLearning(Pawn pawn)
         {
             float lifeStageMinAge = pawn.ageTracker.AdultMinAge;
@@ -660,6 +671,11 @@ namespace BetterRomance
             return (int)(Math.Round((backstoryMinAge - lifeStageMinAge) * .75f) + lifeStageMinAge);
         }
 
+        /// <summary>
+        /// The age at which a pawn starts wanting an age reversal. Human default is 25
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <returns></returns>
         public static int AgeReversalDemandAge(Pawn pawn)
         {
             float adultAge = GetMinAgeForAdulthood(pawn);
@@ -690,6 +706,46 @@ namespace BetterRomance
                 new CurvePoint(AdultAgeForLearning(pawn) * 2f, 1f),
                 new CurvePoint(pawn.RaceProps.lifeExpectancy - (pawn.RaceProps.lifeExpectancy/4), 1.6f),
             };
+        }
+
+        /// <summary>
+        /// Converts a static age into the calculated equivalent
+        /// </summary>
+        /// <param name="age"></param>
+        /// <param name="pawn"></param>
+        /// <returns></returns>
+        public static float ConvertAge(float age, Pawn pawn)
+        {
+            switch (age)
+            {
+                case 0f:
+                    return 0f;
+                case 3f:
+                    return ChildAge(pawn);
+                case 4f:
+                    return ChildAge(pawn) + 1;
+                case 7f:
+                    return GetGrowthMomentAsFloat(pawn, 0);
+                case 10f:
+                    return GetGrowthMomentAsFloat(pawn, 1);
+                case 12f:
+                    return pawn.ageTracker.AdultMinAge - 1;
+                case 13f:
+                    return pawn.ageTracker.AdultMinAge;
+                case 14f:
+                    return pawn.ageTracker.AdultMinAge+1;
+                case 16f:
+                    return pawn.MinAgeForSex();
+                case 18f:
+                    return AdultAgeForLearning(pawn);
+                case 20f:
+                    return GetMinAgeForAdulthood(pawn);
+                case 25f:
+                    return AdultAgeForLearning(pawn);
+                default:
+                    LogUtil.Warning($"Unable to translate {age} to appropriate age for race {pawn.def.defName}");
+                    return age;
+            }
         }
     }
 }
