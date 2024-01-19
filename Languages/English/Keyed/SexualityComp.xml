@@ -10,4 +10,20 @@
 	<WBR.Biromantic>{0_labelShort} is biromantic, which means {0_pronoun} is romantically attracted to both men and women.</WBR.Biromantic>
 	<WBR.Aromantic>{0_labelShort} is aromantic, which means {0_pronoun} is not interested in any romantic engagements.</WBR.Aromantic>
 	<WBR.MoreInfo>&lt;i&gt;Click for more info&lt;/i&gt;</WBR.MoreInfo>
+
+	<WBR.AttractedToWomen>{0_pronoun} is attracted to women.</WBR.AttractedToWomen>
+	<WBR.AttractedToMen>{0_pronoun} is attracted to men.</WBR.AttractedToMen>
+	<WBR.AttractedToEnby>{0_pronoun} is attracted to non-binary people.</WBR.AttractedToEnby>
+	<WBR.AttractedToWomenPlus>{0_pronoun} is attracted to women and </WBR.AttractedToWomenPlus>
+
+	<WBR.TraitDescAceAro>{0_pronoun} is uninterested in sexual or romantic engagements.</WBR.TraitDescAceAro>
+	<WBR.TraitDescPan> anyone regardless of gender.</WBR.TraitDescPan>
+	<WBR.TraitDescMen> men</WBR.TraitDescMen>
+	<WBR.TraitDescWomen> women</WBR.TraitDescWomen>
+	<WBR.TraitDescEnby> non-binary people</WBR.TraitDescEnby>
+	<WBR.TraitDescAnd> and</WBR.TraitDescAnd>
+	<WBR.TraitDescBoth>{0_pronoun} is romantically and sexually attracted to{1}.</WBR.TraitDescBoth>
+	<WBR.TraitDescAsexual>{0_pronoun} is uninterested in sexual engagements. {0_pronoun} is romantically attracted to{1}.</WBR.TraitDescAsexual>
+	<WBR.TraitDescAromantic>{0_pronoun} is sexually attracted to{1}. They are uninterested in romantic engagements.</WBR.TraitDescAromantic>
+	<WBR.TraitDescDifferent>{0_pronoun} is sexually attracted to{1} and romantically attracted to{2}.</WBR.TraitDescDifferent>
 </LanguageData>
