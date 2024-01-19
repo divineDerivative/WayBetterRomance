@@ -22,14 +22,16 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        [HarmonyPostfix]
-        public static void DescriptionPostfix(Pawn pawn, ref string __result, Trait __instance)
+        [HarmonyPrefix]
+        public static bool DescriptionPrefix(Pawn pawn, ref string __result, Trait __instance)
         {
             if (__instance.def == RomanceDefOf.DynamicOrientation)
             {
                 //var text = new StringBuilder(__result);
-                __result = __result.Replace("REPLACE THIS", "is replaced");
+                __result = pawn.CheckForComp<Comp_Orientation>().Desc;
+                return false;
             }
+            return true;
         }
     }
 }
