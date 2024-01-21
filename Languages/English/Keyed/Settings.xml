@@ -6,7 +6,7 @@
 	<WBR.StraightChance>Chance of a Pawn Being Straight:</WBR.StraightChance>
 	<WBR.StraightChanceTip>Romantically and/or sexually interested only in opposite-gender partners</WBR.StraightChanceTip>
 	<WBR.BisexualChance>Chance of a Pawn Being Bisexual: {0}%</WBR.BisexualChance>
-	<WBR.BisexualChanceTip>Romantically and/or sexually interested in partners of either gender</WBR.BisexualChanceTip>
+	<WBR.BisexualChanceTip>Romantically and/or sexually interested in both men and women</WBR.BisexualChanceTip>
 	<WBR.GayChance>Chance of a Pawn Being Gay: {0}%</WBR.GayChance>
 	<WBR.GayChanceTip>Romantically and/or sexually interested only in same-gender partners</WBR.GayChanceTip>
 	<WBR.AsexualChance>Chance of a Pawn Being Asexual: {0}%</WBR.AsexualChance>
@@ -17,12 +17,12 @@
 	<WBR.AceHeteroChance>Chance of a Pawn Being Heteroromantic:</WBR.AceHeteroChance>
 	<WBR.AceHeteroChanceTip>Romantically interested only in opposite-gender partners</WBR.AceHeteroChanceTip>
 	<WBR.AceBiChance>Chance of a Pawn Being Biromantic: {0}%</WBR.AceBiChance>
-	<WBR.AceBiChanceTip>Romantically interested in partners of either gender</WBR.AceBiChanceTip>
+	<WBR.AceBiChanceTip>Romantically interested in both men and women</WBR.AceBiChanceTip>
 	<WBR.AceHomoChance>Chance of a Pawn Being Homoromantic: {0}%</WBR.AceHomoChance>
-		<WBR.AceHomoChanceTip>Romantically interested only in same-gender partners</WBR.AceHomoChanceTip>
+	<WBR.AceHomoChanceTip>Romantically interested only in same-gender partners</WBR.AceHomoChanceTip>
 	<WBR.AceAroChance>Chance of a Pawn Being Aromantic: {0}%</WBR.AceAroChance>
 	<WBR.AceAroChanceTip>Uninterested in all romantic engagements. These pawns will behave similar to vanilla asexual pawns.</WBR.AceAroChanceTip>
-	
+
 	<WBR.OtherHeading>Other Settings</WBR.OtherHeading>
 	<WBR.AlienLoveChance>Modifier for Cross-Species Romance: {0}%</WBR.AlienLoveChance>
 	<WBR.AlienLoveChanceTip>This slider determines how likely pawns are to be romantically interested in pawns of other species. (Obviously, the setting only matters if you're actually playing with alien races in your game.) If set to 100%, pawns will be just as likely to attempt to romance members of alien species as to romance members of their own species. If set to 0%, cross-species romances will never occur.</WBR.AlienLoveChanceTip>
