@@ -75,12 +75,16 @@ namespace BetterRomance
                 Messages.Message("WBR.HookupTargetNotFreeReason".Translate() + reason, MessageTypeDefOf.RejectInput, false);
                 return;
             }
+            string text = null;
             //Check if pawns are in a relationship with each other
             DirectPawnRelation existingRelation = LovePartnerRelationUtility.ExistingLoveRealtionshipBetween(romancer, romanceTarget, false);
+            if (existingRelation == null)
             //Create string for warning if either pawn is in a relationship
-            string text = GetRelationshipWarning(romancer) + GetRelationshipWarning(romanceTarget);
+            {
+                text = GetRelationshipWarning(romancer) + GetRelationshipWarning(romanceTarget);
+            }
             //If neither is in a relationship or they're in a relationship with each other, give the job
-            if (text.NullOrEmpty() || existingRelation != null)
+            if (existingRelation != null || text.NullOrEmpty())
             {
                 GiveHookupJob(romancer, romanceTarget, bed);
             }
@@ -120,7 +124,7 @@ namespace BetterRomance
             if (maxPartners && ModsConfig.IdeologyActive)
             {
                 maxPartners = !IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn);
-                LogUtil.Message($"{pawn.LabelShort} is {(maxPartners ? "not " : "")}allowed to take a new lover");
+                //LogUtil.Message($"{pawn.LabelShort} is {(maxPartners ? "not " : "")}allowed to take a new lover");
             }
             if (!maxPartners || !pawn.CaresAboutCheating())
             {
