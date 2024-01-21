@@ -203,7 +203,7 @@ namespace BetterRomance
                                        select c).ToList();
                 best = list2.FirstOrDefault();
                 list2.Reverse();
-                LogUtil.Message("Date walk destinations found from beauty " + BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " + BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map));
+                LogUtil.Message("Date walk destinations found from beauty " + BeautyUtility.AverageBeautyPerceptible(best, p1.Map) + " to " + BeautyUtility.AverageBeautyPerceptible(list2.FirstOrDefault(), p1.Map), true);
                 result = true;
             }
 

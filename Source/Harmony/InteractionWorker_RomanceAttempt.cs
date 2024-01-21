@@ -115,7 +115,7 @@ namespace BetterRomance.HarmonyPatches
 
                 while (num > 0 && !IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn))
                 {
-                    LogUtil.Message($"{pawn.LabelShort} is breaking up with someone because they're about to take a new lover");
+                    LogUtil.Message($"{pawn.LabelShort} is breaking up with someone because they're about to take a new lover", true);
                     //Grab the least liked lover
                     Pawn leastLikedLover = LovePartnerRelationUtility.ExistingLeastLikedPawnWithRelation(pawn, (DirectPawnRelation r) => r.def == PawnRelationDefOf.Lover);
                     if (leastLikedLover != null)

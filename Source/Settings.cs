@@ -35,6 +35,7 @@ namespace BetterRomance
         public static bool ATRActive = false;
         public static bool VREHighmateActive = false;
         public static Dictionary<string, string> FertilityMods = new Dictionary<string, string>();
+        public static bool debugLogging = false;
         public static bool LoveRelationsLoaded => !CustomLoveRelationUtility.LoveRelations.EnumerableNullOrEmpty();
 
         public override void ExposeData()
@@ -177,6 +178,10 @@ namespace BetterRomance
                 list.CheckboxLabeled("Slaves", ref settings.joyOnSlaves);
             }
             list.CheckboxLabeled("Prisoners", ref settings.joyOnPrisoners);
+            if (Prefs.DevMode)
+            {
+                list.CheckboxLabeled("Enable dev logging", ref Settings.debugLogging);
+            }
             list.End();
         }
 
