@@ -37,7 +37,7 @@ namespace BetterRomance
         public static string fertilityMod = "None";
         public bool joyOnSlaves = false;
         public bool joyOnPrisoners = false;
-        public bool complicated = false;
+        public bool complex = false;
 
         //These are not set by the user
         public static bool HARActive = false;
@@ -78,7 +78,7 @@ namespace BetterRomance
             Scribe_Values.Look(ref joyOnSlaves, "joyOnSlaves", false);
             Scribe_Values.Look(ref joyOnPrisoners, "joyOnPrisoners", false);
             Scribe_Values.Look(ref debugLogging, "debugLogging", false);
-            Scribe_Values.Look(ref complicated, "complicatedOrientations", false);
+            Scribe_Values.Look(ref complex, "compexOrientations", false);
         }
 
         public static void ApplyJoySettings()
@@ -146,8 +146,7 @@ namespace BetterRomance
                 ColumnWidth = (canvas.width / 2f) - 17f + secondBoxOffset
             };
             list.Begin(canvas);
-
-            if (settings.complicated)
+            if (settings.complex)
             {
                 Rect leftRect = new(0f, 0f, list.ColumnWidth, canvas.height);
                 Rect viewRectLeft = new(leftRect)
@@ -174,9 +173,9 @@ namespace BetterRomance
 
                 DrawExtraStuff(scrollListLeft);
                 scrollListLeft.Gap();
-                if (scrollListLeft.ButtonText(settings.complicated ? "Simplify it" : "Let's make it complicated"))
+                if (scrollListLeft.ButtonText(settings.complex ? "Simplify it" : "Let's make it complicated"))
                 {
-                    settings.complicated = !settings.complicated;
+                    settings.complex = !settings.complex;
                     scrollPosLeft = Vector2.zero;
                 }
                 scrollViewLeftHeight = scrollListLeft.MaxColumnHeightSeen;
@@ -196,9 +195,9 @@ namespace BetterRomance
                 { settings.asexualOrientations.Reset(); });
 
                 list.Gap();
-                if (list.ButtonText(settings.complicated ? "Simplify it" : "Let's make it complicated"))
+                if (list.ButtonText(settings.complex ? "Simplify it" : "Let's make it complicated"))
                 {
-                    settings.complicated = !settings.complicated;
+                    settings.complex = !settings.complex;
                 }
             }
             list.NewColumn();
@@ -265,7 +264,7 @@ namespace BetterRomance
         }
         private static float sectionHeightOrientation = 0f;
         private static float sectionHeightOther = 0f;
-        private static float sectionHeightComplicated = 0f;
+        private static float sectionHeightComplex = 0f;
         private static float scrollViewLeftHeight = 0f;
         private static float scrollViewRightHeight = 0f;
 
@@ -439,12 +438,12 @@ namespace BetterRomance
 
         private static void DrawExtraStuff(Listing_Standard listing)
         {
-            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightComplicated, "Extra Settings", tooltip: "WBR.RomanticOrentationHeadingTip".Translate());
+            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightComplex, "Extra Settings", tooltip: "WBR.RomanticOrentationHeadingTip".Translate());
             list.Label("Extra stuff for length");
             list.Label("Extra stuff for length");
             list.Label("Extra stuff for length");
             list.Label("Extra stuff for length");
-            DrawCustomSectionEnd(listing, list, out sectionHeightComplicated);
+            DrawCustomSectionEnd(listing, list, out sectionHeightComplex);
         }
 
         private static void DrawFertilityMod(Listing_Standard listing)
