@@ -37,13 +37,14 @@ namespace BetterRomance
         public static string fertilityMod = "None";
         public bool joyOnSlaves = false;
         public bool joyOnPrisoners = false;
+        public bool complicated = false;
 
         //These are not set by the user
         public static bool HARActive = false;
         public static bool RotRActive = false;
         public static bool ATRActive = false;
         public static bool VREHighmateActive = false;
-        internal static bool NonBinaryActive = false;
+        public static bool NonBinaryActive = false;
         public static Dictionary<string, string> FertilityMods = new();
         public static bool debugLogging = false;
         public static bool AsimovActive;
@@ -77,6 +78,7 @@ namespace BetterRomance
             Scribe_Values.Look(ref joyOnSlaves, "joyOnSlaves", false);
             Scribe_Values.Look(ref joyOnPrisoners, "joyOnPrisoners", false);
             Scribe_Values.Look(ref debugLogging, "debugLogging", false);
+            Scribe_Values.Look(ref complicated, "complicatedOrientations", false);
         }
 
         public static void ApplyJoySettings()
@@ -118,7 +120,8 @@ namespace BetterRomance
             Settings.ApplyJoySettings();
         }
 
-        Vector2 scrollPos;
+        Vector2 scrollPosLeft;
+        Vector2 scrollPosRight;
         static FieldInfo curX = AccessTools.Field(typeof(Listing_Standard), "curX");
         const float scrollListPadding = 20f;
         const float secondBoxOffset = -12.01f;
@@ -131,34 +134,78 @@ namespace BetterRomance
             };
             list.Begin(canvas);
 
-            DrawBaseSexualityChance(list);
-            list.Gap();
-            TwoButtonText(list, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
-            { settings.sexualOrientations.Reset(); });
-            list.Gap();
+            if (settings.complicated)
+            {
+                Rect leftRect = new(0f, 0f, list.ColumnWidth, canvas.height);
+                Rect viewRectLeft = new Rect(leftRect)
+                {
+                    height = scrollViewLeftHeight
+                };
 
-            DrawAceOrientationChance(list);
-            list.Gap();
-            TwoButtonText(list, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
-            { settings.asexualOrientations.Reset(); });
+                Widgets.BeginScrollView(leftRect, ref scrollPosLeft, viewRectLeft, false);
+                Listing_Standard scrollListLeft = new Listing_Standard(leftRect, () => scrollPosLeft)
+                {
+                    maxOneColumn = true
+                };
+                scrollListLeft.Begin(viewRectLeft);
 
+                DrawSexualOrientationChance(scrollListLeft);
+                scrollListLeft.Gap();
+                TwoButtonText(list, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+                { settings.sexualOrientations.Reset(); });
+
+                DrawRomanticOrientationChance(scrollListLeft);
+                scrollListLeft.Gap();
+                TwoButtonText(list, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+                { settings.asexualOrientations.Reset(); });
+
+                DrawExtraStuff(scrollListLeft);
+                scrollListLeft.Gap();
+                if (scrollListLeft.ButtonText(settings.complicated ? "Simplify it" : "Let's make it complicated"))
+                {
+                    settings.complicated = !settings.complicated;
+                    scrollPosLeft = Vector2.zero;
+                }
+                scrollViewLeftHeight = scrollListLeft.MaxColumnHeightSeen;
+                scrollListLeft.End();
+                Widgets.EndScrollView();
+            }
+            else
+            {
+                DrawBaseSexualityChance(list);
+                list.Gap();
+                TwoButtonText(list, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+                { settings.sexualOrientations.Reset(); });
+
+                DrawAceOrientationChance(list);
+                list.Gap();
+                TwoButtonText(list, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+                { settings.asexualOrientations.Reset(); });
+
+                list.Gap();
+                if (list.ButtonText(settings.complicated ? "Simplify it" : "Let's make it complicated"))
+                {
+                    settings.complicated = !settings.complicated;
+                }
+            }
             list.NewColumn();
+
             Rect rightRect = new(0f, 0f, canvas.width, canvas.height)
             {
                 xMin = (float)curX.GetValue(list)
             };
-            Rect viewRect = new(0f, 0f, rightRect.width - scrollListPadding, scrollViewHeight);
+            Rect viewRectRight = new(0f, 0f, rightRect.width - scrollListPadding, scrollViewRightHeight);
 
-            Widgets.BeginScrollView(rightRect, ref scrollPos, viewRect, true);
-            Listing_Standard scrollList = new(rightRect, () => scrollPos)
+            Widgets.BeginScrollView(rightRect, ref scrollPosRight, viewRectRight, true);
+            Listing_Standard scrollListRight = new(rightRect, () => scrollPosRight)
             {
                 maxOneColumn = true
             };
-            scrollList.Begin(viewRect);
+            scrollListRight.Begin(viewRectRight);
 
-            DrawCustomRight(scrollList);
-            scrollList.Gap();
-            if (scrollList.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
+            DrawCustomRight(scrollListRight);
+            scrollListRight.Gap();
+            if (scrollListRight.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
             {
                 settings.dateRate = 100f;
                 settings.hookupRate = 100f;
@@ -169,11 +216,11 @@ namespace BetterRomance
                 settings.maxOpinionCheating = 30;
             }
 
-            scrollList.Gap();
-            DrawRightMisc(scrollList);
+            scrollListRight.Gap();
+            DrawRightMisc(scrollListRight);
 
-            scrollViewHeight = scrollList.MaxColumnHeightSeen;
-            scrollList.End();
+            scrollViewRightHeight = scrollListRight.MaxColumnHeightSeen;
+            scrollListRight.End();
             Widgets.EndScrollView();
             list.End();
         }
@@ -205,7 +252,9 @@ namespace BetterRomance
         }
         private static float sectionHeightOrientation = 0f;
         private static float sectionHeightOther = 0f;
-        private static float scrollViewHeight = 0f;
+        private static float sectionHeightComplicated = 0f;
+        private static float scrollViewLeftHeight = 0f;
+        private static float scrollViewRightHeight = 0f;
 
         private static Listing_Standard DrawCustomSectionStart(Listing_Standard listing, float height, string label, string tooltip = null)
         {
@@ -295,6 +344,84 @@ namespace BetterRomance
 
         private static void DrawRightMisc(Listing_Standard list)
         {
+            DrawFertilityMod(list);
+
+            list.Label("Add joy need (reload save after changing)");
+            if (ModsConfig.IdeologyActive)
+            {
+                list.CheckboxLabeled("Slaves", ref settings.joyOnSlaves);
+            }
+            list.CheckboxLabeled("Prisoners", ref settings.joyOnPrisoners);
+            if (Prefs.DevMode)
+            {
+                list.CheckboxLabeled("Enable dev logging", ref Settings.debugLogging);
+            }
+        }
+
+        private static void DrawSexualOrientationChance(Listing_Standard listing)
+        {
+            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.OrentationHeading".Translate(), tooltip: "WBR.SexualOrentationHeadingTip".Translate());
+            list.Label("WBR.HeterosexualChance".Translate() + "  " + (int)settings.sexualOrientations.hetero + "%", tooltip: "WBR.HeterosexualChanceTip".Translate());
+            settings.sexualOrientations.hetero = list.Slider(settings.sexualOrientations.hetero, 0f, 100.99f);
+            if (settings.sexualOrientations.hetero > 100.99f - settings.sexualOrientations.bi - settings.sexualOrientations.homo)
+            {
+                settings.sexualOrientations.hetero = 100.99f - settings.sexualOrientations.bi - settings.sexualOrientations.homo;
+            }
+            list.Label("WBR.BisexualChance".Translate() + "  " + (int)settings.sexualOrientations.bi + "%", tooltip: "WBR.BisexualComplicatedChanceTip".Translate());
+            settings.sexualOrientations.bi = list.Slider(settings.sexualOrientations.bi, 0f, 100.99f);
+            if (settings.sexualOrientations.bi > 100.99f - settings.sexualOrientations.hetero - settings.sexualOrientations.homo)
+            {
+                settings.sexualOrientations.bi = 100.99f - settings.sexualOrientations.hetero - settings.sexualOrientations.homo;
+            }
+            list.Label("WBR.HomosexualChance".Translate() + "  " + (int)settings.sexualOrientations.homo + "%", tooltip: "WBR.HomosexualChanceTip".Translate());
+            settings.sexualOrientations.homo = list.Slider(settings.sexualOrientations.homo, 0f, 100.99f);
+            if (settings.sexualOrientations.homo > 100.99f - settings.sexualOrientations.hetero - settings.sexualOrientations.bi)
+            {
+                settings.sexualOrientations.homo = 100.99f - settings.sexualOrientations.hetero - settings.sexualOrientations.bi;
+            }
+            settings.sexualOrientations.none = 100 - (int)settings.sexualOrientations.hetero - (int)settings.sexualOrientations.bi - (int)settings.sexualOrientations.homo;
+            list.Label("WBR.AsexualChance".Translate() + "  " + settings.sexualOrientations.none + "%", tooltip: "WBR.AsexualChanceTip".Translate());
+            DrawCustomSectionEnd(listing, list, out sectionHeightOrientation);
+        }
+
+        private static void DrawRomanticOrientationChance(Listing_Standard listing)
+        {
+            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.RomanticOrentationHeading".Translate(), tooltip: "WBR.RomanticOrentationHeadingTip".Translate());
+            list.Label("WBR.AceHeteroChance".Translate() + "  " + (int)settings.asexualOrientations.hetero + "%", tooltip: "WBR.AceHeteroChanceTip".Translate());
+            settings.asexualOrientations.hetero = list.Slider(settings.asexualOrientations.hetero, 0f, 100.99f);
+            if (settings.asexualOrientations.hetero > 100.99f - settings.asexualOrientations.bi - settings.asexualOrientations.homo)
+            {
+                settings.asexualOrientations.hetero = 100.99f - settings.asexualOrientations.bi - settings.asexualOrientations.homo;
+            }
+            list.Label("WBR.AceBiChance".Translate() + "  " + (int)settings.asexualOrientations.bi + "%", tooltip: "WBR.AceBiChanceTip".Translate());
+            settings.asexualOrientations.bi = list.Slider(settings.asexualOrientations.bi, 0f, 100.99f);
+            if (settings.asexualOrientations.bi > 100.99f - settings.asexualOrientations.hetero - settings.asexualOrientations.homo)
+            {
+                settings.asexualOrientations.bi = 100.99f - settings.asexualOrientations.hetero - settings.asexualOrientations.homo;
+            }
+            list.Label("WBR.AceHomoChance".Translate() + "  " + (int)settings.asexualOrientations.homo + "%", tooltip: "WBR.AceHomoChanceTip".Translate());
+            settings.asexualOrientations.homo = list.Slider(settings.asexualOrientations.homo, 0f, 100.99f);
+            if (settings.asexualOrientations.homo > 100.99f - settings.asexualOrientations.hetero - settings.asexualOrientations.bi)
+            {
+                settings.asexualOrientations.homo = 100.99f - settings.asexualOrientations.hetero - settings.asexualOrientations.bi;
+            }
+            settings.asexualOrientations.none = 100 - (int)settings.asexualOrientations.hetero - (int)settings.asexualOrientations.bi - (int)settings.asexualOrientations.homo;
+            list.Label("WBR.AceAroChance".Translate() + "  " + settings.asexualOrientations.none + "%", tooltip: "WBR.AromanticTip".Translate());
+            DrawCustomSectionEnd(listing, list, out sectionHeightOrientation);
+        }
+
+        private static void DrawExtraStuff(Listing_Standard listing)
+        {
+            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightComplicated, "Extra Settings", tooltip: "WBR.RomanticOrentationHeadingTip".Translate());
+            list.Label("Extra stuff for length");
+            list.Label("Extra stuff for length");
+            list.Label("Extra stuff for length");
+            list.Label("Extra stuff for length");
+            DrawCustomSectionEnd(listing, list, out sectionHeightComplicated);
+        }
+
+        private static void DrawFertilityMod(Listing_Standard listing)
+        {
             if (Settings.FertilityMods.Count == 1 && (Settings.fertilityMod == "None" || !Settings.FertilityMods.ContainsKey(Settings.fertilityMod)))
             {
                 Settings.fertilityMod = Settings.FertilityMods.First().Key;
@@ -303,7 +430,7 @@ namespace BetterRomance
             {
                 Settings.fertilityMod = "None";
             }
-            if (list.ButtonTextLabeled("Fertility Mod", Settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(Settings.fertilityMod) : "None"))
+            if (listing.ButtonTextLabeled("Fertility Mod", Settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(Settings.fertilityMod) : "None"))
             {
                 List<FloatMenuOption> options = new();
                 foreach (KeyValuePair<string, string> item in Settings.FertilityMods)
@@ -320,17 +447,7 @@ namespace BetterRomance
             }
             if (Settings.FertilityMods.Count == 0)
             {
-                list.Label("No fertility mod detected. If you are using one, please let me know which one so I can add support for it.");
-            }
-            list.Label("Add joy need (reload save after changing)");
-            if (ModsConfig.IdeologyActive)
-            {
-                list.CheckboxLabeled("Slaves", ref settings.joyOnSlaves);
-            }
-            list.CheckboxLabeled("Prisoners", ref settings.joyOnPrisoners);
-            if (Prefs.DevMode)
-            {
-                list.CheckboxLabeled("Enable dev logging", ref Settings.debugLogging);
+                listing.Label("No fertility mod detected. If you are using one, please let me know which one so I can add support for it.");
             }
         }
     }
