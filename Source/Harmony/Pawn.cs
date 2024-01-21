@@ -82,15 +82,18 @@ namespace BetterRomance.HarmonyPatches
                     yield return action2;
                 }
 
-                Command_Action action3 = new Command_Action
+                if (__instance.RaceProps.Humanlike)
                 {
-                    defaultLabel = "DEV: Reset lovin' tick",
-                    action = delegate
+                    Command_Action action3 = new Command_Action
                     {
-                        __instance.mindState.canLovinTick = -99999;
-                    }
-                };
-                yield return action3;
+                        defaultLabel = "DEV: Reset lovin' tick",
+                        action = delegate
+                        {
+                            __instance.mindState.canLovinTick = -99999;
+                        }
+                    };
+                    yield return action3;
+                }
             }
         }
     }
