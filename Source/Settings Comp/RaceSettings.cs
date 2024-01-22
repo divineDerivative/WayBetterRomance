@@ -134,12 +134,19 @@ namespace BetterRomance
         private void SetMiscSettings()
         {
             //There's no extension for these, they are all directly calculated
-            //Min age for adulthood
+            //Shortcut for robot types
             if (biotech.growthMoments == null)
             {
                 misc.minAgeForAdulthood = 0f;
+                misc.childAge = 0;
+                misc.adultAgeForLearning = 0;
+                misc.ageReversalDemandAge = 0;//not sure about this
+                misc.ageSkillFactor = new SimpleCurve { new CurvePoint(0f,1f)};
+                misc.ageSkillMaxFactorCurve = new SimpleCurve { new CurvePoint(0f, 1f) };
+                return;
             }
-            else if (Settings.HARActive)
+            //Min age for adulthood
+            if (Settings.HARActive)
             {
                 if (HAR_Integration.UseHARAgeForAdulthood(race, out float age))
                 {
@@ -183,7 +190,7 @@ namespace BetterRomance
             misc.ageSkillMaxFactorCurve = new SimpleCurve
             {
                 new CurvePoint(0f,0f),
-                new CurvePoint(biotech.growthMoments[1], 0.7f),
+                new CurvePoint(biotech.growthMoments?[1] ?? 0f, 0.7f),
                 new CurvePoint(misc.adultAgeForLearning * 2f, 1f),
                 new CurvePoint(race.race.lifeExpectancy - (race.race.lifeExpectancy/4), 1.6f),
             };
