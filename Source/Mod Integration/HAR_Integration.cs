@@ -24,7 +24,15 @@ namespace BetterRomance
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static int[] GetGrowthMoments(Pawn pawn)
         {
-            return (pawn.def as ThingDef_AlienRace)?.alienRace.generalSettings.growthAges?.ToArray();
+            if (pawn.def is ThingDef_AlienRace alienRace)
+            {
+                if (alienRace.alienRace.generalSettings.GrowthAges.NullOrEmpty())
+                {
+                    return null;
+                }
+                return alienRace.alienRace.generalSettings.GrowthAges;
+            }
+            return GrowthUtility.GrowthMomentAges;
         }
 
         public static bool FertilityCurveExists(Pawn pawn)
