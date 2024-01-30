@@ -7,6 +7,7 @@ using System.Reflection;
 namespace BetterRomance.HarmonyPatches
 {
     [HarmonyPatch]
+    [HarmonyAfter(new string[] { "rimworld.erdelf.alien_race.main" })]
     public static class StatPart_Age_AgeEffect
     {
         public static bool Prefix(Pawn pawn, StatPart_Age __instance, ref float __result, bool ___humanlikeOnly, bool ___useBiologicalYears, SimpleCurve ___curve)
