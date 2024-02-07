@@ -36,6 +36,8 @@ namespace BetterRomance
         public static bool VREHighmateActive = false;
         public static Dictionary<string, string> FertilityMods = new Dictionary<string, string>();
         public static bool debugLogging = false;
+        public static bool AsimovActive;
+
         public static bool LoveRelationsLoaded => !CustomLoveRelationUtility.LoveRelations.EnumerableNullOrEmpty();
 
         public override void ExposeData()

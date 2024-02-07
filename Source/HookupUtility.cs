@@ -151,6 +151,11 @@ namespace BetterRomance
             {
                 return false;
             }
+            //Don't even try with drones
+            if (target.DroneCheck())
+            {
+                return false;
+            }
             //Start with reasons that are not subject to change
             //Don't allow if target is too young
             if (forOpinionExplanation && target.ageTracker.AgeBiologicalYearsFloat < target.MinAgeForSex())
@@ -321,7 +326,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static bool CanDrawTryHookup(Pawn pawn)
         {
-            return pawn.ageTracker.AgeBiologicalYearsFloat >= pawn.MinAgeForSex() && pawn.Spawned && pawn.IsFreeColonist;
+            return pawn.ageTracker.AgeBiologicalYearsFloat >= pawn.MinAgeForSex() && pawn.Spawned && pawn.IsFreeColonist && !pawn.DroneCheck();
         }
 
         /// <summary>
@@ -399,6 +404,11 @@ namespace BetterRomance
         public static AcceptanceReport WillPawnTryHookup(Pawn pawn, bool initiator = false, bool ordered = false)
         {
             //We return false if no reason needs to be given, otherwise return the string for the rejection reason
+            //Check for drones
+            if (pawn.DroneCheck())
+            {
+                return false;
+            }
             //Check age
             if (pawn.ageTracker.AgeBiologicalYearsFloat < pawn.MinAgeForSex())
             {

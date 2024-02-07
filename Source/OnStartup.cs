@@ -62,7 +62,6 @@ namespace BetterRomance
                 Settings.VREHighmateActive = true;
                 harmony.PatchVRE();
             }
-            
             if (ModsConfig.IsActive("VanillaExpanded.VanillaSocialInteractionsExpanded"))
             {
                 MethodInfo GetSpouseOrLoverOrFiance = Type.GetType("VanillaSocialInteractionsExpanded.VSIE_Utils, VanillaSocialInteractionsExpanded").GetMethod("GetSpouseOrLoverOrFiance");
@@ -90,6 +89,15 @@ namespace BetterRomance
                 harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.xxx,RJW"), "is_asexual"), postfix: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RJWAsexualPostfix)));
                 harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.CompRJW,RJW"), "VanillaTraitCheck"), transpiler: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.VanillaTraitCheckTranspiler)));
             }
+            if (ModsConfig.IsActive("Neronix17.Asimov"))
+            {
+                Settings.AsimovActive = true;
+                HelperClasses.IsHumanlikeAutomaton = AccessTools.DeclaredMethod(Type.GetType("Asimov.AutomatonUtil,Asimov"), "IsHumanlikeAutomaton");
+                Type PawnDef = Type.GetType("Asimov.PawnDef,Asimov");
+                HelperClasses.pawnSettings = AccessTools.Field(PawnDef, "pawnSettings");
+                HelperClasses.AsimovGrowth = AccessTools.Field(Type.GetType("Asimov.PawnSettings,Asimov"), "hasGrowthMoments");
+            }
+
             MakeFertilityModList();
             Settings.ApplyJoySettings();
         }
@@ -132,6 +140,9 @@ namespace BetterRomance
         public static MethodInfo IsConsideredMechanicalAndroid;
         public static MethodInfo IsConsideredMechanicalDrone;
         public static MethodInfo IsConsideredMechanical;
+        public static MethodInfo IsHumanlikeAutomaton;
+        public static FieldInfo AsimovGrowth;
+        public static FieldInfo pawnSettings;
     }
 
     public class MayRequireHARAttribute : MayRequireAttribute

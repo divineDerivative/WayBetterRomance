@@ -99,11 +99,6 @@ namespace BetterRomance
 
         public static bool UseHARAgeForAdulthood(Pawn pawn, out float age)
         {
-            if (pawn.HasNoGrowth())
-            {
-                age = 0f;
-                return true;
-            }
             if (pawn.def is ThingDef_AlienRace race)
             {
                 age = race.alienRace.generalSettings.minAgeForAdulthood;

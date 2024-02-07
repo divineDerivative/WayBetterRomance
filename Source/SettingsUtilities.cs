@@ -633,6 +633,10 @@ namespace BetterRomance
         /// <returns></returns>
         public static float GetMinAgeForAdulthood(Pawn pawn)
         {
+            if (pawn.HasNoGrowth())
+            {
+                return 0f;
+            }
             if (Settings.HARActive)
             {
                 if (HAR_Integration.UseHARAgeForAdulthood(pawn, out float age))
@@ -668,6 +672,10 @@ namespace BetterRomance
         {
             float lifeStageMinAge = pawn.ageTracker.AdultMinAge;
             float backstoryMinAge = GetMinAgeForAdulthood(pawn);
+            if (Settings.AsimovActive && (bool)HelperClasses.IsHumanlikeAutomaton?.Invoke(null, new object[] { pawn }) && pawn.HasNoGrowth())
+            {
+                backstoryMinAge = defaultMinAgeForAdulthood;
+            }
             return (int)(Math.Round((backstoryMinAge - lifeStageMinAge) * .75f) + lifeStageMinAge);
         }
 

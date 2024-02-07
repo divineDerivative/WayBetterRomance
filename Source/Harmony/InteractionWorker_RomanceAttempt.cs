@@ -31,6 +31,12 @@ namespace BetterRomance.HarmonyPatches
                 __result = 0f;
                 return false;
             }
+            //Don't allow for drones
+            if (initiator.DroneCheck() || recipient.DroneCheck())
+            {
+                __result = 0f;
+                return false;
+            }
             //Don't allow for juveniles
             if (initiator.DevelopmentalStage.Juvenile() || recipient.DevelopmentalStage.Juvenile())
             {

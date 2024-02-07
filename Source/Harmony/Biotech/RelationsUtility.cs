@@ -92,6 +92,17 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(RelationsUtility), "RomanceEligiblePair")]
     public static class RelationsUtility_RomanceEligiblePair
     {
+        [HarmonyPrefix]
+        public static bool RobotPrefix(Pawn target, ref AcceptanceReport __result)
+        {
+            if (target.DroneCheck())
+            {
+                __result = false;
+                return false;
+            }
+            return true;
+        }
+
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> MinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
         {

@@ -30,6 +30,11 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
+
+        public static void Postfix(Pawn pawn, ref bool __result)
+        {
+            __result = __result && !pawn.DroneCheck();
+        }
     }
 
     //Adds a button for ordered hookups to the social card

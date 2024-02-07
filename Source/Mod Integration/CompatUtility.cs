@@ -4,7 +4,6 @@ namespace BetterRomance
 {
     internal static class CompatUtility
     {
-
         public static bool AndroidCheck(this Pawn pawn)
         {
             if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanicalAndroid?.Invoke(null, new object[] { pawn }))
@@ -20,7 +19,11 @@ namespace BetterRomance
             {
                 return true;
             }
-            return false;
+            if (Settings.AsimovActive && pawn.needs.mood == null)
+            {
+                return true;
+            }
+            return !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
         }
 
         public static bool HasNoGrowth(this Pawn pawn)
@@ -28,6 +31,14 @@ namespace BetterRomance
             if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanical?.Invoke(null, new object[] { pawn }))
             {
                 return true;
+            }
+            if (Settings.AsimovActive && (bool)HelperClasses.IsHumanlikeAutomaton?.Invoke(null, new object[] { pawn }))
+            {
+                object pawnSettings = HelperClasses.pawnSettings.GetValue(pawn.def);
+                if (pawnSettings != null)
+                {
+                    return !(bool)HelperClasses.AsimovGrowth.GetValue(pawnSettings);
+                }
             }
             if (Settings.HARActive && HAR_Integration.GetGrowthMoments(pawn) == null)
             {

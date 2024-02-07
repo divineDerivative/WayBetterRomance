@@ -252,8 +252,8 @@ namespace BetterRomance
             List<Pawn> pawns = map.mapPawns.AllPawnsSpawned;
             foreach (Pawn pawn in pawns)
             {
-                //Exclude animals and enemies
-                if (pawn.RaceProps.Humanlike && !pawn.HostileTo(Faction.OfPlayer))
+                //Exclude animals and enemies and robots
+                if (pawn.RaceProps.Humanlike && !pawn.HostileTo(Faction.OfPlayer) && !pawn.DroneCheck())
                 {
                     result.Add(pawn);
                 }
