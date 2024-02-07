@@ -733,7 +733,8 @@ namespace BetterRomance
                 case 4f:
                     return ChildAge(pawn) + 1;
                 case 7f:
-                    return GetGrowthMomentAsFloat(pawn, 0);
+                    float num = GetGrowthMomentAsFloat(pawn, 0);
+                    return num == -1? 0 : num;
                 case 10f:
                     return GetGrowthMomentAsFloat(pawn, 1);
                 case 12f:
@@ -749,7 +750,7 @@ namespace BetterRomance
                 case 20f:
                     return GetMinAgeForAdulthood(pawn);
                 case 25f:
-                    return AdultAgeForLearning(pawn);
+                    return AgeReversalDemandAge(pawn);
                 default:
                     LogUtil.Warning($"Unable to translate {age} to appropriate age for race {pawn.def.defName}");
                     return age;

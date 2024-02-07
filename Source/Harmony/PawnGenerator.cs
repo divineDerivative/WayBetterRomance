@@ -85,7 +85,7 @@ namespace BetterRomance.HarmonyPatches
                 if (code.LoadsConstant(16))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetMinAgeForAdulthood));
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                     yield return new CodeInstruction(OpCodes.Conv_I4);
                 }
                 else if (code.LoadsConstant(20))
