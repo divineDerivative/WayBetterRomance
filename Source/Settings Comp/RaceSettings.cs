@@ -207,6 +207,14 @@ namespace BetterRomance
         //This is getting kind of bloated. Think about ways to pare it down
         private SimpleCurve CheckFertilityCurve(Gender gender)
         {
+            //Don't do anything if they're never reproductive
+            if (!race.race.lifeStageAges.Any(stage => stage.def.reproductive))
+            {
+                return new SimpleCurve
+                {
+                    new CurvePoint(0f,0f)
+                };
+            }
             //First, check if there is a curve supplied via the extension
             SimpleCurve myCurve;
             switch (gender)
