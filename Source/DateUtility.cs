@@ -138,5 +138,10 @@ namespace BetterRomance
                 HelperClasses.RotRFillRomanceBar?.Invoke(null, new object[] { pawn, 0.00002f });
             }
         }
+
+        public static bool FailureCheck(Pawn Partner, JobDef job)
+        {
+            return !Partner.Spawned || Partner.Dead || Partner.Downed || Partner.CurJob?.def != job;
+        }
     }
 }

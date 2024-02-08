@@ -42,9 +42,7 @@ namespace BetterRomance
             toil.tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); };
             toil.defaultCompleteMode = ToilCompleteMode.PatherArrival;
             //Fail if partner despawns, dies, or stops the follow job
-            toil.AddFailCondition(() => !Partner.Spawned);
-            toil.AddFailCondition(() => Partner.Dead);
-            toil.AddFailCondition(() => Partner.CurJob.def != (IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow));
+            toil.AddFailCondition(() => DateUtility.FailureCheck(Partner, IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow));
             return toil;
         }
         //Wait for partner at each tile
@@ -58,12 +56,9 @@ namespace BetterRomance
                 tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); },
             };
             //Fail if either participant needs to go eat or sleep
-            toil.AddFailCondition(() =>
-                PawnUtility.WillSoonHaveBasicNeed(Actor) || PawnUtility.WillSoonHaveBasicNeed(Partner));
-            //Fail if partner despawns, dies, or stops the follow job
-            toil.AddFailCondition(() => !Partner.Spawned);
-            toil.AddFailCondition(() => Partner.Dead);
-            toil.AddFailCondition(() => Partner.CurJob.def != (IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow));
+            toil.AddFailCondition(() => PawnUtility.WillSoonHaveBasicNeed(Actor) || PawnUtility.WillSoonHaveBasicNeed(Partner));
+            //Fail if partner is no longer capable of continuing
+            toil.AddFailCondition(() => DateUtility.FailureCheck(Partner, IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow));
             return toil;
         }
 

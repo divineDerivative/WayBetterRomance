@@ -38,20 +38,18 @@ namespace BetterRomance
             //New toil
             Toil FollowPartner = new Toil
             {
-                defaultCompleteMode = ToilCompleteMode.Delay
+                defaultCompleteMode = ToilCompleteMode.Delay,
+                //Chase after partner
+                initAction = delegate
+                {
+                    ticksLeftThisToil = 200;
+                    Actor.pather.StartPath(Partner, PathEndMode.Touch);
+                },
+                //Gain joy
+                tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); }
             };
             //Fail if partner despawns, dies, or stops the lead job
-            FollowPartner.AddFailCondition(() => !Partner.Spawned);
-            FollowPartner.AddFailCondition(() => Partner.Dead);
-            FollowPartner.AddFailCondition(() => Partner.CurJob.def != (IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead));
-            //Chase after partner
-            FollowPartner.initAction = delegate
-            {
-                ticksLeftThisToil = 200;
-                Actor.pather.StartPath(Partner, PathEndMode.Touch);
-            };
-            //Gain joy
-            FollowPartner.tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); };
+            FollowPartner.AddFailCondition(() => DateUtility.FailureCheck(Partner, IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead));
             //Yield this toil 100 times
             //Date lead job has a finite end, so the date won't go on forever
             for (int i = 0; i < 100; i++)

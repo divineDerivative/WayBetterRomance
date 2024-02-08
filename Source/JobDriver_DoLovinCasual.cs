@@ -1,4 +1,3 @@
-using BetterRomance.HarmonyPatches;
 using RimWorld;
 using System.Collections.Generic;
 using Verse;
@@ -132,8 +131,8 @@ namespace BetterRomance
                 },
                 defaultCompleteMode = ToilCompleteMode.Delay,
             };
-            //Fail if partner dies, or there's over 100 ticks left and the partner has wandered off
-            loveToil.AddFailCondition(() => Partner.Dead || (ticksLeftThisToil > 100 && !IsInOrByBed(Bed, Partner)));
+            //Fail if partner dies/goes down, or there's over 100 ticks left and the partner has wandered off
+            loveToil.AddFailCondition(() => Partner.Dead || Partner.Downed || (ticksLeftThisToil > 100 && !IsInOrByBed(Bed, Partner)));
             yield return loveToil;
             //If they finish, add the appropriate memory and record events
             //Vanilla has this as a "finish action" on the previous toil, but I think it only makes sense to add this stuff if the lovin' actually... finishes
