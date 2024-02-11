@@ -141,7 +141,30 @@ namespace BetterRomance
 
         public static bool FailureCheck(Pawn Partner, JobDef job)
         {
-            return !Partner.Spawned || Partner.Dead || Partner.Downed || Partner.CurJob?.def != job;
+            if (Settings.debugLogging)
+            {
+                if (!Partner.Spawned)
+                {
+                    LogUtil.Message($"Date failed because {Partner.Name.ToStringShort} despawned", true);
+                }
+                else if (Partner.Dead)
+                {
+                    LogUtil.Message($"Date failed because {Partner.Name.ToStringShort} is dead", true);
+                }
+                else if (Partner.Downed)
+                {
+                    LogUtil.Message($"Date failed because {Partner.Name.ToStringShort} is downed", true);
+                }
+                else if (PawnUtility.WillSoonHaveBasicNeed(Partner))
+                {
+                    LogUtil.Message($"Date ended early because {Partner.Name.ToStringShort} needs to eat or sleep", true);
+                }
+                else if (Partner.CurJob?.def != job)
+                {
+                    LogUtil.Message($"Date failed because {Partner.Name.ToStringShort} stopped their job", true);
+                }
+            }
+            return !Partner.Spawned || Partner.Dead || Partner.Downed || PawnUtility.WillSoonHaveBasicNeed(Partner) || Partner.CurJob?.def != job;
         }
     }
 }

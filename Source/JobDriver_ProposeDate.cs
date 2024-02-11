@@ -322,11 +322,13 @@ namespace BetterRomance
                         //By the time this delegate function runs, the actual success has been determined, so if it wasn't successful, end the toil
                         if (!WasSuccessfulPass)
                         {
+                            Actor.jobs.EndCurrentJob(JobCondition.Succeeded);
                             return;
                         }
                         //If no date activities were found, end the toil
                         if (!TryGetDateJobs(out Job leadJob, out Job followJob))
                         {
+                            Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
                             return;
                         }
                         //Give the jobs we just created

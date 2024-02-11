@@ -32,7 +32,11 @@ namespace BetterRomance
             Toil WaitForPartnerJob = new Toil
             {
                 defaultCompleteMode = ToilCompleteMode.Delay,
-                initAction = delegate { ticksLeftThisToil = 1; }
+                initAction = delegate
+                {
+                    ticksLeftThisToil = 1;
+                    LogUtil.Message($"Date follow job started for {Actor.Name.ToStringShort}", true);
+                }
             };
             yield return WaitForPartnerJob;
             //New toil
@@ -46,7 +50,7 @@ namespace BetterRomance
                     Actor.pather.StartPath(Partner, PathEndMode.Touch);
                 },
                 //Gain joy
-                tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); }
+                tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); },
             };
             //Fail if partner despawns, dies, or stops the lead job
             FollowPartner.AddFailCondition(() => DateUtility.FailureCheck(Partner, IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead));

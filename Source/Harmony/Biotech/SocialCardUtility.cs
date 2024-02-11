@@ -67,11 +67,12 @@ namespace BetterRomance.HarmonyPatches
         private static void SocialCardHelper(Pawn pawn, Rect rect)
         {
             Vector2 ButtonSize = (Vector2)AccessTools.Field(typeof(SocialCardUtility), "RoleChangeButtonSize").GetValue(null);
+            float padding = (float)AccessTools.Field(typeof(SocialCardUtility), "RowLeftRightPadding").GetValue(null);
             if (HookupUtility.CanDrawTryHookup(pawn))
             {
                 bool romanceDrawn = (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, new object[] { pawn });
                 //Adjust x position based on if romance button is present
-                float width = romanceDrawn ? rect.width - 150f - ButtonSize.x - 5f : rect.width - 150f - +10f;
+                float width = romanceDrawn ? rect.width - 150f - ButtonSize.x - padding : rect.width - 150f + (padding*2);
                 DrawTryHookup(new Rect(width, rect.height - ButtonSize.y, ButtonSize.x, ButtonSize.y), pawn);
             }
         }
