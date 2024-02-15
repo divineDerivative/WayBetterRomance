@@ -395,23 +395,12 @@ namespace BetterRomance
             throw new Exception("No parent pawnkind set for " + pawn.kindDef.defName + " or " + pawn.def.defName);
         }
 
-        public static float MinAgeToHaveChildren(this Pawn pawn)
+        public static float MinAgeToHaveChildren(this Pawn pawn, Gender gender = Gender.None)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
-            if (pawn.gender == Gender.Female)
+            if (gender == Gender.None)
             {
-                return (settings != null) ? settings.minFemaleAgeToHaveChildren : 16f;
+                gender = pawn.gender;
             }
-            else if (pawn.gender == Gender.Male)
-            {
-                return (settings != null) ? settings.minMaleAgeToHaveChildren : 14f;
-            }
-            throw new ArgumentException("This pawn has no gender");
-        }
-
-        //Same as above but takes a gender argument, for use when getting age settings for pawns that haven't been generated yet
-        public static float MinAgeToHaveChildren(this Pawn pawn, Gender gender)
-        {
             RelationSettings settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
@@ -424,23 +413,12 @@ namespace BetterRomance
             throw new ArgumentException("No gender provided");
         }
 
-        public static float MaxAgeToHaveChildren(this Pawn pawn)
+        public static float MaxAgeToHaveChildren(this Pawn pawn, Gender gender = Gender.None)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
-            if (pawn.gender == Gender.Female)
+            if (gender == Gender.None)
             {
-                return (settings != null) ? settings.maxFemaleAgeToHaveChildren : 45f;
+                gender = pawn.gender;
             }
-            else if (pawn.gender == Gender.Male)
-            {
-                return (settings != null) ? settings.maxMaleAgeToHaveChildren : 50f;
-            }
-            throw new ArgumentException("This pawn has no gender");
-        }
-
-        //Same as above but takes a gender argument, for use when getting age settings for pawns that haven't been generated yet
-        public static float MaxAgeToHaveChildren(this Pawn pawn, Gender gender)
-        {
             RelationSettings settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
@@ -453,27 +431,12 @@ namespace BetterRomance
             throw new ArgumentException("This pawn has no gender");
         }
 
-        public static float UsualAgeToHaveChildren(this Pawn pawn)
+        public static float UsualAgeToHaveChildren(this Pawn pawn, Gender gender = Gender.None)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
-            if (pawn.gender == Gender.Female)
+            if (gender == Gender.None)
             {
-                return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
+                gender = pawn.gender;
             }
-            else if (pawn.gender == Gender.Male)
-            {
-                return (settings != null) ? settings.usualMaleAgeToHaveChildren : 30f;
-            }
-            else
-            {
-                LogUtil.WarningOnce($"Pawn {pawn.Label} has no gender, defaulting to female setting", pawn.thingIDNumber);
-                return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
-            }
-        }
-
-        //Same as above but takes a gender argument, for use when getting age settings for pawns that haven't been generated yet
-        public static float UsualAgeToHaveChildren(this Pawn pawn, Gender gender)
-        {
             RelationSettings settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {

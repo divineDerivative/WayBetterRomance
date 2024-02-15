@@ -32,33 +32,40 @@ namespace BetterRomance.HarmonyPatches
                 {
                     //father
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                    //Just load Gender.None, the method will use the correct gender
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
                 }
                 else if (code.OperandIs(50f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren));
                 }
                 else if (code.OperandIs(30f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren));
                 }
                 else if (code.OperandIs(16f))
                 {
                     //mother
                     yield return new CodeInstruction(OpCodes.Ldarg_2);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
                 }
                 else if (code.OperandIs(45f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_2);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren));
                 }
                 else if (code.OperandIs(27f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_2);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren));
                 }
                 else if (code.opcode == OpCodes.Ldloc_3)
                 {

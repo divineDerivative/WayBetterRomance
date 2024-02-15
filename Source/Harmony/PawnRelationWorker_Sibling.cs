@@ -76,38 +76,38 @@ namespace BetterRomance.HarmonyPatches
                         yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         //Since Gender is an enum, I need to load the value of Male, which is 1
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
                     }
                     else if (instruction.OperandIs(16f))
                     {
                         yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         //Since Gender is an enum, I need to load the value of Female, which is 2
                         yield return new CodeInstruction(OpCodes.Ldc_I4_2);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
                     }
                     else if (instruction.OperandIs(50f))
                     {
                         yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren));
                     }
                     else if (instruction.OperandIs(45f))
                     {
                         yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         yield return new CodeInstruction(OpCodes.Ldc_I4_2);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren));
                     }
                     else if (instruction.OperandIs(30f))
                     {
                         yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren));
                     }
                     else if (instruction.OperandIs(27f))
                     {
                         yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
                         yield return new CodeInstruction(OpCodes.Ldc_I4_2);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren), parameters: new Type[] { typeof(Pawn), typeof(Gender) });
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren));
                     }
                     else
                     {

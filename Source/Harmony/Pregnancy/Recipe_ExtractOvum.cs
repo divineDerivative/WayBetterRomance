@@ -27,7 +27,8 @@ namespace BetterRomance.HarmonyPatches
                     if (codes[i + 1].LoadsField(recipe) && codes[i + 2].LoadsField(minAllowedAge))
                     {
                         yield return new CodeInstruction(OpCodes.Ldloc_0);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), new Type[] { typeof(Pawn) });
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
                         yield return new CodeInstruction(OpCodes.Conv_I4);
                         i += 2;
                     }
