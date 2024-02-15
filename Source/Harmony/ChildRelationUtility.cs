@@ -1,5 +1,8 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using Verse;
 
 namespace BetterRomance.HarmonyPatches
@@ -9,131 +12,93 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(ChildRelationUtility), "ChanceOfBecomingChildOf")]
     public static class ChildRelationUtility_ChanceOfBecomingChildOf
     {
-        // CHANGE: Removed bias against gays being assigned as parents.
+        //Check if settings allow children
         public static bool Prefix(Pawn child, Pawn father, Pawn mother, PawnGenerationRequest? childGenerationRequest, PawnGenerationRequest? fatherGenerationRequest, PawnGenerationRequest? motherGenerationRequest, ref float __result)
         {
-            //Check if settings allow children
             if ((father != null && !father.ChildAllowed()) || (mother != null && !mother.ChildAllowed()))
             {
                 __result = 0f;
                 return false;
             }
-            //Make sure parent genders are correct
-            if (father != null && father.gender != Gender.Male)
-            {
-                LogUtil.Warning(string.Concat("Tried to calculate chance for father with gender \"", father.gender, "\"."));
-                __result = 0f;
-                return false;
-            }
-            if (mother != null && mother.gender != Gender.Female)
-            {
-                LogUtil.Warning(string.Concat("Tried to calculate chance for mother with gender \"", mother.gender, "\"."));
-                __result = 0f;
-                return false;
-            }
-            //If the child already has a parent that does not match one being considered, do not allow
-            if (father != null && child.GetFather() != null && child.GetFather() != father)
-            {
-                __result = 0f;
-                return false;
-            }
-            if (mother != null && child.GetMother() != null && child.GetMother() != mother)
-            {
-                __result = 0f;
-                return false;
-            }
-            //If both parents are provided, and have never been lovers, do not allow
-            if (mother != null && father != null &&
-                !LovePartnerRelationUtility.LovePartnerRelationExists(mother, father) && !LovePartnerRelationUtility.ExLovePartnerRelationExists(mother, father))
-            {
-                __result = 0f;
-                return false;
-            }
-            if (mother != null && !ChildRelationUtility.XenotypesCompatible(child, mother))
-            {
-                __result = 0f;
-                return false;
-            }
-            if (father != null && !ChildRelationUtility.XenotypesCompatible(child, father))
-            {
-                __result = 0f;
-                return false;
-            }
-            //This prevents spawning children if the potential parent grew up in the colony
-            if (ModsConfig.BiotechActive)
-            {
-                if (father?.records != null && father.records.GetValue(RecordDefOf.TimeAsChildInColony) > 0f)
-                {
-                    __result = 0f;
-                    return false;
-                }
-                if (mother?.records != null && mother.records.GetValue(RecordDefOf.TimeAsChildInColony) > 0f)
-                {
-                    __result = 0f;
-                    return false;
-                }
-            }
-            //Calculations based on age of parents compared to child
-            float fatherAgeFactor = 1f;
-            float motherAgeFactor = 1f;
-            float childrenCountFactor = 1f;
-            if (father != null && child.GetFather() == null)
-            {
-                fatherAgeFactor = (float)AccessTools.Method(typeof(ChildRelationUtility), "GetParentAgeFactor").Invoke(null, new object[] { father, child, father.MinAgeToHaveChildren(), father.UsualAgeToHaveChildren(), father.MaxAgeToHaveChildren() });
-                if (fatherAgeFactor == 0f)
-                {
-                    __result = 0f;
-                    return false;
-                }
-            }
-            if (mother != null && child.GetMother() == null)
-            {
-                motherAgeFactor = (float)AccessTools.Method(typeof(ChildRelationUtility), "GetParentAgeFactor").Invoke(null, new object[] { mother, child, mother.MinAgeToHaveChildren(), mother.UsualAgeToHaveChildren(), mother.MaxAgeToHaveChildren() });
-                if (motherAgeFactor == 0f)
-                {
-                    __result = 0f;
-                    return false;
-                }
-
-                int maxChildren = NumberOfChildrenFemaleWantsEver(mother);
-                if (mother.relations.ChildrenCount >= maxChildren)
-                {
-                    __result = 0f;
-                    return false;
-                }
-
-                childrenCountFactor = 1f - (mother.relations.ChildrenCount / (float)maxChildren);
-            }
-            //Lower chances if one parent already has a spouse that is not the other parent
-            float curRelationFactor = 1f;
-            Pawn motherSpouse = mother?.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Spouse);
-            if (motherSpouse != null && motherSpouse != father)
-            {
-                curRelationFactor *= 0.15f;
-            }
-            Pawn fatherSpouse = father?.relations.GetFirstDirectRelationPawn(PawnRelationDefOf.Spouse);
-            if (fatherSpouse != null && fatherSpouse != mother)
-            {
-                curRelationFactor *= 0.15f;
-            }
-
-            __result = fatherAgeFactor * motherAgeFactor * childrenCountFactor * curRelationFactor;
-            return false;
+            return true;
         }
 
-        //This is a copy from base game, since it's private, only gets called by the above, and needs to be changed
-        /// <summary>
-        /// Determines max children "randomly". Seed is based on pawn's ID, so it will always return the same number for a given pawn.
-        /// </summary>
-        /// <param name="female"></param>
-        /// <returns>An int between 0 and max children setting</returns>
-        private static int NumberOfChildrenFemaleWantsEver(Pawn female)
+        //Use age settings and remove gay bias
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            Rand.PushState();
-            Rand.Seed = female.thingIDNumber * 3;
-            int result = Rand.RangeInclusive(0, female.MaxChildren());
-            Rand.PopState();
-            return result;
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(14f))
+                {
+                    //father
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                }
+                else if (code.OperandIs(50f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                }
+                else if (code.OperandIs(30f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                }
+                else if (code.OperandIs(16f))
+                {
+                    //mother
+                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                }
+                else if (code.OperandIs(45f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                }
+                else if (code.OperandIs(27f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren), parameters: new Type[] { typeof(Pawn) });
+                }
+                else if (code.opcode == OpCodes.Ldloc_3)
+                {
+                    //This just replaces num4 with 1f at the end, negating the gay reduction
+                    yield return new CodeInstruction (OpCodes.Ldc_R4, 1f);
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(ChildRelationUtility), "NumberOfChildrenFemaleWantsEver")]
+    public static class ChildRelationUtility_NumberOfChildrenFemaleWantsEver
+    {
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            bool first = true;
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(3))
+                {
+                    if (first)
+                    {
+                        yield return code;
+                        first = false;
+                    }
+                    else
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxChildren));
+                    }
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
         }
     }
 }
