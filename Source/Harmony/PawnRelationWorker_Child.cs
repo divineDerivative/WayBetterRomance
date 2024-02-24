@@ -13,8 +13,18 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Pawn generated, Pawn other, ref PawnGenerationRequest request, PawnRelationWorker_Child __instance)
         {
             //This patch only runs if spouses are not allowed by the new parent's race/pawnkind settings or they're gay
-            //Pretty sure this will never have two pawns with the same gender
-            if (!generated.SpouseAllowed() || generated.IsHomo())
+            //I think I also need to check if spouses are allowed for the kid's existing parent
+            bool existingParentNoSpouse = false;
+            if (other.GetMother() != null)
+            {
+                existingParentNoSpouse = !other.GetMother().SpouseAllowed();
+            }
+            else if (other.GetFather() != null)
+            {
+                existingParentNoSpouse = !other.GetFather().SpouseAllowed();
+            }
+
+            if (!generated.SpouseAllowed() || generated.IsHomo() || existingParentNoSpouse)
             {
                 if (generated.gender == Gender.Male)
                 {
