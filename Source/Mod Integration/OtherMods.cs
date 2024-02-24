@@ -71,7 +71,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), new Type[] { typeof(TraitDef) })))
                 {
-                    yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(HelperThingy));
+                    yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(TraitConversion));
                 }
                 else
                 {
@@ -81,7 +81,7 @@ namespace BetterRomance.HarmonyPatches
         }
 
         private static List<TraitDef> traits = [TraitDefOf.Gay, TraitDefOf.Bisexual, TraitDefOf.Asexual, RomanceDefOf.Straight];
-        public static bool HelperThingy(TraitSet set, TraitDef trait)
+        public static bool TraitConversion(TraitSet set, TraitDef trait)
         {
             Pawn pawn = (Pawn)AccessTools.Field(typeof(TraitSet), "pawn").GetValue(set);
             if (traits.Contains(trait))

@@ -101,7 +101,7 @@ namespace BetterRomance.HarmonyPatches
                     }
                     else if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), new Type[] { typeof(TraitDef) })))
                     {
-                        yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(OtherMod_Patches.HelperThingy));
+                        yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(OtherMod_Patches.TraitConversion));
                         nextBranch = true;
                         firstFound = true;
                     }
@@ -117,7 +117,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else if (firstFound && code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), new Type[] { typeof(TraitDef) })))
                 {
-                    yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(OtherMod_Patches.HelperThingy));
+                    yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(OtherMod_Patches.TraitConversion));
                 }
                 else
                 {
