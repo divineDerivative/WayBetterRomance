@@ -97,6 +97,10 @@ namespace BetterRomance
                 HelperClasses.pawnSettings = AccessTools.Field(PawnDef, "pawnSettings");
                 HelperClasses.AsimovGrowth = AccessTools.Field(Type.GetType("Asimov.PawnSettings,Asimov"), "hasGrowthMoments");
             }
+            if (ModsConfig.IsActive("RforReload.EdgesOfAcceptence"))
+            {
+                harmony.PatchForceLoveHate();
+            }
 
             MakeFertilityModList();
             Settings.ApplyJoySettings();

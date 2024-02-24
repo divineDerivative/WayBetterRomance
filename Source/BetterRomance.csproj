@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="Harmony\StatPart_Age.cs" />
     <Compile Include="Harmony\ThinkNode_ChancePerHour_Lovin.cs" />
+    <Compile Include="Mod Integration\PhobiaPatches.cs" />
     <Compile Include="Sex Repulsion\CharacterCardUtility.cs" />
     <Compile Include="Sex Repulsion\Comp_SexRepulsion.cs" />
     <Compile Include="CustomLoveRelationUtility.cs" />
