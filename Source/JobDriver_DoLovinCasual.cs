@@ -14,9 +14,11 @@ namespace BetterRomance
         private const float PregnancyChance = 0.05f;
         private const int ticksForEnhancer = 2750;
         private const int ticksOtherwise = 1000;
+        private int waitCount = 0;
+        private string ActorName => Actor.Name.ToStringShort;
+        private string PartnerName => Partner.Name.ToStringShort;
 
         private Building_Bed Bed => (Building_Bed)(Thing)job.GetTarget(BedInd);
-
         private Pawn Partner => (Pawn)(Thing)job.GetTarget(PartnerInd);
         private Pawn Actor => GetActor();
 
@@ -44,40 +46,76 @@ namespace BetterRomance
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
-            //Fail if bed or partner gets despawned or wasn't assigned
+            //Fail if bed gets despawned, wasn't assigned, or becomes forbidden
             this.FailOnDespawnedOrNull(BedInd);
-            this.FailOnDespawnedOrNull(PartnerInd);
-            //Fail if partner is unconscious
-            this.FailOn(() => !Partner.health.capacities.CanBeAwake);
+            this.FailOnForbidden(BedInd);
             //Reserve the bed, not claiming
             yield return Toils_Reserve.Reserve(BedInd, 2, 0);
-            //Go to assigned spot in bed
-            yield return Toils_Goto.Goto(SlotInd, PathEndMode.OnCell);
-            //Wait for partner
-            yield return new Toil
+
+            //This is to prevent immediately ending the job because the other guy hasn't started yet
+            Toil WaitForPartnerJob = new Toil
             {
-                initAction = delegate { ticksLeftThisToil = 300; },
+                defaultCompleteMode = ToilCompleteMode.Delay,
+                initAction = delegate
+                {
+                    ticksLeftThisToil = 1;
+                    if (Partner.CurJobDef == RomanceDefOf.DoLovinCasual)
+                    {
+                        LogUtil.Message($"Hookup job started for {ActorName} and {PartnerName}", true);
+                    }
+                }
+            };
+            yield return WaitForPartnerJob;
+
+            //Go to assigned spot in bed
+            Toil walkToBed = Toils_Goto.Goto(SlotInd, PathEndMode.OnCell);
+            walkToBed.AddFailCondition(() => DateUtility.FailureCheck(Partner, RomanceDefOf.DoLovinCasual));
+            yield return walkToBed;
+
+            //Wait at bed for partner
+            Toil wait = new Toil
+            {
+                initAction = delegate { ticksLeftThisToil = DateUtility.waitingTicks; },
                 tickAction = delegate
                 {
+                    //Once they've arrived, start the next toil
                     if (IsInOrByBed(Bed, Partner))
                     {
-                        ticksLeftThisToil = 0;
+                        ReadyForNextToil();
+                    }
+                    else if (ticksLeftThisToil <= 1)
+                    {
+                        //But don't wait forever
+                        if (DateUtility.DistanceFailure(Actor, Partner, ref waitCount, ref ticksLeftThisToil))
+                        {
+                            LogUtil.Message($"{ActorName} called off the hook up with {PartnerName} because they took too long to show up.", true);
+                            Partner.jobs.EndCurrentJob(JobCondition.Incompletable);
+                            Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
+                        }
                     }
                 },
-                defaultCompleteMode = ToilCompleteMode.Delay
+                defaultCompleteMode = ToilCompleteMode.Delay,
             };
+            wait.AddFailCondition(() => DateUtility.FailureCheck(Partner, RomanceDefOf.DoLovinCasual));
+            wait.AddFinishAction(() =>
+            {
+                LogUtil.Message($"{ActorName} waited {debugTicksSpentThisToil} ticks", true);
+            });
+            yield return wait;
+
             //Get in the bed
-            Toil layDown = new Toil();
-            layDown.initAction = delegate
+            Toil layDown = new Toil
             {
-                layDown.actor.pather.StopDead();
-                JobDriver curDriver = layDown.actor.jobs.curDriver;
-                curDriver.asleep = false;
-                layDown.actor.jobs.posture = PawnPosture.LayingInBed;
-            };
-            layDown.tickAction = delegate
-            {
-                Actor.GainComfortFromCellIfPossible();
+                initAction = delegate
+                {
+                    Actor.pather.StopDead();
+                    Actor.jobs.curDriver.asleep = false;
+                    Actor.jobs.posture = PawnPosture.LayingInBed;
+                },
+                tickAction = delegate
+                {
+                    Actor.GainComfortFromCellIfPossible();
+                }
             };
             yield return layDown;
 
@@ -115,6 +153,7 @@ namespace BetterRomance
                             }
                         }
                     }
+                    LogUtil.Message($"Casual lovin' started for {ActorName}", true);
                 },
                 tickAction = delegate
                 {
@@ -123,6 +162,7 @@ namespace BetterRomance
                     {
                         FleckMaker.ThrowMetaIcon(Actor.Position, Actor.Map, FleckDefOf.Heart);
                     }
+                    Actor.GainComfortFromCellIfPossible();
                     //Gain joy every tick, but only if they have a joy need
                     if (Actor.needs.joy != null)
                     {
@@ -130,10 +170,12 @@ namespace BetterRomance
                     }
                 },
                 defaultCompleteMode = ToilCompleteMode.Delay,
+                debugName = "HookupLovinToil",
             };
             //Fail if partner dies/goes down, or there's over 100 ticks left and the partner has wandered off
             loveToil.AddFailCondition(() => Partner.Dead || Partner.Downed || (ticksLeftThisToil > 100 && !IsInOrByBed(Bed, Partner)));
             yield return loveToil;
+
             //If they finish, add the appropriate memory and record events
             //Vanilla has this as a "finish action" on the previous toil, but I think it only makes sense to add this stuff if the lovin' actually... finishes
             yield return new Toil
@@ -181,10 +223,13 @@ namespace BetterRomance
                                 Messages.Message("MessagePregnancyFailed".Translate(male.Named("FATHER"), female.Named("MOTHER")) + ": " + "CombinedGenesExceedMetabolismLimits".Translate(), new LookTargets(male, female), MessageTypeDefOf.NegativeEvent);
                             }
                         }
+                        LogUtil.Message($"Pregnancy code run successfully", true);
                     }
+                    LogUtil.Message($"Hook up between {ActorName} and {PartnerName} finished successfully", true);
                 },
                 defaultCompleteMode = ToilCompleteMode.Instant,
                 socialMode = RandomSocialMode.Off,
+                debugName = "HookupFinish",
             };
         }
 

@@ -9,7 +9,6 @@ namespace BetterRomance
     public class JobDriver_JobDateLead : JobDriver
     {
         private readonly TargetIndex PartnerInd = TargetIndex.A;
-        private int ticksLeft = 20;
         private Pawn Actor => GetActor();
         private Pawn Partner => (Pawn)(Thing)job.GetTarget(PartnerInd);
         private bool IsDate => job.def == RomanceDefOf.JobDateLead;
@@ -17,12 +16,6 @@ namespace BetterRomance
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
             return true;
-        }
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Values.Look(ref ticksLeft, "ticksLeft");
         }
 
         public override RandomSocialMode DesiredSocialMode()
@@ -58,7 +51,7 @@ namespace BetterRomance
                 defaultCompleteMode = ToilCompleteMode.Delay,
                 initAction = delegate { ticksLeftThisToil = 700; },
                 tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); },
-                debugName = "DateLeadWait"
+                debugName = "DateLeadWait",
             };
             //Fail if partner is no longer capable of continuing
             toil.AddFailCondition(() => DateUtility.FailureCheck(Partner, IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow));
@@ -68,6 +61,14 @@ namespace BetterRomance
         [DebuggerHidden]
         protected override IEnumerable<Toil> MakeNewToils()
         {
+            yield return new Toil
+            {
+                defaultCompleteMode = ToilCompleteMode.Instant,
+                initAction = delegate
+                {
+                    LogUtil.Message($"Date lead job started for {Actor.Name.ToStringShort}", true);
+                },
+            };
             //Alternate goto and wait toils for each tile in path
             foreach (LocalTargetInfo target in job.targetQueueB)
             {
@@ -82,9 +83,9 @@ namespace BetterRomance
                 {
                     if (Partner.CurJobDef == (IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow))
                     {
+                        LogUtil.Message($"Date for {Actor.Name.ToStringShort} and {Partner.Name.ToStringShort} finished successfully", true);
                         Partner.jobs.EndCurrentJob(JobCondition.Succeeded);
                         Actor.jobs.EndCurrentJob(JobCondition.Succeeded);
-                        LogUtil.Message($"Date for {Actor.Name.ToStringShort} and {Partner.Name.ToStringShort} finished successfully", true);
                     }
                 }
             };

@@ -8,6 +8,8 @@ namespace BetterRomance
     public class JobDriver_LeadHookup : JobDriver
     {
         public bool successfulPass = true;
+        private const int orderedHookupInterval = 120000;
+        private int waitCount = 0;
         //This is necessary, see below
         public bool WasSuccessfulPass => successfulPass;
         private Pawn Actor => GetActor();
@@ -15,7 +17,8 @@ namespace BetterRomance
         private Building_Bed TargetBed => TargetThingB as Building_Bed;
         private TargetIndex TargetPawnIndex => TargetIndex.A;
         private bool Ordered => job.def == RomanceDefOf.OrderedHookup;
-        private const int orderedHookupInterval = 120000;
+        private string ActorName => Actor.Name.ToStringShort;
+        private string TargetName => TargetPawn.Name.ToStringShort;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -38,8 +41,23 @@ namespace BetterRomance
             this.FailOnDespawnedNullOrForbidden(TargetPawnIndex);
             //Walk to the target
             Toil walkToTarget = Toils_Interpersonal.GotoInteractablePosition(TargetPawnIndex);
+            walkToTarget.AddPreInitAction(delegate
+            {
+                ticksLeftThisToil = DateUtility.walkingTicks;
+                LogUtil.Error($"{ActorName} is going to ask {TargetName} to hook up", true);
+            });
+            walkToTarget.AddPreTickAction(delegate
+            {
+                if (ticksLeftThisToil <= 1)
+                {
+                    if (DateUtility.DistanceFailure(Actor, TargetPawn, ref waitCount, ref ticksLeftThisToil))
+                    {
+                        LogUtil.Message($"{ActorName} gave up asking {TargetName} to hook up because it took too long to find them, {debugTicksSpentThisToil} ticks", true);
+                        Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
+                    }
+                }
+            });
             walkToTarget.socialMode = RandomSocialMode.Off;
-
             yield return walkToTarget;
 
             //Wait if needed
@@ -76,6 +94,7 @@ namespace BetterRomance
                     {
                         Actor.CheckForComp<Comp_PartnerList>().orderedHookupTick = Find.TickManager.TicksGame + orderedHookupInterval;
                     }
+                    LogUtil.Message($"It took {Find.TickManager.TicksGame - startTick} ticks for {ActorName} to walk to {TargetName}", true);
                 },
             };
             //Fail if target is dead or downed
@@ -97,6 +116,7 @@ namespace BetterRomance
                         FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.Heart);
                         Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.InitiatedLovin, pawn.Named(HistoryEventArgsNames.Doer)));
                         list.Add(RomanceDefOf.HookupSucceeded);
+                        LogUtil.Message($"{TargetName} agreed to hook up with {ActorName}", true);
                         //Send message if job was ordered
                         if (Ordered)
                         {
@@ -116,6 +136,7 @@ namespace BetterRomance
                         {
                             comp.Hookup.list.Remove(TargetPawn);
                         }
+                        LogUtil.Message($"{TargetName} did not agree to hook up with {ActorName}: {rejectReason}", true);
                         //Send message if job was ordered
                         if (Ordered)
                         {
@@ -151,6 +172,7 @@ namespace BetterRomance
                         //By the time this delegate function runs, the actual success has been determined, so if it wasn't successful, end the toil
                         if (!WasSuccessfulPass)
                         {
+                            Actor.jobs.EndCurrentJob(JobCondition.Succeeded);
                             return;
                         }
                         //If actually successful

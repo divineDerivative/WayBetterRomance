@@ -9,6 +9,10 @@ namespace BetterRomance
 {
     public static class DateUtility
     {
+        //45 mins
+        internal const int walkingTicks = 1875;
+        //30 min
+        internal const int waitingTicks = 1250;
         public static bool CanInteractWith(Pawn pawn, Thing t)
         {
             if (!pawn.CanReserve(t))
@@ -143,28 +147,45 @@ namespace BetterRomance
         {
             if (Settings.debugLogging)
             {
+                string activity = job == RomanceDefOf.DoLovinCasual ? "Hook up" : job.defName.Contains("Hangout") ? "Hangout" : "Date";
                 if (!Partner.Spawned)
                 {
-                    LogUtil.Message($"Date failed because {Partner.Name.ToStringShort} despawned", true);
+                    LogUtil.Message($"{activity} failed because {Partner.Name.ToStringShort} despawned", true);
                 }
                 else if (Partner.Dead)
                 {
-                    LogUtil.Message($"Date failed because {Partner.Name.ToStringShort} is dead", true);
+                    LogUtil.Message($"{activity} failed because {Partner.Name.ToStringShort} is dead", true);
                 }
                 else if (Partner.Downed)
                 {
-                    LogUtil.Message($"Date failed because {Partner.Name.ToStringShort} is downed", true);
+                    LogUtil.Message($"{activity} failed because {Partner.Name.ToStringShort} is downed", true);
                 }
                 else if (PawnUtility.WillSoonHaveBasicNeed(Partner))
                 {
-                    LogUtil.Message($"Date ended early because {Partner.Name.ToStringShort} needs to eat or sleep", true);
+                    LogUtil.Message($"{activity} ended early because {Partner.Name.ToStringShort} needs to eat or sleep", true);
                 }
                 else if (Partner.CurJob?.def != job)
                 {
-                    LogUtil.Message($"Date failed because {Partner.Name.ToStringShort} stopped their job", true);
+                    LogUtil.Message($"{activity} failed because {Partner.Name.ToStringShort} stopped their job", true);
                 }
             }
             return !Partner.Spawned || Partner.Dead || Partner.Downed || PawnUtility.WillSoonHaveBasicNeed(Partner) || Partner.CurJob?.def != job;
+        }
+
+        public static bool DistanceFailure(Pawn pawn, Pawn TargetPawn, ref int waitCount, ref int ticksLeft)
+        {
+            //If time has run out but they're within 10 tiles, add some extra time
+            if (pawn.Position.InHorDistOf(TargetPawn.Position, 10f))
+            {
+                ticksLeft += 100;
+                //But don't add time indefinitely
+                waitCount++;
+                if (waitCount <= 5 || (pawn.Position.InHorDistOf(TargetPawn.Position, 5f) && waitCount < 8))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

@@ -10,12 +10,14 @@ namespace BetterRomance
     public class JobDriver_ProposeDate : JobDriver
     {
         private bool successfulPass = true;
+        private int waitCount = 0;
         public bool WasSuccessfulPass => successfulPass;
         private Pawn Actor => GetActor();
         private Pawn TargetPawn => TargetThingA as Pawn;
         private TargetIndex TargetPawnIndex => TargetIndex.A;
         private bool IsDate => job.def == RomanceDefOf.ProposeDate;
-        private const int ticksToFail = 1000;
+        private string ActorName => Actor.Name.ToStringShort;
+        private string TargetName => TargetName;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -243,25 +245,28 @@ namespace BetterRomance
             this.FailOnDespawnedNullOrForbidden(TargetPawnIndex);
             //Walk to the target
             Toil walkToTarget = Toils_Interpersonal.GotoInteractablePosition(TargetPawnIndex);
-            //attempt to make job fail if it takes too long to walk to target
-            //This just makes them stand in place after one attempt to reach the target and then times out :(
-            //walkToTarget.initAction = delegate
-            //{
-            //    ticksLeftThisToil = ticksToFail;
-            //};
-            //walkToTarget.tickAction = delegate
-            //{
-            //    if (ticksLeftThisToil <= 1)
-            //    {
-            //        Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
-            //    }
-            //};
+            walkToTarget.AddPreInitAction(delegate
+            {
+                ticksLeftThisToil = DateUtility.walkingTicks;
+                LogUtil.Error($"{ActorName} is going to ask {TargetName} {(IsDate ? "on a date" : "to hang out")}", true);
+            });
+            walkToTarget.AddPreTickAction(delegate
+            {
+                //Fail if it takes too long to walk to target
+                if (ticksLeftThisToil <= 1)
+                {
+                    if (DateUtility.DistanceFailure(Actor, TargetPawn, ref waitCount, ref ticksLeftThisToil))
+                    {
+                        LogUtil.Message($"{ActorName} gave up asking {TargetName} {(IsDate ? "for a date" : "to hang out")} because it took too long to find them", true);
+                        Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
+                    }
+                }
+            });
             walkToTarget.socialMode = RandomSocialMode.Off;
             yield return walkToTarget;
 
             //Wait if needed
             Toil wait = Toils_Interpersonal.WaitToBeAbleToInteract(pawn);
-            wait.socialMode = RandomSocialMode.Off;
             yield return wait;
 
             //Start new toil
@@ -293,6 +298,7 @@ namespace BetterRomance
                         //Make hearts and add correct string to the log
                         FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, IsDate ? FleckDefOf.Heart : RomanceDefOf.FriendHeart);
                         list.Add(IsDate ? RomanceDefOf.DateSucceeded : RomanceDefOf.HangoutSucceeded);
+                        LogUtil.Message($"{TargetName} agreed to {(IsDate ? "a date" : "hang out")} with {ActorName}", true);
                     }
                     else
                     {
@@ -302,6 +308,7 @@ namespace BetterRomance
                         TargetPawn.needs.mood.thoughts.memories.TryGainMemory(IsDate ? RomanceDefOf.FailedDateAttemptOnMe : RomanceDefOf.FailedHangoutAttemptOnMe, Actor);
                         list.Add(IsDate ? RomanceDefOf.DateFailed : RomanceDefOf.HangoutFailed);
                         Actor.GetComp<Comp_PartnerList>().Date.list.Remove(TargetPawn);
+                        LogUtil.Message($"{TargetName} did not agree to {(IsDate ? "a date" : "hang out")} with {ActorName}", true);
                     }
                     //Add "asked on a date" to the log, with the result
                     Find.PlayLog.Add(new PlayLogEntry_Interaction(IsDate ? RomanceDefOf.AskedForDate : RomanceDefOf.AskedForHangout, pawn, TargetPawn, list));
@@ -332,8 +339,8 @@ namespace BetterRomance
                             return;
                         }
                         //Give the jobs we just created
-                        Actor.jobs.jobQueue.EnqueueFirst(leadJob);
-                        TargetPawn.jobs.jobQueue.EnqueueFirst(followJob);
+                        Actor.jobs.jobQueue.EnqueueFirst(leadJob, JobTag.SatisfyingNeeds);
+                        TargetPawn.jobs.jobQueue.EnqueueFirst(followJob, JobTag.SatisfyingNeeds);
                         //Stop the current job
                         TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                         Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);

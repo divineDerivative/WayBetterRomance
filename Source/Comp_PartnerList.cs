@@ -2,6 +2,7 @@
 using RimWorld;
 using System.Collections.Generic;
 using Verse;
+using Verse.AI;
 
 namespace BetterRomance
 {
@@ -12,6 +13,7 @@ namespace BetterRomance
         public CompListVars Hookup;
         private const int tickInterval = 120000;
         public int orderedHookupTick = -1;
+        private const float distanceLimit = 100f;
         public bool IsOrderedHookupOnCooldown => orderedHookupTick > Find.TickManager.TicksGame;
 
         public override void Initialize(CompProperties props)
@@ -57,10 +59,27 @@ namespace BetterRomance
                     {
                         continue;
                     }
+                    //If p is more than limit cells away, continue
+                    if (!p.Position.InHorDistOf(Pawn.Position, distanceLimit))
+                    {
+                        continue;
+                    }
+                    //Need to get the path to p and use the length, rather than 'as the crow flies' distance
                     if (p.IsFree(hookup ? RomanticActivityType.CasualHookup : RomanticActivityType.Date, out _) && !p.IsForbidden(Pawn))
                     {
-                        partner = p;
-                        break;
+                        //The path goes directly from cell to cell; the next cell is always one of the 8 surrounding the previous
+                        //So the number of nodes can be used as a shortcut for the length of the path
+                        //Horizontal/vertical moves are 1f in length, diagonal moves are 1.4142f (sqrt of 2) in length, so the actual distance the path covers will always be >= the number of nodes
+                        PawnPath path = Pawn.Map.pathFinder.FindPath(Pawn.Position, p.Position, Pawn, PathEndMode.Touch);
+                        //If the length of the path is longer than the limit, continue
+                        if (path.NodesLeftCount <= distanceLimit)
+                        {
+                            partner = p;
+                            //Since we're not actually using the path for anything, get rid of it
+                            path.Dispose();
+                            break;
+                        }
+                        path.Dispose();
                     }
                 }
             }

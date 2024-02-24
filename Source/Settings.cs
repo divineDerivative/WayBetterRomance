@@ -63,6 +63,7 @@ namespace BetterRomance
             Scribe_Values.Look(ref fertilityMod, "fertilityMod", "None");
             Scribe_Values.Look(ref joyOnSlaves, "joyOnSlaves", false);
             Scribe_Values.Look(ref joyOnPrisoners, "joyOnPrisoners", false);
+            Scribe_Values.Look(ref debugLogging, "debugLogging", false);
         }
 
         public static void ApplyJoySettings()

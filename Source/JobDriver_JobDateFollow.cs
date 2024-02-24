@@ -51,6 +51,7 @@ namespace BetterRomance
                 },
                 //Gain joy
                 tickAction = delegate { DateUtility.DateTickAction(Actor, IsDate); },
+                debugName = "DateFollowPartner",
             };
             //Fail if partner despawns, dies, or stops the lead job
             FollowPartner.AddFailCondition(() => DateUtility.FailureCheck(Partner, IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead));
