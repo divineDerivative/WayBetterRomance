@@ -80,7 +80,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        private static List<TraitDef> traits = [TraitDefOf.Gay, TraitDefOf.Bisexual, TraitDefOf.Asexual, RomanceDefOf.Straight];
+        private static List<TraitDef> traits = new List<TraitDef> { TraitDefOf.Gay, TraitDefOf.Bisexual, TraitDefOf.Asexual, RomanceDefOf.Straight };
         public static bool TraitConversion(TraitSet set, TraitDef trait)
         {
             Pawn pawn = (Pawn)AccessTools.Field(typeof(TraitSet), "pawn").GetValue(set);

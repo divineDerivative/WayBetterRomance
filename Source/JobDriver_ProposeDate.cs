@@ -89,77 +89,71 @@ namespace BetterRomance
         }
 
         //No idea how this works
+        //Look at WalkPathFinder.TryFindWalkPath; I suspect this was based on that, so maybe there's some improvements that have been made in the mean time
         private bool TryFindUnforbiddenDatePath(Pawn p1, Pawn p2, IntVec3 root, out List<IntVec3> result)
         {
             int StartRadialIndex = GenRadial.NumCellsInRadius(14f);
             int EndRadialIndex = GenRadial.NumCellsInRadius(2f);
             int RadialIndexStride = 3;
-            List<IntVec3> intVec3s = new List<IntVec3> { root };
-            IntVec3 intVec3 = root;
+            List<IntVec3> cellList = new List<IntVec3>() { root };
+            IntVec3 statCell = root;
             for (int i = 0; i < 8; i++)
             {
-                IntVec3 invalid = IntVec3.Invalid;
+                IntVec3 tempCell = IntVec3.Invalid;
                 float single1 = -1f;
                 for (int j = StartRadialIndex; j > EndRadialIndex; j -= RadialIndexStride)
                 {
-                    IntVec3 radialPattern = intVec3 + GenRadial.RadialPattern[j];
-                    if (!radialPattern.InBounds(p1.Map) || !radialPattern.Standable(p1.Map) ||
-                        radialPattern.IsForbidden(p1) || radialPattern.IsForbidden(p2) ||
-                        radialPattern.GetTerrain(p1.Map).avoidWander ||
-                        !GenSight.LineOfSight(intVec3, radialPattern, p1.Map) || radialPattern.Roofed(p1.Map) ||
-                        PawnUtility.KnownDangerAt(radialPattern, p1.Map, p1) ||
-                        PawnUtility.KnownDangerAt(radialPattern, p1.Map, p2))
+                    IntVec3 nextCell = statCell + GenRadial.RadialPattern[j];
+                    if (nextCell.InBounds(p1.Map) && nextCell.Standable(p1.Map) && !nextCell.IsForbidden(p1)/* && !radialPattern.IsForbidden(p2)*/ && !nextCell.GetTerrain(p1.Map).avoidWander && GenSight.LineOfSight(statCell, nextCell, p1.Map) && !nextCell.Roofed(p1.Map) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p1) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p2))
                     {
-                        continue;
-                    }
-
-                    float lengthManhattan = 10000f;
-                    foreach (IntVec3 vec3 in intVec3s)
-                    {
-                        lengthManhattan += (vec3 - radialPattern).LengthManhattan;
-                    }
-
-                    float lengthManhattan1 = (radialPattern - root).LengthManhattan;
-                    if (lengthManhattan1 > 40f)
-                    {
-                        lengthManhattan *= Mathf.InverseLerp(70f, 40f, lengthManhattan1);
-                    }
-
-                    if (intVec3s.Count >= 2)
-                    {
-                        IntVec3 item = intVec3s[intVec3s.Count - 1] - intVec3s[intVec3s.Count - 2];
-                        float angleFlat = item.AngleFlat;
-                        float angleFlat1 = (radialPattern - intVec3).AngleFlat;
-                        float single;
-                        if (angleFlat1 <= angleFlat)
+                        float lengthManhattan = 10000f;
+                        foreach (IntVec3 vec3 in cellList)
                         {
-                            angleFlat -= 360f;
-                            single = angleFlat1 - angleFlat;
-                        }
-                        else
-                        {
-                            single = angleFlat1 - angleFlat;
+                            lengthManhattan += (vec3 - nextCell).LengthManhattan;
                         }
 
-                        if (single > 110f)
+                        float lengthManhattan1 = (nextCell - root).LengthManhattan;
+                        if (lengthManhattan1 > 40f)
                         {
-                            lengthManhattan *= 0.01f;
+                            lengthManhattan *= Mathf.InverseLerp(70f, 40f, lengthManhattan1);
                         }
-                    }
 
-                    if (intVec3s.Count >= 4 &&
-                        (intVec3 - root).LengthManhattan < (radialPattern - root).LengthManhattan)
-                    {
-                        lengthManhattan *= 1E-05f;
-                    }
+                        if (cellList.Count >= 2)
+                        {
+                            IntVec3 item = cellList[cellList.Count - 1] - cellList[cellList.Count - 2];
+                            float angleFlat = item.AngleFlat;
+                            float angleFlat1 = (nextCell - statCell).AngleFlat;
+                            float single;
+                            if (angleFlat1 <= angleFlat)
+                            {
+                                angleFlat -= 360f;
+                                single = angleFlat1 - angleFlat;
+                            }
+                            else
+                            {
+                                single = angleFlat1 - angleFlat;
+                            }
 
-                    if (!(lengthManhattan > single1))
-                    {
-                        continue;
-                    }
+                            if (single > 110f)
+                            {
+                                lengthManhattan *= 0.01f;
+                            }
+                        }
 
-                    invalid = radialPattern;
-                    single1 = lengthManhattan;
+                        if (cellList.Count >= 4 &&
+                            (statCell - root).LengthManhattan < (nextCell - root).LengthManhattan)
+                        {
+                            lengthManhattan *= 1E-05f;
+                        }
+
+                        if (!(lengthManhattan > single1))
+                        {
+                            continue;
+                        }
+
+                        tempCell = nextCell;
+                        single1 = lengthManhattan;
+                    }
                 }
 
                 if (single1 < 0f)
@@ -168,12 +162,12 @@ namespace BetterRomance
                     return false;
                 }
 
-                intVec3s.Add(invalid);
-                intVec3 = invalid;
+                cellList.Add(tempCell);
+                statCell = tempCell;
             }
 
-            intVec3s.Add(root);
-            result = intVec3s;
+            cellList.Add(root);
+            result = cellList;
             return true;
         }
 
