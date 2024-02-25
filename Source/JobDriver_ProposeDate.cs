@@ -264,49 +264,45 @@ namespace BetterRomance
             yield return wait;
 
             //Start new toil
-            Toil askOut = new Toil
+            Toil askOut = Toils_General.Do(delegate
             {
-                defaultCompleteMode = ToilCompleteMode.Delay,
                 //Make heart fleck
-                initAction = delegate
-                {
-                    ticksLeftThisToil = 50;
-                    FleckMaker.ThrowMetaIcon(GetActor().Position, GetActor().Map, IsDate ? FleckDefOf.Heart : RomanceDefOf.FriendHeart);
-                },
-            };
+                ticksLeftThisToil = 50;
+                FleckMaker.ThrowMetaIcon(GetActor().Position, GetActor().Map, IsDate ? FleckDefOf.Heart : RomanceDefOf.FriendHeart);
+            });
+            askOut.defaultCompleteMode = ToilCompleteMode.Delay;
+            
             //Fail if target is downed or dead
             askOut.AddFailCondition(() => !IsTargetPawnOkay());
             yield return askOut;
 
             //Start new toil
-            Toil awaitResponse = new Toil
+            Toil awaitResponse = ToilMaker.MakeToil("AwaitResponse");
+            awaitResponse.defaultCompleteMode = ToilCompleteMode.Instant;
+            awaitResponse.initAction = delegate
             {
-                defaultCompleteMode = ToilCompleteMode.Instant,
-                initAction = delegate
+                List<RulePackDef> list = new List<RulePackDef>();
+                successfulPass = DoesTargetPawnAcceptDate();
+                //Make heart or ! fleck depending on success
+                if (successfulPass)
                 {
-                    List<RulePackDef> list = new List<RulePackDef>();
-                    successfulPass = DoesTargetPawnAcceptDate();
-                    //Make heart or ! fleck depending on success
-                    if (successfulPass)
-                    {
-                        //Make hearts and add correct string to the log
-                        FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, IsDate ? FleckDefOf.Heart : RomanceDefOf.FriendHeart);
-                        list.Add(IsDate ? RomanceDefOf.DateSucceeded : RomanceDefOf.HangoutSucceeded);
-                        LogUtil.Message($"{TargetName} agreed to {(IsDate ? "a date" : "hang out")} with {ActorName}", true);
-                    }
-                    else
-                    {
-                        //Make ! mote, add rebuffed memories, and add correct string to the log
-                        FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.IncapIcon);
-                        Actor.needs.mood.thoughts.memories.TryGainMemory(IsDate ? RomanceDefOf.RebuffedMyDateAttempt : RomanceDefOf.RebuffedMyHangoutAttempt, TargetPawn);
-                        TargetPawn.needs.mood.thoughts.memories.TryGainMemory(IsDate ? RomanceDefOf.FailedDateAttemptOnMe : RomanceDefOf.FailedHangoutAttemptOnMe, Actor);
-                        list.Add(IsDate ? RomanceDefOf.DateFailed : RomanceDefOf.HangoutFailed);
-                        Actor.GetComp<Comp_PartnerList>().Date.list.Remove(TargetPawn);
-                        LogUtil.Message($"{TargetName} did not agree to {(IsDate ? "a date" : "hang out")} with {ActorName}", true);
-                    }
-                    //Add "asked on a date" to the log, with the result
-                    Find.PlayLog.Add(new PlayLogEntry_Interaction(IsDate ? RomanceDefOf.AskedForDate : RomanceDefOf.AskedForHangout, pawn, TargetPawn, list));
+                    //Make hearts and add correct string to the log
+                    FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, IsDate ? FleckDefOf.Heart : RomanceDefOf.FriendHeart);
+                    list.Add(IsDate ? RomanceDefOf.DateSucceeded : RomanceDefOf.HangoutSucceeded);
+                    LogUtil.Message($"{TargetName} agreed to {(IsDate ? "a date" : "hang out")} with {ActorName}", true);
                 }
+                else
+                {
+                    //Make ! mote, add rebuffed memories, and add correct string to the log
+                    FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.IncapIcon);
+                    Actor.needs.mood.thoughts.memories.TryGainMemory(IsDate ? RomanceDefOf.RebuffedMyDateAttempt : RomanceDefOf.RebuffedMyHangoutAttempt, TargetPawn);
+                    TargetPawn.needs.mood.thoughts.memories.TryGainMemory(IsDate ? RomanceDefOf.FailedDateAttemptOnMe : RomanceDefOf.FailedHangoutAttemptOnMe, Actor);
+                    list.Add(IsDate ? RomanceDefOf.DateFailed : RomanceDefOf.HangoutFailed);
+                    Actor.GetComp<Comp_PartnerList>().Date.list.Remove(TargetPawn);
+                    LogUtil.Message($"{TargetName} did not agree to {(IsDate ? "a date" : "hang out")} with {ActorName}", true);
+                }
+                //Add "asked on a date" to the log, with the result
+                Find.PlayLog.Add(new PlayLogEntry_Interaction(IsDate ? RomanceDefOf.AskedForDate : RomanceDefOf.AskedForHangout, pawn, TargetPawn, list));
             };
             //Fails if target doesn't agree
             awaitResponse.AddFailCondition(() => !WasSuccessfulPass);
@@ -315,30 +311,28 @@ namespace BetterRomance
             if (WasSuccessfulPass)
             {
                 //Start new toil
-                yield return new Toil
+                Toil makeJobs = ToilMaker.MakeToil();
+                makeJobs.defaultCompleteMode = ToilCompleteMode.Instant;
+                makeJobs.initAction = delegate
                 {
-                    defaultCompleteMode = ToilCompleteMode.Instant,
-                    initAction = delegate
+                    //By the time this delegate function runs, the actual success has been determined, so if it wasn't successful, end the toil
+                    if (!WasSuccessfulPass)
                     {
-                        //By the time this delegate function runs, the actual success has been determined, so if it wasn't successful, end the toil
-                        if (!WasSuccessfulPass)
-                        {
-                            Actor.jobs.EndCurrentJob(JobCondition.Succeeded);
-                            return;
-                        }
-                        //If no date activities were found, end the toil
-                        if (!TryGetDateJobs(out Job leadJob, out Job followJob))
-                        {
-                            Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
-                            return;
-                        }
-                        //Give the jobs we just created
-                        Actor.jobs.jobQueue.EnqueueFirst(leadJob, JobTag.SatisfyingNeeds);
-                        TargetPawn.jobs.jobQueue.EnqueueFirst(followJob, JobTag.SatisfyingNeeds);
-                        //Stop the current job
-                        TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
-                        Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
+                        Actor.jobs.EndCurrentJob(JobCondition.Succeeded);
+                        return;
                     }
+                    //If no date activities were found, end the toil
+                    if (!TryGetDateJobs(out Job leadJob, out Job followJob))
+                    {
+                        Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
+                        return;
+                    }
+                    //Give the jobs we just created
+                    Actor.jobs.jobQueue.EnqueueFirst(leadJob, JobTag.SatisfyingNeeds);
+                    TargetPawn.jobs.jobQueue.EnqueueFirst(followJob, JobTag.SatisfyingNeeds);
+                    //Stop the current job
+                    TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
+                    Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                 };
             }
         }
