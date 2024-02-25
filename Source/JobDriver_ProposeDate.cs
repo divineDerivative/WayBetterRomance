@@ -17,7 +17,7 @@ namespace BetterRomance
         private TargetIndex TargetPawnIndex => TargetIndex.A;
         private bool IsDate => job.def == RomanceDefOf.ProposeDate;
         private string ActorName => Actor.Name.ToStringShort;
-        private string TargetName => TargetName;
+        private string TargetName => TargetPawn.Name.ToStringShort;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {

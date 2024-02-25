@@ -76,10 +76,10 @@ namespace BetterRomance
                         {
                             partner = p;
                             //Since we're not actually using the path for anything, get rid of it
-                            path.Dispose();
+                            path?.Dispose();
                             break;
                         }
-                        path.Dispose();
+                        path?.Dispose();
                     }
                 }
             }
