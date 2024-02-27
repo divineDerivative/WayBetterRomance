@@ -16,4 +16,27 @@ namespace BetterRomance.HarmonyPatches
             return false;
         }
     }
+
+    //Respect sex repulsion rules
+    [HarmonyPatch(typeof(PawnRelationWorker_Fiance), nameof(PawnRelationWorker_Fiance.GenerationChance))]
+    public static class PawnRelationWorker_Fiance_GenerationChance
+    {
+        public static void Postfix(Pawn generated, Pawn other, PawnGenerationRequest request, ref float __result)
+        {
+            if (__result == 0f)
+            {
+                return;
+            }
+            if (generated.IsAsexual() && generated.AsexualRating() < 0.2f && !other.IsAsexual())
+            {
+                __result = 0f;
+                return;
+            }
+            if (other.IsAsexual() && other.AsexualRating() < 0.2f && !generated.IsAsexual())
+            {
+                __result = 0f;
+                return;
+            }
+        }
+    }
 }

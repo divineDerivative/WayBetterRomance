@@ -82,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Harmony\PawnRelationWorker_Spouse.cs" />
     <Compile Include="Harmony\StatPart_Age.cs" />
     <Compile Include="Harmony\ThinkNode_ChancePerHour_Lovin.cs" />
     <Compile Include="Mod Integration\PhobiaPatches.cs" />
