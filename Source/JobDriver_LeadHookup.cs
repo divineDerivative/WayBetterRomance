@@ -180,6 +180,7 @@ namespace BetterRomance
                     TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                     Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);        
                 };
+                yield return makeJobs;
             }
         }
     }
