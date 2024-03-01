@@ -60,7 +60,7 @@ namespace BetterRomance
                         dateFollowJob = JobMaker.MakeJob(IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow);
                         dateFollowJob.locomotionUrgency = LocomotionUrgency.Amble;
                         dateFollowJob.targetA = Actor;
-
+                        LogUtil.Message($"Jobs created for {ActorName} and {TargetName}", true);
                         return true;
                     }
                 }
@@ -96,15 +96,15 @@ namespace BetterRomance
             int EndRadialIndex = GenRadial.NumCellsInRadius(2f);
             int RadialIndexStride = 3;
             List<IntVec3> cellList = new List<IntVec3>() { root };
-            IntVec3 statCell = root;
+            IntVec3 startCell = root;
             for (int i = 0; i < 8; i++)
             {
                 IntVec3 tempCell = IntVec3.Invalid;
                 float single1 = -1f;
                 for (int j = StartRadialIndex; j > EndRadialIndex; j -= RadialIndexStride)
                 {
-                    IntVec3 nextCell = statCell + GenRadial.RadialPattern[j];
-                    if (nextCell.InBounds(p1.Map) && nextCell.Standable(p1.Map) && !nextCell.IsForbidden(p1)/* && !radialPattern.IsForbidden(p2)*/ && !nextCell.GetTerrain(p1.Map).avoidWander && GenSight.LineOfSight(statCell, nextCell, p1.Map) && !nextCell.Roofed(p1.Map) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p1) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p2))
+                    IntVec3 nextCell = startCell + GenRadial.RadialPattern[j];
+                    if (nextCell.InBounds(p1.Map) && nextCell.Standable(p1.Map) && !nextCell.IsForbidden(p1) && !nextCell.IsForbidden(p2) && !nextCell.GetTerrain(p1.Map).avoidWander && GenSight.LineOfSight(startCell, nextCell, p1.Map) && !nextCell.Roofed(p1.Map) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p1) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p2))
                     {
                         float lengthManhattan = 10000f;
                         foreach (IntVec3 vec3 in cellList)
@@ -122,7 +122,7 @@ namespace BetterRomance
                         {
                             IntVec3 item = cellList[cellList.Count - 1] - cellList[cellList.Count - 2];
                             float angleFlat = item.AngleFlat;
-                            float angleFlat1 = (nextCell - statCell).AngleFlat;
+                            float angleFlat1 = (nextCell - startCell).AngleFlat;
                             float single;
                             if (angleFlat1 <= angleFlat)
                             {
@@ -141,7 +141,7 @@ namespace BetterRomance
                         }
 
                         if (cellList.Count >= 4 &&
-                            (statCell - root).LengthManhattan < (nextCell - root).LengthManhattan)
+                            (startCell - root).LengthManhattan < (nextCell - root).LengthManhattan)
                         {
                             lengthManhattan *= 1E-05f;
                         }
@@ -158,12 +158,13 @@ namespace BetterRomance
 
                 if (single1 < 0f)
                 {
+                    LogUtil.Message($"Unable to find a path for {ActorName} and {TargetName}", true);
                     result = null;
                     return false;
                 }
 
                 cellList.Add(tempCell);
-                statCell = tempCell;
+                startCell = tempCell;
             }
 
             cellList.Add(root);
@@ -242,7 +243,7 @@ namespace BetterRomance
             walkToTarget.AddPreInitAction(delegate
             {
                 ticksLeftThisToil = DateUtility.walkingTicks;
-                LogUtil.Error($"{ActorName} is going to ask {TargetName} {(IsDate ? "on a date" : "to hang out")}", true);
+                LogUtil.Message($"{ActorName} is going to ask {TargetName} {(IsDate ? "on a date" : "to hang out")}", true);
             });
             walkToTarget.AddPreTickAction(delegate
             {
@@ -269,6 +270,7 @@ namespace BetterRomance
                 //Make heart fleck
                 ticksLeftThisToil = 50;
                 FleckMaker.ThrowMetaIcon(GetActor().Position, GetActor().Map, IsDate ? FleckDefOf.Heart : RomanceDefOf.FriendHeart);
+                LogUtil.Message($"It took {Find.TickManager.TicksGame - startTick} ticks for {ActorName} to walk to {TargetName}", true);
             });
             askOut.defaultCompleteMode = ToilCompleteMode.Delay;
             
@@ -324,6 +326,7 @@ namespace BetterRomance
                     //If no date activities were found, end the toil
                     if (!TryGetDateJobs(out Job leadJob, out Job followJob))
                     {
+                        LogUtil.Message($"Unable to create jobs for {(IsDate ? "date" : "hang out")}", true);
                         Actor.jobs.EndCurrentJob(JobCondition.Incompletable);
                         return;
                     }
@@ -333,6 +336,7 @@ namespace BetterRomance
                     //Stop the current job
                     TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                     Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
+                    LogUtil.Message($"JobDriver_ProposeDate finished", true);
                 };
                 yield return makeJobs;
             }

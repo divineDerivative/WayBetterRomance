@@ -44,7 +44,7 @@ namespace BetterRomance
             walkToTarget.AddPreInitAction(delegate
             {
                 ticksLeftThisToil = DateUtility.walkingTicks;
-                LogUtil.Error($"{ActorName} is going to ask {TargetName} to hook up", true);
+                LogUtil.Message($"{ActorName} is going to ask {TargetName} to hook up", true);
             });
             walkToTarget.AddPreTickAction(delegate
             {
