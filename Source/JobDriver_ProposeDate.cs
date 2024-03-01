@@ -95,76 +95,77 @@ namespace BetterRomance
             int StartRadialIndex = GenRadial.NumCellsInRadius(14f);
             int EndRadialIndex = GenRadial.NumCellsInRadius(2f);
             int RadialIndexStride = 3;
-            List<IntVec3> cellList = new List<IntVec3>() { root };
-            IntVec3 startCell = root;
+            List<IntVec3> cellList = new List<IntVec3> { root };
+            IntVec3 currentCell = root;
             for (int i = 0; i < 8; i++)
             {
                 IntVec3 tempCell = IntVec3.Invalid;
-                float single1 = -1f;
+                float tempDistance = -1f;
                 for (int j = StartRadialIndex; j > EndRadialIndex; j -= RadialIndexStride)
                 {
-                    IntVec3 nextCell = startCell + GenRadial.RadialPattern[j];
-                    if (nextCell.InBounds(p1.Map) && nextCell.Standable(p1.Map) && !nextCell.IsForbidden(p1) && !nextCell.IsForbidden(p2) && !nextCell.GetTerrain(p1.Map).avoidWander && GenSight.LineOfSight(startCell, nextCell, p1.Map) && !nextCell.Roofed(p1.Map) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p1) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p2))
+                    IntVec3 nextCell = currentCell + GenRadial.RadialPattern[j];
+                    if (!nextCell.InBounds(p1.Map) || !nextCell.Standable(p1.Map) ||
+                        nextCell.IsForbidden(p1) || nextCell.IsForbidden(p2) ||
+                        nextCell.GetTerrain(p1.Map).avoidWander ||
+                        !GenSight.LineOfSight(currentCell, nextCell, p1.Map) || nextCell.Roofed(p1.Map) ||
+                        PawnUtility.KnownDangerAt(nextCell, p1.Map, p1) ||
+                        PawnUtility.KnownDangerAt(nextCell, p1.Map, p2))
                     {
-                        float lengthManhattan = 10000f;
-                        foreach (IntVec3 vec3 in cellList)
-                        {
-                            lengthManhattan += (vec3 - nextCell).LengthManhattan;
-                        }
-
-                        float lengthManhattan1 = (nextCell - root).LengthManhattan;
-                        if (lengthManhattan1 > 40f)
-                        {
-                            lengthManhattan *= Mathf.InverseLerp(70f, 40f, lengthManhattan1);
-                        }
-
-                        if (cellList.Count >= 2)
-                        {
-                            IntVec3 item = cellList[cellList.Count - 1] - cellList[cellList.Count - 2];
-                            float angleFlat = item.AngleFlat;
-                            float angleFlat1 = (nextCell - startCell).AngleFlat;
-                            float single;
-                            if (angleFlat1 <= angleFlat)
-                            {
-                                angleFlat -= 360f;
-                                single = angleFlat1 - angleFlat;
-                            }
-                            else
-                            {
-                                single = angleFlat1 - angleFlat;
-                            }
-
-                            if (single > 110f)
-                            {
-                                lengthManhattan *= 0.01f;
-                            }
-                        }
-
-                        if (cellList.Count >= 4 &&
-                            (startCell - root).LengthManhattan < (nextCell - root).LengthManhattan)
-                        {
-                            lengthManhattan *= 1E-05f;
-                        }
-
-                        if (!(lengthManhattan > single1))
-                        {
-                            continue;
-                        }
-
-                        tempCell = nextCell;
-                        single1 = lengthManhattan;
+                        continue;
                     }
+                    float score = 10000f;
+                    foreach (IntVec3 vec3 in cellList)
+                    {
+                        score += (vec3 - nextCell).LengthManhattan;
+                    }
+                    float distanceFromRoot = (nextCell - root).LengthManhattan;
+                    if (distanceFromRoot > 40f)
+                    {
+                        score *= Mathf.InverseLerp(70f, 40f, distanceFromRoot);
+                    }
+
+                    if (cellList.Count >= 2)
+                    {
+                        IntVec3 item = cellList[cellList.Count - 1] - cellList[cellList.Count - 2];
+                        float angleFlat = item.AngleFlat;
+                        float angleFlat1 = (nextCell - currentCell).AngleFlat;
+                        float single;
+                        if (angleFlat1 <= angleFlat)
+                        {
+                            angleFlat -= 360f;
+                            single = angleFlat1 - angleFlat;
+                        }
+                        else
+                        {
+                            single = angleFlat1 - angleFlat;
+                        }
+                        if (single > 110f)
+                        {
+                            score *= 0.01f;
+                        }
+                    }
+                    if (cellList.Count >= 4 &&
+                        (currentCell - root).LengthManhattan < (nextCell - root).LengthManhattan)
+                    {
+                        score *= 1E-05f;
+                    }
+                    if (!(score > tempDistance))
+                    {
+                        continue;
+                    }
+
+                    tempCell = nextCell;
+                    tempDistance = score;
                 }
 
-                if (single1 < 0f)
+                if (tempDistance < 0f)
                 {
-                    LogUtil.Message($"Unable to find a path for {ActorName} and {TargetName}", true);
                     result = null;
                     return false;
                 }
 
                 cellList.Add(tempCell);
-                startCell = tempCell;
+                currentCell = tempCell;
             }
 
             cellList.Add(root);
@@ -273,7 +274,7 @@ namespace BetterRomance
                 LogUtil.Message($"It took {Find.TickManager.TicksGame - startTick} ticks for {ActorName} to walk to {TargetName}", true);
             });
             askOut.defaultCompleteMode = ToilCompleteMode.Delay;
-            
+
             //Fail if target is downed or dead
             askOut.AddFailCondition(() => !IsTargetPawnOkay());
             yield return askOut;
