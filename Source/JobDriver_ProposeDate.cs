@@ -43,7 +43,7 @@ namespace BetterRomance
                     if (TryFindUnforbiddenDatePath(pawn, TargetPawn, root, out List<IntVec3> list))
                     {
                         //Create date lead job
-                        dateLeadJob = JobMaker.MakeJob(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead);
+                        dateLeadJob = JobMaker.MakeJob(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead, TargetPawn, list[0]);
                         //Add the path info to the job info
                         LogUtil.Message("Date walk path found.");
                         dateLeadJob.targetQueueB = new List<LocalTargetInfo>();
@@ -53,13 +53,10 @@ namespace BetterRomance
                         }
                         //Wander along path
                         dateLeadJob.locomotionUrgency = LocomotionUrgency.Amble;
-                        //Add the target pawn to the job info
-                        dateLeadJob.targetA = TargetPawn;
 
                         //Create date follow job, with wander and actor info
-                        dateFollowJob = JobMaker.MakeJob(IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow);
+                        dateFollowJob = JobMaker.MakeJob(IsDate ? RomanceDefOf.JobDateFollow : RomanceDefOf.JobHangoutFollow, Actor);
                         dateFollowJob.locomotionUrgency = LocomotionUrgency.Amble;
-                        dateFollowJob.targetA = Actor;
                         LogUtil.Message($"Jobs created for {ActorName} and {TargetName}", true);
                         return true;
                     }
@@ -90,72 +87,77 @@ namespace BetterRomance
 
         //No idea how this works
         //Look at WalkPathFinder.TryFindWalkPath; I suspect this was based on that, so maybe there's some improvements that have been made in the mean time
+        //Nope, it's the same :(
         private bool TryFindUnforbiddenDatePath(Pawn p1, Pawn p2, IntVec3 root, out List<IntVec3> result)
         {
             int StartRadialIndex = GenRadial.NumCellsInRadius(14f);
             int EndRadialIndex = GenRadial.NumCellsInRadius(2f);
             int RadialIndexStride = 3;
+            //root gets added again at the end and then the first root is skipped when yielding the results
             List<IntVec3> cellList = new List<IntVec3> { root };
+            //currentCell is the cell that was most recently added to the result list
             IntVec3 currentCell = root;
+            //We want to add 8 cells to the list
             for (int i = 0; i < 8; i++)
             {
                 IntVec3 tempCell = IntVec3.Invalid;
                 float tempDistance = -1f;
                 for (int j = StartRadialIndex; j > EndRadialIndex; j -= RadialIndexStride)
                 {
+                    //nextCell is the cell being evaluated to potentially be added to the result list
                     IntVec3 nextCell = currentCell + GenRadial.RadialPattern[j];
-                    if (!nextCell.InBounds(p1.Map) || !nextCell.Standable(p1.Map) ||
-                        nextCell.IsForbidden(p1) || nextCell.IsForbidden(p2) ||
-                        nextCell.GetTerrain(p1.Map).avoidWander ||
-                        !GenSight.LineOfSight(currentCell, nextCell, p1.Map) || nextCell.Roofed(p1.Map) ||
-                        PawnUtility.KnownDangerAt(nextCell, p1.Map, p1) ||
-                        PawnUtility.KnownDangerAt(nextCell, p1.Map, p2))
+                    if (nextCell.InBounds(p1.Map) && nextCell.Standable(p1.Map) && !nextCell.IsForbidden(p1) && !nextCell.IsForbidden(p2) && !nextCell.GetTerrain(p1.Map).avoidWander && GenSight.LineOfSight(currentCell, nextCell, p1.Map) && !nextCell.Roofed(p1.Map) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p1) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p2))
                     {
-                        continue;
-                    }
-                    float score = 10000f;
-                    foreach (IntVec3 vec3 in cellList)
-                    {
-                        score += (vec3 - nextCell).LengthManhattan;
-                    }
-                    float distanceFromRoot = (nextCell - root).LengthManhattan;
-                    if (distanceFromRoot > 40f)
-                    {
-                        score *= Mathf.InverseLerp(70f, 40f, distanceFromRoot);
-                    }
+                        float score = 10000f;
+                        foreach (IntVec3 vec3 in cellList)
+                        {
+                            score += (vec3 - nextCell).LengthManhattan;
+                        }
+                        //On the first iteration the distance will be the same, since the first vec3 is root
+                        float distanceFromRoot = (nextCell - root).LengthManhattan;
+                        if (distanceFromRoot > 40f)
+                        {
+                            //Lower score if it's too far away; will be 0 at > 70f
+                            score *= Mathf.InverseLerp(70f, 40f, distanceFromRoot);
+                        }
 
-                    if (cellList.Count >= 2)
-                    {
-                        IntVec3 item = cellList[cellList.Count - 1] - cellList[cellList.Count - 2];
-                        float angleFlat = item.AngleFlat;
-                        float angleFlat1 = (nextCell - currentCell).AngleFlat;
-                        float single;
-                        if (angleFlat1 <= angleFlat)
+                        if (cellList.Count >= 2)
                         {
-                            angleFlat -= 360f;
-                            single = angleFlat1 - angleFlat;
+                            //Difference between the last two cells in the list
+                            IntVec3 item = cellList[cellList.Count - 1] - cellList[cellList.Count - 2];
+                            //Not sure what AngleFlat means, but we're comparing it for the difference above and the difference between the last cell in the list and the potential next cell
+                            float angleFlat = item.AngleFlat;
+                            float angleFlat1 = (nextCell - currentCell).AngleFlat;
+                            float single;
+                            if (angleFlat1 <= angleFlat)
+                            {
+                                angleFlat -= 360f;
+                                single = angleFlat1 - angleFlat;
+                            }
+                            else
+                            {
+                                single = angleFlat1 - angleFlat;
+                            }
+                            //If whatever single means is too big, lower the score by a lot
+                            if (single > 110f)
+                            {
+                                score *= 0.01f;
+                            }
                         }
-                        else
+                        //If we have at least four cells already, and the distance between the last cell and the root is less than the distance between the potential next cell and the root, super decrease the score
+                        if (cellList.Count >= 4 &&
+                            (currentCell - root).LengthManhattan < (nextCell - root).LengthManhattan)
                         {
-                            single = angleFlat1 - angleFlat;
+                            score *= 0.00001f;
                         }
-                        if (single > 110f)
+                        if (!(score > tempDistance))
                         {
-                            score *= 0.01f;
+                            continue;
                         }
-                    }
-                    if (cellList.Count >= 4 &&
-                        (currentCell - root).LengthManhattan < (nextCell - root).LengthManhattan)
-                    {
-                        score *= 1E-05f;
-                    }
-                    if (!(score > tempDistance))
-                    {
-                        continue;
-                    }
 
-                    tempCell = nextCell;
-                    tempDistance = score;
+                        tempCell = nextCell;
+                        tempDistance = score;
+                    }
                 }
 
                 if (tempDistance < 0f)
