@@ -50,7 +50,7 @@ namespace BetterRomance
             {
                 if (ticksLeftThisToil <= 1)
                 {
-                    if (DateUtility.DistanceFailure(Actor, TargetPawn, ref waitCount, ref ticksLeftThisToil))
+                    if (!Ordered && DateUtility.DistanceFailure(Actor, TargetPawn, ref waitCount, ref ticksLeftThisToil))
                     {
                         LogUtil.Message($"{ActorName} gave up asking {TargetName} to hook up because it took too long to find them, {debugTicksSpentThisToil} ticks", true);
                         Actor.jobs.EndCurrentJob(JobCondition.Incompletable);

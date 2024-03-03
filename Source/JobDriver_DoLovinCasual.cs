@@ -94,8 +94,8 @@ namespace BetterRomance
                 }
                 else if (ticksLeftThisToil <= 1)
                 {
-                    //But don't wait forever
-                    if (DateUtility.DistanceFailure(Actor, Partner, ref waitCount, ref ticksLeftThisToil))
+                    //But don't wait forever, unless it's ordered
+                    if (!ordered && DateUtility.DistanceFailure(Actor, Partner, ref waitCount, ref ticksLeftThisToil))
                     {
                         LogUtil.Message($"{ActorName} called off the hook up with {PartnerName} because they took too long to show up.", true);
                         Partner.jobs.EndCurrentJob(JobCondition.Incompletable);
