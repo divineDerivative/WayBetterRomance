@@ -143,7 +143,7 @@ namespace BetterRomance
             }
         }
 
-        public static bool FailureCheck(Pawn Partner, JobDef job)
+        public static bool FailureCheck(Pawn Partner, JobDef job, bool ordered = false)
         {
             if (Settings.debugLogging)
             {
@@ -160,7 +160,7 @@ namespace BetterRomance
                 {
                     LogUtil.Message($"{activity} failed because {Partner.Name.ToStringShort} is downed", true);
                 }
-                else if (PawnUtility.WillSoonHaveBasicNeed(Partner))
+                else if (!ordered && PawnUtility.WillSoonHaveBasicNeed(Partner))
                 {
                     LogUtil.Message($"{activity} ended early because {Partner.Name.ToStringShort} needs to eat or sleep", true);
                 }
@@ -169,7 +169,7 @@ namespace BetterRomance
                     LogUtil.Message($"{activity} failed because {Partner.Name.ToStringShort} stopped their job", true);
                 }
             }
-            return !Partner.Spawned || Partner.Dead || Partner.Downed || PawnUtility.WillSoonHaveBasicNeed(Partner) || Partner.CurJob?.def != job;
+            return !Partner.Spawned || Partner.Dead || Partner.Downed || (!ordered && PawnUtility.WillSoonHaveBasicNeed(Partner)) || Partner.CurJob?.def != job;
         }
 
         public static bool DistanceFailure(Pawn pawn, Pawn TargetPawn, ref int waitCount, ref int ticksLeft)

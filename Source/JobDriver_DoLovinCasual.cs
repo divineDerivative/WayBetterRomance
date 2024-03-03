@@ -7,6 +7,7 @@ namespace BetterRomance
 {
     public class JobDriver_DoLovinCasual : JobDriver
     {
+        public bool ordered = false;
         private readonly TargetIndex PartnerInd = TargetIndex.A;
         private readonly TargetIndex BedInd = TargetIndex.B;
         private readonly TargetIndex SlotInd = TargetIndex.C;
@@ -61,13 +62,24 @@ namespace BetterRomance
                 if (Partner.CurJobDef == RomanceDefOf.DoLovinCasual)
                 {
                     LogUtil.Message($"Hookup job started for {ActorName} and {PartnerName}", true);
+                    if (Partner.jobs.curDriver is JobDriver_DoLovinCasual driver)
+                    {
+                        if (driver.ordered)
+                        {
+                            ordered = true;
+                        }
+                    }
+                }
+                else if (Partner.CurJobDef == RomanceDefOf.OrderedHookup)
+                {
+                    ordered = true;
                 }
             };
             yield return WaitForPartnerJob;
 
             //Go to assigned spot in bed
             Toil walkToBed = Toils_Goto.Goto(SlotInd, PathEndMode.OnCell);
-            walkToBed.AddFailCondition(() => DateUtility.FailureCheck(Partner, RomanceDefOf.DoLovinCasual));
+            walkToBed.AddFailCondition(() => DateUtility.FailureCheck(Partner, RomanceDefOf.DoLovinCasual, ordered));
             yield return walkToBed;
 
             //Wait at bed for partner
@@ -92,7 +104,7 @@ namespace BetterRomance
                 }
             };
             wait.defaultCompleteMode = ToilCompleteMode.Delay;
-            wait.AddFailCondition(() => DateUtility.FailureCheck(Partner, RomanceDefOf.DoLovinCasual));
+            wait.AddFailCondition(() => DateUtility.FailureCheck(Partner, RomanceDefOf.DoLovinCasual, ordered));
             wait.AddFinishAction(() =>
             {
                 LogUtil.Message($"{ActorName} waited {debugTicksSpentThisToil} ticks", true);
