@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RimWorld;
 using Verse;
 using HarmonyLib;
 using RomanceOnTheRim;
 using UnityEngine;
+using System.Reflection.Emit;
+using RimWorld.Planet;
+using System.Reflection;
 
 namespace BetterRomance
 {
@@ -75,6 +76,23 @@ namespace BetterRomance
                     harmony.Patch(typeof(InteractionWorker_RomanceAttempt).GetMethod("SuccessChance"), postfix: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(SuccessChancePostfix))));
 
                     harmony.Patch(typeof(HarmonyPatch_SocialCardUtility_RomanceExplanation).GetMethod("AddPreceptExplanation"), transpiler: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(AddPreceptExplanationTranspiler))));
+                    harmony.Patch(AccessTools.Method(typeof(QuestPart_BondOfFreedom_Reject), "DoAction"), prefix: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(BondOfFreedom_RejectPrefix))), postfix: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(BondOfFreedom_RejectPostfix))));
+                }
+                harmony.Patch(AccessTools.Method(typeof(QuestNode_Root_Crush), "TestRunInt"), transpiler: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(QuestNode_Root_CrushTranspiler))));
+                harmony.Patch(AccessTools.Method(typeof(QuestNode_Root_DiplomaticMarriageAway), "SpawnSuitor"), postfix: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(SpawnSuitorAwayPostfix))), transpiler: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(SpawnSuitorTranspiler))));
+                harmony.Patch(AccessTools.Method(typeof(QuestNode_Root_DiplomaticMarriage), "SpawnSuitor"), postfix: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(SpawnSuitorPostfix))), transpiler: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(SpawnSuitorTranspiler))));
+                harmony.Patch(AccessTools.Method(typeof(HarmonyPatch_Pawn_AgeTracker_BirthdayBiological), nameof(HarmonyPatch_Pawn_AgeTracker_BirthdayBiological.CheckAdoptionChance)), transpiler: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(CheckAdoptionChanceTranspiler))));
+
+                Type[] innerTypes = typeof(Dialog_DiplomaticMarriage).GetNestedTypes(AccessTools.all);
+                foreach (Type innerType in innerTypes)
+                {
+                    IEnumerable<MethodInfo> methods = innerType.GetMethods(AccessTools.all).Where(x => x.Name.Contains("AddRejectAndAcceptButtons"));
+                    if (methods.Count() == 1)
+                    {
+                        AddRejectAndAcceptButtonsCompilerType = innerType;
+                        harmony.Patch(methods.First(), transpiler: new HarmonyMethod(typeof(RotRPatches).GetMethod(nameof(AddRejectAndAcceptButtonsTranspiler))));
+                        break;
+                    }
                 }
             }
 
@@ -152,6 +170,178 @@ namespace BetterRomance
                         skip = false;
                     }
                 }
+            }
+
+            //Use age settings
+            public static IEnumerable<CodeInstruction> QuestNode_Root_CrushTranspiler(IEnumerable<CodeInstruction> instructions)
+            {
+                foreach (CodeInstruction code in instructions)
+                {
+                    if (code.LoadsConstant(16f))
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldloc_2);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                    }
+                    else
+                    {
+                        yield return code;
+                    }
+                }
+            }
+
+            public static PawnGenerationRequest SuitorRequest;
+
+            //Spawn a new one if the age range is incorrect
+            public static void SpawnSuitorAwayPostfix(ref Pawn ___suitor, Settlement ___settlement)
+            {
+                FloatRange range = new FloatRange(___suitor.MinAgeForSex(), ___suitor.DeclineAtAge() + (___suitor.DeclineAtAge() / 6));
+                if (!range.Includes(___suitor.ageTracker.AgeBiologicalYearsFloat))
+                {
+                    Find.WorldPawns.RemoveAndDiscardPawnViaGC(___suitor);
+                    SuitorRequest.BiologicalAgeRange = range;
+                    ___suitor = PawnGenerator.GeneratePawn(SuitorRequest);
+                    if (!___suitor.IsWorldPawn())
+                    {
+                        Find.WorldPawns.PassToWorld(___suitor);
+                    }
+                    ___settlement.previouslyGeneratedInhabitants.Add(___suitor);
+                }
+            }
+            public static void SpawnSuitorPostfix(ref Pawn ___suitor)
+            {
+                FloatRange range = new FloatRange(___suitor.MinAgeForSex(), ___suitor.DeclineAtAge() + (___suitor.DeclineAtAge() / 6));
+                if (!range.Includes(___suitor.ageTracker.AgeBiologicalYearsFloat))
+                {
+                    Find.WorldPawns.RemoveAndDiscardPawnViaGC(___suitor);
+                    SuitorRequest.BiologicalAgeRange = range;
+                    ___suitor = PawnGenerator.GeneratePawn(SuitorRequest);
+                    PawnComponentsUtility.AddAndRemoveDynamicComponents(___suitor, true);
+                    if (!___suitor.IsWorldPawn())
+                    {
+                        Find.WorldPawns.PassToWorld(___suitor);
+                    }
+                }
+            }
+
+            //Save the request to use in the postfix
+            public static IEnumerable<CodeInstruction> SpawnSuitorTranspiler(IEnumerable<CodeInstruction> instructions)
+            {
+                foreach (CodeInstruction code in instructions)
+                {
+                    yield return code;
+                    if (code.opcode == OpCodes.Ldloc_0)
+                    {
+                        yield return CodeInstruction.StoreField(typeof(RotRPatches), nameof(SuitorRequest));
+                        yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    }
+                }
+            }
+
+            static Type AddRejectAndAcceptButtonsCompilerType;
+
+            //The original assumes that SecondaryLovinChanceFactor will be 0 for an orientation mismatch
+            //Since I make it non-zero, need to do a different check
+            public static IEnumerable<CodeInstruction> AddRejectAndAcceptButtonsTranspiler(IEnumerable<CodeInstruction> instructions)
+            {
+                FieldInfo[] fields = AddRejectAndAcceptButtonsCompilerType.GetFields();
+                FieldInfo thisField = null;
+                foreach (FieldInfo field in fields)
+                {
+                    if (field.Name.Contains("this"))
+                    {
+                        thisField = field;
+                        break;
+                    }
+                }
+                foreach (CodeInstruction code in instructions)
+                {
+                    if (code.opcode == OpCodes.Stloc_0)
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code);
+                        yield return thisField.LoadField();
+                        yield return CodeInstruction.LoadField(thisField.FieldType, "suitor");
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return thisField.LoadField();
+                        yield return CodeInstruction.LoadField(thisField.FieldType, "betrothed");
+                        yield return CodeInstruction.Call(typeof(RotRPatches), nameof(MarriageDialogHelper));
+                    }
+                    yield return code;
+                }
+            }
+
+            private static bool MarriageDialogHelper(bool result, Pawn suitor, Pawn betrothed)
+            {
+                //Should probably add an asexual/sex repulsion check
+                return result && RelationsUtility.AttractedToGender(suitor, betrothed.gender) && RelationsUtility.AttractedToGender(betrothed, suitor.gender);
+            }
+
+            //Check custom love relations
+            //Hasn't really been tested
+            public static void BondOfFreedom_RejectPrefix(Pawn ___lover, Pawn ___slave, ref bool __state)
+            {
+                if (Settings.LoveRelationsLoaded)
+                {
+                    //If they have any of these relationships, we don't want to remove ex lover later
+                    if (!___lover.relations.DirectRelationExists(PawnRelationDefOf.Lover, ___slave) && !___lover.relations.DirectRelationExists(PawnRelationDefOf.Fiance, ___slave) && !___lover.relations.DirectRelationExists(PawnRelationDefOf.ExLover, ___slave))
+                    {
+                        __state = true;
+                    }
+                }
+            }
+
+            public static void BondOfFreedom_RejectPostfix(Pawn ___lover, Pawn ___slave, bool __state)
+            {
+                if (Settings.LoveRelationsLoaded)
+                {
+                    //This should tell us that they did break up
+                    if (___lover.relations.DirectRelationExists(PawnRelationDefOf.ExLover, ___slave))
+                    {
+                        //Remove the custom relation if it exists
+                        if (CustomLoveRelationUtility.CheckCustomLoveRelations(___lover, ___slave) is DirectPawnRelation relation)
+                        {
+                            ___lover.relations.RemoveDirectRelation(relation);
+                            if (relation.def.GetModExtension<LoveRelations>().exLoveRelation is PawnRelationDef exRelation)
+                            {
+                                ___lover.relations.AddDirectRelation(exRelation, ___slave);
+                                //Remove ex lover if it shouldn't have been added
+                                if (!__state)
+                                {
+                                    ___lover.relations.RemoveDirectRelation(PawnRelationDefOf.ExLover, ___slave);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            //Use age settings
+            public static IEnumerable<CodeInstruction> CheckAdoptionChanceTranspiler(IEnumerable<CodeInstruction> instructions)
+            {
+                foreach (CodeInstruction code in instructions)
+                {
+                    if (code.LoadsConstant(13))
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
+                        yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AdultMinAge)));
+                        yield return new CodeInstruction(OpCodes.Conv_I4);
+                    }
+                    else if (code.LoadsConstant(8))
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return CodeInstruction.Call(typeof(RotRPatches), nameof(AdoptionAge));
+                    }
+                    else
+                    {
+                        yield return code;
+                    }
+                }
+            }
+
+            private static int AdoptionAge(Pawn pawn)
+            {
+                int firstGrowth = SettingsUtilities.GetGrowthMoment(pawn, 0);
+                return firstGrowth + ((SettingsUtilities.GetGrowthMoment(pawn, 1) - firstGrowth) / 3);
             }
         }
     }

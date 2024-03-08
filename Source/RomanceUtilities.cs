@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 
@@ -449,6 +450,18 @@ namespace BetterRomance
             {
                 Log.ErrorOnce(WrapMessage(message), key);
             }
+        }
+    }
+
+    internal static class CodeInstructionMethods
+    {
+        public static CodeInstruction LoadField(this FieldInfo fieldInfo, bool useAddress = false)
+        {
+            if (fieldInfo is null)
+            {
+                throw new ArgumentException($"fieldInfo is null");
+            }
+            return new CodeInstruction((!useAddress) ? (fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld) : (fieldInfo.IsStatic ? OpCodes.Ldsflda : OpCodes.Ldflda), fieldInfo);
         }
     }
 }
