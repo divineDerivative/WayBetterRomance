@@ -258,7 +258,7 @@ namespace BetterRomance
 
     public class LoveRelations : DefModExtension
     {
-        public bool isLoveRelation = false;
+        public bool isLoveRelation = true;
         public bool shouldBreakForNewLover = true;
         public PawnRelationDef exLoveRelation;
     }

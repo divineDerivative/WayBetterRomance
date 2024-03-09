@@ -145,7 +145,7 @@ namespace BetterRomance
                 LogUtil.ErrorOnce("Unexpected value of fertilityMod: " + mod, 1798621);
                 return 100f;
             }
-            LogUtil.Message("If you are using a mod that adds fertility/pregnancy, please set it in the mod options for Way Better Romance. Otherwise, ignore this message.");
+            LogUtil.WarningOnce("If you are using a mod that adds fertility/pregnancy, please set it in the mod options for Way Better Romance. Otherwise, ignore this message.", 6894123);
             return 100f;
         }
 

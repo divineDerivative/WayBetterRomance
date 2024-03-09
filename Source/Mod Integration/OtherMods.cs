@@ -175,7 +175,7 @@ namespace BetterRomance.HarmonyPatches
                     if (initiator.relations.DirectRelationExists(rel, recipient))
                     {
                         initiator.relations.RemoveDirectRelation(rel, recipient);
-                        initiator.relations.AddDirectRelation(rel.GetModExtension<LoveRelations>().exLoveRelation ?? PawnRelationDefOf.ExLover, recipient);
+                        initiator.relations.AddDirectRelation(rel.GetExRelationDef(), recipient);
                         //We only want to add the break up thought once
                         if (!thoughtAdded)
                         {

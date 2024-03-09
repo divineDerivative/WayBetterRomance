@@ -118,7 +118,6 @@ namespace BetterRomance.HarmonyPatches
                 //Grab all relations
                 int num = 200;
                 //Code from vanilla to determine if a new lover is allowed by ideo
-
                 while (num > 0 && !IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn))
                 {
                     LogUtil.Message($"{pawn.LabelShort} is breaking up with someone because they're about to take a new lover", true);
@@ -152,15 +151,7 @@ namespace BetterRomance.HarmonyPatches
                             if (leastLikedOther != null && rel.GetModExtension<LoveRelations>().shouldBreakForNewLover)
                             {
                                 pawn.relations.RemoveDirectRelation(rel, leastLikedOther);
-                                PawnRelationDef exRel = rel.GetModExtension<LoveRelations>().exLoveRelation;
-                                if (exRel == null)
-                                {
-                                    pawn.relations.AddDirectRelation(PawnRelationDefOf.ExLover, leastLikedOther);
-                                }
-                                else
-                                {
-                                    pawn.relations.AddDirectRelation(exRel, leastLikedOther);
-                                }
+                                pawn.relations.AddDirectRelation(rel.GetExRelationDef(), leastLikedOther);
                                 oldLoversAndFiances.Add(leastLikedOther);
                                 num--;
                                 break;

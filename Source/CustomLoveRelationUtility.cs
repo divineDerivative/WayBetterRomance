@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
-using HarmonyLib;
 
 namespace BetterRomance
 {
@@ -23,12 +18,9 @@ namespace BetterRomance
                 {
                     foreach (PawnRelationDef rel in ExLoveRelations)
                     {
-                        DirectPawnRelation tempRel = pawn.relations.GetDirectRelation(rel, otherPawn);
+                        if (pawn.relations.GetDirectRelation(rel, otherPawn) is DirectPawnRelation tempRel)
                         {
-                            if (tempRel != null)
-                            {
-                                return tempRel;
-                            }
+                            return tempRel;
                         }
                     }
                 }
@@ -37,12 +29,9 @@ namespace BetterRomance
             {
                 foreach (PawnRelationDef rel in LoveRelations)
                 {
-                    DirectPawnRelation tempRel = pawn.relations.GetDirectRelation(rel, otherPawn);
+                    if (pawn.relations.GetDirectRelation(rel, otherPawn) is DirectPawnRelation tempRel)
                     {
-                        if (tempRel != null)
-                        {
-                            return tempRel;
-                        }
+                        return tempRel;
                     }
                 }
             }
@@ -53,11 +42,11 @@ namespace BetterRomance
         {
             if (Settings.LoveRelationsLoaded)
             {
-                foreach (var thing in pawn.relations.DirectRelations)
+                foreach (DirectPawnRelation relation in pawn.relations.DirectRelations)
                 {
-                    if (LoveRelations.Contains(thing.def))
+                    if (LoveRelations.Contains(relation.def))
                     {
-                        return thing;
+                        return relation;
                     }
                 }
             }
@@ -82,6 +71,16 @@ namespace BetterRomance
                     }
                 }
             }
+        }
+
+        public static PawnRelationDef GetExRelationDef(this PawnRelationDef relation)
+        {
+            if (relation.HasModExtension<LoveRelations>())
+            {
+                return relation.GetModExtension<LoveRelations>().exLoveRelation ?? PawnRelationDefOf.ExLover;
+            }
+            LogUtil.Warning($"Tried to get the ex relation for a relation with no LoveRelations extension {relation.defName}");
+            return PawnRelationDefOf.ExLover;
         }
     }
 }

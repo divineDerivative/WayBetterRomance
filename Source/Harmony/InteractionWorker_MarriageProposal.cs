@@ -159,10 +159,8 @@ namespace BetterRomance.HarmonyPatches
         //If a custom love relation exists, this will remove that relation instead of vanilla lover
         public static bool Prefix(Pawn initiator, Pawn recipient, List<RulePackDef> extraSentencePacks, out string letterText, out string letterLabel, out LetterDef letterDef, out LookTargets lookTargets, InteractionWorker_MarriageProposal __instance)
         {
-            //First check for a custom relation
-            DirectPawnRelation relation = CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient);
-            //Only run patch if a custom relation exists
-            if (relation != null)
+            //First check for a custom relation and only run patch if one exists
+            if (CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient) is DirectPawnRelation relation)
             {
                 bool accepted = Rand.Value < __instance.AcceptanceChance(initiator, recipient);
                 bool breakup = false;
@@ -195,7 +193,7 @@ namespace BetterRomance.HarmonyPatches
                     {
                         initiator.relations.RemoveDirectRelation(relation);
                         //Add custom ex relation if it exists, otherwise add ex lover
-                        initiator.relations.AddDirectRelation(relation.def.GetModExtension<LoveRelations>().exLoveRelation ?? PawnRelationDefOf.ExLover, recipient);
+                        initiator.relations.AddDirectRelation(relation.def.GetExRelationDef(), recipient);
 
                         breakup = true;
                         extraSentencePacks.Add(RulePackDefOf.Sentence_MarriageProposalRejectedBrokeUp);

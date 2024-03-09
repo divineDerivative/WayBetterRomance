@@ -44,17 +44,14 @@ namespace BetterRomance.HarmonyPatches
     {
         public static bool Prefix(Pawn initiator, Pawn recipient, List<RulePackDef> extraSentencePacks, out string letterText, out string letterLabel, out LetterDef letterDef, out LookTargets lookTargets, InteractionWorker_Breakup __instance)
         {
-            //Check if there's any custom relations
-            DirectPawnRelation relation = CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient);
-
-            //Only run patch if a custom relation exists
-            if (relation != null)
+            //Check if there's any custom relations and only run patch if one exists
+            if (CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient) is DirectPawnRelation relation)
             {
                 Thought thought = __instance.RandomBreakupReason(initiator, recipient);
                 //At this point we already know which relation exists
                 initiator.relations.RemoveDirectRelation(relation);
                 //Use custom ex relation if it exists, otherwise use ex lover
-                initiator.relations.AddDirectRelation(relation.def.GetModExtension<LoveRelations>().exLoveRelation ?? PawnRelationDefOf.ExLover, recipient);
+                initiator.relations.AddDirectRelation(relation.def.GetExRelationDef(), recipient);
 
                 recipient.needs.mood?.thoughts.memories.TryGainMemory(ThoughtDefOf.BrokeUpWithMe, initiator);
                 if (initiator.ownership.OwnedBed != null && initiator.ownership.OwnedBed == recipient.ownership.OwnedBed)
