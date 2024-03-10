@@ -85,10 +85,9 @@ namespace BetterRomance
             return false;
         }
 
-        //No idea how this works
-        //Look at WalkPathFinder.TryFindWalkPath; I suspect this was based on that, so maybe there's some improvements that have been made in the mean time
-        //Nope, it's the same :(
-        private bool TryFindUnforbiddenDatePath(Pawn p1, Pawn p2, IntVec3 root, out List<IntVec3> result)
+        //This is the same as WalkPathFinder.TryFindWalkPath, which is used for the 'go for a walk' job, with checks added for the second pawn
+        //Finds a path that starts and ends at root; if given completely open ground it starts as a diamond shape, but the last two cells go in a different direction
+        private static bool TryFindUnforbiddenDatePath(Pawn p1, Pawn p2, IntVec3 root, out List<IntVec3> result)
         {
             int StartRadialIndex = GenRadial.NumCellsInRadius(14f);
             int EndRadialIndex = GenRadial.NumCellsInRadius(2f);
@@ -102,18 +101,21 @@ namespace BetterRomance
             {
                 IntVec3 tempCell = IntVec3.Invalid;
                 float tempDistance = -1f;
+                //This loop happens 200 times! D:
                 for (int j = StartRadialIndex; j > EndRadialIndex; j -= RadialIndexStride)
                 {
                     //nextCell is the cell being evaluated to potentially be added to the result list
                     IntVec3 nextCell = currentCell + GenRadial.RadialPattern[j];
                     if (nextCell.InBounds(p1.Map) && nextCell.Standable(p1.Map) && !nextCell.IsForbidden(p1) && !nextCell.IsForbidden(p2) && !nextCell.GetTerrain(p1.Map).avoidWander && GenSight.LineOfSight(currentCell, nextCell, p1.Map) && !nextCell.Roofed(p1.Map) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p1) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p2))
                     {
+                        //Not sure why we start with 10k
                         float score = 10000f;
                         foreach (IntVec3 vec3 in cellList)
                         {
+                            //LengthManhattan is |x| + |z|; the number of cells needed to travel between the two vectors using only adjacent cells
                             score += (vec3 - nextCell).LengthManhattan;
                         }
-                        //On the first iteration the distance will be the same, since the first vec3 is root
+
                         float distanceFromRoot = (nextCell - root).LengthManhattan;
                         if (distanceFromRoot > 40f)
                         {
@@ -126,18 +128,15 @@ namespace BetterRomance
                             //Difference between the last two cells in the list
                             IntVec3 item = cellList[cellList.Count - 1] - cellList[cellList.Count - 2];
                             //Not sure what AngleFlat means, but we're comparing it for the difference above and the difference between the last cell in the list and the potential next cell
+                            //I think it might be the angle of the line between the two points with reference to some axis, but that doesn't always match up
                             float angleFlat = item.AngleFlat;
                             float angleFlat1 = (nextCell - currentCell).AngleFlat;
-                            float single;
+                            //This just makes sure the result will be a positive number
                             if (angleFlat1 <= angleFlat)
                             {
                                 angleFlat -= 360f;
-                                single = angleFlat1 - angleFlat;
                             }
-                            else
-                            {
-                                single = angleFlat1 - angleFlat;
-                            }
+                            float single = angleFlat1 - angleFlat;
                             //If whatever single means is too big, lower the score by a lot
                             if (single > 110f)
                             {
@@ -145,34 +144,58 @@ namespace BetterRomance
                             }
                         }
                         //If we have at least four cells already, and the distance between the last cell and the root is less than the distance between the potential next cell and the root, super decrease the score
+                        //This might be what makes it start circling around back towards the root
                         if (cellList.Count >= 4 &&
                             (currentCell - root).LengthManhattan < (nextCell - root).LengthManhattan)
                         {
                             score *= 0.00001f;
                         }
-                        if (!(score > tempDistance))
+                        //And we're looking for the cell with the highest score
+                        if (score > tempDistance)
                         {
-                            continue;
+                            tempCell = nextCell;
+                            tempDistance = score;
                         }
-
-                        tempCell = nextCell;
-                        tempDistance = score;
                     }
-                }
-
+                }//end of inner for loop
+                //Fail if we never found a suitable cell
                 if (tempDistance < 0f)
                 {
                     result = null;
                     return false;
                 }
-
+                //Add the cell to the list and make it the new currentCell
                 cellList.Add(tempCell);
                 currentCell = tempCell;
-            }
-
+            }//end of outer for loop
+            //Add root again at the end and return
             cellList.Add(root);
             result = cellList;
             return true;
+        }
+
+        public static void DebugFlashDatePath(IntVec3 root, int numEntries = 8)
+        {
+            Map currentMap = Find.CurrentMap;
+            if (!TryFindUnforbiddenDatePath(currentMap.mapPawns.FreeColonistsSpawned.First(), currentMap.mapPawns.FreeColonistsSpawned.Last(), root, out var result))
+            {
+                currentMap.debugDrawer.FlashCell(root, 0.2f, "NOPATH");
+                return;
+            }
+            for (int i = 0; i < result.Count; i++)
+            {
+                currentMap.debugDrawer.FlashCell(result[i], (float)i / (float)numEntries, i.ToString());
+                if (i > 0)
+                {
+                    currentMap.debugDrawer.FlashLine(result[i], result[i - 1]);
+                }
+            }
+        }
+
+        [DebugAction("General", null, false, false, false, 0, false, actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.PlayingOnMap, hideInSubMenu = true)]
+        private static void FlashDatePath()
+        {
+            DebugFlashDatePath(UI.MouseCell());
         }
 
         //No idea how this works either
