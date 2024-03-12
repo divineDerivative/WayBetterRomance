@@ -27,8 +27,9 @@ namespace BetterRomance
         /// <param name="pawn"></param>
         /// <param name="otherPawn"></param>
         /// <param name="cheaterList">A list of pawns who will think that <paramref name="pawn"/> cheated on them, regardless of what <paramref name="pawn"/> thinks</param>
+        /// <param name="loverCountOnly">Whether to look at lover count only, otherwise cheating setting/precept is also looked at</param>
         /// <returns>True or False</returns>
-        public static bool IsThisCheating(Pawn pawn, Pawn otherPawn, out List<Pawn> cheaterList)
+        public static bool IsThisCheating(Pawn pawn, Pawn otherPawn, out List<Pawn> cheaterList, bool loverCountOnly = false)
         {
             //This has to happen to get passed out
             cheaterList = new List<Pawn>();
@@ -40,13 +41,13 @@ namespace BetterRomance
             foreach (Pawn p in GetAllLoveRelationPawns(pawn, false, false))
             {
                 //If the pawns have different ideos, I think this will check if the partner would feel cheated on per their ideo and settings
-                if (!pawn.GetHistoryEventForLoveRelationCountPlusOne().WillingToDoGendered(p.Ideo, pawn.gender) && p.CaresAboutCheating())
+                if (!pawn.GetHistoryEventForLoveRelationCountPlusOne().WillingToDoGendered(p.Ideo, pawn.gender) && (loverCountOnly || p.CaresAboutCheating()))
                 {
                     cheaterList.Add(p);
                 }
             }
             //The cheater list is for use later, initiator will only look at their ideo and settings to decide if they're cheating
-            if (IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn) || !pawn.CaresAboutCheating())
+            if (IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn) || (!loverCountOnly && !pawn.CaresAboutCheating()))
             {
                 //Faithful pawns will respect their partner's ideo
                 return !cheaterList.NullOrEmpty() && pawn.story.traits.HasTrait(RomanceDefOf.Faithful);
@@ -61,10 +62,10 @@ namespace BetterRomance
         /// <param name="otherPawn"></param>
         /// <param name="cheatOn">The pawn they feel worst about cheating on</param>
         /// <returns></returns>
-        public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out Pawn cheatOn)
+        public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out Pawn cheatOn, bool loverCountOnly = false)
         {
             cheatOn = null;
-            if (IsThisCheating(pawn, otherPawn, out List<Pawn> cheatedOnList))
+            if (IsThisCheating(pawn, otherPawn, out List<Pawn> cheatedOnList, loverCountOnly))
             {
                 if (!cheatedOnList.NullOrEmpty())
                 {
@@ -429,7 +430,7 @@ namespace BetterRomance
         }
 
         internal static void WarningOnce(string message, int key, bool debugOnly = false)
-            {
+        {
             if (debugOnly && Settings.debugLogging || !debugOnly)
             {
                 Log.WarningOnce(WrapMessage(message), key);
@@ -437,7 +438,7 @@ namespace BetterRomance
         }
 
         internal static void Error(string message, bool debugOnly = false)
-                {
+        {
             if (debugOnly && Settings.debugLogging || !debugOnly)
             {
                 Log.Error(WrapMessage(message));
@@ -445,7 +446,7 @@ namespace BetterRomance
         }
 
         internal static void ErrorOnce(string message, int key, bool debugOnly = false)
-                    {
+        {
             if (debugOnly && Settings.debugLogging || !debugOnly)
             {
                 Log.ErrorOnce(WrapMessage(message), key);

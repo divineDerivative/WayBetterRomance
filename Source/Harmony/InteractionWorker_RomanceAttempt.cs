@@ -74,7 +74,7 @@ namespace BetterRomance.HarmonyPatches
             }
 
             float cheatChance = 1f;
-            if (!RomanceUtilities.WillPawnContinue(initiator, recipient, out Pawn cheatOn))
+            if (!RomanceUtilities.WillPawnContinue(initiator, recipient, out Pawn cheatOn, true))
             {
                 //Do not allow if they've decided not to cheat
                 __result = 0f;
@@ -220,7 +220,7 @@ namespace BetterRomance.HarmonyPatches
         {
             float relationFactor = 1f;
             //Check if this is cheating and whether they decide to do it anyways, also grabs the partner they would feel worst about cheating on
-            if (!RomanceUtilities.WillPawnContinue(recipient, initiator, out Pawn partnerToConsider) && !forTooltip)
+            if (!RomanceUtilities.WillPawnContinue(recipient, initiator, out Pawn partnerToConsider, true) && !forTooltip)
             {
                 __result = 0f;
                 return false;
@@ -232,7 +232,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     relationFactor = PartnerRelationFactor(recipient, partnerToConsider);
                 }
-                //If there's no parnter they're cheating on, then factor remains unchanged
+                //If there's no partner they're cheating on, then factor remains unchanged
                 __result = relationFactor;
                 return false;
             }
