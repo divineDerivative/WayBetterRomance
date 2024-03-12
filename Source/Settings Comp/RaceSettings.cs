@@ -92,6 +92,11 @@ namespace BetterRomance
                     Log.Warning("Growth moment ages for " + race.defName + " do not make sense. Child at " + childAge + ", adult at " + adultAge + ", growth ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
                     biotech.growthMoments = GrowthMomentArray(childAge, adultAge);
                     Log.Warning("New ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
+                    //Do I need to reassign the HAR growth moments?
+                    if (Settings.HARActive)
+                    {
+                        HAR_Integration.SetGrowthMoments(race, biotech.growthMoments.ToList());
+                    }
                 }
             }
             //We don't assign a default because some races intentionally have null growthAges

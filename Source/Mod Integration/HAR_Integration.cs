@@ -1,6 +1,7 @@
 ﻿using AlienRace;
 using HarmonyLib;
 using RimWorld;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Verse;
 
@@ -33,6 +34,14 @@ namespace BetterRomance
                 return alienRace.alienRace.generalSettings.GrowthAges;
             }
             return GrowthUtility.GrowthMomentAges;
+        }
+
+        public static void SetGrowthMoments(ThingDef race, List<int> ages)
+        {
+            if (race is ThingDef_AlienRace alienRace)
+            {
+                alienRace.alienRace.generalSettings.growthAges = ages;
+            }
         }
 
         //This is still not ever going to work right since HAR provides a default curve if none is specified
