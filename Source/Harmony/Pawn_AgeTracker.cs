@@ -66,6 +66,17 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.ResetAgeReversalDemand))]
     public static class Pawn_AgeTracker_ResetAgeReversalDemand
     {
+        //This is to initialize all the age settings on the comp, because this is right after their age has been determined and right before they are needed
+        //This only works for new pawn generation
+        public static void Prefix(Pawn ___pawn, Pawn_AgeTracker.AgeReversalReason reason, bool cancelInitialization = false)
+        {
+            if (reason == Pawn_AgeTracker.AgeReversalReason.Initial)
+            {
+                WBR_SettingsComp comp = ___pawn.TryGetComp<WBR_SettingsComp>();
+                comp?.ApplySettings();
+            }
+        }
+
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             foreach (CodeInstruction code in instructions)
@@ -83,6 +94,20 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return code;
                 }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.ExposeData))]
+    public static class Pawn_AgeTracker_ExposeData
+    {
+        //This will initialize the comp for existing pawns on loading
+        public static void Prefix(Pawn_AgeTracker __instance, Pawn ___pawn)
+        {
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                WBR_SettingsComp comp = ___pawn.TryGetComp<WBR_SettingsComp>();
+                comp?.ApplySettings();
             }
         }
     }

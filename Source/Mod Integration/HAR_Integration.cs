@@ -1,6 +1,7 @@
 ﻿using AlienRace;
 using HarmonyLib;
 using RimWorld;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Verse;
 
@@ -22,9 +23,9 @@ namespace BetterRomance
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static int[] GetGrowthMoments(Pawn pawn)
+        public static int[] GetGrowthMoments(ThingDef race)
         {
-            if (pawn.def is ThingDef_AlienRace alienRace)
+            if (race is ThingDef_AlienRace alienRace)
             {
                 if (alienRace.alienRace.generalSettings.GrowthAges.NullOrEmpty())
                 {
@@ -35,6 +36,16 @@ namespace BetterRomance
             return GrowthUtility.GrowthMomentAges;
         }
 
+        public static void SetGrowthMoments(ThingDef race, List<int> ages)
+        {
+            if (race is ThingDef_AlienRace alienRace)
+            {
+                alienRace.alienRace.generalSettings.growthAges = ages;
+            }
+        }
+
+        //This is still not ever going to work right since HAR provides a default curve if none is specified
+        //So I need to try again to get him to change it
         public static bool FertilityCurveExists(Pawn pawn)
         {
             if (!(pawn.def is ThingDef_AlienRace alienRace))
@@ -43,6 +54,45 @@ namespace BetterRomance
             }
             return pawn.gender != Gender.Female ? alienRace.alienRace.generalSettings.reproduction.maleFertilityAgeFactor != null : alienRace.alienRace.generalSettings.reproduction.femaleFertilityAgeFactor != null;
         }
+
+        public static SimpleCurve FertilityCurve(ThingDef race, Gender gender)
+        {
+            if (!(race is ThingDef_AlienRace alienRace))
+            {
+                return null;
+            }
+            return gender != Gender.Female ? alienRace.alienRace.generalSettings.reproduction?.maleFertilityAgeFactor : alienRace.alienRace.generalSettings.reproduction?.femaleFertilityAgeFactor;
+        }
+
+        public static bool IsCurveDefault(SimpleCurve curve, Gender gender)
+        {
+            switch (gender)
+            {
+                case Gender.Female:
+                    return curve.IsEquivalentTo(femaleFertilityAgeFactor);
+                default:
+                    return curve.IsEquivalentTo(maleFertilityAgeFactor);
+            }
+        }
+
+        public static readonly SimpleCurve maleFertilityAgeFactor = new SimpleCurve
+        {
+            new CurvePoint(14f, 0f),
+            new CurvePoint(18f, 1f),
+            new CurvePoint(50f, 1f),
+            new CurvePoint(90f, 0f)
+        };
+
+        public static readonly SimpleCurve femaleFertilityAgeFactor = new SimpleCurve
+        {
+            new CurvePoint(14f, 0f),
+            new CurvePoint(20f, 1f),
+            new CurvePoint(28f, 1f),
+            new CurvePoint(35f, 0.5f),
+            new CurvePoint(40f, 0.1f),
+            new CurvePoint(45f, 0.02f),
+            new CurvePoint(50f, 0f)
+        };
 
         public static AcceptanceReport CanEverProduceChild(Pawn first, Pawn second)
         {
@@ -97,11 +147,11 @@ namespace BetterRomance
             return true;
         }
 
-        public static bool UseHARAgeForAdulthood(Pawn pawn, out float age)
+        public static bool UseHARAgeForAdulthood(ThingDef race, out float age)
         {
-            if (pawn.def is ThingDef_AlienRace race)
+            if (race is ThingDef_AlienRace alienThingDef)
             {
-                age = race.alienRace.generalSettings.minAgeForAdulthood;
+                age = alienThingDef.alienRace.generalSettings.minAgeForAdulthood;
                 return true;
             }
             age = 20f;

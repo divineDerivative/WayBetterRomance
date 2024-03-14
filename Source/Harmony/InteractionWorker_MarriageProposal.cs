@@ -162,7 +162,7 @@ namespace BetterRomance.HarmonyPatches
             //First check for a custom relation and only run patch if one exists
             if (CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient) is DirectPawnRelation relation)
             {
-                bool accepted = Rand.Value < __instance.AcceptanceChance(initiator, recipient);
+                bool accepted = Rand.Value < InteractionWorker_MarriageProposal.AcceptanceChance(initiator, recipient);
                 bool breakup = false;
                 if (accepted)
                 {

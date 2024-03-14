@@ -16,7 +16,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>portable</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Assemblies\</OutputPath>
+    <OutputPath>..\1.5\Assemblies\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -84,6 +84,8 @@
   <ItemGroup>
     <Compile Include="Harmony\PawnRelationWorker_Spouse.cs" />
     <Compile Include="Harmony\StatPart_Age.cs" />
+    <Compile Include="Settings Comp\CompSettingsClasses.cs" />
+    <Compile Include="Settings Comp\Comp_WBRSettings.cs" />
     <Compile Include="Harmony\ThinkNode_ChancePerHour_Lovin.cs" />
     <Compile Include="Mod Integration\PhobiaPatches.cs" />
     <Compile Include="Sex Repulsion\CharacterCardUtility.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Mod Integration\HAR_Integration.cs" />
     <Compile Include="Harmony\TraitSet.cs" />
     <Compile Include="HookupUtility.cs" />
+    <Compile Include="Settings Comp\RaceSettings.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Sex Repulsion\Trait.cs" />
     <Compile Include="SexualityUtility.cs" />

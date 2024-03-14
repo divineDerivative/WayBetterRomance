@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
+//using static BetterRomance.WBR_SettingsComp;
 
 namespace BetterRomance
 {
@@ -13,17 +14,10 @@ namespace BetterRomance
         //Sexuality chances does not have methods, since they're only needed in the AssignOrientation function
 
         //Casual sex settings
-        public static CasualSexSettings GetCasualSexSettings(Pawn pawn)
+        public static CompSettingsCasualSexPawn GetCasualSexSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<CasualSexSettings>())
-            {
-                return pawn.kindDef.GetModExtension<CasualSexSettings>();
-            }
-            else if (pawn.def.HasModExtension<CasualSexSettings>())
-            {
-                return pawn.def.GetModExtension<CasualSexSettings>();
-            }
-            return null;
+            WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            return comp.casualSex;
         }
 
         public static bool CaresAboutCheating(this Pawn pawn)
@@ -32,14 +26,14 @@ namespace BetterRomance
             {
                 return false;
             }
-            CasualSexSettings settings = GetCasualSexSettings(pawn);
-            return settings == null || settings.caresAboutCheating;
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
+            return settings.caresAboutCheating;
         }
 
         public static bool HookupAllowed(this Pawn pawn, bool ordered = false)
         {
-            CasualSexSettings settings = GetCasualSexSettings(pawn);
-            return settings == null || (ordered ? settings.canDoOrderedHookup : settings.willDoHookup);
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
+            return ordered ? settings.canDoOrderedHookup : settings.willDoHookup;
         }
 
         public static float HookupRate(this Pawn pawn)
@@ -48,8 +42,8 @@ namespace BetterRomance
             {
                 return 0f;
             }
-            CasualSexSettings settings = GetCasualSexSettings(pawn);
-            return (settings != null) ? settings.hookupRate : BetterRomanceMod.settings.hookupRate;
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
+            return settings.hookupRate ?? BetterRomanceMod.settings.hookupRate;
         }
 
         public static float AlienLoveChance(this Pawn pawn)
@@ -58,32 +52,14 @@ namespace BetterRomance
             {
                 return 0f;
             }
-            CasualSexSettings settings = GetCasualSexSettings(pawn);
-            return (settings != null) ? settings.alienLoveChance : BetterRomanceMod.settings.alienLoveChance;
-        }
-
-        /// <summary>
-        /// Get settings related to casual hookups
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
-        public static HookupTrigger GetHookupSettings(Pawn pawn, bool ordered = false)
-        {
-            if (pawn.kindDef.HasModExtension<CasualSexSettings>())
-            {
-                return ordered ? pawn.kindDef.GetModExtension<CasualSexSettings>().orderedHookupTriggers : pawn.kindDef.GetModExtension<CasualSexSettings>().hookupTriggers;
-            }
-            else if (pawn.def.HasModExtension<CasualSexSettings>())
-            {
-                return ordered ? pawn.def.GetModExtension<CasualSexSettings>().orderedHookupTriggers : pawn.def.GetModExtension<CasualSexSettings>().hookupTriggers;
-            }
-            return null;
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
+            return settings.alienLoveChance ?? BetterRomanceMod.settings.alienLoveChance;
         }
 
         public static int MinOpinionForHookup(this Pawn pawn, bool ordered = false)
         {
-            HookupTrigger triggers = GetHookupSettings(pawn, ordered);
-            return (triggers != null) ? triggers.minOpinion : BetterRomanceMod.settings.minOpinionHookup;
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
+            return (ordered ? settings.minOpinionForOrderedHookup : settings.minOpinionForHookup) ?? BetterRomanceMod.settings.minOpinionHookup;
         }
 
         /// <summary>
@@ -94,9 +70,8 @@ namespace BetterRomance
         /// <returns></returns>
         public static bool HookupForBreedingOnly(this Pawn pawn)
         {
-            HookupTrigger triggers = GetHookupSettings(pawn, true);
-            //If triggers are not provided, default is false
-            return triggers != null && triggers.forBreedingOnly;
+            CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
+            return settings.forBreedingOnly;
         }
 
         /// <summary>
@@ -255,23 +230,17 @@ namespace BetterRomance
         }
 
         //Regular sex settings
-        public static RegularSexSettings GetSexSettings(Pawn pawn)
+        public static CompSettingsRegularSex GetSexSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<RegularSexSettings>())
-            {
-                return pawn.kindDef.GetModExtension<RegularSexSettings>();
-            }
-            else if (pawn.def.HasModExtension<RegularSexSettings>())
-            {
-                return pawn.def.GetModExtension<RegularSexSettings>();
-            }
-            return null;
+            WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            return comp?.regularSex;
         }
 
         public static float MinAgeForSex(this Pawn pawn)
         {
-            RegularSexSettings settings = GetSexSettings(pawn);
-            return (settings != null) ? settings.minAgeForSex : 16f;
+            CompSettingsRegularSex settings = GetSexSettings(pawn);
+            //This gets called by GenerateInitialHediffs for all pawns, so needs to be null checked
+            return settings?.minAgeForSex ?? 16f;
         }
 
         public static float MaxAgeForSex(this Pawn pawn)
@@ -280,14 +249,14 @@ namespace BetterRomance
             {
                 return pawn.ageTracker.AgeBiologicalYearsFloat + 2f;
             }
-            RegularSexSettings settings = GetSexSettings(pawn);
-            return (settings != null) ? settings.maxAgeForSex : 80f;
+            CompSettingsRegularSex settings = GetSexSettings(pawn);
+            return settings.maxAgeForSex;
         }
 
         public static float MaxAgeGap(this Pawn pawn)
         {
-            RegularSexSettings settings = GetSexSettings(pawn);
-            return (settings != null) ? settings.maxAgeGap : 40f;
+            CompSettingsRegularSex settings = GetSexSettings(pawn);
+            return settings.maxAgeGap;
         }
 
         public static float DeclineAtAge(this Pawn pawn)
@@ -296,8 +265,8 @@ namespace BetterRomance
             {
                 return pawn.ageTracker.AgeBiologicalYearsFloat + 1f;
             }
-            RegularSexSettings settings = GetSexSettings(pawn);
-            return (settings != null) ? settings.declineAtAge : 30f;
+            CompSettingsRegularSex settings = GetSexSettings(pawn);
+            return settings.declineAtAge;
         }
 
         public static List<Pawn> CachedNonSenescentPawns = new List<Pawn>();
@@ -332,30 +301,23 @@ namespace BetterRomance
         }
 
         //Relation Settings
-        public static RelationSettings GetRelationSettings(Pawn pawn)
+        public static CompSettingsRelationsPawn GetRelationSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<RelationSettings>())
-            {
-                return pawn.kindDef.GetModExtension<RelationSettings>();
-            }
-            else if (pawn.def.HasModExtension<RelationSettings>())
-            {
-                return pawn.def.GetModExtension<RelationSettings>();
-            }
-            return null;
+            WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            return comp.relations;
         }
 
         //Add check for the no spouses precept here
         public static bool SpouseAllowed(this Pawn pawn)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
-            return settings == null || settings.spousesAllowed;
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
+            return settings.spousesAllowed;
         }
 
         public static bool ChildAllowed(this Pawn pawn)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
-            return settings == null || settings.childrenAllowed;
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
+            return settings.childrenAllowed;
         }
 
         /// <summary>
@@ -372,7 +334,7 @@ namespace BetterRomance
             {
                 return pawn.kindDef;
             }
-            RelationSettings settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             if (settings.pawnKindForParentGlobal != null)
             {
                 return settings.pawnKindForParentGlobal;
@@ -401,14 +363,14 @@ namespace BetterRomance
             {
                 gender = pawn.gender;
             }
-            RelationSettings settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
-                return (settings != null) ? settings.minFemaleAgeToHaveChildren : 16f;
+                return settings.minFemaleAgeToHaveChildren;
             }
             else if (gender == Gender.Male)
             {
-                return (settings != null) ? settings.minMaleAgeToHaveChildren : 14f;
+                return settings.minMaleAgeToHaveChildren;
             }
             throw new ArgumentException("No gender provided");
         }
@@ -419,14 +381,14 @@ namespace BetterRomance
             {
                 gender = pawn.gender;
             }
-            RelationSettings settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
-                return (settings != null) ? settings.maxFemaleAgeToHaveChildren : 45f;
+                return settings.maxFemaleAgeToHaveChildren;
             }
             else if (gender == Gender.Male)
             {
-                return (settings != null) ? settings.maxMaleAgeToHaveChildren : 50f;
+                return settings.maxMaleAgeToHaveChildren;
             }
             throw new ArgumentException("This pawn has no gender");
         }
@@ -437,44 +399,38 @@ namespace BetterRomance
             {
                 gender = pawn.gender;
             }
-            RelationSettings settings = GetRelationSettings(pawn);
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
-                return (settings != null) ? settings.usualFemaleAgeToHaveChildren : 27f;
+                return settings.usualFemaleAgeToHaveChildren;
             }
             else if (gender == Gender.Male)
             {
-                return (settings != null) ? settings.usualMaleAgeToHaveChildren : 30f;
+                return settings.usualMaleAgeToHaveChildren;
             }
             throw new ArgumentException("No gender provided");
         }
 
         public static int MaxChildren(this Pawn pawn)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
-            return (settings != null) ? settings.maxChildrenDesired : 3;
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
+            return settings.maxChildrenDesired;
         }
 
         public static int MinOpinionForRomance(this Pawn pawn)
         {
-            RelationSettings settings = GetRelationSettings(pawn);
-            return (settings != null) ? settings.minOpinionRomance : BetterRomanceMod.settings.minOpinionRomance;
+            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
+            return settings.minOpinionRomance ?? BetterRomanceMod.settings.minOpinionRomance;
         }
 
         //Biotech Settings
-        public static BiotechSettings GetBiotechSettings(Pawn pawn)
+        public static CompSettingsBiotech GetBiotechSettings(Pawn pawn)
         {
-            if (pawn.kindDef.HasModExtension<BiotechSettings>())
-            {
-                return pawn.kindDef.GetModExtension<BiotechSettings>();
-            }
-            else if (pawn.def.HasModExtension<BiotechSettings>())
-            {
-                return pawn.def.GetModExtension<BiotechSettings>();
-            }
-            return null;
+            WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            return comp?.biotech;
         }
 
+        //This will preserve any xml patches that might be made to the default curves
         internal static void GrabBiotechStuff()
         {
             if (StatDefOf.Fertility.parts != null && StatDefOf.Fertility.parts.OfType<StatPart_FertilityByGenderAge>().Any())
@@ -485,76 +441,79 @@ namespace BetterRomance
             childBirthByAgeCurve = RitualOutcomeEffectDefOf.ChildBirth.comps.Find(c => c is RitualOutcomeComp_PawnAge) as RitualOutcomeComp_PawnAge;
         }
 
+        public static SimpleCurve femaleFertilityAgeFactor;
+        public static SimpleCurve maleFertilityAgeFactor;
+        public static RitualOutcomeComp_PawnAge childBirthByAgeCurve;
+
         public static SimpleCurve GetFertilityAgeCurve(this Pawn pawn)
         {
-            BiotechSettings settings = GetBiotechSettings(pawn);
+            CompSettingsBiotech settings = GetBiotechSettings(pawn);
+            //This gets called on animals and mechs even though the stat never gets used
+            //So need to pass something
+            if (settings == null)
+            {
+                return GetDefaultFertilityAgeCurve(pawn.gender);
+            }
             if (pawn.gender == Gender.Male)
             {
-                return settings != null ? settings.maleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
+                return settings.maleFertilityAgeFactor;
             }
             else if (pawn.gender == Gender.Female)
             {
-                return settings != null ? settings.femaleFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
+                return settings.femaleFertilityAgeFactor;
             }
             else
             {
-                return settings != null ? settings.noneFertilityAgeFactor : GetDefaultFertilityAgeCurve(pawn.gender);
+                return settings.noneFertilityAgeFactor;
             }
         }
 
-        private static SimpleCurve femaleFertilityAgeFactor;
-        private static SimpleCurve maleFertilityAgeFactor;
-        private static SimpleCurve GetDefaultFertilityAgeCurve(Gender gender)
+        public static SimpleCurve GetDefaultFertilityAgeCurve(Gender gender)
         {
             //This will preserve any xml patches that might be made to the default curves
             if (gender == Gender.Female)
             {
-                return femaleFertilityAgeFactor ??  new SimpleCurve
-                                                    {
-                                                        new CurvePoint(14f, 0f),
-                                                        new CurvePoint(20f, 1f),
-                                                        new CurvePoint(28f, 1f),
-                                                        new CurvePoint(35f, 0.5f),
-                                                        new CurvePoint(40f, 0.1f),
-                                                        new CurvePoint(45f, 0.02f),
-                                                        new CurvePoint(50f, 0f),
-                                                    };
+                return femaleFertilityAgeFactor ?? new SimpleCurve
+                {
+                    new CurvePoint(14f, 0f),
+                    new CurvePoint(20f, 1f),
+                    new CurvePoint(28f, 1f),
+                    new CurvePoint(35f, 0.5f),
+                    new CurvePoint(40f, 0.1f),
+                    new CurvePoint(45f, 0.02f),
+                    new CurvePoint(50f, 0f),
+                };
             }
             else
             {
-                return maleFertilityAgeFactor ??    new SimpleCurve
-                                                    {
-                                                        new CurvePoint(14f, 0f),
-                                                        new CurvePoint(18f, 1f),
-                                                        new CurvePoint(50f, 1f),
-                                                        new CurvePoint(90f, 0f),
-                                                    };
+                return maleFertilityAgeFactor ?? new SimpleCurve
+                {
+                    new CurvePoint(14f, 0f),
+                    new CurvePoint(18f, 1f),
+                    new CurvePoint(50f, 1f),
+                    new CurvePoint(90f, 0f),
+                };
             }
         }
 
         public static SimpleCurve GetChildBirthAgeCurve(this Pawn pawn)
         {
-            BiotechSettings settings = GetBiotechSettings(pawn);
-            return settings != null ? settings.ageEffectOnChildbirth : GetDefaultChildbirthAgeCurve();
+            CompSettingsBiotech settings = GetBiotechSettings(pawn);
+            return settings.ageEffectOnChildbirth;
         }
 
-        private static RitualOutcomeComp_PawnAge childBirthByAgeCurve;
-        private static SimpleCurve GetDefaultChildbirthAgeCurve()
+        public static SimpleCurve GetDefaultChildbirthAgeCurve()
         {
             //This will preserve any xml patches that might be made to the default curve
-            if (RitualOutcomeEffectDefOf.ChildBirth.comps.Find(c => c is RitualOutcomeComp_PawnAge) is RitualOutcomeComp_PawnAge comp)
+            return childBirthByAgeCurve?.curve ?? new SimpleCurve
             {
-                return comp.curve;
-            }
-            return childBirthByAgeCurve.curve ??    new SimpleCurve
-                                                    {
-                                                        new CurvePoint(14f, 0.0f),
-                                                        new CurvePoint(15f, 0.3f),
-                                                        new CurvePoint(20f, 0.5f),
-                                                        new CurvePoint(30f, 0.5f),
-                                                        new CurvePoint(40f, 0.3f),
-                                                        new CurvePoint(65f, 0.0f),
-                                                    };
+                new CurvePoint(14f, 0.0f),
+                new CurvePoint(15f, 0.3f),
+                new CurvePoint(20f, 0.5f),
+                new CurvePoint(30f, 0.5f),
+                new CurvePoint(40f, 0.3f),
+                new CurvePoint(65f, 0.0f),
+            };
         }
 
         public static int GetGrowthMoment(Pawn pawn, int index)
@@ -563,19 +522,8 @@ namespace BetterRomance
             {
                 return 0;
             }
-            if (Settings.HARActive)
-            {
-                int[] array = HAR_Integration.GetGrowthMoments(pawn);
-                if (array != null)
-                {
-                    return array[index];
-                }
-            }
-            else if (index == 2)
-            {
-                return (int)pawn.ageTracker.AdultMinAge;
-            }
-            return GrowthUtility.GrowthMomentAges[index];
+            int[] ages = GetBiotechSettings(pawn).growthMoments;
+            return ages[index];
         }
 
         public static float GetGrowthMomentAsFloat(Pawn pawn, int index)
@@ -588,6 +536,11 @@ namespace BetterRomance
         }
 
         //Miscellaneous age calculations
+        public static CompSettingsMisc GetMiscSettings(Pawn pawn)
+        {
+            WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            return comp?.misc;
+        }
 
         /// <summary>
         /// Age at which a pawn is given an adult backstory. Human default is 20
@@ -596,24 +549,16 @@ namespace BetterRomance
         /// <returns></returns>
         public static float GetMinAgeForAdulthood(Pawn pawn)
         {
-            if (pawn.HasNoGrowth())
+            CompSettingsMisc settings = GetMiscSettings(pawn);
+            //This can get called on animals/mechs
+            if (settings == null)
             {
-                return 0f;
+                return defaultMinAgeForAdulthood;
             }
-            if (Settings.HARActive)
-            {
-                if (HAR_Integration.UseHARAgeForAdulthood(pawn, out float age))
-                {
-                    return age;
-                }
-                //Put something here to calculate a reasonable age?
-                //HAR does the below if min age is not set
-                //Maybe I can co-opt that to do a more reasonable calculation?
-            }
-            return defaultMinAgeForAdulthood;
+            return settings.minAgeForAdulthood;
         }
 
-        private static readonly float defaultMinAgeForAdulthood = (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
+        public static readonly float defaultMinAgeForAdulthood = (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
 
         /// <summary>
         /// Finds the first life stage with a developmental stage of child and returns the minimum age of that stage. Human default is 3
@@ -622,8 +567,8 @@ namespace BetterRomance
         /// <returns>The age at which <paramref name="pawn"/> becomes a child.</returns>
         public static int ChildAge(Pawn pawn)
         {
-            float result = pawn.RaceProps.lifeStageAges.FirstOrDefault((LifeStageAge lifeStageAge) => lifeStageAge.def.developmentalStage.Child())?.minAge ?? 0f;
-            return (int)result;
+            CompSettingsMisc settings = GetMiscSettings(pawn);
+            return settings.childAge;
         }
 
         /// <summary>
@@ -633,13 +578,8 @@ namespace BetterRomance
         /// <returns></returns>
         public static int AdultAgeForLearning(Pawn pawn)
         {
-            float lifeStageMinAge = pawn.ageTracker.AdultMinAge;
-            float backstoryMinAge = GetMinAgeForAdulthood(pawn);
-            if (Settings.AsimovActive && (bool)HelperClasses.IsHumanlikeAutomaton?.Invoke(null, new object[] { pawn }) && pawn.HasNoGrowth())
-            {
-                backstoryMinAge = defaultMinAgeForAdulthood;
-            }
-            return (int)(Math.Round((backstoryMinAge - lifeStageMinAge) * .75f) + lifeStageMinAge);
+            CompSettingsMisc settings = GetMiscSettings(pawn);
+            return settings.adultAgeForLearning;
         }
 
         /// <summary>
@@ -649,34 +589,25 @@ namespace BetterRomance
         /// <returns></returns>
         public static int AgeReversalDemandAge(Pawn pawn)
         {
-            float adultAge = GetMinAgeForAdulthood(pawn);
-            float declineAge = pawn.DeclineAtAge();
-            float result = adultAge + 5f;
-            if (declineAge - adultAge < 10f)
+            CompSettingsMisc settings = GetMiscSettings(pawn);
+            //This is for animals, which won't have the comp, since this gets called during generation for ALL pawns
+            if (settings == null)
             {
-                result = adultAge + ((declineAge - adultAge) / 2);
+                return 25;
             }
-            return (int)result;
+            return settings.ageReversalDemandAge;
         }
 
         public static SimpleCurve AgeSkillFactor(Pawn pawn)
         {
-            return new SimpleCurve
-            {
-                new CurvePoint(ChildAge(pawn), 0.2f),
-                new CurvePoint(AdultAgeForLearning(pawn), 1f),
-            };
+            CompSettingsMisc settings = GetMiscSettings(pawn);
+            return settings.ageSkillFactor;
         }
 
         public static SimpleCurve AgeSkillMaxFactorCurve(Pawn pawn)
         {
-            return new SimpleCurve
-            {
-                new CurvePoint(0f,0f),
-                new CurvePoint(GetGrowthMoment(pawn, 1), 0.7f),
-                new CurvePoint(AdultAgeForLearning(pawn) * 2f, 1f),
-                new CurvePoint(pawn.RaceProps.lifeExpectancy - (pawn.RaceProps.lifeExpectancy/4), 1.6f),
-            };
+            CompSettingsMisc settings = GetMiscSettings(pawn);
+            return settings.ageSkillMaxFactorCurve;
         }
 
         /// <summary>
@@ -705,7 +636,7 @@ namespace BetterRomance
                 case 13f:
                     return pawn.ageTracker.AdultMinAge;
                 case 14f:
-                    return pawn.ageTracker.AdultMinAge+1;
+                    return pawn.ageTracker.AdultMinAge + 1;
                 case 16f:
                     return pawn.MinAgeForSex();
                 case 18f:
@@ -718,6 +649,24 @@ namespace BetterRomance
                     LogUtil.Warning($"Unable to translate {age} to appropriate age for race {pawn.def.defName}");
                     return age;
             }
+        }
+        public static bool IsUnset(this float value) => value == -999f;
+        public static bool IsUnset(this int value) => value == -999;
+
+        public static bool IsEquivalentTo(this SimpleCurve first,  SimpleCurve second)
+        {
+            if (first.PointsCount != second.PointsCount)
+            {
+                return false;
+            }
+            for (int i = 0; i < first.PointsCount; i++)
+            {
+                if (first.Points[i].Loc != second.Points[i].Loc)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

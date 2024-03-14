@@ -17,7 +17,8 @@
 	<WBR.CantHookupTargetSlave>slave</WBR.CantHookupTargetSlave>
 	<WBR.CantHookupTargetAsexual>asexual</WBR.CantHookupTargetAsexual>
 	<WBR.CantHookupTargetGender>incompatible gender</WBR.CantHookupTargetGender>
-	<WBR.CantHookupTargetInfertile>pregnancy not possible</WBR.CantHookupTargetInfertile>
+	<WBR.CantHookupTargetInfertile>infertile</WBR.CantHookupTargetInfertile>
+	<WBR.CantHookupTargetPregnancy>pregnancy not possible</WBR.CantHookupTargetPregnancy>
 	<WBR.CantHookupTargetTrait>missing trait</WBR.CantHookupTargetTrait>
 	<WBR.CantHookupTargetIdeo>{0_name}</WBR.CantHookupTargetIdeo>
 	<WBR.CantHookupTargetUnreachable>unreachable</WBR.CantHookupTargetUnreachable>
