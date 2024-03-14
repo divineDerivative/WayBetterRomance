@@ -10,7 +10,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(FloatMenuMakerMap), "AddHumanlikeOrders")]
     public static class FloatMenuMakerMap_AddHumanlikeOrders
     {
-
         public static void Postfix(Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
         {
             if (!pawn.Drafted && pawn.ageTracker.AgeBiologicalYearsFloat > pawn.MinAgeForSex() && !pawn.CheckForComp<Comp_PartnerList>().IsOrderedHookupOnCooldown)

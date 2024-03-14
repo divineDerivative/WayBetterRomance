@@ -16,7 +16,7 @@ namespace BetterRomance.HarmonyPatches
         {
             FieldInfo biologicalAgeTickFactorFromAgeCurve = AccessTools.Field(typeof(GeneDef), nameof(GeneDef.biologicalAgeTickFactorFromAgeCurve));
             int fieldFound = 0;
-            object label = new object();
+            object label = new();
             Type type = original.GetMethodBody().LocalVariables[0].LocalType;
 
             foreach (CodeInstruction code in instructions)
@@ -43,7 +43,7 @@ namespace BetterRomance.HarmonyPatches
                     //sb.AppendLine("WBR.AgelessGeneWarning".Translate());
                     yield return CodeInstruction.LoadField(type, "sb");
                     yield return CodeInstruction.Call(typeof(GeneDef_GetDescriptionFull), nameof(MakeAgelessString));
-                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), parameters: new Type[] { typeof(string) });
+                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), parameters: [typeof(string)]);
                     yield return new CodeInstruction(OpCodes.Pop);
                     fieldFound++;
                 }

@@ -15,7 +15,6 @@ namespace BetterRomance.HarmonyPatches
                 if (!pawn.HookupAllowed() || BetterRomanceMod.settings.hookupRate == 0f)
                 {
                     __result = false;
-                    return;
                 }
             }
         }

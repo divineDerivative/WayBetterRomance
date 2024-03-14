@@ -11,8 +11,8 @@ using Verse;
 namespace BetterRomance.HarmonyPatches
 {
     //This determines chances of a pawn initiating a romance attempt (not a hookup)
-    [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "RandomSelectionWeight")]
-    [HarmonyAfter(new string[] { "cedaro.NoHopelessRomance" })]
+    [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.RandomSelectionWeight))]
+    [HarmonyAfter(["cedaro.NoHopelessRomance"])]
     public static class InteractionWorker_RomanceAttempt_RandomSelectionWeight
     {
         //Changes from Vanilla:
@@ -39,6 +39,11 @@ namespace BetterRomance.HarmonyPatches
             }
             //Don't allow for juveniles
             if (initiator.DevelopmentalStage.Juvenile() || recipient.DevelopmentalStage.Juvenile())
+            {
+                __result = 0f;
+                return false;
+            }
+            if (initiator.Inhumanized())
             {
                 __result = 0f;
                 return false;
@@ -244,7 +249,7 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="pawn"></param>
         /// <param name="partner"></param>
         /// <returns></returns>
-        public static float PartnerRelationFactor(Pawn pawn, Pawn partner)
+        private static float PartnerRelationFactor(Pawn pawn, Pawn partner)
         {
             float relationFactor = 1f;
             if (pawn.relations.DirectRelationExists(PawnRelationDefOf.Lover, partner))

@@ -9,7 +9,7 @@ namespace BetterRomance.HarmonyPatches
 {
 
     //This determines the chance for a given pawn to become the child of two other pawns
-    [HarmonyPatch(typeof(ChildRelationUtility), "ChanceOfBecomingChildOf")]
+    [HarmonyPatch(typeof(ChildRelationUtility), nameof(ChildRelationUtility.ChanceOfBecomingChildOf))]
     public static class ChildRelationUtility_ChanceOfBecomingChildOf
     {
         //Check if settings allow children

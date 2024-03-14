@@ -7,7 +7,7 @@ using Verse;
 namespace BetterRomance.HarmonyPatches
 {
     //This determines chance of a breakup
-    [HarmonyPatch(typeof(InteractionWorker_Breakup), "RandomSelectionWeight")]
+    [HarmonyPatch(typeof(InteractionWorker_Breakup), nameof(InteractionWorker_Breakup.RandomSelectionWeight))]
     public static class InteractionWorker_Breakup_RandomSelectionWeight
     {
         //Changes from Vanilla:
@@ -39,7 +39,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //This only runs if there is a custom relation between the two pawns
-    [HarmonyPatch(typeof(InteractionWorker_Breakup), "Interacted")]
+    [HarmonyPatch(typeof(InteractionWorker_Breakup), nameof(InteractionWorker_Breakup.Interacted))]
     public static class InteractionWorker_Breakup_Interacted
     {
         public static bool Prefix(Pawn initiator, Pawn recipient, List<RulePackDef> extraSentencePacks, out string letterText, out string letterLabel, out LetterDef letterDef, out LookTargets lookTargets, InteractionWorker_Breakup __instance)

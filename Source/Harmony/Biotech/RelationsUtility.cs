@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace BetterRomance.HarmonyPatches
 {
-    [HarmonyPatch(typeof(RelationsUtility), "RomanceEligible")]
+    [HarmonyPatch(typeof(RelationsUtility), nameof(RelationsUtility.RomanceEligible))]
     public static class RelationsUtility_RomanceEligible
     {
         [HarmonyTranspiler]
@@ -89,7 +89,7 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(RelationsUtility), "RomanceEligiblePair")]
+    [HarmonyPatch(typeof(RelationsUtility), nameof(RelationsUtility.RomanceEligiblePair))]
     public static class RelationsUtility_RomanceEligiblePair
     {
         [HarmonyPrefix]
@@ -193,7 +193,7 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(RelationsUtility), "AttractedToGender")]
+    [HarmonyPatch(typeof(RelationsUtility), nameof(RelationsUtility.AttractedToGender))]
     public static class RelationsUtility_AttractedToGender
     {
         public static bool Prefix(Pawn pawn, Gender gender, ref bool __result)

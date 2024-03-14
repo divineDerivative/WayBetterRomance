@@ -10,7 +10,7 @@ using Verse;
 namespace BetterRomance.HarmonyPatches
 {
     //This determines the chance of generating a love relation, it is called by most relation workers
-    [HarmonyPatch(typeof(LovePartnerRelationUtility), "LovePartnerRelationGenerationChance")]
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.LovePartnerRelationGenerationChance))]
     public static class LovePartnerRelationUtility_LovePartnerRelationGenerationChance
     {
         //Changes From Vanilla:
@@ -135,43 +135,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeGapFactor")]
     public static class LovePartnerRelationUtility_GetGenerationChanceAgeGapFactor
     {
-        /// <summary>
-        /// Determines chances to generate a love relation based on age gap
-        /// </summary>
-        /// <param name="p1">First pawn</param>
-        /// <param name="p2">Second pawn</param>
-        /// <param name="ex">Is it an ex relation</param>
-        /// <returns>A float between 0.01 and 1</returns>
-        //public static bool Prefix(Pawn p1, Pawn p2, bool ex, ref float __result)
-        //{
-        //    float gap = Mathf.Abs(p1.ageTracker.AgeBiologicalYearsFloat - p2.ageTracker.AgeBiologicalYearsFloat);
-        //    if (ex)
-        //    {
-        //        float minGapAtMinAge1 = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers").Invoke(null, new object[] { p1, p2 });
-        //        if (minGapAtMinAge1 >= 0f)
-        //        {
-        //            gap = Mathf.Min(gap, minGapAtMinAge1);
-        //        }
-
-        //        float minGapAtMinAge2 = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers").Invoke(null, new object[] { p2, p1 });
-        //        if (minGapAtMinAge2 >= 0f)
-        //        {
-        //            gap = Mathf.Min(gap, minGapAtMinAge2);
-        //        }
-        //    }
-        //    //Use the lower of the two maxes from settings
-        //    float maxAgeGap = Mathf.Min(p1.MaxAgeGap(), p2.MaxAgeGap());
-        //    if (gap > maxAgeGap)
-        //    {
-        //        __result = 0f;
-        //        return false;
-        //    }
-        //    //This lowers chance to 0.01 if age gap is larger than half the max
-        //    float num = GenMath.LerpDouble(0f, maxAgeGap / 2, 1f, 0.01f, gap);
-        //    __result = Mathf.Clamp(num, 0.01f, 1f);
-        //    return false;
-        //}
-
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             LocalBuilder local_maxAgeGap = ilg.DeclareLocal(typeof(float));
@@ -250,7 +213,6 @@ namespace BetterRomance.HarmonyPatches
         //Changes from vanilla:
         //Age adjustments
         //No adjustment made for asexual pawns as that is handled elsewhere
-
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             foreach (CodeInstruction instruction in instructions)
@@ -293,7 +255,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //If no vanilla love relations were found, checks custom ones
-    [HarmonyPatch(typeof(LovePartnerRelationUtility), "IsLovePartnerRelation")]
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.IsLovePartnerRelation))]
     public static class LovePartnerRelationUtility_IsLovePartnerRelation
     {
         public static void Postfix(PawnRelationDef relation, ref bool __result)
@@ -306,7 +268,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //If no vanilla ex love relations were found, checks custom ones
-    [HarmonyPatch(typeof(LovePartnerRelationUtility), "IsExLovePartnerRelation")]
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.IsExLovePartnerRelation))]
     public static class LovePartnerRelationUtility_IsExLovePartnerRelation
     {
         public static void Postfix(PawnRelationDef relation, ref bool __result)
@@ -319,7 +281,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //If no vanilla love relations were found, checks custom ones
-    [HarmonyPatch(typeof(LovePartnerRelationUtility), "LovePartnerRelationExists")]
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.LovePartnerRelationExists))]
     public static class LovePartnerRelationUtility_LovePartnerRelationExists
     {
         public static void Postfix(Pawn first, Pawn second, ref bool __result)
@@ -332,7 +294,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //If no vanilla ex love relations were found, checks custom ones
-    [HarmonyPatch(typeof(LovePartnerRelationUtility), "ExLovePartnerRelationExists")]
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.ExLovePartnerRelationExists))]
     public static class LovePartnerRelationUtility_ExLovePartnerRelationExists
     {
         public static void Postfix(Pawn first, Pawn second, ref bool __result)
@@ -345,7 +307,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //Removes possibility of ex spouse relation if settings do not allow spouses for either pawn
-    [HarmonyPatch(typeof(LovePartnerRelationUtility), "GiveRandomExLoverOrExSpouseRelation")]
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.GiveRandomExLoverOrExSpouseRelation))]
     public static class LovePartnerRelationUtility_GiveRandomExLoverOrExSpouseRelation
     {
         public static bool Prefix(Pawn first, Pawn second)
@@ -360,7 +322,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //Simply skips this method entirely if children are not allowed for the generated pawn
-    [HarmonyPatch(typeof(LovePartnerRelationUtility), "TryToShareChildrenForGeneratedLovePartner")]
+    [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.TryToShareChildrenForGeneratedLovePartner))]
     public static class LovePartnerRelationUtility_TryToShareChildrenForGeneratedLovePartner
     {
         public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, float extraChanceFactor)

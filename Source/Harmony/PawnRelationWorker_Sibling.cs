@@ -29,13 +29,13 @@ namespace BetterRomance.HarmonyPatches
                 }
                 if (!hasMother)
                 {
-                    Pawn newMother = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, new object[] { generated, other, Gender.Female, request, false });
+                    Pawn newMother = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, [generated, other, Gender.Female, request, false]);
                     other.SetMother(newMother);
                 }
                 generated.SetMother(other.GetMother());
                 if (!hasFather)
                 {
-                    Pawn newFather = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, new object[] { generated, other, Gender.Male, request, false });
+                    Pawn newFather = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, [generated, other, Gender.Male, request, false]);
                     other.SetFather(newFather);
                 }
                 generated.SetFather(other.GetFather());
@@ -52,7 +52,7 @@ namespace BetterRomance.HarmonyPatches
                         father.relations.AddDirectRelation(PawnRelationDefOf.ExLover, mother);
                     }
                 }
-                AccessTools.Method(typeof(PawnRelationWorker_Sibling), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
+                AccessTools.Method(typeof(PawnRelationWorker_Sibling), "ResolveMyName").Invoke(__instance, [request, generated]);
                 return false;
             }
             return true;
@@ -66,69 +66,69 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.opcode == OpCodes.Ldc_R4)
+                if (code.opcode == OpCodes.Ldc_R4)
                 {
-                    if (instruction.OperandIs(14f))
+                    if (code.OperandIs(14f))
                     {
                         //Because the instruction I'm replacing is used as a jump to point, the new instruction needs to have the same label as the old one
-                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
+                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
                         //Since Gender is an enum, I need to load the value of Male, which is 1
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
                     }
-                    else if (instruction.OperandIs(16f))
+                    else if (code.OperandIs(16f))
                     {
-                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
+                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
                         //Since Gender is an enum, I need to load the value of Female, which is 2
                         yield return new CodeInstruction(OpCodes.Ldc_I4_2);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
                     }
-                    else if (instruction.OperandIs(50f))
+                    else if (code.OperandIs(50f))
                     {
-                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
+                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren));
                     }
-                    else if (instruction.OperandIs(45f))
+                    else if (code.OperandIs(45f))
                     {
-                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
+                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
                         yield return new CodeInstruction(OpCodes.Ldc_I4_2);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren));
                     }
-                    else if (instruction.OperandIs(30f))
+                    else if (code.OperandIs(30f))
                     {
-                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
+                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
                         yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren));
                     }
-                    else if (instruction.OperandIs(27f))
+                    else if (code.OperandIs(27f))
                     {
-                        yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
+                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
                         yield return new CodeInstruction(OpCodes.Ldc_I4_2);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren));
                     }
                     else
                     {
-                        yield return instruction;
+                        yield return code;
                     }
                 }
-                else if (instruction.LoadsField(AccessTools.Field(typeof(Pawn), nameof(Pawn.kindDef))))
+                else if (code.LoadsField(AccessTools.Field(typeof(Pawn), nameof(Pawn.kindDef))))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_2);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ParentPawnkind));
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }
     }
 
     //Add use of age settings
-    [HarmonyPatch(typeof(PawnRelationWorker_Sibling), "GenerationChance")]
+    [HarmonyPatch(typeof(PawnRelationWorker_Sibling), nameof(PawnRelationWorker_Sibling.GenerationChance))]
     public static class PawnRelationWorker_Sibling_GenerationChance
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -143,7 +143,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 2f);
                     yield return new CodeInstruction(OpCodes.Div);
-                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), new Type[] { typeof(float), typeof(float) });
+                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), [typeof(float), typeof(float)]);
                 }
                 else if (instruction.Is(OpCodes.Ldc_R4, 10f))
                 {
@@ -153,7 +153,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 8f);
                     yield return new CodeInstruction(OpCodes.Div);
-                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), new Type[] { typeof(float), typeof(float) });
+                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), [typeof(float), typeof(float)]);
                 }
                 else
                 {

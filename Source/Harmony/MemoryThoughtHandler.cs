@@ -6,7 +6,7 @@ using Verse;
 namespace BetterRomance.HarmonyPatches
 {
     //Intercepts adding the 'got some lovin'' thought and replaces it with the asexual version if needed
-    [HarmonyPatch(typeof(MemoryThoughtHandler), "TryGainMemory", new Type[] { typeof(Thought_Memory), typeof(Pawn) })]
+    [HarmonyPatch(typeof(MemoryThoughtHandler), nameof(MemoryThoughtHandler.TryGainMemory), [typeof(Thought_Memory), typeof(Pawn)])]
     public static class MemoryThoughtHandler_TryGainMemory
     {
         public static bool Prefix(ref Thought_Memory newThought, Pawn otherPawn, Pawn ___pawn)

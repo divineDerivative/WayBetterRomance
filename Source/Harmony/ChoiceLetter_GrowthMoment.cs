@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace BetterRomance.HarmonyPatches
 {
-    [HarmonyPatch(typeof(ChoiceLetter_GrowthMoment), "MakeChoices")]
+    [HarmonyPatch(typeof(ChoiceLetter_GrowthMoment), nameof(ChoiceLetter_GrowthMoment.MakeChoices))]
     public static class ChoiceLetter_GrowthMoment_MakeChoices
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

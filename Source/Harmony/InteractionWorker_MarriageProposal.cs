@@ -9,8 +9,8 @@ using Verse;
 namespace BetterRomance.HarmonyPatches
 {
     //This determines if a pawn will propose marriage to another pawn
-    [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), "RandomSelectionWeight")]
-    [HarmonyAfter(new string[] { "cedaro.NoHopelessRomance" })]
+    [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), nameof(InteractionWorker_MarriageProposal.RandomSelectionWeight))]
+    [HarmonyAfter(["cedaro.NoHopelessRomance"])]
     public static class InteractionWorker_MarriageProposal_RandomSelectionWeight
     {
         //Changes from Vanilla:
@@ -29,6 +29,12 @@ namespace BetterRomance.HarmonyPatches
             //If pawns are not already in a lover relationship, do not allow
             DirectPawnRelation directRelation = initiator.relations.GetDirectRelation(PawnRelationDefOf.Lover, recipient) ?? CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient);
             if (directRelation == null)
+            {
+                __result = 0f;
+                return false;
+            }
+            //Some Anomaly thing
+            if (initiator.Inhumanized())
             {
                 __result = 0f;
                 return false;
@@ -105,8 +111,8 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //This determines if a pawn will accept a marriage proposal
-    [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), "AcceptanceChance")]
-    [HarmonyAfter(new string[] { "Telardo.RomanceOnTheRim", "cedaro.NoHopelessRomance" })]
+    [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), nameof(InteractionWorker_MarriageProposal.AcceptanceChance))]
+    [HarmonyAfter(["Telardo.RomanceOnTheRim", "cedaro.NoHopelessRomance"])]
     public static class InteractionWorker_MarriageProposal_AcceptanceChance
     {
         //Changes from Vanilla:
@@ -152,8 +158,8 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
-    //Makes neccessary changes depending on outcome of interaction
-    [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), "Interacted")]
+    //Makes necessary changes depending on outcome of interaction
+    [HarmonyPatch(typeof(InteractionWorker_MarriageProposal), nameof(InteractionWorker_MarriageProposal.Interacted))]
     public static class InteractionWorker_MarriageProposal_Interacted
     {
         //If a custom love relation exists, this will remove that relation instead of vanilla lover
@@ -201,7 +207,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 if (PawnUtility.ShouldSendNotificationAbout(initiator) || PawnUtility.ShouldSendNotificationAbout(recipient))
                 {
-                    StringBuilder stringBuilder = new StringBuilder();
+                    StringBuilder stringBuilder = new();
                     if (accepted)
                     {
                         letterLabel = "LetterLabelAcceptedProposal".Translate();

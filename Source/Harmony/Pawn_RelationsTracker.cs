@@ -9,8 +9,8 @@ using System.Reflection;
 namespace BetterRomance.HarmonyPatches
 {
     //This determines how likely a pawn is to want to have sex with another pawn
-    [HarmonyPatch(typeof(Pawn_RelationsTracker), "SecondaryLovinChanceFactor")]
-    [HarmonyAfter(new string[] { "Pecius.PawnExtensions" })]
+    [HarmonyPatch(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.SecondaryLovinChanceFactor))]
+    [HarmonyAfter(["Pecius.PawnExtensions"])]
     public static class Pawn_RelationsTracker_SecondaryLovinChanceFactor
     {
         //Changes from Vanilla:
@@ -73,7 +73,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //Age considerations were moved to a separate method in 1.4
-    [HarmonyPatch(typeof(Pawn_RelationsTracker), "LovinAgeFactor")]
+    [HarmonyPatch(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.LovinAgeFactor))]
     public static class Pawn_RelationsTracker_LovinAgeFactor
     {
         //Changes from vanilla:
@@ -99,7 +99,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //This is used to determine chances of deep talk, slight, and insult interaction
-    [HarmonyPatch(typeof(Pawn_RelationsTracker), "CompatibilityWith")]
+    [HarmonyPatch(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.CompatibilityWith))]
     public static class Pawn_RelationsTracker_CompatibilityWith
     {
         //Change from Vanilla:
@@ -133,7 +133,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //Adjusts SecondaryLovinChanceFactor based on attractiveness
-    [HarmonyPatch(typeof(Pawn_RelationsTracker), "PrettinessFactor")]
+    [HarmonyPatch(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.PrettinessFactor))]
     public static class Pawn_RelationsTracker_PrettinessFactor
     {
         public static bool Prefix(Pawn otherPawn, Pawn ___pawn, ref float __result)

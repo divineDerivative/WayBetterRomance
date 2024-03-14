@@ -5,7 +5,7 @@ using System.Reflection.Emit;
 
 namespace BetterRomance.HarmonyPatches
 {
-    [HarmonyPatch(typeof(CompAbilityEffect_WordOfLove), "ValidateTarget")]
+    [HarmonyPatch(typeof(CompAbilityEffect_WordOfLove), nameof(CompAbilityEffect_WordOfLove.ValidateTarget))]
     public static class CompAbilityEffect_WordOfLove_ValidateTarget
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

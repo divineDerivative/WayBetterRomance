@@ -45,7 +45,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     if (comp.IsOrderedHookupOnCooldown)
                     {
-                        Command_Action action1 = new Command_Action
+                        Command_Action action1 = new()
                         {
                             defaultLabel = "DEV: Reset ordered hookup cooldown",
                             action = delegate
@@ -56,7 +56,7 @@ namespace BetterRomance.HarmonyPatches
                         yield return action1;
                     }
 
-                    Command_Action action2 = new Command_Action
+                    Command_Action action2 = new()
                     {
                         defaultLabel = "DEV: Clear partner lists",
                         action = delegate
@@ -84,7 +84,7 @@ namespace BetterRomance.HarmonyPatches
 
                 if (__instance.RaceProps.Humanlike)
                 {
-                    Command_Action action3 = new Command_Action
+                    Command_Action action3 = new()
                     {
                         defaultLabel = "DEV: Reset lovin' tick",
                         action = delegate

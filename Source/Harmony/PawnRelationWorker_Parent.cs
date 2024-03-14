@@ -5,7 +5,7 @@ using Verse;
 namespace BetterRomance.HarmonyPatches
 {
     //If spouses are not allowed, look at lover relations for the generated child's other parent
-    [HarmonyPatch(typeof(PawnRelationWorker_Parent), "CreateRelation")]
+    [HarmonyPatch(typeof(PawnRelationWorker_Parent), nameof(PawnRelationWorker_Parent.CreateRelation))]
     public static class PawnRelationWorker_Parent_CreateRelation
     {
         public static bool Prefix(Pawn generated, Pawn other, ref PawnGenerationRequest request, PawnRelationWorker_Parent __instance)
@@ -20,7 +20,7 @@ namespace BetterRomance.HarmonyPatches
                     {
                         generated.SetMother(firstLoverOfOppositeGender);
                     }
-                    AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
+                    AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMyName").Invoke(__instance, [request, generated]);
                 }
                 else if (other.gender == Gender.Female)
                 {
@@ -30,7 +30,7 @@ namespace BetterRomance.HarmonyPatches
                     {
                         generated.SetFather(firstLoverOfOppositeGender);
                     }
-                    AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMyName").Invoke(__instance, new object[] { request, generated });
+                    AccessTools.Method(typeof(PawnRelationWorker_Parent), "ResolveMyName").Invoke(__instance, [request, generated]);
                 }
                 //Just in case another mod has patches to run for genderless pawns
                 else

@@ -20,7 +20,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return CodeInstruction.LoadField(typeof(RitualOutcomeComp_PawnAge), nameof(RitualOutcomeComp_PawnAge.roleId));
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(RitualOutcomeComp_PawnAge_QualityOffset), nameof(RitualOutcomeComp_PawnAge_QualityOffset.RolePawn));
+                    yield return CodeInstruction.Call(typeof(RitualOutcomeComp_PawnAge_QualityOffset), nameof(RolePawn));
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetChildBirthAgeCurve));
                 }
                 else
@@ -57,7 +57,7 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(RitualOutcomeComp_PawnAge), "GetExpectedOutcomeDesc")]
+    [HarmonyPatch(typeof(RitualOutcomeComp_PawnAge), nameof(RitualOutcomeComp_PawnAge.GetQualityFactor))]
     public static class RitualOutcomeComp_PawnAge_GetExpectedOutcomeDesc
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

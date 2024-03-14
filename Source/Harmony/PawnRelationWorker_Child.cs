@@ -6,7 +6,7 @@ namespace BetterRomance.HarmonyPatches
 {
     //Do not force a spouse relation on a newly generated parent if settings do not allow spouses
     //Actually need to have it run for parents with orientation mismatch
-    [HarmonyPatch(typeof(PawnRelationWorker_Child), "CreateRelation")]
+    [HarmonyPatch(typeof(PawnRelationWorker_Child), nameof(PawnRelationWorker_Child.CreateRelation))]
     public static class PawnRelationWorker_Child_CreateRelation
     {
         //generated is the parent, other is the child
@@ -29,7 +29,7 @@ namespace BetterRomance.HarmonyPatches
                 if (generated.gender == Gender.Male)
                 {
                     other.SetFather(generated);
-                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, new object[] { request, other, other.GetMother() });
+                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, other.GetMother()]);
                     if (other.GetMother() != null)
                     {
                         if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && !generated.IsHomo() && !other.GetMother().IsHomo())
@@ -45,7 +45,7 @@ namespace BetterRomance.HarmonyPatches
                 else if (generated.gender == Gender.Female)
                 {
                     other.SetMother(generated);
-                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, new object[] { request, other, other.GetFather() });
+                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, other.GetFather()]);
                     if (other.GetFather() != null)
                     {
                         if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && !generated.IsHomo() && !other.GetFather().IsHomo())

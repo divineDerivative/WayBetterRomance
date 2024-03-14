@@ -70,7 +70,7 @@ namespace BetterRomance.HarmonyPatches
             float padding = (float)AccessTools.Field(typeof(SocialCardUtility), "RowLeftRightPadding").GetValue(null);
             if (HookupUtility.CanDrawTryHookup(pawn))
             {
-                bool romanceDrawn = (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, new object[] { pawn });
+                bool romanceDrawn = (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, [pawn]);
                 //Adjust x position based on if romance button is present
                 float width = romanceDrawn ? rect.width - 150f - ButtonSize.x + padding : rect.width - 150f + (padding * 2);
                 DrawTryHookup(new Rect(width, rect.height - ButtonSize.y, ButtonSize.x, ButtonSize.y), pawn);
@@ -125,8 +125,8 @@ namespace BetterRomance.HarmonyPatches
         /// <returns></returns>
         private static List<FloatMenuOption> HookupOptions(Pawn romancer)
         {
-            List<(float, FloatMenuOption)> eligibleList = new List<(float, FloatMenuOption)>();
-            List<FloatMenuOption> ineligibleList = new List<FloatMenuOption>();
+            List<(float, FloatMenuOption)> eligibleList = new();
+            List<FloatMenuOption> ineligibleList = new();
 
             foreach (Pawn p in RomanceUtilities.GetAllSpawnedHumanlikesOnMap(romancer.Map))
             {
@@ -149,7 +149,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(SocialCardUtility), "GetPawnRowTooltip")]
     public static class SocialCardUtility_GetPawnRowTooltip
     {
-
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             MethodInfo RomanceExplanation = AccessTools.Method(typeof(SocialCardUtility), "RomanceExplanation");
@@ -180,7 +179,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Brtrue, oldLabel);
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Ldloc, text);
-                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), parameters: new Type[] { typeof(string) });
+                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), parameters: [typeof(string)]);
                     yield return new CodeInstruction(OpCodes.Pop);
 
                     startFound = false;
@@ -193,7 +192,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        public static string HookupExplanation(Pawn initiator, Pawn target)
+        private static string HookupExplanation(Pawn initiator, Pawn target)
         {
             if (!HookupUtility.CanDrawTryHookup(initiator))
             {
@@ -208,7 +207,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 return "WBR.HookupChanceCant".Translate() + (" (" + ar.Reason + ")\n");
             }
-            StringBuilder text = new StringBuilder();
+            StringBuilder text = new();
             text.AppendLine(("WBR.HookupChance".Translate() + (": " + HookupUtility.HookupSuccessChance(target, initiator, ordered: true, forTooltip: true).ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
             text.Append(HookupUtility.HookupFactors(initiator, target));
             return text.ToString();
@@ -221,7 +220,7 @@ namespace BetterRomance.HarmonyPatches
         //This is to prevent drawing the button since I had to co-opt the bool that usually prevents it
         public static bool Prefix(Rect buttonRect, Pawn pawn)
         {
-            return (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, new object[] { pawn });
+            return (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, [pawn]);
         }
 
         //Adds a custom message when clicking on the disabled romance button for an aromantic pawn
@@ -232,7 +231,7 @@ namespace BetterRomance.HarmonyPatches
             bool cooldownFound = false;
             MethodInfo Accepted = AccessTools.PropertyGetter(typeof(AcceptanceReport), nameof(AcceptanceReport.Accepted));
 
-            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            List<CodeInstruction> codes = new(instructions);
             for (int i = 0; i < codes.Count; i++)
             {
                 CodeInstruction code = codes[i];
@@ -264,12 +263,12 @@ namespace BetterRomance.HarmonyPatches
 
                     yield return new CodeInstruction(OpCodes.Ldstr, "WBR.CantRomanceInitiateMessageAromantic");
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(NamedArgument), "op_Implicit", new Type[] { typeof(Thing) });
-                    yield return CodeInstruction.Call(typeof(TranslatorFormattedStringExtensions), nameof(TranslatorFormattedStringExtensions.Translate), new Type[] { typeof(string), typeof(NamedArgument) });
-                    yield return CodeInstruction.Call(typeof(TaggedString), "op_Implicit", new Type[] { typeof(TaggedString) });
+                    yield return CodeInstruction.Call(typeof(NamedArgument), "op_Implicit", [typeof(Thing)]);
+                    yield return CodeInstruction.Call(typeof(TranslatorFormattedStringExtensions), nameof(TranslatorFormattedStringExtensions.Translate), [typeof(string), typeof(NamedArgument)]);
+                    yield return CodeInstruction.Call(typeof(TaggedString), "op_Implicit", [typeof(TaggedString)]);
                     yield return CodeInstruction.LoadField(typeof(MessageTypeDefOf), nameof(MessageTypeDefOf.RejectInput));
                     yield return new CodeInstruction(OpCodes.Ldc_I4_0);
-                    yield return CodeInstruction.Call(typeof(Messages), nameof(Messages.Message), new Type[] { typeof(string), typeof(MessageTypeDef), typeof(bool) });
+                    yield return CodeInstruction.Call(typeof(Messages), nameof(Messages.Message), [typeof(string), typeof(MessageTypeDef), typeof(bool)]);
                     yield return new CodeInstruction(OpCodes.Ret);
                 }
 

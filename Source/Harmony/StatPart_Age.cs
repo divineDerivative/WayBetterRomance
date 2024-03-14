@@ -7,7 +7,7 @@ using System.Reflection;
 namespace BetterRomance.HarmonyPatches
 {
     [HarmonyPatch]
-    [HarmonyAfter(new string[] { "rimworld.erdelf.alien_race.main" })]
+    [HarmonyAfter(["rimworld.erdelf.alien_race.main"])]
     public static class StatPart_Age_AgeEffect
     {
         public static bool Prefix(Pawn pawn, StatPart_Age __instance, ref float __result, bool ___humanlikeOnly, bool ___useBiologicalYears, SimpleCurve ___curve)
@@ -30,7 +30,7 @@ namespace BetterRomance.HarmonyPatches
                     new CurvePoint(1f, 1f)
                 };
             }
-            SimpleCurve newCurve = new SimpleCurve();
+            SimpleCurve newCurve = new();
             foreach (CurvePoint point in oldCurve.Points)
             {
                 newCurve.Points.Add(new CurvePoint(SettingsUtilities.ConvertAge(point.x, pawn), point.y));
