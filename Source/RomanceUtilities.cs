@@ -251,7 +251,7 @@ namespace BetterRomance
         public static List<Pawn> GetAllSpawnedHumanlikesOnMap(Map map)
         {
             List<Pawn> result = new List<Pawn>();
-            List<Pawn> pawns = map.mapPawns.AllPawnsSpawned;
+            IReadOnlyList<Pawn> pawns = map.mapPawns.AllPawnsSpawned;
             foreach (Pawn pawn in pawns)
             {
                 //Exclude animals and enemies and robots

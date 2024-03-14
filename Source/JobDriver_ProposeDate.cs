@@ -4,6 +4,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using LudeonTK;
 
 namespace BetterRomance
 {
@@ -192,7 +193,7 @@ namespace BetterRomance
             }
         }
 
-        [DebugAction("General", null, false, false, false, 0, false, actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.PlayingOnMap, hideInSubMenu = true)]
+        [DebugAction(category = "General", actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.PlayingOnMap, hideInSubMenu = true)]
         private static void FlashDatePath()
         {
             DebugFlashDatePath(UI.MouseCell());
