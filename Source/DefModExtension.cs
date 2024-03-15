@@ -219,7 +219,7 @@ namespace BetterRomance
 
         public override IEnumerable<string> ConfigErrors()
         {
-            if (childrenAllowed == true)
+            if (childrenAllowed == false)
             {
                 if (pawnKindForParentGlobal == null && pawnKindForParentFemale == null && pawnKindForParentMale == null)
                 {

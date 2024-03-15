@@ -528,7 +528,7 @@ namespace BetterRomance
                             float value = gene.def.missingGeneRomanceChanceFactor;
                             string kind = string.Empty;
                             //Nullify with kind trait
-                            if (target.story?.traits != null && initiator.story.traits.HasTrait(TraitDefOf.Kind))
+                            if (target.story?.traits != null && target.story.traits.HasTrait(TraitDefOf.Kind))
                             {
                                 value = 1f;
                                 kind = " (" + TraitDefOf.Kind.DataAtDegree(0).label + ")";
