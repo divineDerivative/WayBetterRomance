@@ -227,12 +227,12 @@ namespace BetterRomance
                 case Gender.Female:
                     myCurve = biotech.femaleFertilityAgeFactor;
                     break;
+                case Gender.None:
+                    myCurve = biotech.noneFertilityAgeFactor;
+                    break;
                 case Gender.Male:
                 default:
                     myCurve = biotech.maleFertilityAgeFactor;
-                    break;
-                case Gender.None:
-                    myCurve = biotech.noneFertilityAgeFactor;
                     break;
             }
             //None gender is a special case because HAR doesn't have a separate setting for that
@@ -298,6 +298,8 @@ namespace BetterRomance
         //This still needs work
         private SimpleCurve CalculateCurve(Gender gender)
         {
+            //Disabling until I figure out a better way to do this
+            return SettingsUtilities.GetDefaultFertilityAgeCurve(gender);
             //Just use the default for humans
             if (race.defName == "Human")
             {
@@ -363,6 +365,8 @@ namespace BetterRomance
         //This doesn't really work yet
         private bool DoAgesMakeSense(SimpleCurve curve)
         {
+            //Disabling until I figure out a better way to do this
+            return true;
             //So I guess first we could check if they even have any reproductive life stages. If not we just return true because their fertility curve won't matter
             if (!race.race.lifeStageAges.Any(stage => stage.def.reproductive))
             {
