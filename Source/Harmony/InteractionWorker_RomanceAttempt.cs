@@ -43,11 +43,13 @@ namespace BetterRomance.HarmonyPatches
                 __result = 0f;
                 return false;
             }
+#if v1_5
             if (initiator.Inhumanized())
             {
                 __result = 0f;
                 return false;
             }
+#endif
             //Don't allow if target is in mental state or is already in a love relation with initiator
             if (recipient.InMentalState || LovePartnerRelationUtility.LovePartnerRelationExists(initiator, recipient))
             {

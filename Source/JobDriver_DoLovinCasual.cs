@@ -248,6 +248,16 @@ namespace BetterRomance
                     num *= item.def.lovinMTBFactor;
                 }
             }
+#if v1_5
+            foreach (Hediff hediff in pawn.health.hediffSet.hediffs)
+            {
+                HediffComp_GiveLovinMTBFactor hediffComp_GiveLovinMTBFactor = hediff.TryGetComp<HediffComp_GiveLovinMTBFactor>();
+                if (hediffComp_GiveLovinMTBFactor != null)
+                {
+                    num *= hediffComp_GiveLovinMTBFactor.Props.lovinMTBFactor;
+                }
+            }
+#endif
             num = Rand.Gaussian(num, 0.3f);
             if (num < 0.5f)
             {

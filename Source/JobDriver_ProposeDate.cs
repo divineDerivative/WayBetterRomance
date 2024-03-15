@@ -4,7 +4,9 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+#if v1_5
 using LudeonTK;
+#endif
 
 namespace BetterRomance
 {

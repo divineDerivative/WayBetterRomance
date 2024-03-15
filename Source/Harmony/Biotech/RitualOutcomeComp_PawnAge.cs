@@ -57,7 +57,11 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
+#if v1_4
+    [HarmonyPatch(typeof(RitualOutcomeComp_PawnAge), nameof(RitualOutcomeComp_PawnAge.GetExpectedOutcomeDesc))]
+#else
     [HarmonyPatch(typeof(RitualOutcomeComp_PawnAge), nameof(RitualOutcomeComp_PawnAge.GetQualityFactor))]
+#endif
     public static class RitualOutcomeComp_PawnAge_GetExpectedOutcomeDesc
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

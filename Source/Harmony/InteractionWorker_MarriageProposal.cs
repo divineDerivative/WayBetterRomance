@@ -34,11 +34,13 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //Some Anomaly thing
+#if v1_5
             if (initiator.Inhumanized())
             {
                 __result = 0f;
                 return false;
             }
+#endif
             //This is vanilla code for checking if ideology allows for the new spouse relation
             if (!IdeoUtility.DoerWillingToDo(initiator.GetHistoryEventForSpouseAndFianceCountPlusOne(), initiator) || !IdeoUtility.DoerWillingToDo(recipient.GetHistoryEventForSpouseAndFianceCountPlusOne(), recipient))
             {
@@ -168,7 +170,11 @@ namespace BetterRomance.HarmonyPatches
             //First check for a custom relation and only run patch if one exists
             if (CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient) is DirectPawnRelation relation)
             {
+#if v1_4
+                bool accepted = Rand.Value < __instance.AcceptanceChance(initiator, recipient);
+#else
                 bool accepted = Rand.Value < InteractionWorker_MarriageProposal.AcceptanceChance(initiator, recipient);
+#endif
                 bool breakup = false;
                 if (accepted)
                 {
