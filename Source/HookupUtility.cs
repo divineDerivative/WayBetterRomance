@@ -588,8 +588,8 @@ namespace BetterRomance
                 return "WBR.PawnIsTooYoung".Translate((manYoung ? man : woman).Named("PAWN")).Resolve();
             }
             //Check fertility of both pawns
-            bool manInfertile = man.GetFertilityLevel() <= 0f;
-            bool womanInfertile = woman.GetFertilityLevel() <= 0f;
+            bool manInfertile = man.IsFertile();
+            bool womanInfertile = woman.IsFertile();
             if (manInfertile && womanInfertile)
             {
                 return "WBR.PawnsAreInfertile".Translate(man.Named("PAWN1"), woman.Named("PAWN2")).Resolve();

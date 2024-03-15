@@ -24,7 +24,7 @@ namespace BetterRomance
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            return true;
+            return pawn.Reserve(TargetPawn, job, errorOnFailed: errorOnFailed);
         }
 
         private bool IsTargetPawnOkay()
@@ -34,7 +34,7 @@ namespace BetterRomance
 
         private bool DoesTargetPawnAcceptDate()
         {
-            return TargetPawn.IsFree(IsDate ? RomanticActivityType.Date : RomanticActivityType.Hangout, out _) && (IsDate ? DateUtility.IsDateAppealing(TargetPawn, Actor) : DateUtility.IsHangoutAppealing(TargetPawn, Actor));
+            return IsDate ? TargetPawn.IsFree(RomanticActivityType.Date, out _) && DateUtility.IsDateAppealing(TargetPawn, Actor) : TargetPawn.IsFree(RomanticActivityType.Hangout, out _) && DateUtility.IsHangoutAppealing(TargetPawn, Actor);
         }
 
         private bool TryGetDateJobs(out Job dateLeadJob, out Job dateFollowJob)

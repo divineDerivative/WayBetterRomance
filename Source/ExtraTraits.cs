@@ -21,34 +21,22 @@ namespace BetterRomance
                 AssignOrientation(pawn);
             }
         }
+
         public static void AssignOrientation(Pawn pawn)
         {
-            float orientation = Rand.Value;
             if (pawn.gender == Gender.None && pawn.def.defName != "RE_Asari")
             {
                 return;
             }
             if (pawn.story != null)
             {
-                //Start with user settings
-                //Actually I can just grab whichever orientation object is relevant
-                //UnifiedOrientationChances sexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.sexual ?? BetterRomanceMod.settings.sexualOrientations;
-                //But I'll save this for later
-                float asexualChance = BetterRomanceMod.settings.sexualOrientations.none;
-                float bisexualChance = BetterRomanceMod.settings.sexualOrientations.bi;
-                float gayChance = BetterRomanceMod.settings.sexualOrientations.homo;
-                float straightChance = BetterRomanceMod.settings.sexualOrientations.hetero;
-
-                //Overwrite if settings exist on comp
-                WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
-                OrientationChances chances = comp.orientation?.sexual;
-                if (chances != null)
-                {
-                    asexualChance = chances.none;
-                    bisexualChance = chances.bi;
-                    gayChance = chances.homo;
-                    straightChance = chances.hetero;
-                }
+                //Grab the relevant orientation object
+                OrientationChances sexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.sexual ?? BetterRomanceMod.settings.sexualOrientations;
+                //Assign chances
+                float asexualChance = sexualChances.none;
+                float bisexualChance = sexualChances.bi;
+                float gayChance = sexualChances.homo;
+                float straightChance = sexualChances.hetero;
 
                 //Check for existing partners first
                 bool mightBeStraight = false;
@@ -67,10 +55,12 @@ namespace BetterRomance
                     return;
                 }
 
+                //Roll for orientation
+                float orientation = Rand.Value;
+
                 //Asexual chance
                 if (orientation < asexualChance / 100f)
                 {
-
                     if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
                     {
                         pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
@@ -79,19 +69,11 @@ namespace BetterRomance
                     else
                     {
                         //Set up romantic orientation chances
-                        float aceAroChance = BetterRomanceMod.settings.asexualOrientations.none;
-                        float aceBiChance = BetterRomanceMod.settings.asexualOrientations.bi;
-                        float aceHomoChance = BetterRomanceMod.settings.asexualOrientations.homo;
-                        float aceHeteroChance = BetterRomanceMod.settings.asexualOrientations.hetero;
-
-                        OrientationChances asexualChances = comp.orientation?.asexual;
-                        if (asexualChances != null)
-                        {
-                            aceAroChance = asexualChances.none;
-                            aceBiChance = asexualChances.bi;
-                            aceHomoChance = asexualChances.homo;
-                            aceHeteroChance = asexualChances.hetero;
-                        }
+                        OrientationChances asexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.asexual ?? BetterRomanceMod.settings.sexualOrientations;
+                        float aceAroChance = asexualChances.none;
+                        float aceBiChance = asexualChances.bi;
+                        float aceHomoChance = asexualChances.homo;
+                        float aceHeteroChance = asexualChances.hetero;
 
                         if (mightBeGay)
                         {

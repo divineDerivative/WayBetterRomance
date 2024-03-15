@@ -14,7 +14,7 @@ namespace BetterRomance
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            return true;
+            return pawn.Reserve(Partner, job, errorOnFailed: errorOnFailed);
         }
 
         public override RandomSocialMode DesiredSocialMode()
