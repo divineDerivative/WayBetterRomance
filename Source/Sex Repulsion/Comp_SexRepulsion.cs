@@ -7,6 +7,7 @@ namespace BetterRomance
         public Pawn Pawn => (Pawn)parent;
         public float rating;
 
+        //Seed is based on pawn's ID, so it will always return the same number for a given pawn.
         float InitialRating()
         {
             Rand.PushState();
@@ -19,6 +20,7 @@ namespace BetterRomance
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
+            //If rating has been changed, it will be overwritten in PostExposeData
             rating = InitialRating();
         }
 

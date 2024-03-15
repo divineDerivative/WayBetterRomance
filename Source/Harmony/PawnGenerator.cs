@@ -1,8 +1,6 @@
 ﻿using HarmonyLib;
-using RimWorld;
 using System.Collections.Generic;
 using System.Reflection.Emit;
-using UnityEngine;
 using Verse;
 
 namespace BetterRomance.HarmonyPatches
@@ -107,7 +105,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (var code in instructions)
+            foreach (CodeInstruction code in instructions)
             {
                 if (code.LoadsField(AccessTools.Field(typeof(PawnGenerator), "AgeSkillMaxFactorCurve")))
                 {

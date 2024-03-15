@@ -7,8 +7,8 @@ namespace BetterRomance
     public static class CustomLoveRelationUtility
     {
         //Love Relation Settings
-        public static HashSet<PawnRelationDef> LoveRelations = new HashSet<PawnRelationDef>();
-        public static HashSet<PawnRelationDef> ExLoveRelations = new HashSet<PawnRelationDef>();
+        public static HashSet<PawnRelationDef> LoveRelations = new();
+        public static HashSet<PawnRelationDef> ExLoveRelations = new();
 
         public static DirectPawnRelation CheckCustomLoveRelations(Pawn pawn, Pawn otherPawn, bool ex = false)
         {
@@ -79,7 +79,7 @@ namespace BetterRomance
             {
                 return relation.GetModExtension<LoveRelations>().exLoveRelation ?? PawnRelationDefOf.ExLover;
             }
-            LogUtil.Warning($"Tried to get the ex relation for a relation with no LoveRelations extension {relation.defName}");
+            LogUtil.Warning($"Tried to get the ex relation for {relation.defName} but it has no LoveRelations extension ");
             return PawnRelationDefOf.ExLover;
         }
     }

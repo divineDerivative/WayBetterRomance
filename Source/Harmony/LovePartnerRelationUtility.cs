@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -98,9 +97,9 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //Bunch of age calculations
-            float generatedAgeFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor").Invoke(null, new object[] { generated });
-            float otherAgeFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor").Invoke(null, new object[] { other });
-            float ageGapFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeGapFactor").Invoke(null, new object[] { generated, other, ex });
+            float generatedAgeFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor").Invoke(null, [generated]);
+            float otherAgeFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor").Invoke(null, [other]);
+            float ageGapFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeGapFactor").Invoke(null, [generated, other, ex]);
             float existingFamilyFactor = 1f;
             //This reduces chances if they're already related by blood
             if (generated.GetRelations(other).Any(x => x.familyByBloodRelation))
@@ -146,7 +145,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
-                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), parameters: new Type[] { typeof(float), typeof(float) });
+                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), parameters: [typeof(float), typeof(float)]);
                     //need to store this value somewhere
                     yield return new CodeInstruction(OpCodes.Stloc, local_maxAgeGap.LocalIndex);
                     yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);

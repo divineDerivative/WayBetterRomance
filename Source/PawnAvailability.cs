@@ -93,7 +93,7 @@ namespace BetterRomance
             return PawnAvailability.Free;
         }
 
-        private static readonly List<JobDef> DontInterruptJobs = new List<JobDef>
+        private static readonly List<JobDef> DontInterruptJobs = new()
         {
             //Ceremonies
             JobDefOf.SpectateCeremony,
@@ -128,7 +128,7 @@ namespace BetterRomance
             JobDefOf.Breastfeed,
         };
 
-        private static readonly List<JobDef> CantInterruptJobs = new List<JobDef>
+        private static readonly List<JobDef> CantInterruptJobs = new()
         {
             //Incapacitated
             JobDefOf.Wait_Downed,
@@ -181,7 +181,7 @@ namespace BetterRomance
     };
 
         //Turn a PawnAvailability into a string for reporting to player
-        public static readonly Dictionary<PawnAvailability, string> AvailabilityReasons = new Dictionary<PawnAvailability, string>
+        public static readonly Dictionary<PawnAvailability, string> AvailabilityReasons = new()
         {
             {PawnAvailability.Free, "free" },
             {PawnAvailability.NeedSoon, "WBR.CantHookupReasonNeed".Translate() },
@@ -197,7 +197,7 @@ namespace BetterRomance
 
         //Each activity type has its own set of availabilities that prevent it
         //Currently they're all the same except for ordered hookup, but this setup will allow easier adjusting later if needed
-        public static readonly Dictionary<RomanticActivityType, List<PawnAvailability>> AvailabilityPerActivity = new Dictionary<RomanticActivityType, List<PawnAvailability>>
+        public static readonly Dictionary<RomanticActivityType, List<PawnAvailability>> AvailabilityPerActivity = new()
         {
             {RomanticActivityType.Any, new List<PawnAvailability>()
             {

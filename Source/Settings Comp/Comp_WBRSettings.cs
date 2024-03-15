@@ -205,10 +205,10 @@ namespace BetterRomance
             //But none of it is allowed to be null, so assign default values.
             //Do the same checks as we do for race
             //I think I'm making it so that the curves can't be null on the race setting; so I shouldn't need to do anything other than overwrite it with the pawnkind ones
-            biotech.maleFertilityAgeFactor = biotech.maleFertilityAgeFactor ?? SettingsUtilities.GetDefaultFertilityAgeCurve(Gender.Male);
-            biotech.femaleFertilityAgeFactor = biotech.femaleFertilityAgeFactor ?? SettingsUtilities.GetDefaultFertilityAgeCurve(Gender.Female);
-            biotech.noneFertilityAgeFactor = biotech.noneFertilityAgeFactor ?? SettingsUtilities.GetDefaultFertilityAgeCurve(Gender.None);
-            biotech.ageEffectOnChildbirth = biotech.ageEffectOnChildbirth ?? SettingsUtilities.GetDefaultChildbirthAgeCurve();
+            biotech.maleFertilityAgeFactor ??= SettingsUtilities.GetDefaultFertilityAgeCurve(Gender.Male);
+            biotech.femaleFertilityAgeFactor ??= SettingsUtilities.GetDefaultFertilityAgeCurve(Gender.Female);
+            biotech.noneFertilityAgeFactor ??= SettingsUtilities.GetDefaultFertilityAgeCurve(Gender.None);
+            biotech.ageEffectOnChildbirth ??= SettingsUtilities.GetDefaultChildbirthAgeCurve();
         }
 
         private void SetMiscSettings()

@@ -94,7 +94,7 @@ namespace BetterRomance
         /// <returns>A list of pawns, with love relations first, then descending order by the secondary factor.</returns>
         private static List<Pawn> FindAttractivePawns(Pawn pawn, bool hookup = true)
         {
-            List<Pawn> result = new List<Pawn>();
+            List<Pawn> result = new();
             //Removed asexual check, it instead goes in the joy givers that generate jobs that need this
             //Put existing partners in the list
             if (LovePartnerRelationUtility.HasAnyLovePartner(pawn))
@@ -184,7 +184,7 @@ namespace BetterRomance
 //Also adds the asexual comp to asexual pawns
 namespace BetterRomance.HarmonyPatches
 {
-    [HarmonyPatch(typeof(Pawn_NeedsTracker), "AddOrRemoveNeedsAsAppropriate")]
+    [HarmonyPatch(typeof(Pawn_NeedsTracker), nameof(Pawn_NeedsTracker.AddOrRemoveNeedsAsAppropriate))]
     public static class Pawn_NeedsTracker_AddOrRemoveNeedsAsAppropriate
     {
         public static void Postfix(Pawn_NeedsTracker __instance, Pawn ___pawn)

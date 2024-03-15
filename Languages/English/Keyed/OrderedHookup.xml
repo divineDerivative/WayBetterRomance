@@ -49,7 +49,6 @@
 	<WBR.CanHookup>Hook up with {0}</WBR.CanHookup>
 
 	<WBR.HookupChance>Hookup chance</WBR.HookupChance>
-	<HookupChanceExistingRelation>already {PAWN_nameDef}'s {RELATION}</HookupChanceExistingRelation>
 	<WBR.HookupChanceCant>Cannot order hook up with</WBR.HookupChanceCant>
 	<WBR.HookupChanceNotPartner>No relationship</WBR.HookupChanceNotPartner>
 	<WBR.HookupChanceSexuality>Orientation factor</WBR.HookupChanceSexuality>

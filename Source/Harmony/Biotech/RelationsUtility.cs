@@ -37,7 +37,7 @@ namespace BetterRomance.HarmonyPatches
             int startIndex = -1;
             int endIndex = -1;
 
-            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            List<CodeInstruction> codes = new(instructions);
             for (int i = 0; i < codes.Count; i++)
             {
                 if (codes[i].opcode == OpCodes.Ret)
@@ -128,7 +128,7 @@ namespace BetterRomance.HarmonyPatches
             bool foundStart = false;
             bool foundEnd = false;
 
-            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            List<CodeInstruction> codes = new(instructions);
 
             for (int i = 0; i < codes.Count; i++)
             {
@@ -163,7 +163,7 @@ namespace BetterRomance.HarmonyPatches
         {
             bool foundStart = false;
 
-            List<CodeInstruction> codes = new List<CodeInstruction>(instructions);
+            List<CodeInstruction> codes = new(instructions);
 
             for (int i = 0; i < codes.Count; i++)
             {

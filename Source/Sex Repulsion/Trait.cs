@@ -13,7 +13,7 @@ namespace BetterRomance.HarmonyPatches
         {
             if (SexualityUtility.asexualTraits.Contains(__instance.def))
             {
-                StringBuilder str = new StringBuilder(__result);
+                StringBuilder str = new(__result);
                 str.AppendLine();
                 str.AppendLine();
                 str.AppendLine("WBR.MoreInfo".Translate().Colorize(ColoredText.SubtleGrayColor));

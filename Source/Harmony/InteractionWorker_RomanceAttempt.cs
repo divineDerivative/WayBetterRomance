@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -175,7 +174,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 foreach (Pawn p in cheatList)
                 {
-                    AccessTools.Method(typeof(InteractionWorker_RomanceAttempt), "TryAddCheaterThought").Invoke(__instance, new object[] { p, pawn });
+                    AccessTools.Method(typeof(InteractionWorker_RomanceAttempt), "TryAddCheaterThought").Invoke(__instance, [p, pawn]);
                 }
             }
             return false;
@@ -337,11 +336,11 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Beq_S, oldLabel);
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Ldstr, "WBR.HookupChanceSexuality");
-                    yield return CodeInstruction.Call(typeof(Translator), nameof(Translator.Translate), new Type[] { typeof(string) });
-                    yield return CodeInstruction.Call(typeof(TaggedString), "op_Implicit", new Type[] { typeof(TaggedString) });
+                    yield return CodeInstruction.Call(typeof(Translator), nameof(Translator.Translate), [typeof(string)]);
+                    yield return CodeInstruction.Call(typeof(TaggedString), "op_Implicit", [typeof(TaggedString)]);
                     yield return new CodeInstruction(OpCodes.Ldloc, num);
                     yield return CodeInstruction.Call(typeof(InteractionWorker_RomanceAttempt), "RomanceFactorLine");
-                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), new Type[] { typeof(string) });
+                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]);
                     yield return new CodeInstruction(OpCodes.Pop);
 
                     startFound = false;

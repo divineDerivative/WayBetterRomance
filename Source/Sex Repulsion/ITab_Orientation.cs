@@ -24,7 +24,7 @@ namespace BetterRomance
         protected override void FillTab()
         {
             Rect rect = new Rect(0f, 0f, size.x, size.y).ContractedBy(10f);
-            Listing_Standard list = new Listing_Standard();
+            Listing_Standard list = new();
             list.Begin(rect);
             Text.Font = GameFont.Small;
             if (Prefs.DevMode && SelPawn.IsAsexual())

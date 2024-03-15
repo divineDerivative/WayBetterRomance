@@ -2,8 +2,6 @@
 using Verse;
 using HarmonyLib;
 using System.Reflection.Emit;
-using System;
-using System.IO;
 
 namespace BetterRomance.HarmonyPatches
 {

@@ -48,20 +48,20 @@ namespace BetterRomance
         //So I need to try again to get him to change it
         public static bool FertilityCurveExists(Pawn pawn)
         {
-            if (!(pawn.def is ThingDef_AlienRace alienRace))
+            if (pawn.def is ThingDef_AlienRace alienRace)
             {
-                return false;
+                return pawn.gender != Gender.Female ? alienRace.alienRace.generalSettings.reproduction.maleFertilityAgeFactor != null : alienRace.alienRace.generalSettings.reproduction.femaleFertilityAgeFactor != null;
             }
-            return pawn.gender != Gender.Female ? alienRace.alienRace.generalSettings.reproduction.maleFertilityAgeFactor != null : alienRace.alienRace.generalSettings.reproduction.femaleFertilityAgeFactor != null;
+            return false;
         }
 
         public static SimpleCurve FertilityCurve(ThingDef race, Gender gender)
         {
-            if (!(race is ThingDef_AlienRace alienRace))
+            if (race is ThingDef_AlienRace alienRace)
             {
-                return null;
+                return gender != Gender.Female ? alienRace.alienRace.generalSettings.reproduction?.maleFertilityAgeFactor : alienRace.alienRace.generalSettings.reproduction?.femaleFertilityAgeFactor;
             }
-            return gender != Gender.Female ? alienRace.alienRace.generalSettings.reproduction?.maleFertilityAgeFactor : alienRace.alienRace.generalSettings.reproduction?.femaleFertilityAgeFactor;
+            return null;
         }
 
         public static bool IsCurveDefault(SimpleCurve curve, Gender gender)
@@ -75,7 +75,7 @@ namespace BetterRomance
             }
         }
 
-        public static readonly SimpleCurve maleFertilityAgeFactor = new SimpleCurve
+        public static readonly SimpleCurve maleFertilityAgeFactor = new()
         {
             new CurvePoint(14f, 0f),
             new CurvePoint(18f, 1f),
@@ -83,7 +83,7 @@ namespace BetterRomance
             new CurvePoint(90f, 0f)
         };
 
-        public static readonly SimpleCurve femaleFertilityAgeFactor = new SimpleCurve
+        public static readonly SimpleCurve femaleFertilityAgeFactor = new()
         {
             new CurvePoint(14f, 0f),
             new CurvePoint(20f, 1f),

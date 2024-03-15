@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Verse;
@@ -70,7 +69,7 @@ namespace BetterRomance.HarmonyPatches
                 else if (code.opcode == OpCodes.Ldloc_3)
                 {
                     //This just replaces num4 with 1f at the end, negating the gay reduction
-                    yield return new CodeInstruction (OpCodes.Ldc_R4, 1f);
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
                 }
                 else
                 {

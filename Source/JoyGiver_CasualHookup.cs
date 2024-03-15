@@ -14,52 +14,44 @@ namespace BetterRomance
                 return null;
             }
             //Don't allow for kids
-            else if (pawn.ageTracker.AgeBiologicalYearsFloat < pawn.MinAgeForSex())
+            if (pawn.ageTracker.AgeBiologicalYearsFloat < pawn.MinAgeForSex())
             {
                 return null;
             }
             //Checks on whether pawn should try hookup now
-            else if (!InteractionUtility.CanInitiateInteraction(pawn) || !HookupUtility.WillPawnTryHookup(pawn, initiator: true) || PawnUtility.WillSoonHaveBasicNeed(pawn))
+            if (!InteractionUtility.CanInitiateInteraction(pawn) || !HookupUtility.WillPawnTryHookup(pawn, initiator: true) || PawnUtility.WillSoonHaveBasicNeed(pawn))
             {
                 return null;
             }
             //Generate random number to check against hookup settings
-            else if (100f * Rand.Value > pawn.HookupRate() / 2)
+            if (100f * Rand.Value > pawn.HookupRate() / 2)
             {
                 return null;
             }
-            else
+            Pawn partner = pawn.CheckForComp<Comp_PartnerList>()?.GetPartner(true);
+            if (partner == null || !partner.Spawned || !partner.Awake())
             {
-                Comp_PartnerList comp = pawn.CheckForComp<Comp_PartnerList>();
-                Pawn partner = comp.GetPartner(true);
-                if (partner == null || !partner.Spawned || !partner.Awake())
-                {
-                    return null;
-                }
-                //If this hookup is cheating, will pawn do it anyways?
-                if (!RomanceUtilities.WillPawnContinue(pawn, partner, out _))
-                {
-                    return null;
-                }
-
-                //Also check ideo for non spouse lovin' thoughts
-                if (!IdeoUtility.DoerWillingToDo(HistoryEventDefOf.GotLovin_NonSpouse, pawn) && !pawn.relations.DirectRelationExists(PawnRelationDefOf.Spouse, partner))
-                {
-                    return null;
-                }
-                //If its not cheating, or they decided to cheat, continue with making the job
-                Building_Bed bed = HookupUtility.FindHookupBed(pawn, partner);
-                //If no suitable bed found, do not continue
-                if (bed == null)
-                {
-                    return null;
-                }
-                //Create the lead hookup job with partner and bed info
-                else
-                {
-                    return JobMaker.MakeJob(def.jobDef, partner, bed);
-                }
+                return null;
             }
+            //If this hookup is cheating, will pawn do it anyways?
+            if (!RomanceUtilities.WillPawnContinue(pawn, partner, out _))
+            {
+                return null;
+            }
+            //Also check ideo for non spouse lovin' thoughts
+            if (!IdeoUtility.DoerWillingToDo(HistoryEventDefOf.GotLovin_NonSpouse, pawn) && !pawn.relations.DirectRelationExists(PawnRelationDefOf.Spouse, partner))
+            {
+                return null;
+            }
+            //If its not cheating, or they decided to cheat, continue with making the job
+            Building_Bed bed = HookupUtility.FindHookupBed(pawn, partner);
+            //If no suitable bed found, do not continue
+            if (bed == null)
+            {
+                return null;
+            }
+            //Create the lead hookup job with partner and bed info
+            return JobMaker.MakeJob(def.jobDef, partner, bed);
         }
     }
 }

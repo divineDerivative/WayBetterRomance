@@ -98,12 +98,12 @@ namespace BetterRomance
                 hookupTriggers.forBreedingOnly = false;
                 yield return "forBreedingOnly is for ordered hookups only. Setting to false.";
             }
-            if (hookupTriggers?.minOpinion < -100 || hookupTriggers?.minOpinion > 100)
+            if (hookupTriggers?.minOpinion is < (-100) or > 100)
             {
                 yield return "minOpinion for hookups must be between -100 and 100";
                 hookupTriggers.minOpinion = Mathf.Clamp((int)hookupTriggers.minOpinion, -100, 100);
             }
-            if (orderedHookupTriggers?.minOpinion < -100 || orderedHookupTriggers?.minOpinion > 100)
+            if (orderedHookupTriggers?.minOpinion is < (-100) or > 100)
             {
                 yield return "minOpinion for ordered hookups must be between -100 and 100";
                 orderedHookupTriggers.minOpinion = Mathf.Clamp((int)orderedHookupTriggers.minOpinion, -100, 100);
@@ -286,7 +286,7 @@ namespace BetterRomance
             {
                 yield return "maxChildrenDesired must be a positive number";
             }
-            if (minOpinionRomance > 100f || minOpinionRomance < -100f)
+            if (minOpinionRomance is > (int)100f or < (int)-100f)
             {
                 yield return "Minimum opinion must be between 100 and -100";
                 minOpinionRomance = Mathf.Clamp((int)minOpinionRomance, -100, 100);

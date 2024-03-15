@@ -37,7 +37,7 @@ namespace BetterRomance
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            return pawn.Reserve(Partner, job, 1, -1, null, errorOnFailed) && pawn.Reserve(Bed, job, Bed.SleepingSlotsCount, 0, null, errorOnFailed);
+            return pawn.Reserve(Partner, job, errorOnFailed: errorOnFailed) && pawn.Reserve(Bed, job, maxPawns: Bed.SleepingSlotsCount, errorOnFailed: errorOnFailed);
         }
 
         public override bool CanBeginNowWhileLyingDown()
@@ -197,7 +197,7 @@ namespace BetterRomance
                 if (Actor.needs.mood != null)
                 {
                     Actor.needs.mood.thoughts.memories.TryGainMemory(thought_Memory, Partner);
-                    HelperClasses.RotRFillRomanceBar?.Invoke(null, new object[] { Actor, 0.5f });
+                    HelperClasses.RotRFillRomanceBar?.Invoke(null, [Actor, 0.5f]);
                 }
                 Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.GotLovin, Actor.Named(HistoryEventArgsNames.Doer)));
                 //Do I need to account for spouse like custom relations?
@@ -205,7 +205,7 @@ namespace BetterRomance
                 Find.HistoryEventsManager.RecordEvent(new HistoryEvent(def, Actor.Named(HistoryEventArgsNames.Doer)));
                 //Attempt to have hookups behave more like normal lovin, use the same cooldown period based on age
                 Actor.mindState.canLovinTick = Find.TickManager.TicksGame + GenerateRandomMinTicksToNextLovin(Actor);
-                HelperClasses.CSLLoved?.Invoke(this, new object[] { Actor, Partner, false });
+                HelperClasses.CSLLoved?.Invoke(this, [Actor, Partner, false]);
                 //Biotech addition
                 if (ModsConfig.BiotechActive)
                 {
@@ -223,7 +223,7 @@ namespace BetterRomance
                         else if (PawnUtility.ShouldSendNotificationAbout(male) || PawnUtility.ShouldSendNotificationAbout(female))
                         {
                             Messages.Message("MessagePregnancyFailed".Translate(male.Named("FATHER"), female.Named("MOTHER")) + ": " + "CombinedGenesExceedMetabolismLimits".Translate(), new LookTargets(male, female), MessageTypeDefOf.NegativeEvent);
-                            }
+                        }
                     }
                     LogUtil.Message($"Pregnancy code run successfully", true);
                 }

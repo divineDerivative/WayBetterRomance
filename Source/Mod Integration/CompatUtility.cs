@@ -6,7 +6,7 @@ namespace BetterRomance
     {
         public static bool AndroidCheck(this Pawn pawn)
         {
-            if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanicalAndroid?.Invoke(null, new object[] { pawn }))
+            if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanicalAndroid?.Invoke(null, [pawn]))
             {
                 return true;
             }
@@ -15,7 +15,7 @@ namespace BetterRomance
 
         public static bool DroneCheck(this Pawn pawn)
         {
-            if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanicalDrone?.Invoke(null, new object[] { pawn }))
+            if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanicalDrone?.Invoke(null, [pawn]))
             {
                 return true;
             }
@@ -29,12 +29,8 @@ namespace BetterRomance
         public static bool HasNoGrowth(this Pawn pawn)
         {
             WBR_SettingsComp settings = pawn.TryGetComp<WBR_SettingsComp>();
-            //For animals
-            if (settings != null)
-            {
-                return settings.NoGrowth;
-            }
-            return false;
+            //Null check is for animals, which won't have the comp
+            return settings?.NoGrowth ?? false;
         }
 
         /// <summary>
@@ -44,7 +40,7 @@ namespace BetterRomance
         /// <returns><see langword="true"/> if race is a robot that should not have growth moments.</returns>
         public static bool RobotGrowthCheck(this ThingDef race)
         {
-            if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanical?.Invoke(null, new object[] { race }))
+            if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanical?.Invoke(null, [race]))
             {
                 return true;
             }

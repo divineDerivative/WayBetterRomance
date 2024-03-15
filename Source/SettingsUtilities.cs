@@ -10,8 +10,8 @@ namespace BetterRomance
 {
     public static class SettingsUtilities
     {
-        //Grabbing stuff from def mod extensions
-        //Sexuality chances does not have methods, since they're only needed in the AssignOrientation function
+        //Grabbing stuff from settings comp
+        //Orientation chances do not have methods, since they're only needed in the AssignOrientation function
 
         //Casual sex settings
         public static CompSettingsCasualSexPawn GetCasualSexSettings(Pawn pawn)
@@ -38,7 +38,7 @@ namespace BetterRomance
 
         public static float HookupRate(this Pawn pawn)
         {
-            if (BetterRomanceMod.settings.hookupRate == 0)
+            if (BetterRomanceMod.settings.hookupRate == 0f)
             {
                 return 0f;
             }
@@ -48,7 +48,7 @@ namespace BetterRomance
 
         public static float AlienLoveChance(this Pawn pawn)
         {
-            if (BetterRomanceMod.settings.alienLoveChance == 0)
+            if (BetterRomanceMod.settings.alienLoveChance == 0f)
             {
                 return 0f;
             }
@@ -126,8 +126,8 @@ namespace BetterRomance
 
         public static bool IsFertile(this Pawn pawn) => pawn.GetFertilityLevel() > 0f;
 
-        public static Dictionary<ThingDef, HashSet<TraitRequirement>> RaceHookupTraits = new Dictionary<ThingDef, HashSet<TraitRequirement>>();
-        public static Dictionary<PawnKindDef, HashSet<TraitRequirement>> PawnkindHookupTraits = new Dictionary<PawnKindDef, HashSet<TraitRequirement>>();
+        public static Dictionary<ThingDef, HashSet<TraitRequirement>> RaceHookupTraits = new();
+        public static Dictionary<PawnKindDef, HashSet<TraitRequirement>> PawnkindHookupTraits = new();
 
         public static void MakeTraitList()
         {
@@ -269,8 +269,8 @@ namespace BetterRomance
             return settings.declineAtAge;
         }
 
-        public static List<Pawn> CachedNonSenescentPawns = new List<Pawn>();
-        public static List<Pawn> CachedSenescentPawns = new List<Pawn>();
+        public static List<Pawn> CachedNonSenescentPawns = new();
+        public static List<Pawn> CachedSenescentPawns = new();
 
         private static bool IsNonSenescent(this Pawn pawn)
         {
@@ -628,7 +628,7 @@ namespace BetterRomance
                     return ChildAge(pawn) + 1;
                 case 7f:
                     float num = GetGrowthMomentAsFloat(pawn, 0);
-                    return num == -1? 0 : num;
+                    return num == -1 ? 0 : num;
                 case 10f:
                     return GetGrowthMomentAsFloat(pawn, 1);
                 case 12f:
@@ -653,7 +653,7 @@ namespace BetterRomance
         public static bool IsUnset(this float value) => value == -999f;
         public static bool IsUnset(this int value) => value == -999;
 
-        public static bool IsEquivalentTo(this SimpleCurve first,  SimpleCurve second)
+        public static bool IsEquivalentTo(this SimpleCurve first, SimpleCurve second)
         {
             if (first.PointsCount != second.PointsCount)
             {

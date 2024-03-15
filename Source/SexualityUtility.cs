@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
-using HarmonyLib;
-using System.Reflection;
 
 namespace BetterRomance
 {
     public static class SexualityUtility
     {
         public static bool editRepulsion;
-        public static readonly List<TraitDef> OrientationTraits = new List<TraitDef>()
+        public static readonly List<TraitDef> OrientationTraits = new()
         {
             TraitDefOf.Gay,
             TraitDefOf.Bisexual,
@@ -24,10 +18,10 @@ namespace BetterRomance
             RomanceDefOf.BiAce,
         };
 
-        public static List<TraitDef> asexualTraits = new List<TraitDef> { TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce };
+        public static List<TraitDef> asexualTraits = new() { TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce };
 
         /// <summary>
-        /// A rating to use for determining sex aversion for asexual pawns. Seed is based on pawn's ID, so it will always return the same number for a given pawn.
+        /// A rating to use for determining sex repulsion for asexual pawns.
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns>float between 0 and 1</returns>

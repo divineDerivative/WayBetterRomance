@@ -8,14 +8,14 @@ namespace BetterRomance
 {
     public class Settings : ModSettings
     {
-        public OrientationChances sexualOrientations = new OrientationChances
+        public OrientationChances sexualOrientations = new()
         {
             hetero = 20f,
             homo = 20f,
             bi = 50f,
             none = 10f,
         };
-        public OrientationChances asexualOrientations = new OrientationChances
+        public OrientationChances asexualOrientations = new()
         {
             hetero = 20f,
             homo = 20f,
@@ -39,12 +39,12 @@ namespace BetterRomance
         public static bool RotRActive = false;
         public static bool ATRActive = false;
         public static bool VREHighmateActive = false;
-        public static Dictionary<string, string> FertilityMods = new Dictionary<string, string>();
+        public static Dictionary<string, string> FertilityMods = new();
         public static bool debugLogging = false;
         public static bool AsimovActive;
 
         public static bool LoveRelationsLoaded => !CustomLoveRelationUtility.LoveRelations.EnumerableNullOrEmpty();
-        public static List<RaceSettings> RaceSettingsList = new List<RaceSettings>();
+        public static List<RaceSettings> RaceSettingsList = new();
 
         public override void ExposeData()
         {
@@ -114,7 +114,7 @@ namespace BetterRomance
 
         public override void DoSettingsWindowContents(Rect canvas)
         {
-            Listing_Standard list = new Listing_Standard
+            Listing_Standard list = new()
             {
                 ColumnWidth = (canvas.width / 2f) - 17f
             };
@@ -142,7 +142,6 @@ namespace BetterRomance
             list.NewColumn();
             DrawCustomRight(list);
             list.Gap();
-
             if (list.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
             {
                 settings.dateRate = 100f;
@@ -164,7 +163,7 @@ namespace BetterRomance
             }
             if (list.ButtonTextLabeled("Fertility Mod", Settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(Settings.fertilityMod) : "None"))
             {
-                List<FloatMenuOption> options = new List<FloatMenuOption>();
+                List<FloatMenuOption> options = new();
                 foreach (KeyValuePair<string, string> item in Settings.FertilityMods)
                 {
                     options.Add(new FloatMenuOption(item.Value, delegate

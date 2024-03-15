@@ -8,7 +8,7 @@ namespace BetterRomance.HarmonyPatches
 {
     //Let HAR go first so my curve can be passed to his helper
     [HarmonyPatch(typeof(JobDriver_Lovin), "GenerateRandomMinTicksToNextLovin")]
-    [HarmonyAfter(new string[] { "rimworld.erdelf.alien_race.main" })]
+    [HarmonyAfter(["rimworld.erdelf.alien_race.main"])]
     public static class JobDriver_Lovin_GenerateRandomMinTicksToNextLovin
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)

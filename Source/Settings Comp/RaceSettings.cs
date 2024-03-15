@@ -108,27 +108,27 @@ namespace BetterRomance
             int interval = difference / 3;
             if (difference % 3 == 0)
             {
-                return new int[] {
+                return [
                             childAge + interval,
                             childAge + (interval * 2),
                             adultAge,
-                        };
+                        ];
             }
             else if (difference % 3 == 1)
             {
-                return new int[] {
+                return [
                             childAge + interval + 1,
                             childAge + (interval * 2) + 1,
                             adultAge,
-                        };
+                        ];
             }
             else if (difference % 3 == 2)
             {
-                return new int[] {
+                return [
                             childAge + interval + 1,
                             childAge + (interval * 2) + 2,
                             adultAge,
-                        };
+                        ];
             }
             else
             {
@@ -146,7 +146,7 @@ namespace BetterRomance
                 misc.childAge = 0;
                 misc.adultAgeForLearning = 0;
                 misc.ageReversalDemandAge = 0;//not sure about this
-                misc.ageSkillFactor = new SimpleCurve { new CurvePoint(0f,1f)};
+                misc.ageSkillFactor = new SimpleCurve { new CurvePoint(0f, 1f) };
                 misc.ageSkillMaxFactorCurve = new SimpleCurve { new CurvePoint(0f, 1f) };
                 return;
             }
@@ -402,7 +402,7 @@ namespace BetterRomance
             //And an age range where fertility is not zero
             //Keep in mind this is just from the start to the end, I haven't checked for where it peaks
             //Let me just do that real fast in case I end up needing it
-            FloatRange peakRange = new FloatRange();
+            FloatRange peakRange = new();
             bool startFound = false;
             foreach (CurvePoint point in curve.Points)
             {

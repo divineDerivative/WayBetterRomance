@@ -53,6 +53,7 @@ namespace BetterRomance
             }
             return result;
         }
+
         public bool TotalCorrect => hetero + homo + bi + none == 100f;
     }
 

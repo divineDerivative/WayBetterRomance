@@ -61,7 +61,7 @@ namespace BetterRomance.HarmonyPatches
                 TaleRecorder.RecordTale(TaleDefOf.Breakup, initiator, recipient);
                 if (PawnUtility.ShouldSendNotificationAbout(initiator) || PawnUtility.ShouldSendNotificationAbout(recipient))
                 {
-                    StringBuilder stringBuilder = new StringBuilder();
+                    StringBuilder stringBuilder = new();
                     stringBuilder.AppendLine("LetterNoLongerLovers".Translate(initiator.LabelShort, recipient.LabelShort, initiator.Named("PAWN1"), recipient.Named("PAWN2")));
                     stringBuilder.AppendLine();
                     if (thought != null)

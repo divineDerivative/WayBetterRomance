@@ -87,7 +87,7 @@ namespace BetterRomance
         /// Factor based on opinion of most liked partner. Higher opinion means a lower factor. Only call if <paramref name="partnerList"/> is not empty
         /// </summary>
         /// <param name="pawn">The <see cref="Pawn"/> in question</param>
-        /// <param name="partnerList">List of partners that would feel cheated on, provided by <see cref="IsThisCheating(Pawn, Pawn, out List{Pawn})"/></param>
+        /// <param name="partnerList">List of partners that would feel cheated on, provided by <see cref="IsThisCheating(Pawn, Pawn, out List{Pawn}, bool)"/></param>
         /// <param name="partner">The partner <paramref name="pawn"/> would feel the worst about cheating on</param>
         /// <returns></returns>
         public static float PartnerFactor(Pawn pawn, List<Pawn> partnerList, out Pawn partner)
@@ -171,13 +171,12 @@ namespace BetterRomance
         /// <returns></returns>
         public static List<Pawn> GetNonSpouseLovers(Pawn pawn, bool includeDead)
         {
-            List<Pawn> list = new List<Pawn>();
+            List<Pawn> list = new();
             if (!pawn.RaceProps.IsFlesh)
             {
                 return list;
             }
-            List<DirectPawnRelation> relations = pawn.relations.DirectRelations;
-            foreach (DirectPawnRelation rel in relations)
+            foreach (DirectPawnRelation rel in pawn.relations.DirectRelations)
             {
                 if (rel.def == PawnRelationDefOf.Lover && (includeDead || !rel.otherPawn.Dead))
                 {
@@ -197,10 +196,10 @@ namespace BetterRomance
         /// <param name="pawn"></param>
         /// <param name="includeDead">Whether dead pawns are added to the list</param>
         /// <param name="onMap">Whether pawns must be on the same map to be added to the list</param>
-        /// <returns>A list of pawns that in a love relation with <paramref name="pawn"/></returns>
+        /// <returns>A list of pawns that have a love relation with <paramref name="pawn"/></returns>
         public static List<Pawn> GetAllLoveRelationPawns(Pawn pawn, bool includeDead, bool onMap)
         {
-            List<Pawn> list = new List<Pawn>();
+            List<Pawn> list = new();
             if (!pawn.RaceProps.IsFlesh)
             {
                 return list;
@@ -209,11 +208,7 @@ namespace BetterRomance
             {
                 if (!list.Contains(rel.otherPawn))
                 {
-                    if (pawn.Map == rel.otherPawn.Map)
-                    {
-                        list.Add(rel.otherPawn);
-                    }
-                    else if (!onMap)
+                    if (pawn.Map == rel.otherPawn.Map || !onMap)
                     {
                         list.Add(rel.otherPawn);
                     }
@@ -231,16 +226,15 @@ namespace BetterRomance
         /// <returns></returns>
         public static Pawn GetMostLikedOfRel(Pawn pawn, PawnRelationDef relation, bool allowDead)
         {
-            List<DirectPawnRelation> list = pawn.relations.DirectRelations;
             Pawn result = null;
-            int num = 0;
-            foreach (DirectPawnRelation rel in list)
+            int maxOpinion = 0;
+            foreach (DirectPawnRelation rel in pawn.relations.DirectRelations)
             {
                 if (rel.def == relation && (rel.otherPawn.Dead || allowDead))
                 {
-                    if (pawn.relations.OpinionOf(rel.otherPawn) > num)
+                    if (pawn.relations.OpinionOf(rel.otherPawn) > maxOpinion)
                     {
-                        num = pawn.relations.OpinionOf(rel.otherPawn);
+                        maxOpinion = pawn.relations.OpinionOf(rel.otherPawn);
                         result = rel.otherPawn;
                     }
                 }
@@ -250,9 +244,8 @@ namespace BetterRomance
 
         public static List<Pawn> GetAllSpawnedHumanlikesOnMap(Map map)
         {
-            List<Pawn> result = new List<Pawn>();
-            IReadOnlyList<Pawn> pawns = map.mapPawns.AllPawnsSpawned;
-            foreach (Pawn pawn in pawns)
+            List<Pawn> result = new();
+            foreach (Pawn pawn in map.mapPawns.AllPawnsSpawned)
             {
                 //Exclude animals and enemies and robots
                 if (pawn.RaceProps.Humanlike && !pawn.HostileTo(Faction.OfPlayer) && !pawn.DroneCheck())
@@ -272,7 +265,7 @@ namespace BetterRomance
             float minAge = pawn.MinAgeForSex();
             float maxAge = pawn.MaxAgeForSex();
             float declineAge = pawn.DeclineAtAge();
-            List<CurvePoint> points = new List<CurvePoint>
+            List<CurvePoint> points = new()
             {
                 new CurvePoint(minAge, 1.5f),
                 new CurvePoint((declineAge / 5) + minAge, 1.5f),
@@ -293,8 +286,7 @@ namespace BetterRomance
             T comp = p.TryGetComp<T>();
             if (comp == null)
             {
-                FieldInfo field = AccessTools.Field(typeof(ThingWithComps), "comps");
-                List<ThingComp> compList = (List<ThingComp>)field.GetValue(p);
+                List<ThingComp> compList = (List<ThingComp>)AccessTools.Field(typeof(ThingWithComps), "comps").GetValue(p);
                 ThingComp newComp = (ThingComp)Activator.CreateInstance(typeof(T));
                 newComp.parent = p;
                 compList.Add(newComp);
@@ -368,7 +360,7 @@ namespace BetterRomance
                             continue;
                         }
                         //Now we compare the gender we're asking about with the gender of the comp
-                        //If they are the same, then the extra lover is not allowed for the gender in question
+                        //If they are the same, then the event not allowed for the gender in question
                         if (gender == genderedComp.gender)
                         {
                             return false;
@@ -383,11 +375,7 @@ namespace BetterRomance
         public static Pawn GetPartnerInMyBedForLovin(Pawn pawn)
         {
             Building_Bed bed = pawn.CurrentBed();
-            if (bed == null)
-            {
-                return null;
-            }
-            if (bed.SleepingSlotsCount <= 1)
+            if (bed == null || bed.SleepingSlotsCount <= 1)
             {
                 return null;
             }
@@ -415,7 +403,7 @@ namespace BetterRomance
         private static string WrapMessage(string message) => $"<color=#1116e4>[WayBetterRomance]</color> {message}";
         internal static void Message(string message, bool debugOnly = false)
         {
-            if (debugOnly && Settings.debugLogging || !debugOnly)
+            if ((debugOnly && Settings.debugLogging) || !debugOnly)
             {
                 Log.Message(WrapMessage(message));
             }
@@ -423,7 +411,7 @@ namespace BetterRomance
 
         internal static void Warning(string message, bool debugOnly = false)
         {
-            if (debugOnly && Settings.debugLogging || !debugOnly)
+            if ((debugOnly && Settings.debugLogging) || !debugOnly)
             {
                 Log.Warning(WrapMessage(message));
             }
@@ -431,7 +419,7 @@ namespace BetterRomance
 
         internal static void WarningOnce(string message, int key, bool debugOnly = false)
         {
-            if (debugOnly && Settings.debugLogging || !debugOnly)
+            if ((debugOnly && Settings.debugLogging) || !debugOnly)
             {
                 Log.WarningOnce(WrapMessage(message), key);
             }
@@ -439,7 +427,7 @@ namespace BetterRomance
 
         internal static void Error(string message, bool debugOnly = false)
         {
-            if (debugOnly && Settings.debugLogging || !debugOnly)
+            if ((debugOnly && Settings.debugLogging) || !debugOnly)
             {
                 Log.Error(WrapMessage(message));
             }
@@ -447,7 +435,7 @@ namespace BetterRomance
 
         internal static void ErrorOnce(string message, int key, bool debugOnly = false)
         {
-            if (debugOnly && Settings.debugLogging || !debugOnly)
+            if ((debugOnly && Settings.debugLogging) || !debugOnly)
             {
                 Log.ErrorOnce(WrapMessage(message), key);
             }

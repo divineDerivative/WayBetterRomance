@@ -72,7 +72,7 @@ namespace BetterRomance.HarmonyPatches
                             {
                                 return x.def == RomanceDefOf.RebuffedMyHookupAttempt || x.def == RomanceDefOf.RebuffedMyDateAttempt;
                             });
-                            foreach (var memory in memories)
+                            foreach (Thought_Memory memory in memories)
                             {
                                 __instance.needs.mood.thoughts.memories.RemoveMemory(memory);
                                 memory.otherPawn.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(memory.def, __instance);

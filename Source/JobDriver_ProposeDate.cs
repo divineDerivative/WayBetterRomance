@@ -96,7 +96,7 @@ namespace BetterRomance
             int EndRadialIndex = GenRadial.NumCellsInRadius(2f);
             int RadialIndexStride = 3;
             //root gets added again at the end and then the first root is skipped when yielding the results
-            List<IntVec3> cellList = new List<IntVec3> { root };
+            List<IntVec3> cellList = new() { root };
             //currentCell is the cell that was most recently added to the result list
             IntVec3 currentCell = root;
             //We want to add 8 cells to the list
@@ -180,14 +180,14 @@ namespace BetterRomance
         public static void DebugFlashDatePath(IntVec3 root, int numEntries = 8)
         {
             Map currentMap = Find.CurrentMap;
-            if (!TryFindUnforbiddenDatePath(currentMap.mapPawns.FreeColonistsSpawned.First(), currentMap.mapPawns.FreeColonistsSpawned.Last(), root, out var result))
+            if (!TryFindUnforbiddenDatePath(currentMap.mapPawns.FreeColonistsSpawned.First(), currentMap.mapPawns.FreeColonistsSpawned.Last(), root, out List<IntVec3> result))
             {
                 currentMap.debugDrawer.FlashCell(root, 0.2f, "NOPATH");
                 return;
             }
             for (int i = 0; i < result.Count; i++)
             {
-                currentMap.debugDrawer.FlashCell(result[i], (float)i / (float)numEntries, i.ToString());
+                currentMap.debugDrawer.FlashCell(result[i], i / (float)numEntries, i.ToString());
                 if (i > 0)
                 {
                     currentMap.debugDrawer.FlashLine(result[i], result[i - 1]);
@@ -205,7 +205,7 @@ namespace BetterRomance
         private bool TryFindMostBeautifulRootInDistance(int distance, Pawn p1, Pawn p2, out IntVec3 best)
         {
             best = default;
-            List<IntVec3> list = new List<IntVec3>();
+            List<IntVec3> list = new();
             for (int i = 0; i < 200; i++)
             {
                 if (CellFinder.TryFindRandomCellNear(p1.Position, p1.Map, distance,
@@ -312,7 +312,7 @@ namespace BetterRomance
             awaitResponse.defaultCompleteMode = ToilCompleteMode.Instant;
             awaitResponse.initAction = delegate
             {
-                List<RulePackDef> list = new List<RulePackDef>();
+                List<RulePackDef> list = new();
                 successfulPass = DoesTargetPawnAcceptDate();
                 //Make heart or ! fleck depending on success
                 if (successfulPass)

@@ -36,7 +36,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     startIndex = i;
                 }
-                if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), parameters: new Type[] { typeof(TraitDef) })))
+                if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), parameters: [typeof(TraitDef)])))
                 {
                     endIndex = i;
                 }
@@ -69,7 +69,7 @@ namespace BetterRomance.HarmonyPatches
         {
             foreach (CodeInstruction code in instructions)
             {
-                if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), new Type[] { typeof(TraitDef) })))
+                if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
                 {
                     yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(TraitConversion));
                 }
@@ -80,7 +80,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        private static List<TraitDef> traits = new List<TraitDef> { TraitDefOf.Gay, TraitDefOf.Bisexual, TraitDefOf.Asexual, RomanceDefOf.Straight };
+        private static List<TraitDef> traits = new() { TraitDefOf.Gay, TraitDefOf.Bisexual, TraitDefOf.Asexual, RomanceDefOf.Straight };
         public static bool TraitConversion(TraitSet set, TraitDef trait)
         {
             Pawn pawn = (Pawn)AccessTools.Field(typeof(TraitSet), "pawn").GetValue(set);
@@ -204,14 +204,14 @@ namespace BetterRomance.HarmonyPatches
 
         public static void PatchVRE(this Harmony harmony)
         {
-            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", new Type[] { typeof(LocalTargetInfo), typeof(bool) }), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
-            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", new Type[] { typeof(LocalTargetInfo), typeof(bool) }), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREAsexualTranspiler))));
-            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("GetLovers"), prefix: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREGetLoversPrefix))));
-            harmony.Patch(typeof(JobDriver_InitiateLovin).GetMethod("GetLovers"), prefix: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREGetLoversPrefix))));
-            harmony.Patch(typeof(JobDriver_InitiateLovin).GetMethod("ProcessBreakups"), prefix: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREProcessBreakupsPrefix))), postfix: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREProcessBreakupsPostfix))));
-            harmony.Patch(typeof(Need_Lovin).GetMethod("get_ShowOnNeedList"), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
-            harmony.Patch(typeof(Need_Lovin).GetMethod("get_IsFrozen"), transpiler: new HarmonyMethod(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
-            harmony.Patch(AccessTools.Method(typeof(JobDriver_DoLovinCasual), "GenerateRandomMinTicksToNextLovin"), postfix: new HarmonyMethod(typeof(VanillaRacesExpandedHighmate_JobDriver_Lovin_GenerateRandomMinTicksToNextLovin_Patch), "PawnFucks"));
+            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", [typeof(LocalTargetInfo), typeof(bool)]), transpiler: new(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
+            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", [typeof(LocalTargetInfo), typeof(bool)]), transpiler: new(typeof(VREPatches).GetMethod(nameof(VREAsexualTranspiler))));
+            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("GetLovers"), prefix: new(typeof(VREPatches).GetMethod(nameof(VREGetLoversPrefix))));
+            harmony.Patch(typeof(JobDriver_InitiateLovin).GetMethod("GetLovers"), prefix: new(typeof(VREPatches).GetMethod(nameof(VREGetLoversPrefix))));
+            harmony.Patch(typeof(JobDriver_InitiateLovin).GetMethod("ProcessBreakups"), prefix: new(typeof(VREPatches).GetMethod(nameof(VREProcessBreakupsPrefix))), postfix: new(typeof(VREPatches).GetMethod(nameof(VREProcessBreakupsPostfix))));
+            harmony.Patch(typeof(Need_Lovin).GetMethod("get_ShowOnNeedList"), transpiler: new(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
+            harmony.Patch(typeof(Need_Lovin).GetMethod("get_IsFrozen"), transpiler: new(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
+            harmony.Patch(AccessTools.Method(typeof(JobDriver_DoLovinCasual), "GenerateRandomMinTicksToNextLovin"), postfix: new(typeof(VanillaRacesExpandedHighmate_JobDriver_Lovin_GenerateRandomMinTicksToNextLovin_Patch), "PawnFucks"));
         }
     }
 
@@ -220,10 +220,7 @@ namespace BetterRomance.HarmonyPatches
         //Check for custom love relations
         public static void GetSpouseOrLoverOrFiancePostfix(ref Pawn __result, Pawn pawn)
         {
-            if (__result == null)
-            {
-                __result = pawn.FirstCustomLoveRelation()?.otherPawn;
-            }
+            __result ??= pawn.FirstCustomLoveRelation()?.otherPawn;
         }
 
         public static Type CompilerType;

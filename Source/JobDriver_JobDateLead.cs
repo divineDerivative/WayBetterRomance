@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -48,7 +47,6 @@ namespace BetterRomance
             return toil;
         }
 
-        [DebuggerHidden]
         protected override IEnumerable<Toil> MakeNewToils()
         {
             yield return Toils_General.Do(delegate

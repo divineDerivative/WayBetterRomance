@@ -19,7 +19,7 @@ namespace BetterRomance
             {
                 SettingsUtilities.GrabBiotechStuff();
             }
-            Harmony harmony = new Harmony(id: "rimworld.divineDerivative.romance");
+            Harmony harmony = new(id: "rimworld.divineDerivative.romance");
             harmony.PatchAll();
 
             if (ModsConfig.IsActive("erdelf.humanoidalienraces") || ModsConfig.IsActive("erdelf.humanoidalienraces.dev"))
@@ -36,26 +36,26 @@ namespace BetterRomance
             }
             if (ModsConfig.IsActive("dylan.csl"))
             {
-                HelperClasses.CSLLoved = AccessTools.DeclaredMethod(Type.GetType("Children.MorePawnUtilities,ChildrenHelperClasses"), "Loved", new Type[] { typeof(Pawn), typeof(Pawn), typeof(bool) });
+                HelperClasses.CSLLoved = AccessTools.DeclaredMethod(Type.GetType("Children.MorePawnUtilities,ChildrenHelperClasses"), "Loved", [typeof(Pawn), typeof(Pawn), typeof(bool)]);
             }
             if (ModsConfig.IsActive("Killathon.AndroidTiersReforged"))
             {
                 Settings.ATRActive = true;
-                HelperClasses.IsConsideredMechanicalAndroid = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanicalAndroid", new Type[] { typeof(Pawn) });
-                HelperClasses.IsConsideredMechanicalDrone = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanicalDrone", new Type[] { typeof(Pawn) });
-                HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanical", new Type[] { typeof(ThingDef) });
+                HelperClasses.IsConsideredMechanicalAndroid = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanicalAndroid", [typeof(Pawn)]);
+                HelperClasses.IsConsideredMechanicalDrone = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanicalDrone", [typeof(Pawn)]);
+                HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("ATReforged.Utils,Android Tiers Reforged"), "IsConsideredMechanical", [typeof(ThingDef)]);
             }
             else if (ModsConfig.IsActive("Killathon.MechHumanlikes.AndroidTiersCore"))
             {
                 Settings.ATRActive = true;
-                HelperClasses.IsConsideredMechanicalAndroid = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanicalAndroid", new Type[] { typeof(Pawn) });
-                HelperClasses.IsConsideredMechanicalDrone = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanicalDrone", new Type[] { typeof(Pawn) });
-                HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanical", new Type[] { typeof(ThingDef) });
+                HelperClasses.IsConsideredMechanicalAndroid = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanicalAndroid", [typeof(Pawn)]);
+                HelperClasses.IsConsideredMechanicalDrone = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanicalDrone", [typeof(Pawn)]);
+                HelperClasses.IsConsideredMechanical = AccessTools.DeclaredMethod(Type.GetType("MechHumanlikes.MHC_Utils,Mechanical Humanlikes Core"), "IsConsideredMechanical", [typeof(ThingDef)]);
             }
             if (ModsConfig.IsActive("Neronix17.TweaksGalore"))
             {
                 MethodInfo IsSexualityTrait = AccessTools.DeclaredMethod(Type.GetType("TweaksGalore.Patch_PawnGenerator_GenerateTraits,TweaksGalore"), "IsSexualityTrait");
-                harmony.Patch(IsSexualityTrait, prefix: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.IsSexualityTraitPrefix)));
+                harmony.Patch(IsSexualityTrait, prefix: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.IsSexualityTraitPrefix)));
             }
             if (ModsConfig.IsActive("vanillaracesexpanded.highmate"))
             {
@@ -81,13 +81,13 @@ namespace BetterRomance
                         }
                     }
                 }
-                harmony.Patch(GetSpouseOrLoverOrFiance, postfix: new HarmonyMethod(typeof(VSIEPatches), nameof(VSIEPatches.GetSpouseOrLoverOrFiancePostfix)));
-                harmony.Patch(prefixDelegate, transpiler: new HarmonyMethod(typeof(VSIEPatches), nameof(VSIEPatches.AddDirectRelation_PrefixTranspiler)));
+                harmony.Patch(GetSpouseOrLoverOrFiance, postfix: new(typeof(VSIEPatches), nameof(VSIEPatches.GetSpouseOrLoverOrFiancePostfix)));
+                harmony.Patch(prefixDelegate, transpiler: new(typeof(VSIEPatches), nameof(VSIEPatches.AddDirectRelation_PrefixTranspiler)));
             }
             if (ModsConfig.IsActive("rim.job.world") || ModsConfig.IsActive("safe.job.world"))
             {
-                harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.xxx,RJW"), "is_asexual"), postfix: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RJWAsexualPostfix)));
-                harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.CompRJW,RJW"), "VanillaTraitCheck"), transpiler: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.VanillaTraitCheckTranspiler)));
+                harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.xxx,RJW"), "is_asexual"), postfix: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RJWAsexualPostfix)));
+                harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.CompRJW,RJW"), "VanillaTraitCheck"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.VanillaTraitCheckTranspiler)));
             }
             if (ModsConfig.IsActive("Neronix17.Asimov"))
             {

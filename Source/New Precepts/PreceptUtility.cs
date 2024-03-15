@@ -138,7 +138,7 @@ namespace BetterRomance
             }
         }
 
-        private static HashSet<Ideo> IdeosChecked = new HashSet<Ideo>();
+        private static HashSet<Ideo> IdeosChecked = new();
 
         /// <summary>
         /// Checks if an <paramref name="ideo"/> has lover count precepts, and if not, adds them

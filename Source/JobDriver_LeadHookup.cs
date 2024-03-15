@@ -105,7 +105,7 @@ namespace BetterRomance
             awaitResponse.defaultCompleteMode = ToilCompleteMode.Instant;
             awaitResponse.initAction = delegate
             {
-                List<RulePackDef> list = new List<RulePackDef>();
+                List<RulePackDef> list = new();
                 //See if target accepts
                 successfulPass = DoesTargetPawnAcceptAdvance(out string rejectReason);
                 if (successfulPass)
@@ -178,7 +178,7 @@ namespace BetterRomance
                     TargetPawn.jobs.jobQueue.EnqueueFirst(JobMaker.MakeJob(RomanceDefOf.DoLovinCasual, Actor, TargetBed, TargetBed.GetSleepingSlotPos(1)), JobTag.SatisfyingNeeds);
                     //Stop the current job
                     TargetPawn.jobs.EndCurrentJob(JobCondition.InterruptOptional);
-                    Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);        
+                    Actor.jobs.EndCurrentJob(JobCondition.InterruptOptional);
                 };
                 yield return makeJobs;
             }

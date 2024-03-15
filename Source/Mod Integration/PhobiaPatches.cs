@@ -99,7 +99,7 @@ namespace BetterRomance.HarmonyPatches
                     {
                         yield return CodeInstruction.LoadField(typeof(RomanceDefOf), nameof(RomanceDefOf.Straight));
                     }
-                    else if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), new Type[] { typeof(TraitDef) })))
+                    else if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
                     {
                         yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(OtherMod_Patches.TraitConversion));
                         nextBranch = true;
@@ -115,7 +115,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Brfalse, label);
                     nextBranch = false;
                 }
-                else if (firstFound && code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), new Type[] { typeof(TraitDef) })))
+                else if (firstFound && code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
                 {
                     yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(OtherMod_Patches.TraitConversion));
                 }
@@ -128,7 +128,7 @@ namespace BetterRomance.HarmonyPatches
 
         public static void PatchForceLoveHate(this Harmony harmony)
         {
-            List<string> typeNames = new List<string>
+            List<string> typeNames = new()
             {
                 "Thought_HomophobicVsGay",
                 "ThoughtWorker_HomophobicVsGay",
@@ -137,9 +137,9 @@ namespace BetterRomance.HarmonyPatches
                 "ThoughtWorker_PositiveViewOnSameSexCouples",
                 "ThoughtWorker_NegativeViewOnSameSexCouples",
             };
-            HarmonyMethod TraitToOrientationTranspiler = new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.TraitToOrientationTranspiler));
-            HarmonyMethod IsInSameSexRelationshipPostfix = new HarmonyMethod(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipPostfix)));
-            HarmonyMethod IsInSameSexRelationshipWithPostfix = new HarmonyMethod(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipWithPostfix)));
+            HarmonyMethod TraitToOrientationTranspiler = new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.TraitToOrientationTranspiler));
+            HarmonyMethod IsInSameSexRelationshipPostfix = new(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipPostfix)));
+            HarmonyMethod IsInSameSexRelationshipWithPostfix = new(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipWithPostfix)));
             foreach (string name in typeNames)
             {
                 Type type = AccessTools.TypeByName(name);
@@ -147,7 +147,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     foreach (MethodInfo method in type.GetMethods(AccessTools.all))
                     {
-                        if (method.Name == "OpinionOffset" || method.Name == "CurrentSocialStateInternal")
+                        if (method.Name is "OpinionOffset" or "CurrentSocialStateInternal")
                         {
                             harmony.Patch(method, transpiler: TraitToOrientationTranspiler);
                         }
@@ -163,11 +163,11 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
 
-            harmony.Patch(AccessTools.TypeByName("ThoughtWorker_PreceptSameSexCouples").GetMethod("CountSameSexCouples"), postfix: new HarmonyMethod(typeof(PhobiaPatches).GetMethod(nameof(CountSameSexCouplesPostfix))));
+            harmony.Patch(AccessTools.TypeByName("ThoughtWorker_PreceptSameSexCouples").GetMethod("CountSameSexCouples"), postfix: new(typeof(PhobiaPatches).GetMethod(nameof(CountSameSexCouplesPostfix))));
             //Replacing the original postfix, since it's unnecessarily destructive
             harmony.Unpatch(typeof(RelationsUtility).GetMethod(nameof(RelationsUtility.AttractedToGender)), Type.GetType("ForceLoveHate.Patch_AttractedToGender,ForceLoveHate").GetMethod("Postfix"));
-            harmony.Patch(typeof(RelationsUtility).GetMethod(nameof(RelationsUtility.AttractedToGender)), postfix: new HarmonyMethod(typeof(PhobiaPatches), nameof(AttractedToGenderPostfix)));
-            harmony.Patch(Type.GetType("ForceLoveHate.Patch_InteractionWorker_RomanceAttempt_SuccessChance,ForceLoveHate").GetMethod("Postfix"), transpiler: new HarmonyMethod(typeof(PhobiaPatches), nameof(SuccessChanceTranspiler)));
+            harmony.Patch(typeof(RelationsUtility).GetMethod(nameof(RelationsUtility.AttractedToGender)), postfix: new(typeof(PhobiaPatches), nameof(AttractedToGenderPostfix)));
+            harmony.Patch(Type.GetType("ForceLoveHate.Patch_InteractionWorker_RomanceAttempt_SuccessChance,ForceLoveHate").GetMethod("Postfix"), transpiler: new(typeof(PhobiaPatches), nameof(SuccessChanceTranspiler)));
         }
     }
 }

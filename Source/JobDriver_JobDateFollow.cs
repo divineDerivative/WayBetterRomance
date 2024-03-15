@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -23,7 +22,6 @@ namespace BetterRomance
             return RandomSocialMode.SuperActive;
         }
 
-        [DebuggerHidden]
         protected override IEnumerable<Toil> MakeNewToils()
         {
             // Wait a tick to avoid a 1.1 issue where the date leader now must end their current
@@ -37,7 +35,7 @@ namespace BetterRomance
                 LogUtil.Message($"Date follow job started for {Actor.Name.ToStringShort}", true);
             };
             yield return WaitForPartnerJob;
-            
+
             //Follow partner
             Toil FollowPartner = ToilMaker.MakeToil("DateFollowPartner");
             FollowPartner.defaultCompleteMode = ToilCompleteMode.Delay;

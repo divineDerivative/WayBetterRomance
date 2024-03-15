@@ -37,12 +37,12 @@ namespace BetterRomance
 
         public static bool TryFindBestWatchCellNear(Thing toWatch, Pawn pawn, Building otherChair, bool desireSit, out IntVec3 result, out Building chair)
         {
-            List<int> list = (List<int>)AccessTools.Method(typeof(WatchBuildingUtility), "CalculateAllowedDirections").Invoke(null, new object[] { toWatch.def, toWatch.Rotation });
+            List<int> list = (List<int>)AccessTools.Method(typeof(WatchBuildingUtility), "CalculateAllowedDirections").Invoke(null, [toWatch.def, toWatch.Rotation]);
             list.Shuffle();
             IntVec3 intVec = IntVec3.Invalid;
             for (int i = 0; i < list.Count; i++)
             {
-                CellRect watchCellRect = (CellRect)AccessTools.Method(typeof(WatchBuildingUtility), "GetWatchCellRect").Invoke(null, new object[] { toWatch.def, toWatch.Position, toWatch.Rotation, list[i] });
+                CellRect watchCellRect = (CellRect)AccessTools.Method(typeof(WatchBuildingUtility), "GetWatchCellRect").Invoke(null, [toWatch.def, toWatch.Position, toWatch.Rotation, list[i]]);
                 IntVec3 centerCell = watchCellRect.CenterCell;
                 int num = watchCellRect.Area * 4;
                 for (int j = 0; j < num; j++)
@@ -54,7 +54,7 @@ namespace BetterRomance
                     }
                     bool flag = false;
                     Building building = null;
-                    if ((bool)AccessTools.Method(typeof(WatchBuildingUtility), "EverPossibleToWatchFrom").Invoke(null, new object[] { intVec2, toWatch.Position, toWatch.Map, false, toWatch.def }) && !intVec2.IsForbidden(pawn) && pawn.CanReserveSittableOrSpot(intVec2) && pawn.Map.pawnDestinationReservationManager.CanReserve(intVec2, pawn))
+                    if ((bool)AccessTools.Method(typeof(WatchBuildingUtility), "EverPossibleToWatchFrom").Invoke(null, [intVec2, toWatch.Position, toWatch.Map, false, toWatch.def]) && !intVec2.IsForbidden(pawn) && pawn.CanReserveSittableOrSpot(intVec2) && pawn.Map.pawnDestinationReservationManager.CanReserve(intVec2, pawn))
                     {
                         if (desireSit)
                         {
@@ -139,7 +139,7 @@ namespace BetterRomance
             JoyUtility.JoyTickCheckEnd(pawn, JoyTickFullJoyAction.None);
             if (isDate)
             {
-                HelperClasses.RotRFillRomanceBar?.Invoke(null, new object[] { pawn, 0.00002f });
+                HelperClasses.RotRFillRomanceBar?.Invoke(null, [pawn, 0.00002f]);
             }
         }
 

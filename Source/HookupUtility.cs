@@ -163,7 +163,7 @@ namespace BetterRomance
                 return "WBR.CantHookupTargetYoung".Translate();
             }
             //Don't allow if it would be incestuous
-            if ((bool)AccessTools.Method(typeof(RelationsUtility), "Incestuous").Invoke(null, new object[] { initiator, target }))
+            if ((bool)AccessTools.Method(typeof(RelationsUtility), "Incestuous").Invoke(null, [initiator, target]))
             {
                 return "WBR.CantHookupTargetIncest".Translate();
             }
@@ -258,7 +258,7 @@ namespace BetterRomance
         public static Building_Bed FindHookupBed(Pawn first, Pawn second)
         {
             //If first owns a suitable bed that no one is currently using, use that
-            if (first.ownership.OwnedBed is Building_Bed bed1 && bed1 != null && bed1.SleepingSlotsCount > 1 && CanBothReach(bed1, first, second))
+            if (first.ownership.OwnedBed is Building_Bed bed1 && bed1.SleepingSlotsCount > 1 && CanBothReach(bed1, first, second))
             {
                 //If they have the same bed just use that one, even if it's occupied
                 if (second.ownership.OwnedBed == bed1 || (!bed1.AnyOccupants && RestUtility.CanUseBedEver(second, bed1.def)))
@@ -267,7 +267,7 @@ namespace BetterRomance
                 }
             }
             //If second owns a suitable bed that no one is currently using, use that
-            if (second.ownership.OwnedBed is Building_Bed bed2 && bed2 != null && bed2.SleepingSlotsCount > 1 && !bed2.AnyOccupants && CanBothReach(bed2, first, second))
+            if (second.ownership.OwnedBed is Building_Bed bed2 && bed2.SleepingSlotsCount > 1 && !bed2.AnyOccupants && CanBothReach(bed2, first, second))
             {
                 if (RestUtility.CanUseBedEver(first, bed2.def))
                 {
@@ -458,7 +458,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static string HookupFactors(Pawn initiator, Pawn target)
         {
-            StringBuilder text = new StringBuilder();
+            StringBuilder text = new();
             //Opinion factor
             float opinionFactor = target.relations.OpinionOf(initiator) < target.MinOpinionForHookup(true) ? 0f : OpinionFactor(target, initiator);
             text.AppendLine(HookupFactorLine("WBR.HookupChanceOpinionFactor".Translate(), opinionFactor));
@@ -508,14 +508,14 @@ namespace BetterRomance
                         if (gene.Active && gene.def.missingGeneRomanceChanceFactor != 1f && (target.genes == null || !target.genes.HasGene(gene.def)))
                         {
                             float value = gene.def.missingGeneRomanceChanceFactor;
-                            string geneText1 = string.Empty;
+                            string kind = string.Empty;
                             //Nullify with kind trait
                             if (target.story?.traits != null && target.story.traits.HasTrait(TraitDefOf.Kind))
                             {
                                 value = 1f;
-                                geneText1 = " (" + TraitDefOf.Kind.DataAtDegree(0).label + ")";
+                                kind = " (" + TraitDefOf.Kind.DataAtDegree(0).label + ")";
                             }
-                            text.AppendLine(HookupFactorLine(gene.def.LabelCap + " (" + initiator.NameShortColored.Resolve() + ")", value) + geneText1);
+                            text.AppendLine(HookupFactorLine(gene.def.LabelCap + " (" + initiator.NameShortColored.Resolve() + ")", value) + kind);
                         }
                     }
                 }
@@ -525,15 +525,15 @@ namespace BetterRomance
                     {
                         if (gene.Active && gene.def.missingGeneRomanceChanceFactor != 1f && (initiator.genes == null || !initiator.genes.HasGene(gene.def)))
                         {
-                            float value2 = gene.def.missingGeneRomanceChanceFactor;
-                            string geneText2 = string.Empty;
+                            float value = gene.def.missingGeneRomanceChanceFactor;
+                            string kind = string.Empty;
                             //Nullify with kind trait
                             if (target.story?.traits != null && initiator.story.traits.HasTrait(TraitDefOf.Kind))
                             {
-                                value2 = 1f;
-                                geneText2 = " (" + TraitDefOf.Kind.DataAtDegree(0).label + ")";
+                                value = 1f;
+                                kind = " (" + TraitDefOf.Kind.DataAtDegree(0).label + ")";
                             }
-                            text.AppendLine(HookupFactorLine(gene.def.LabelCap + " (" + target.NameShortColored + ")", value2) + geneText2);
+                            text.AppendLine(HookupFactorLine(gene.def.LabelCap + " (" + target.NameShortColored + ")", value) + kind);
                         }
                     }
                 }
