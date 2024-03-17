@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <Excluded>
+    <exclude>.editorconfig</exclude>
+    <exclude>.git</exclude>
+    <exclude>.rimignore</exclude>
+    <exclude>.vs</exclude>
+    <exclude>Source</exclude>
+    <exclude>WayBetterRomance.sln</exclude>
+  </Excluded>
+</Configuration>

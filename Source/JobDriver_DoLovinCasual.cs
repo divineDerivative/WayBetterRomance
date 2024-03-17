@@ -37,7 +37,7 @@ namespace BetterRomance
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            return pawn.Reserve(Partner, job, errorOnFailed: errorOnFailed) && pawn.Reserve(Bed, job, maxPawns: Bed.SleepingSlotsCount, errorOnFailed: errorOnFailed);
+            return pawn.Reserve(Partner, job, errorOnFailed: errorOnFailed) && pawn.Reserve(Bed, job, maxPawns: Bed.SleepingSlotsCount, stackCount: 0, errorOnFailed: errorOnFailed);
         }
 
         public override bool CanBeginNowWhileLyingDown()
