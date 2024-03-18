@@ -1,9 +1,8 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
-using UnityEngine;
 using Verse;
 
 namespace BetterRomance.HarmonyPatches
@@ -26,27 +25,6 @@ namespace BetterRomance.HarmonyPatches
                 __result = 0f;
                 return false;
             }
-            //If pawns are not already in a lover relationship, do not allow
-            DirectPawnRelation directRelation = initiator.relations.GetDirectRelation(PawnRelationDefOf.Lover, recipient) ?? CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient);
-            if (directRelation == null)
-            {
-                __result = 0f;
-                return false;
-            }
-            //Some Anomaly thing
-#if v1_5
-            if (initiator.Inhumanized())
-            {
-                __result = 0f;
-                return false;
-            }
-#endif
-            //This is vanilla code for checking if ideology allows for the new spouse relation
-            if (!IdeoUtility.DoerWillingToDo(initiator.GetHistoryEventForSpouseAndFianceCountPlusOne(), initiator) || !IdeoUtility.DoerWillingToDo(recipient.GetHistoryEventForSpouseAndFianceCountPlusOne(), recipient))
-            {
-                __result = 0f;
-                return false;
-            }
             //If genders are incorrect for initiator's sexuality, do not allow
             if (initiator.gender == recipient.gender && initiator.IsHetero())
             {
@@ -65,7 +43,6 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //If they are asexual and sex repulsed, do not allow unless partner is also asexual
-            //Not sure about this
             if (initiator.IsAsexual() && initiator.AsexualRating() < 0.2f)
             {
                 if (!recipient.IsAsexual())
@@ -74,41 +51,29 @@ namespace BetterRomance.HarmonyPatches
                     return false;
                 }
             }
+            return true;
+        }
 
-            float baseChance = 0.4f;
-            //This determines how long they've been lovers
-            float relLength = (Find.TickManager.TicksGame - directRelation.startTicks) / 60000f;
-            //Adjust chance based on length of relationship
-            float lengthFactor = Mathf.InverseLerp(0f, 60f, relLength);
-            //Adjust chance based on opinion
-            float opinionFactor = Mathf.InverseLerp(0f, 60f, initiator.relations.OpinionOf(recipient));
-            //Lower chance if they're currently mad at you
-            if (recipient.relations.OpinionOf(initiator) < 0)
+        //Remove reduction for females
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            bool foundGender = false;
+            foreach (CodeInstruction code in instructions)
             {
-                baseChance *= 0.3f;
-            }
-            //Added from vanilla to account for psychic love ability
-            HediffWithTarget hediffWithTarget = (HediffWithTarget)initiator.health.hediffSet.GetFirstHediffOfDef(HediffDefOf.PsychicLove);
-            if (hediffWithTarget != null && hediffWithTarget.target == recipient)
-            {
-                baseChance *= 10f;
-            }
-            //Added from vanilla to account for pregnancy
-            if (initiator.health.hediffSet.HasPregnancyHediff() || recipient.health.hediffSet.HasPregnancyHediff())
-            {
-                baseChance *= 3f;
-            }
-            //Added from vanilla, increase chance if they already have a baby together
-            foreach (Pawn child in initiator.relations.Children)
-            {
-                if (child.DevelopmentalStage.Baby() && !child.Dead && recipient.relations.Children.Contains(child))
+                if (code.LoadsField(AccessTools.Field(typeof(Pawn), nameof(Pawn.gender))))
                 {
-                    baseChance *= 2f;
+                    foundGender = true;
+                }
+                if (foundGender && code.IsStloc())
+                {
+                    yield return new CodeInstruction(OpCodes.Pop);
+                    foundGender = false;
+                }
+                else
+                {
+                    yield return code;
                 }
             }
-            //Add everything together
-            __result = baseChance * lengthFactor * opinionFactor;
-            return false;
         }
     }
 
