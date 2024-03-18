@@ -119,5 +119,35 @@
 			</operations>
 		</match>
 	</Operation>-->
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Paniel the Automata</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class ="PatchOperationAddModExtension">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="Paniel_Race"]</xpath>
+					<value>
+						<li Class="BetterRomance.RegularSexSettings">
+							<minAgeForSex>997</minAgeForSex>
+							<maxAgeForSex>999</maxAgeForSex>
+							<maxAgeGap>999</maxAgeGap>
+							<declineAtAge>998</declineAtAge>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationConditional">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="Paniel_Race"]/alienRace/generalSettings/growthAges</xpath>
+					<nomatch Class="PatchOperationAdd">
+						<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="Paniel_Race"]/alienRace/generalSettings</xpath>
+						<value>
+							<growthAges />
+						</value>
+					</nomatch>
+				</li>
+			</operations>
+		</match>
+	</Operation>
 	
 </Patch>
