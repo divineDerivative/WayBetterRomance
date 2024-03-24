@@ -13,19 +13,6 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>portable</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\1.5\Assemblies\</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>
-    </DocumentationFile>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.5|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\1.5\Assemblies\</OutputPath>
@@ -46,33 +33,47 @@
     <ErrorReport>prompt</ErrorReport>
     <DefineConstants>v1_4</DefineConstants>
   </PropertyGroup>
+  <Choose>
+    <When Condition="'$(Configuration)|$(Platform)' == '1.4|AnyCPU'">
+      <ItemGroup>
+        <PackageReference Include="Lib.Harmony">
+          <Version>2.2.2.0</Version>
+          <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+      </ItemGroup>
+      <ItemGroup>
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.4.*">
+          <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Configuration)|$(Platform)' == '1.5|AnyCPU'">
+      <ItemGroup>
+        <PackageReference Include="Lib.Harmony">
+          <Version>2.3.1.1</Version>
+          <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+      </ItemGroup>
+      <ItemGroup>
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*-*">
+          <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+      </ItemGroup>
+    </When>
+  </Choose>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\..\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="AlienRace">
+    <Reference Include="AlienRace" Condition="'$(Configuration)|$(Platform)' == '1.4|AnyCPU'">
       <HintPath>..\..\..\..\..\workshop\content\294100\839005762\1.4\Assemblies\AlienRace.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp" Condition="'$(Configuration)|$(Platform)' == '1.5|AnyCPU'">
-      <HintPath>..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RimWorld14" Condition="'$(Configuration)|$(Platform)' == '1.4|AnyCPU'">
-      <HintPath>..\..\..\..\..\..\..\..\Users\jocme\OneDrive\Desktop\RimWorld14.dll</HintPath>
+    <Reference Include="AlienRace" Condition="'$(Configuration)|$(Platform)' == '1.5|AnyCPU'">
+      <HintPath>..\..\..\..\..\workshop\content\294100\2640710953\1.5\Assemblies\AlienRace.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RomanceOnTheRim">
       <HintPath>..\..\..\..\..\workshop\content\294100\2654432921\1.4\Assemblies\RomanceOnTheRim.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
@@ -81,22 +82,6 @@
     <None Include="..\Common\Defs\**" />
     <None Include="..\Common\Languages\**" />
     <None Include="..\Common\Patches\**" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\..\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="VanillaRacesExpandedHighmate">
       <HintPath>..\..\..\..\..\workshop\content\294100\2995385834\1.4\Assemblies\VanillaRacesExpandedHighmate.dll</HintPath>
       <Private>False</Private>
