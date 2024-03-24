@@ -109,7 +109,7 @@ namespace BetterRomance
 
         public static void MakeRaceSettingsList()
         {
-            foreach (ThingDef race in DefDatabase<ThingDef>.AllDefsListForReading.Where(td => td.race != null && td.race.Humanlike))
+            foreach (ThingDef race in DefDatabase<ThingDef>.AllDefsListForReading.Where(td => td.race != null && !td.IsCorpse && td.race.Humanlike))
             {
                 race.comps.Add(new CompProperties(typeof(WBR_SettingsComp)));
                 Settings.RaceSettingsList.Add(new RaceSettings(race));
