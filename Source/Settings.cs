@@ -153,6 +153,101 @@ namespace BetterRomance
             }
 
             list.Gap();
+            DrawRightMisc(list);
+
+            list.End();
+        }
+
+        private static float sectionHeightOrientation = 0f;
+        private static float sectionHeightOther = 0f;
+
+        private static Listing_Standard DrawCustomSectionStart(Listing_Standard listing, float height, string label, string tooltip = null)
+        {
+            listing.Gap();
+            listing.Label(label, -1f, tooltip);
+            Listing_Standard listing_Standard = listing.BeginSection(height, 8f, 6f);
+            listing_Standard.maxOneColumn = true;
+            return listing_Standard;
+        }
+
+        private static void DrawCustomSectionEnd(Listing_Standard listing, Listing_Standard section, out float height)
+        {
+            listing.EndSection(section);
+            height = section.CurHeight;
+        }
+        //I wonder if I can combine these into one method that can act on the different orientation objects?
+        private static void DrawBaseSexualityChance(Listing_Standard listing)
+        {
+            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.OrentationHeading".Translate(), tooltip: "WBR.OrentationHeadingTip".Translate());
+            list.Label("WBR.StraightChance".Translate() + "  " + settings.sexualOrientations.hetero + "%", tooltip: "WBR.StraightChanceTip".Translate());
+            settings.sexualOrientations.hetero = Mathf.Round(list.Slider(settings.sexualOrientations.hetero, 0f, 100f));
+            if (settings.sexualOrientations.hetero > 100f - settings.sexualOrientations.bi - settings.sexualOrientations.homo)
+            {
+                settings.sexualOrientations.hetero = 100f - settings.sexualOrientations.bi - settings.sexualOrientations.homo;
+            }
+            list.Label("WBR.BisexualChance".Translate() + "  " + settings.sexualOrientations.bi + "%", tooltip: "WBR.BisexualChanceTip".Translate());
+            settings.sexualOrientations.bi = Mathf.Round(list.Slider(settings.sexualOrientations.bi, 0f, 100f));
+            if (settings.sexualOrientations.bi > 100f - settings.sexualOrientations.hetero - settings.sexualOrientations.homo)
+            {
+                settings.sexualOrientations.bi = 100f - settings.sexualOrientations.hetero - settings.sexualOrientations.homo;
+            }
+            list.Label("WBR.GayChance".Translate() + "  " + settings.sexualOrientations.homo + "%", tooltip: "WBR.GayChanceTip".Translate());
+            settings.sexualOrientations.homo = Mathf.Round(list.Slider(settings.sexualOrientations.homo, 0f, 100f));
+            if (settings.sexualOrientations.homo > 100f - settings.sexualOrientations.hetero - settings.sexualOrientations.bi)
+            {
+                settings.sexualOrientations.homo = 100f - settings.sexualOrientations.hetero - settings.sexualOrientations.bi;
+            }
+            settings.sexualOrientations.none = 100f - settings.sexualOrientations.hetero - settings.sexualOrientations.bi - settings.sexualOrientations.homo;
+            list.Label("WBR.AsexualChance".Translate() + "  " + settings.sexualOrientations.none + "%", tooltip: "WBR.AsexualChanceTip".Translate());
+            DrawCustomSectionEnd(listing, list, out sectionHeightOrientation);
+        }
+
+        private static void DrawAceOrientationChance(Listing_Standard listing)
+        {
+            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.AceOrentationHeading".Translate(), tooltip: "WBR.AceOrentationHeadingTip".Translate());
+            list.Label("WBR.AceHeteroChance".Translate() + "  " + settings.asexualOrientations.hetero + "%", tooltip: "WBR.AceHeteroChanceTip".Translate());
+            settings.asexualOrientations.hetero = Mathf.Round(list.Slider(settings.asexualOrientations.hetero, 0f, 100f));
+            if (settings.asexualOrientations.hetero > 100f - settings.asexualOrientations.bi - settings.asexualOrientations.homo)
+            {
+                settings.asexualOrientations.hetero = 100f - settings.asexualOrientations.bi - settings.asexualOrientations.homo;
+            }
+            list.Label("WBR.AceBiChance".Translate() + "  " + settings.asexualOrientations.bi + "%", tooltip: "WBR.AceBiChanceTip".Translate());
+            settings.asexualOrientations.bi = Mathf.Round(list.Slider(settings.asexualOrientations.bi, 0f, 100f));
+            if (settings.asexualOrientations.bi > 100f - settings.asexualOrientations.hetero - settings.asexualOrientations.homo)
+            {
+                settings.asexualOrientations.bi = 100f - settings.asexualOrientations.hetero - settings.asexualOrientations.homo;
+            }
+            list.Label("WBR.AceHomoChance".Translate() + "  " + settings.asexualOrientations.homo + "%", tooltip: "WBR.AceHomoChanceTip".Translate());
+            settings.asexualOrientations.homo = Mathf.Round(list.Slider(settings.asexualOrientations.homo, 0f, 100f));
+            if (settings.asexualOrientations.homo > 100f - settings.asexualOrientations.hetero - settings.asexualOrientations.bi)
+            {
+                settings.asexualOrientations.homo = 100f - settings.asexualOrientations.hetero - settings.asexualOrientations.bi;
+            }
+            settings.asexualOrientations.none = 100 - settings.asexualOrientations.hetero - settings.asexualOrientations.bi - settings.asexualOrientations.homo;
+            list.Label("WBR.AceAroChance".Translate() + "  " + settings.asexualOrientations.none + "%", tooltip: "WBR.AceAroChanceTip".Translate());
+            DrawCustomSectionEnd(listing, list, out sectionHeightOrientation);
+        }
+
+        private static void DrawCustomRight(Listing_Standard listing)
+        {
+            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOther, "WBR.OtherHeading".Translate());
+            list.Label("WBR.DateRate".Translate() + "  " + (int)settings.dateRate + "%", tooltip: "WBR.DateRateTip".Translate());
+            settings.dateRate = list.Slider(settings.dateRate, 0f, 200.99f);
+            list.Label("WBR.HookupRate".Translate() + "  " + (int)settings.hookupRate + "%", tooltip: "WBR.HookupRateTip".Translate());
+            settings.hookupRate = list.Slider(settings.hookupRate, 0f, 200.99f);
+            list.Label("WBR.CheatChance".Translate() + "  " + (int)settings.cheatChance + "%", tooltip: "WBR.CheatChanceTip".Translate());
+            settings.cheatChance = list.Slider(settings.cheatChance, 0f, 200.99f);
+            list.Label("WBR.AlienLoveChance".Translate() + "  " + (int)settings.alienLoveChance + "%", tooltip: "WBR.AlienLoveChanceTip".Translate());
+            settings.alienLoveChance = list.Slider(settings.alienLoveChance, 0f, 100f);
+            list.Label("WBR.MinOpinionRomance".Translate() + " " + settings.minOpinionRomance, tooltip: "WBR.MinOpinionRomanceTip".Translate());
+            settings.minOpinionRomance = Mathf.RoundToInt(list.Slider(settings.minOpinionRomance, -100f, 100f));
+            list.Label("WBR.MinOpinionHookup".Translate() + " " + settings.minOpinionHookup, tooltip: "WBR.MinOpinionHookupTip".Translate());
+            settings.minOpinionHookup = Mathf.RoundToInt(list.Slider(settings.minOpinionHookup, -100f, 50f));
+            DrawCustomSectionEnd(listing, list, out sectionHeightOther);
+        }
+
+        private static void DrawRightMisc(Listing_Standard list)
+        {
             if (Settings.FertilityMods.Count == 1 && (Settings.fertilityMod == "None" || !Settings.FertilityMods.ContainsKey(Settings.fertilityMod)))
             {
                 Settings.fertilityMod = Settings.FertilityMods.First().Key;
@@ -190,95 +285,7 @@ namespace BetterRomance
             {
                 list.CheckboxLabeled("Enable dev logging", ref Settings.debugLogging);
             }
-            list.End();
         }
 
-        private static float sectionHeightOrientation = 0f;
-        private static float sectionHeightOther = 0f;
-
-        private static Listing_Standard DrawCustomSectionStart(Listing_Standard listing, float height, string label, string tooltip = null)
-        {
-            listing.Gap();
-            listing.Label(label, -1f, tooltip);
-            Listing_Standard listing_Standard = listing.BeginSection(height, 8f, 6f);
-            listing_Standard.maxOneColumn = true;
-            return listing_Standard;
-        }
-
-        private static void DrawCustomSectionEnd(Listing_Standard listing, Listing_Standard section, out float height)
-        {
-            listing.EndSection(section);
-            height = section.CurHeight;
-        }
-
-        private static void DrawBaseSexualityChance(Listing_Standard listing)
-        {
-            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.OrentationHeading".Translate(), tooltip: "WBR.OrentationHeadingTip".Translate());
-            list.Label("WBR.StraightChance".Translate() + "  " + (int)settings.sexualOrientations.hetero + "%", tooltip: "WBR.StraightChanceTip".Translate());
-            settings.sexualOrientations.hetero = list.Slider(settings.sexualOrientations.hetero, 0f, 100.99f);
-            if (settings.sexualOrientations.hetero > 100.99f - settings.sexualOrientations.bi - settings.sexualOrientations.homo)
-            {
-                settings.sexualOrientations.hetero = 100.99f - settings.sexualOrientations.bi - settings.sexualOrientations.homo;
-            }
-            list.Label("WBR.BisexualChance".Translate() + "  " + (int)settings.sexualOrientations.bi + "%", tooltip: "WBR.BisexualChanceTip".Translate());
-            settings.sexualOrientations.bi = list.Slider(settings.sexualOrientations.bi, 0f, 100.99f);
-            if (settings.sexualOrientations.bi > 100.99f - settings.sexualOrientations.hetero - settings.sexualOrientations.homo)
-            {
-                settings.sexualOrientations.bi = 100.99f - settings.sexualOrientations.hetero - settings.sexualOrientations.homo;
-            }
-            list.Label("WBR.GayChance".Translate() + "  " + (int)settings.sexualOrientations.homo + "%", tooltip: "WBR.GayChanceTip".Translate());
-            settings.sexualOrientations.homo = list.Slider(settings.sexualOrientations.homo, 0f, 100.99f);
-            if (settings.sexualOrientations.homo > 100.99f - settings.sexualOrientations.hetero - settings.sexualOrientations.bi)
-            {
-                settings.sexualOrientations.homo = 100.99f - settings.sexualOrientations.hetero - settings.sexualOrientations.bi;
-            }
-            settings.sexualOrientations.none = 100 - (int)settings.sexualOrientations.hetero - (int)settings.sexualOrientations.bi - (int)settings.sexualOrientations.homo;
-            list.Label("WBR.AsexualChance".Translate() + "  " + settings.sexualOrientations.none + "%", tooltip: "WBR.AsexualChanceTip".Translate());
-            DrawCustomSectionEnd(listing, list, out sectionHeightOrientation);
-        }
-
-        private static void DrawAceOrientationChance(Listing_Standard listing)
-        {
-            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.AceOrentationHeading".Translate(), tooltip: "WBR.AceOrentationHeadingTip".Translate());
-            list.Label("WBR.AceHeteroChance".Translate() + "  " + (int)settings.asexualOrientations.hetero + "%", tooltip: "WBR.AceHeteroChanceTip".Translate());
-            settings.asexualOrientations.hetero = list.Slider(settings.asexualOrientations.hetero, 0f, 100.99f);
-            if (settings.asexualOrientations.hetero > 100.99f - settings.asexualOrientations.bi - settings.asexualOrientations.homo)
-            {
-                settings.asexualOrientations.hetero = 100.99f - settings.asexualOrientations.bi - settings.asexualOrientations.homo;
-            }
-            list.Label("WBR.AceBiChance".Translate() + "  " + (int)settings.asexualOrientations.bi + "%", tooltip: "WBR.AceBiChanceTip".Translate());
-            settings.asexualOrientations.bi = list.Slider(settings.asexualOrientations.bi, 0f, 100.99f);
-            if (settings.asexualOrientations.bi > 100.99f - settings.asexualOrientations.hetero - settings.asexualOrientations.homo)
-            {
-                settings.asexualOrientations.bi = 100.99f - settings.asexualOrientations.hetero - settings.asexualOrientations.homo;
-            }
-            list.Label("WBR.AceHomoChance".Translate() + "  " + (int)settings.asexualOrientations.homo + "%", tooltip: "WBR.AceHomoChanceTip".Translate());
-            settings.asexualOrientations.homo = list.Slider(settings.asexualOrientations.homo, 0f, 100.99f);
-            if (settings.asexualOrientations.homo > 100.99f - settings.asexualOrientations.hetero - settings.asexualOrientations.bi)
-            {
-                settings.asexualOrientations.homo = 100.99f - settings.asexualOrientations.hetero - settings.asexualOrientations.bi;
-            }
-            settings.asexualOrientations.none = 100 - (int)settings.asexualOrientations.hetero - (int)settings.asexualOrientations.bi - (int)settings.asexualOrientations.homo;
-            list.Label("WBR.AceAroChance".Translate() + "  " + settings.asexualOrientations.none + "%", tooltip: "WBR.AceAroChanceTip".Translate());
-            DrawCustomSectionEnd(listing, list, out sectionHeightOrientation);
-        }
-
-        private static void DrawCustomRight(Listing_Standard listing)
-        {
-            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOther, "WBR.OtherHeading".Translate());
-            list.Label("WBR.DateRate".Translate() + "  " + (int)settings.dateRate + "%", tooltip: "WBR.DateRateTip".Translate());
-            settings.dateRate = list.Slider(settings.dateRate, 0f, 200.99f);
-            list.Label("WBR.HookupRate".Translate() + "  " + (int)settings.hookupRate + "%", tooltip: "WBR.HookupRateTip".Translate());
-            settings.hookupRate = list.Slider(settings.hookupRate, 0f, 200.99f);
-            list.Label("WBR.CheatChance".Translate() + "  " + (int)settings.cheatChance + "%", tooltip: "WBR.CheatChanceTip".Translate());
-            settings.cheatChance = list.Slider(settings.cheatChance, 0f, 200.99f);
-            list.Label("WBR.AlienLoveChance".Translate() + "  " + (int)settings.alienLoveChance + "%", tooltip: "WBR.AlienLoveChanceTip".Translate());
-            settings.alienLoveChance = list.Slider(settings.alienLoveChance, 0f, 100.99f);
-            list.Label("WBR.MinOpinionRomance".Translate() + " " + settings.minOpinionRomance, tooltip: "WBR.MinOpinionRomanceTip".Translate());
-            settings.minOpinionRomance = Mathf.RoundToInt(list.Slider(settings.minOpinionRomance, -100f, 100f));
-            list.Label("WBR.MinOpinionHookup".Translate() + " " + settings.minOpinionHookup, tooltip: "WBR.MinOpinionHookupTip".Translate());
-            settings.minOpinionHookup = Mathf.RoundToInt(list.Slider(settings.minOpinionHookup, -100f, 50f));
-            DrawCustomSectionEnd(listing, list, out sectionHeightOther);
-        }
     }
 }
