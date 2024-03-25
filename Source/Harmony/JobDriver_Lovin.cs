@@ -22,7 +22,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     //Because the instruction I'm replacing is used as a jump to point, the new instruction needs to have the same label as the old one
                     yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetLovinCurve));
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetLovinCurve));
                 }
                 else
                 {

@@ -171,6 +171,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>robocopy "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\WayBetterRomance" "C:\RimWorld_Debug\Mods\Way Better Romance" /r:1 /s /xo /xd Source .vs .git /xf *.sln .gitattributes .gitignore .editorconfig *.md || set errorlist=0</PostBuildEvent>
+    <PostBuildEvent>robocopy "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\WayBetterRomance" "C:\RimWorld_Debug\Mods\Way Better Romance" /r:1 /s /xo /xd Source .vs .git /xf *.sln .gitattributes .gitignore .editorconfig *.md || set errorlist=0
+robocopy "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\WayBetterRomance" "C:\RimWorld_Debug_v1_4\Mods\Way Better Romance" /r:1 /s /xo /xd Source .vs .git /xf *.sln .gitattributes .gitignore .editorconfig *.md || set errorlist=0</PostBuildEvent>
   </PropertyGroup>
 </Project>

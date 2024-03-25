@@ -100,6 +100,7 @@ namespace BetterRomance
         public float maxAgeForSex = -999f;
         public float maxAgeGap = -999f;
         public float declineAtAge = -999f;
+
         public CompSettingsRegularSex Copy()
         {
             return (CompSettingsRegularSex)MemberwiseClone();
@@ -116,9 +117,20 @@ namespace BetterRomance
             };
         }
 
+        public override bool Equals(object obj) => obj is CompSettingsRegularSex sex && minAgeForSex == sex.minAgeForSex && maxAgeForSex == sex.maxAgeForSex && maxAgeGap == sex.maxAgeGap && declineAtAge == sex.declineAtAge;
+
         public bool IsEmpty()
         {
             return minAgeForSex.IsUnset() && maxAgeForSex.IsUnset() && maxAgeGap.IsUnset() && declineAtAge.IsUnset();
+        }
+
+        public static bool operator ==(CompSettingsRegularSex left, CompSettingsRegularSex right)
+        {
+            return left.minAgeForSex == right.minAgeForSex && left.maxAgeForSex == right.maxAgeForSex && left.maxAgeGap == right.maxAgeGap && left.declineAtAge == right.declineAtAge;
+        }
+        public static bool operator !=(CompSettingsRegularSex left, CompSettingsRegularSex right)
+        {
+            return left.minAgeForSex != right.minAgeForSex || left.maxAgeForSex != right.maxAgeForSex || left.maxAgeGap != right.maxAgeGap || left.declineAtAge != right.declineAtAge;
         }
     }
 
@@ -197,6 +209,7 @@ namespace BetterRomance
         public int ageReversalDemandAge;
         public SimpleCurve ageSkillFactor;
         public SimpleCurve ageSkillMaxFactorCurve;
+        public SimpleCurve lovinCurve;
 
         public CompSettingsMisc Copy()
         {

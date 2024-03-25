@@ -610,6 +610,27 @@ namespace BetterRomance
             return settings.ageSkillMaxFactorCurve;
         }
 
+        public static SimpleCurve GetLovinCurve(this Pawn pawn)
+        {
+            if (pawn.IsNonSenescent())
+            {
+                float minAge = pawn.MinAgeForSex();
+                float maxAge = pawn.ageTracker.AgeBiologicalYearsFloat + 2f;
+                float declineAge = pawn.ageTracker.AgeBiologicalYearsFloat + 1f;
+                List<CurvePoint> points = new()
+                {
+                    new CurvePoint(minAge, 1.5f),
+                    new CurvePoint((declineAge / 5) + minAge, 1.5f),
+                    new CurvePoint(declineAge, 4f),
+                    new CurvePoint((maxAge / 4) + declineAge, 12f),
+                    new CurvePoint(maxAge, 36f)
+                };
+                return new SimpleCurve(points);
+            }
+            CompSettingsMisc settings = GetMiscSettings(pawn);
+            return settings.lovinCurve;
+        }
+
         /// <summary>
         /// Converts a static age into the calculated equivalent
         /// </summary>

@@ -148,7 +148,7 @@ namespace BetterRomance
                 misc.ageReversalDemandAge = 0;//not sure about this
                 misc.ageSkillFactor = new SimpleCurve { new CurvePoint(0f, 1f) };
                 misc.ageSkillMaxFactorCurve = new SimpleCurve { new CurvePoint(0f, 1f) };
-                return;
+                goto LovinCurve;
             }
             //Min age for adulthood
             if (Settings.HARActive)
@@ -176,7 +176,7 @@ namespace BetterRomance
 
             //Age reversal demand age
             float adultAge = misc.minAgeForAdulthood;
-            float declineAge = regularSex.declineAtAge == -999f ? 30f : regularSex.declineAtAge;
+            float declineAge = regularSex.declineAtAge.IsUnset() ? 30f : regularSex.declineAtAge;
             float result = adultAge + 5f;
             if (declineAge - adultAge < 10f)
             {
@@ -199,6 +199,20 @@ namespace BetterRomance
                 new CurvePoint(misc.adultAgeForLearning * 2f, 1f),
                 new CurvePoint(race.race.lifeExpectancy - (race.race.lifeExpectancy/4), 1.6f),
             };
+
+        //Curve for lovin' MTB
+        LovinCurve:
+            if (!regularSex.IsEmpty())
+            {
+                misc.lovinCurve = new SimpleCurve
+                {
+                    new CurvePoint(regularSex.minAgeForSex.IsUnset() ? 16f : regularSex.minAgeForSex, 1.5f),
+                    new CurvePoint((regularSex.declineAtAge.IsUnset() ? 30f : regularSex.declineAtAge / 5) + regularSex.minAgeForSex, 1.5f),
+                    new CurvePoint(regularSex.declineAtAge.IsUnset() ? 30f : regularSex.declineAtAge, 4f),
+                    new CurvePoint((regularSex.maxAgeForSex.IsUnset() ? 80f : regularSex.maxAgeForSex / 4) + (regularSex.declineAtAge.IsUnset() ? 30f : regularSex.declineAtAge), 12f),
+                    new CurvePoint(regularSex.maxAgeForSex.IsUnset() ? 80f : regularSex.maxAgeForSex, 36f)
+                };
+            }
         }
 
         private void SetBiotechSettings()
