@@ -92,6 +92,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Harmony\Ideology\Pawn_IdeoTracker.cs" />
     <Compile Include="Harmony\PawnRelationWorker_Spouse.cs" />
     <Compile Include="Harmony\StatPart_Age.cs" />
     <Compile Include="Settings Comp\CompSettingsClasses.cs" />

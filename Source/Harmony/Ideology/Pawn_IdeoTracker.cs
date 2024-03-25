@@ -11,7 +11,6 @@ using System.Reflection.Emit;
 
 namespace BetterRomance.HarmonyPatches
 {
-    //Not including this for now because I think it will increase processing time and will work better after the settings rework
     [HarmonyPatch(typeof(Pawn_IdeoTracker), "CertaintyChangeFactor", MethodType.Getter)]
     public static class Pawn_IdeoTracker_CertaintyChangeFactor
     {
@@ -48,15 +47,6 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return code;
                 }
-            }
-        }
-
-        public static void Postfix(ref float __result, Pawn_IdeoTracker __instance)
-        {
-            Pawn pawn = (Pawn)AccessTools.Field(typeof(Pawn_IdeoTracker), "pawn").GetValue(__instance);
-            if (pawn.Faction == Faction.OfPlayer)
-            {
-                Log.WarningOnce("Certainty Change Factor for " + pawn.Name.ToStringShort + ": " + __result.ToString(), pawn.thingIDNumber);
             }
         }
     }
