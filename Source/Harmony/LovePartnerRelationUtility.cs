@@ -324,7 +324,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.TryToShareChildrenForGeneratedLovePartner))]
     public static class LovePartnerRelationUtility_TryToShareChildrenForGeneratedLovePartner
     {
-        public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, float extraChanceFactor)
+        public static bool Prefix(Pawn generated)
         {
             return generated.ChildAllowed();
         }

@@ -7,8 +7,8 @@ namespace BetterRomance
     public static class SexualityUtility
     {
         public static bool editRepulsion;
-        public static readonly List<TraitDef> OrientationTraits = new()
-        {
+        public static readonly List<TraitDef> OrientationTraits =
+        [
             TraitDefOf.Gay,
             TraitDefOf.Bisexual,
             RomanceDefOf.Straight,
@@ -16,9 +16,9 @@ namespace BetterRomance
             RomanceDefOf.HeteroAce,
             RomanceDefOf.HomoAce,
             RomanceDefOf.BiAce,
-        };
+        ];
 
-        public static List<TraitDef> asexualTraits = new() { TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce };
+        public static List<TraitDef> asexualTraits = [TraitDefOf.Asexual, RomanceDefOf.BiAce, RomanceDefOf.HeteroAce, RomanceDefOf.HomoAce];
 
         /// <summary>
         /// A rating to use for determining sex repulsion for asexual pawns.

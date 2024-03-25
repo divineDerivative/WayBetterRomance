@@ -117,7 +117,7 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Pawn pawn, out List<Pawn> oldLoversAndFiances, InteractionWorker_RomanceAttempt __instance)
         {
             //This has to happen no matter what, so that it can be passed out
-            oldLoversAndFiances = new List<Pawn>();
+            oldLoversAndFiances = new();
             //If they don't think they're cheating, don't break up with anyone, but keep list for later
             if (RomanceUtilities.IsThisCheating(pawn, null, out List<Pawn> cheatList))
             {
@@ -187,7 +187,7 @@ namespace BetterRomance.HarmonyPatches
     {
         //Changes from Vanilla:
         //Checks if pawn cares about cheating
-        public static bool Prefix(Pawn pawn, Pawn cheater)
+        public static bool Prefix(Pawn pawn)
         {
             return pawn.CaresAboutCheating();
         }
@@ -327,7 +327,7 @@ namespace BetterRomance.HarmonyPatches
 
                 if (startFound && code.opcode == OpCodes.Pop)
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = new List<Label> { newLabel } };
+                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = [newLabel] };
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.SexualityFactor));
                     yield return new CodeInstruction(OpCodes.Stloc, num);

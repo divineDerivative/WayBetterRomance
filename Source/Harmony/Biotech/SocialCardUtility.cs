@@ -168,7 +168,7 @@ namespace BetterRomance.HarmonyPatches
 
                 if (startFound && code.opcode == OpCodes.Pop)
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = new List<Label> { newLabel } };
+                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = [newLabel] };
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(AccessTools.Inner(typeof(SocialCardUtility), "CachedSocialTabEntry"), "otherPawn");
                     yield return CodeInstruction.Call(typeof(SocialCardUtility_GetPawnRowTooltip), nameof(HookupExplanation));
@@ -217,7 +217,7 @@ namespace BetterRomance.HarmonyPatches
     public static class SocialCardUtility_DrawTryRomance
     {
         //This is to prevent drawing the button since I had to co-opt the bool that usually prevents it
-        public static bool Prefix(Rect buttonRect, Pawn pawn)
+        public static bool Prefix(Pawn pawn)
         {
             return (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, [pawn]);
         }
@@ -250,7 +250,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1)
                     {
-                        labels = new List<Label> { newLabel }
+                        labels = [newLabel]
                     };
                     yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.IsAsexual));
                     yield return new CodeInstruction(OpCodes.Brfalse_S, oldLabel);

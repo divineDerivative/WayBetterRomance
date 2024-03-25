@@ -49,7 +49,7 @@ namespace BetterRomance
                         dateLeadJob = JobMaker.MakeJob(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead, TargetPawn, list[0]);
                         //Add the path info to the job info
                         LogUtil.Message("Date walk path found.");
-                        dateLeadJob.targetQueueB = new List<LocalTargetInfo>();
+                        dateLeadJob.targetQueueB = new();
                         for (int i = 1; i < list.Count; i++)
                         {
                             dateLeadJob.targetQueueB.Add(list[i]);
@@ -96,7 +96,7 @@ namespace BetterRomance
             int EndRadialIndex = GenRadial.NumCellsInRadius(2f);
             int RadialIndexStride = 3;
             //root gets added again at the end and then the first root is skipped when yielding the results
-            List<IntVec3> cellList = new() { root };
+            List<IntVec3> cellList = [root];
             //currentCell is the cell that was most recently added to the result list
             IntVec3 currentCell = root;
             //We want to add 8 cells to the list

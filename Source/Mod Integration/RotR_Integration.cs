@@ -97,7 +97,7 @@ namespace BetterRomance
             }
 
             //This is the same as the original patch with the cheating section removed
-            public static void RomanceAttempt_RandomSelectionWeight_Patch(ref float __result, Pawn initiator, Pawn recipient)
+            public static void RomanceAttempt_RandomSelectionWeight_Patch(ref float __result, Pawn initiator)
             {
                 if (__result == 0f || initiator.Ideo == null)
                 {

@@ -128,15 +128,15 @@ namespace BetterRomance.HarmonyPatches
 
         public static void PatchForceLoveHate(this Harmony harmony)
         {
-            List<string> typeNames = new()
-            {
+            List<string> typeNames =
+            [
                 "Thought_HomophobicVsGay",
                 "ThoughtWorker_HomophobicVsGay",
                 "Thought_HeterophobicVsStraight",
                 "ThoughtWorker_HeterophobicVsStraight",
                 "ThoughtWorker_PositiveViewOnSameSexCouples",
                 "ThoughtWorker_NegativeViewOnSameSexCouples",
-            };
+            ];
             HarmonyMethod TraitToOrientationTranspiler = new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.TraitToOrientationTranspiler));
             HarmonyMethod IsInSameSexRelationshipPostfix = new(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipPostfix)));
             HarmonyMethod IsInSameSexRelationshipWithPostfix = new(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipWithPostfix)));

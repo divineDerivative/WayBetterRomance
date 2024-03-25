@@ -106,8 +106,7 @@ namespace BetterRomance
         {
             if (Settings.fertilityMod != "None")
             {
-                string mod = Settings.fertilityMod;
-                switch (mod)
+                switch (Settings.fertilityMod)
                 {
                     case "ludeon.rimworld.biotech":
                         return pawn.GetStatValue(StatDefOf.Fertility);
@@ -117,7 +116,7 @@ namespace BetterRomance
                     case "safe.job.world":
                         return pawn.health.capacities.GetLevel(RomanceDefOf.RJW_Fertility);
                 }
-                LogUtil.ErrorOnce("Unexpected value of fertilityMod: " + mod, 1798621);
+                LogUtil.ErrorOnce("Unexpected value of fertilityMod: " + Settings.fertilityMod, 1798621);
                 return 100f;
             }
             LogUtil.WarningOnce("If you are using a mod that adds fertility/pregnancy, please set it in the mod options for Way Better Romance. Otherwise, ignore this message.", 6894123);
@@ -143,7 +142,7 @@ namespace BetterRomance
                         {
                             if (!RaceHookupTraits.ContainsKey(race))
                             {
-                                RaceHookupTraits.Add(race, new HashSet<TraitRequirement>());
+                                RaceHookupTraits.Add(race, new());
                             }
                             if (extension.degrees.NullOrEmpty())
                             {
@@ -172,7 +171,7 @@ namespace BetterRomance
                         {
                             if (!PawnkindHookupTraits.ContainsKey(pawnkind))
                             {
-                                PawnkindHookupTraits.Add(pawnkind, new HashSet<TraitRequirement>());
+                                PawnkindHookupTraits.Add(pawnkind, new());
                             }
                             if (extension.degrees.NullOrEmpty())
                             {
@@ -201,7 +200,7 @@ namespace BetterRomance
 
         public static bool MeetsHookupTraitRequirment(this Pawn pawn, out List<string> list)
         {
-            list = new List<string>();
+            list = new();
             if (PawnkindHookupTraits.ContainsKey(pawn.kindDef))
             {
                 foreach (TraitRequirement trait in PawnkindHookupTraits[pawn.kindDef])
@@ -473,8 +472,8 @@ namespace BetterRomance
             //This will preserve any xml patches that might be made to the default curves
             if (gender == Gender.Female)
             {
-                return femaleFertilityAgeFactor ?? new SimpleCurve
-                {
+                return femaleFertilityAgeFactor ??
+                [
                     new CurvePoint(14f, 0f),
                     new CurvePoint(20f, 1f),
                     new CurvePoint(28f, 1f),
@@ -482,17 +481,17 @@ namespace BetterRomance
                     new CurvePoint(40f, 0.1f),
                     new CurvePoint(45f, 0.02f),
                     new CurvePoint(50f, 0f),
-                };
+                ];
             }
             else
             {
-                return maleFertilityAgeFactor ?? new SimpleCurve
-                {
+                return maleFertilityAgeFactor ??
+                [
                     new CurvePoint(14f, 0f),
                     new CurvePoint(18f, 1f),
                     new CurvePoint(50f, 1f),
                     new CurvePoint(90f, 0f),
-                };
+                ];
             }
         }
 
@@ -505,15 +504,15 @@ namespace BetterRomance
         public static SimpleCurve GetDefaultChildbirthAgeCurve()
         {
             //This will preserve any xml patches that might be made to the default curve
-            return childBirthByAgeCurve?.curve ?? new SimpleCurve
-            {
+            return childBirthByAgeCurve?.curve ??
+            [
                 new CurvePoint(14f, 0.0f),
                 new CurvePoint(15f, 0.3f),
                 new CurvePoint(20f, 0.5f),
                 new CurvePoint(30f, 0.5f),
                 new CurvePoint(40f, 0.3f),
                 new CurvePoint(65f, 0.0f),
-            };
+            ];
         }
 
         public static int GetGrowthMoment(Pawn pawn, int index)
@@ -551,11 +550,7 @@ namespace BetterRomance
         {
             CompSettingsMisc settings = GetMiscSettings(pawn);
             //This can get called on animals/mechs
-            if (settings == null)
-            {
-                return defaultMinAgeForAdulthood;
-            }
-            return settings.minAgeForAdulthood;
+            return settings?.minAgeForAdulthood ?? defaultMinAgeForAdulthood;
         }
 
         public static readonly float defaultMinAgeForAdulthood = (float)AccessTools.Field(typeof(PawnBioAndNameGenerator), "MinAgeForAdulthood").GetValue(null);
@@ -617,14 +612,14 @@ namespace BetterRomance
                 float minAge = pawn.MinAgeForSex();
                 float maxAge = pawn.ageTracker.AgeBiologicalYearsFloat + 2f;
                 float declineAge = pawn.ageTracker.AgeBiologicalYearsFloat + 1f;
-                List<CurvePoint> points = new()
-                {
+                List<CurvePoint> points =
+                [
                     new CurvePoint(minAge, 1.5f),
                     new CurvePoint((declineAge / 5) + minAge, 1.5f),
                     new CurvePoint(declineAge, 4f),
                     new CurvePoint((maxAge / 4) + declineAge, 12f),
                     new CurvePoint(maxAge, 36f)
-                };
+                ];
                 return new SimpleCurve(points);
             }
             CompSettingsMisc settings = GetMiscSettings(pawn);

@@ -32,7 +32,7 @@ namespace BetterRomance
         public static bool IsThisCheating(Pawn pawn, Pawn otherPawn, out List<Pawn> cheaterList, bool loverCountOnly = false)
         {
             //This has to happen to get passed out
-            cheaterList = new List<Pawn>();
+            cheaterList = new();
             //Are they in a relationship?
             if (otherPawn != null && LovePartnerRelationUtility.LovePartnerRelationExists(pawn, otherPawn))
             {

@@ -11,7 +11,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyAfter(["rimworld.erdelf.alien_race.main"])]
     public static class JobDriver_Lovin_GenerateRandomMinTicksToNextLovin
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             FieldInfo LovinIntervalHoursFromAgeCurve = AccessTools.Field(typeof(JobDriver_Lovin), "LovinIntervalHoursFromAgeCurve");
 

@@ -42,7 +42,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(InteractionWorker_Breakup), nameof(InteractionWorker_Breakup.Interacted))]
     public static class InteractionWorker_Breakup_Interacted
     {
-        public static bool Prefix(Pawn initiator, Pawn recipient, List<RulePackDef> extraSentencePacks, out string letterText, out string letterLabel, out LetterDef letterDef, out LookTargets lookTargets, InteractionWorker_Breakup __instance)
+        public static bool Prefix(Pawn initiator, Pawn recipient, out string letterText, out string letterLabel, out LetterDef letterDef, out LookTargets lookTargets, InteractionWorker_Breakup __instance)
         {
             //Check if there's any custom relations and only run patch if one exists
             if (CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient) is DirectPawnRelation relation)

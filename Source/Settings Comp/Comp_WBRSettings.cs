@@ -231,14 +231,14 @@ namespace BetterRomance
             //Redo lovin' curve also, if any of the ages are different
             if (raceSettings.regularSex.IsEmpty() || regularSex != raceSettings.regularSex)
             {
-                misc.lovinCurve = new SimpleCurve
-                {
+                misc.lovinCurve =
+                [
                     new CurvePoint(regularSex.minAgeForSex, 1.5f),
                     new CurvePoint((regularSex.declineAtAge / 5) + regularSex.minAgeForSex, 1.5f),
                     new CurvePoint(regularSex.declineAtAge, 4f),
                     new CurvePoint((regularSex.maxAgeForSex / 4) + regularSex.declineAtAge, 12f),
                     new CurvePoint(regularSex.maxAgeForSex, 36f)
-                };
+                ];
             }
         }
     }

@@ -7,7 +7,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(TraitSet), nameof(TraitSet.GainTrait))]
     public static class TraitSet_GainTrait
     {
-        public static bool Prefix(Trait trait, ref Trait __state, Pawn ___pawn, bool suppressConflicts = false)
+        public static bool Prefix(Trait trait, ref Trait __state, Pawn ___pawn)
         {
             //Only care about orientation traits
             if (SexualityUtility.OrientationTraits.Contains(trait.def))
@@ -26,7 +26,7 @@ namespace BetterRomance.HarmonyPatches
             return true;
         }
 
-        public static void Postfix(Trait trait, ref Trait __state, Pawn ___pawn, bool suppressConflicts = false)
+        public static void Postfix(ref Trait __state, Pawn ___pawn, bool suppressConflicts = false)
         {
             if (__state != null)
             {

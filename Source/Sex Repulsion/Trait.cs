@@ -9,7 +9,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Trait), nameof(Trait.TipString))]
     public static class Trait_TipString
     {
-        public static void Postfix(Pawn pawn, ref string __result, Trait __instance)
+        public static void Postfix(ref string __result, Trait __instance)
         {
             if (SexualityUtility.asexualTraits.Contains(__instance.def))
             {

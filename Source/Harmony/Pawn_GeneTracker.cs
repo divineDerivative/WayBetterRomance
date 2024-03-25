@@ -46,11 +46,11 @@ namespace BetterRomance.HarmonyPatches
         {
             if (geneDef.defName == "Ageless")
             {
-                return new SimpleCurve
-                {
+                return
+                [
                     new CurvePoint(pawn.ageTracker.AdultMinAge, 1f),
                     new CurvePoint(SettingsUtilities.AdultAgeForLearning(pawn) + 0.5f, 0f)
-                };
+                ];
             }
 
             return geneDef.biologicalAgeTickFactorFromAgeCurve;

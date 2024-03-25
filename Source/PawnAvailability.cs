@@ -93,8 +93,8 @@ namespace BetterRomance
             return PawnAvailability.Free;
         }
 
-        private static readonly List<JobDef> DontInterruptJobs = new()
-        {
+        private static readonly List<JobDef> DontInterruptJobs =
+        [
             //Ceremonies
             JobDefOf.SpectateCeremony,
             //Emergency work
@@ -126,10 +126,10 @@ namespace BetterRomance
             JobDefOf.ApplyTechprint,
 
             JobDefOf.Breastfeed,
-        };
+        ];
 
-        private static readonly List<JobDef> CantInterruptJobs = new()
-        {
+        private static readonly List<JobDef> CantInterruptJobs =
+        [
             //Incapacitated
             JobDefOf.Wait_Downed,
             JobDefOf.Vomit,
@@ -178,7 +178,7 @@ namespace BetterRomance
             JobDefOf.GotoMindControlled,
             JobDefOf.ActivateArchonexusCore,
             JobDefOf.PruneGauranlenTree,
-    };
+    ];
 
         //Turn a PawnAvailability into a string for reporting to player
         public static readonly Dictionary<PawnAvailability, string> AvailabilityReasons = new()

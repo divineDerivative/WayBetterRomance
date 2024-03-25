@@ -365,7 +365,7 @@ namespace BetterRomance
                 float opinionFactor = OpinionFactor(target, asker, ordered);
                 if (forTooltip && partner != null)
                 {
-                    return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f) * RomanceUtilities.CheatingChance(target) * RomanceUtilities.PartnerFactor(target, new List<Pawn> { partner }, out _);
+                    return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f) * RomanceUtilities.CheatingChance(target) * RomanceUtilities.PartnerFactor(target, [partner], out _);
                 }
                 //Adjust based on opinion and increase chance for forced job
                 return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f);

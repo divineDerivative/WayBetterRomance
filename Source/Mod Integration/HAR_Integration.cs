@@ -66,25 +66,23 @@ namespace BetterRomance
 
         public static bool IsCurveDefault(SimpleCurve curve, Gender gender)
         {
-            switch (gender)
+            return gender switch
             {
-                case Gender.Female:
-                    return curve.IsEquivalentTo(femaleFertilityAgeFactor);
-                default:
-                    return curve.IsEquivalentTo(maleFertilityAgeFactor);
-            }
+                Gender.Female => curve.IsEquivalentTo(femaleFertilityAgeFactor),
+                _ => curve.IsEquivalentTo(maleFertilityAgeFactor),
+            };
         }
 
-        public static readonly SimpleCurve maleFertilityAgeFactor = new()
-        {
+        public static readonly SimpleCurve maleFertilityAgeFactor =
+        [
             new CurvePoint(14f, 0f),
             new CurvePoint(18f, 1f),
             new CurvePoint(50f, 1f),
             new CurvePoint(90f, 0f)
-        };
+        ];
 
-        public static readonly SimpleCurve femaleFertilityAgeFactor = new()
-        {
+        public static readonly SimpleCurve femaleFertilityAgeFactor =
+        [
             new CurvePoint(14f, 0f),
             new CurvePoint(20f, 1f),
             new CurvePoint(28f, 1f),
@@ -92,7 +90,7 @@ namespace BetterRomance
             new CurvePoint(40f, 0.1f),
             new CurvePoint(45f, 0.02f),
             new CurvePoint(50f, 0f)
-        };
+        ];
 
         public static AcceptanceReport CanEverProduceChild(Pawn first, Pawn second)
         {

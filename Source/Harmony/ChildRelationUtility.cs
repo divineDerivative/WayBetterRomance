@@ -12,7 +12,7 @@ namespace BetterRomance.HarmonyPatches
     public static class ChildRelationUtility_ChanceOfBecomingChildOf
     {
         //Check if settings allow children
-        public static bool Prefix(Pawn child, Pawn father, Pawn mother, PawnGenerationRequest? childGenerationRequest, PawnGenerationRequest? fatherGenerationRequest, PawnGenerationRequest? motherGenerationRequest, ref float __result)
+        public static bool Prefix(Pawn father, Pawn mother, ref float __result)
         {
             if ((father != null && !father.ChildAllowed()) || (mother != null && !mother.ChildAllowed()))
             {

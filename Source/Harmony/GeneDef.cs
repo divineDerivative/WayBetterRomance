@@ -12,7 +12,7 @@ namespace BetterRomance.HarmonyPatches
     public static class GeneDef_GetDescriptionFull
     {
         [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> AgeCurveTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg, MethodBase original)
+        public static IEnumerable<CodeInstruction> AgeCurveTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
             FieldInfo biologicalAgeTickFactorFromAgeCurve = AccessTools.Field(typeof(GeneDef), nameof(GeneDef.biologicalAgeTickFactorFromAgeCurve));
             int fieldFound = 0;

@@ -35,23 +35,13 @@ namespace BetterRomance
             }
             //This will just display information, maybe a more detailed explanation of their orientation and the gender attraction comp stuff if/when I implement that
             Orientation orientation = SelPawn.GetOrientation();
-            string text;
-            switch (orientation)
+            string text = orientation switch
             {
-                case Orientation.Hetero:
-                    text = "WBR.Heteroromantic";
-                    break;
-                case Orientation.Homo:
-                    text = "WBR.Homoromantic";
-                    break;
-                case Orientation.Bi:
-                    text = "WBR.Biromantic";
-                    break;
-                case Orientation.None:
-                default:
-                    text = "WBR.Aromantic";
-                    break;
-            }
+                Orientation.Hetero => "WBR.Heteroromantic",
+                Orientation.Homo => "WBR.Homoromantic",
+                Orientation.Bi => "WBR.Biromantic",
+                _ => "WBR.Aromantic",
+            };
             list.Label(text.Translate(SelPawn));
             //Display sex repulsion, describe the effects of their specific rating.
             if (SelPawn.IsAsexual())

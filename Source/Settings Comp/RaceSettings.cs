@@ -146,8 +146,8 @@ namespace BetterRomance
                 misc.childAge = 0;
                 misc.adultAgeForLearning = 0;
                 misc.ageReversalDemandAge = 0;//not sure about this
-                misc.ageSkillFactor = new SimpleCurve { new CurvePoint(0f, 1f) };
-                misc.ageSkillMaxFactorCurve = new SimpleCurve { new CurvePoint(0f, 1f) };
+                misc.ageSkillFactor = [new CurvePoint(0f, 1f)];
+                misc.ageSkillMaxFactorCurve = [new CurvePoint(0f, 1f)];
                 goto LovinCurve;
             }
             //Min age for adulthood
@@ -185,33 +185,33 @@ namespace BetterRomance
             misc.ageReversalDemandAge = (int)result;
 
             //Effect of age on skill
-            misc.ageSkillFactor = new SimpleCurve
-            {
+            misc.ageSkillFactor =
+            [
                 new CurvePoint(misc.childAge, 0.2f),
                 new CurvePoint(misc.adultAgeForLearning, 1f),
-            };
+            ];
 
             //A different effect of age on skill
-            misc.ageSkillMaxFactorCurve = new SimpleCurve
-            {
+            misc.ageSkillMaxFactorCurve =
+            [
                 new CurvePoint(0f,0f),
                 new CurvePoint(biotech.growthMoments?[1] ?? 0f, 0.7f),
                 new CurvePoint(misc.adultAgeForLearning * 2f, 1f),
                 new CurvePoint(race.race.lifeExpectancy - (race.race.lifeExpectancy/4), 1.6f),
-            };
+            ];
 
         //Curve for lovin' MTB
         LovinCurve:
             if (!regularSex.IsEmpty())
             {
-                misc.lovinCurve = new SimpleCurve
-                {
+                misc.lovinCurve =
+                [
                     new CurvePoint(regularSex.minAgeForSex.IsUnset() ? 16f : regularSex.minAgeForSex, 1.5f),
                     new CurvePoint((regularSex.declineAtAge.IsUnset() ? 30f : regularSex.declineAtAge / 5) + regularSex.minAgeForSex, 1.5f),
                     new CurvePoint(regularSex.declineAtAge.IsUnset() ? 30f : regularSex.declineAtAge, 4f),
                     new CurvePoint((regularSex.maxAgeForSex.IsUnset() ? 80f : regularSex.maxAgeForSex / 4) + (regularSex.declineAtAge.IsUnset() ? 30f : regularSex.declineAtAge), 12f),
                     new CurvePoint(regularSex.maxAgeForSex.IsUnset() ? 80f : regularSex.maxAgeForSex, 36f)
-                };
+                ];
             }
         }
 
@@ -229,26 +229,18 @@ namespace BetterRomance
             //Don't do anything if they're never reproductive
             if (!race.race.lifeStageAges.Any(stage => stage.def.reproductive))
             {
-                return new SimpleCurve
-                {
+                return
+                [
                     new CurvePoint(0f,0f)
-                };
+                ];
             }
             //First, check if there is a curve supplied via the extension
-            SimpleCurve myCurve;
-            switch (gender)
+            SimpleCurve myCurve = gender switch
             {
-                case Gender.Female:
-                    myCurve = biotech.femaleFertilityAgeFactor;
-                    break;
-                case Gender.None:
-                    myCurve = biotech.noneFertilityAgeFactor;
-                    break;
-                case Gender.Male:
-                default:
-                    myCurve = biotech.maleFertilityAgeFactor;
-                    break;
-            }
+                Gender.Female => biotech.femaleFertilityAgeFactor,
+                Gender.None => biotech.noneFertilityAgeFactor,
+                _ => biotech.maleFertilityAgeFactor,
+            };
             //None gender is a special case because HAR doesn't have a separate setting for that
             //So if one is provided via WBR, we use that no matter what
             if (gender == Gender.None && myCurve != null)
@@ -336,8 +328,8 @@ namespace BetterRomance
                 {
                     femaleEndPoint = declineEnd + smallerLifeExpectancyIncrement;
                 }
-                return new SimpleCurve
-                {
+                return
+                [
                     //14f
                     new CurvePoint(startPoint, 0f),
                     //20f
@@ -353,7 +345,7 @@ namespace BetterRomance
                     new CurvePoint(declineEnd, 0.02f),
                     //50f
                     new CurvePoint(femaleEndPoint, 0f),
-                };
+                ];
             }
             //This will be males and none
             //Males next point is the learning age
@@ -363,9 +355,9 @@ namespace BetterRomance
             float malePeakEnd = femaleEndPoint;
             //Life expectancy is 80; males end at 90, females at 50
 
-            return new SimpleCurve
-                {
-                //14f
+            return
+                [
+                    //14f
                     new CurvePoint(startPoint, 0f),
                     //18f
                     new CurvePoint(malePeakStart, 1f),
@@ -373,7 +365,7 @@ namespace BetterRomance
                     new CurvePoint(malePeakEnd, 1f),
                     //90f
                     new CurvePoint(maleEndPoint, 0f)
-                };
+                ];
         }
 
         //This doesn't really work yet

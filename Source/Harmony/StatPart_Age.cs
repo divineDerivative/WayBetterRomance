@@ -10,7 +10,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyAfter(["rimworld.erdelf.alien_race.main"])]
     public static class StatPart_Age_AgeEffect
     {
-        public static bool Prefix(Pawn pawn, StatPart_Age __instance, ref float __result, bool ___humanlikeOnly, bool ___useBiologicalYears, SimpleCurve ___curve)
+        public static bool Prefix(Pawn pawn, ref float __result, bool ___humanlikeOnly, bool ___useBiologicalYears, SimpleCurve ___curve)
         {
             if (___humanlikeOnly && ___useBiologicalYears)
             {
@@ -25,10 +25,10 @@ namespace BetterRomance.HarmonyPatches
         {
             if (pawn.HasNoGrowth())
             {
-                return new SimpleCurve
-                {
+                return
+                [
                     new CurvePoint(1f, 1f)
-                };
+                ];
             }
             SimpleCurve newCurve = new();
             foreach (CurvePoint point in oldCurve.Points)
