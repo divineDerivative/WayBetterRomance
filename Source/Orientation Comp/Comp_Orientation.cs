@@ -45,7 +45,7 @@ namespace BetterRomance
                 string secondGender = null;
                 if (men)
                 {
-                     firstGender = "WBR.TraitDescMen".Translate();
+                    firstGender = "WBR.TraitDescMen".Translate();
                 }
                 if (women)
                 {
@@ -91,10 +91,7 @@ namespace BetterRomance
         {
             get
             {
-                if (cachedDesc == null)
-                {
-                    cachedDesc = BuildDescription();
-                }
+                cachedDesc ??= BuildDescription();
                 return cachedDesc;
             }
         }
@@ -103,10 +100,7 @@ namespace BetterRomance
         {
             get
             {
-                if (cachedLabel == null)
-                {
-                    cachedLabel = GetLabel();
-                }
+                cachedLabel ??= GetLabel();
                 return cachedLabel;
             }
         }
@@ -242,14 +236,12 @@ namespace BetterRomance
             string romanticPrefix = Prefix(romantic);
             if (sexualPrefix == romanticPrefix)
             {
-                switch (sexualPrefix)
+                return sexualPrefix switch
                 {
-                    case "Homo":
-                        return "Gay";
-                    case "Hetero":
-                        return "Straight";
-                }
-                return Aromantic ? romanticPrefix +"romantic": sexualPrefix + "sexual";
+                    "Homo" => "Gay",
+                    "Hetero" => "Straight",
+                    _ => Aromantic ? romanticPrefix + "romantic" : sexualPrefix + "sexual",
+                };
             }
             if (Asexual)
             {
