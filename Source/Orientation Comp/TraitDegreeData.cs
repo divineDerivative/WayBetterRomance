@@ -9,7 +9,7 @@ using HarmonyLib;
 
 namespace BetterRomance.HarmonyPatches
 {
-    [HarmonyPatch(typeof(TraitDegreeData), nameof(TraitDegreeData.GetLabelFor), new Type[] {typeof(Pawn)})]
+    [HarmonyPatch(typeof(TraitDegreeData), nameof(TraitDegreeData.GetLabelFor), [typeof(Pawn)])]
     public static class TraitDegreeData_GetLabelFor
     {
         public static bool Prefix(Pawn pawn, ref string __result, TraitDegreeData __instance)
@@ -23,7 +23,7 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
-    [HarmonyPatch(typeof(TraitDegreeData), nameof(TraitDegreeData.GetLabelCapFor), new Type[] { typeof(Pawn) })]
+    [HarmonyPatch(typeof(TraitDegreeData), nameof(TraitDegreeData.GetLabelCapFor), [typeof(Pawn)])]
     public static class TraitDegreeData_GetLabelCapFor
     {
         public static bool Prefix(Pawn pawn, ref string __result, TraitDegreeData __instance)
