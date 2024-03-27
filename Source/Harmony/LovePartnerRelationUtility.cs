@@ -35,7 +35,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code).WithLabels(firstLabel);
                     code.labels.Add(secondLabel);
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.CouldWeBeLovers));
+                    yield return CodeInstruction.Call(typeof(OrientationUtility), nameof(OrientationUtility.CouldWeBeLovers));
                     yield return new CodeInstruction(OpCodes.Brtrue, secondLabel);
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 0f);
                     yield return new CodeInstruction(OpCodes.Ret);
