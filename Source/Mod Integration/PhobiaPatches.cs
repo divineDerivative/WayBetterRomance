@@ -62,8 +62,8 @@ namespace BetterRomance.HarmonyPatches
         //This will also apply to ordered hookups
         public static void AttractedToGenderPostfix(Pawn pawn, Gender gender, ref bool __result)
         {
-            //If it's already true we don't need to do anything
-            if (!__result)
+            //If it's already true, or they're aromantic, we don't need to do anything
+            if (!__result && !pawn.IsAromantic())
             {
                 bool adoresSameSex = pawn.Ideo?.HasPrecept(DefDatabase<PreceptDef>.GetNamed("SameSexCouples_Adored", false)) ?? false;
                 bool despisesSameSex = pawn.Ideo?.HasPrecept(DefDatabase<PreceptDef>.GetNamed("SameSexCouples_Despised", false)) ?? false;
@@ -71,17 +71,16 @@ namespace BetterRomance.HarmonyPatches
                 if (adoresSameSex || despisesSameSex)
                 {
                     //Make them pretend to like the acceptable gender
-                    if (adoresSameSex && pawn.IsHetero())
+                    if (adoresSameSex && pawn.IsStraight(true))
                     {
                         __result = pawn.gender == gender;
                         return;
                     }
-                    if (despisesSameSex && pawn.IsHomo())
+                    if (despisesSameSex && pawn.IsGay(true))
                     {
                         __result = pawn.gender != gender;
                         return;
                     }
-                    //Aromantic will fall through to here and not get changed
                 }
             }
         }

@@ -16,8 +16,24 @@ namespace BetterRomance
             public bool men;
             public bool women;
             public bool enby;
+            internal Gender gender;
             public bool Pan => men && women && enby;
+            public bool Bi => men && women;
             internal bool None => !men && !women && !enby;
+            public bool Gay => gender switch
+            {
+                Gender.Male => men && !women,
+                Gender.Female => women && !men,
+                (Gender)3 => enby && !men && !women,
+                _ => false
+            };
+            public bool Straight => gender switch
+            {
+                Gender.Male => women && !men,
+                Gender.Female => men && !women,
+                (Gender)3 => (men && !women) || (women && !men),
+                _ => false
+            };
 
             internal string GenderString()
             {
@@ -205,7 +221,8 @@ namespace BetterRomance
 
         private void SetAttraction(Gender gender, bool sexual, bool romantic)
         {
-
+            this.sexual.gender = Pawn.gender;
+            this.romantic.gender = Pawn.gender;
             switch (gender)
             {
                 case Gender.Male:
