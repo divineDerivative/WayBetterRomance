@@ -136,5 +136,10 @@ namespace BetterRomance
         {
             return pawn.AttractedTo(other.gender, romance);
         }
+
+        public static bool AttractionBetween(Pawn first, Pawn second, bool romance)
+        {
+            return first.AttractedTo(second, romance) && second.AttractedTo(first, romance);
+        }
     }
 }

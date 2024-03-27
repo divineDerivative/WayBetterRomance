@@ -272,11 +272,19 @@ namespace BetterRomance
             {
                 return "A";
             }
-            if (type.men && type.women)
+            if (type.Bi)
             {
                 return "Bi";
             }
-            return Pawn.AttractedTo(Gender, type == romantic) ? "Homo" : "Hetero";
+            if (type.Gay)
+            {
+                return "Homo";
+            }
+            if (type.Straight)
+            {
+                return "Hetero";
+            }
+            return string.Empty;
         }
     }
 }
