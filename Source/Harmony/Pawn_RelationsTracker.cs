@@ -54,7 +54,7 @@ namespace BetterRomance.HarmonyPatches
 
             ___pawn.EnsureTraits();
             //Don't allow for ace/aro
-            if (___pawn.CheckForComp<Comp_Orientation>().Aromantic)
+            if (___pawn.IsAromantic())
             {
                 __result = 0f;
                 return false;

@@ -67,6 +67,29 @@ namespace BetterRomance
             }
             return true;
         }
+        
+        public static bool IsAromantic(this Pawn pawn)
+        {
+            return pawn.TryGetComp<Comp_Orientation>()?.Aromantic ?? false;
+        }
+
+        public static bool IsGay(this Pawn pawn, bool romance)
+        {
+            Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
+            return (romance ? comp.romantic : comp.sexual).Gay;
+        }
+
+        public static bool IsStraight(this Pawn pawn, bool romance)
+        {
+            Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
+            return (romance ? comp.romantic : comp.sexual).Straight;
+        }
+
+        public static bool IsBi(this Pawn pawn, bool romance)
+        {
+            Comp_Orientation comp = pawn.GetComp<Comp_Orientation>();
+            return (romance ? comp.romantic : comp.sexual).Bi;
+        }
 
         /// <summary>
         /// Checks if a love relation between <paramref name="first"/> and <paramref name="second"/> is allowed by both orientations
@@ -94,18 +117,19 @@ namespace BetterRomance
 
         public static bool AttractedTo(this Pawn pawn, Gender gender, bool romance)
         {
-            var comp = pawn.TryGetComp<Comp_Orientation>();
-            switch (gender)
+            Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
+            Comp_Orientation.AttractionVars type = romance ? comp.romantic : comp.sexual;
+            switch(gender)
             {
                 case Gender.Male:
-                    return romance ? comp.romantic.men : comp.sexual.men;
+                    return type.men;
                 case Gender.Female:
-                    return romance ? comp.romantic.women : comp.sexual.women;
+                    return type.women;
                 case (Gender)3:
-                    return romance ? comp.romantic.enby : comp.sexual.enby;
+                    return type.enby;
                 default:
                     return false;
-            }
+            };
         }
 
         public static bool AttractedTo(this Pawn pawn, Pawn other, bool romance)

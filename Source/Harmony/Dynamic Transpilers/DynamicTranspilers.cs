@@ -183,19 +183,19 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (trait == TraitDefOf.Gay)
                 {
-                    return pawn.IsHomo();
+                    return pawn.IsGay(true);
                 }
                 if (trait == TraitDefOf.Bisexual)
                 {
-                    return pawn.IsBi();
+                    return pawn.IsBi(true);
                 }
                 if (trait == TraitDefOf.Asexual)
                 {
-                    return romance ? pawn.IsAro() : pawn.IsAsexual();
+                    return romance ? pawn.IsAromantic() : pawn.IsAsexual();
                 }
                 if (trait == RomanceDefOf.Straight)
                 {
-                    return pawn.IsHetero();
+                    return pawn.IsStraight(true);
                 }
             }
             return pawn.story.traits.HasTrait(trait);
