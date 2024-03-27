@@ -78,17 +78,9 @@ namespace BetterRomance
             return pawn.AttractedTo(other.gender, romance);
         }
 
-        //Might need to adjust this for HAR races that can reproduce differently
-        //I also don't like the binary-ness. I think I'll pass in the other pawn or their gender and just check attraction
-        public static bool CouldMarryOtherParent(this Pawn pawn)
+        public static bool AttractionBetween(Pawn first, Pawn second, bool romance)
         {
-            Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
-            return pawn.gender switch
-            {
-                Gender.Male => comp.sexual.women,
-                Gender.Female => comp.sexual.men,
-                _ => false,
-            };
+            return first.AttractedTo(second, romance) && second.AttractedTo(first, romance);
         }
     }
 }

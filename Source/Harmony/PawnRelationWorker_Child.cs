@@ -15,46 +15,51 @@ namespace BetterRomance.HarmonyPatches
             //This patch only runs if spouses are not allowed by the new parent's race/pawnkind settings or they're gay
             //I think I also need to check if spouses are allowed for the kid's existing parent
             bool existingParentNoSpouse = false;
-            if (other.GetMother() != null)
+            bool attractionExists = true;
+            Pawn mother = other.GetMother();
+            Pawn father = other.GetFather();
+            if (mother != null)
             {
-                existingParentNoSpouse = !other.GetMother().SpouseAllowed();
+                existingParentNoSpouse = !mother.SpouseAllowed();
+                attractionExists = OrientationUtility.AttractionBetween(generated, mother, true);
             }
-            else if (other.GetFather() != null)
+            else if (father != null)
             {
-                existingParentNoSpouse = !other.GetFather().SpouseAllowed();
+                existingParentNoSpouse = !father.SpouseAllowed();
+                attractionExists = OrientationUtility.AttractionBetween(generated, father, true);
             }
 
-            if (!generated.SpouseAllowed() || !generated.CouldMarryOtherParent() || existingParentNoSpouse)
+            if (!generated.SpouseAllowed() || !attractionExists || existingParentNoSpouse)
             {
                 if (generated.gender == Gender.Male)
                 {
                     other.SetFather(generated);
-                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, other.GetMother()]);
-                    if (other.GetMother() != null)
+                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, mother]);
+                    if (mother != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && generated.AttractedTo(other.GetMother(), false) && other.GetMother().AttractedTo(generated, false))
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(mother) && OrientationUtility.AttractionBetween(generated, mother, false))
                         {
-                            generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetMother());
+                            generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, mother);
                         }
                         else
                         {
-                            generated.relations.AddDirectRelation(PawnRelationDefOf.ExLover, other.GetMother());
+                            generated.relations.AddDirectRelation(PawnRelationDefOf.ExLover, mother);
                         }
                     }
                 }
                 else if (generated.gender == Gender.Female)
                 {
                     other.SetMother(generated);
-                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, other.GetFather()]);
-                    if (other.GetFather() != null)
+                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, father]);
+                    if (father != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && generated.AttractedTo(other.GetFather(), false) && other.GetFather().AttractedTo(generated, false))
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(father) && OrientationUtility.AttractionBetween(generated, father, false))
                         {
-                            generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetFather());
+                            generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, father);
                         }
                         else
                         {
-                            generated.relations.AddDirectRelation(PawnRelationDefOf.ExLover, other.GetFather());
+                            generated.relations.AddDirectRelation(PawnRelationDefOf.ExLover, father);
                         }
                     }
                 }

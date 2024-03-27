@@ -35,20 +35,19 @@ namespace BetterRomance
             }
             //This will just display information, maybe a more detailed explanation of their orientation and the gender attraction comp stuff if/when I implement that
             string text;
-            Comp_Orientation comp = SelPawn.CheckForComp<Comp_Orientation>();
-            if (comp.Aromantic)
+            if (SelPawn.IsAromantic())
             {
                 text = "WBR.Aromantic";
             }
-            else if (comp.romantic.men && comp.romantic.women)
+            else if (SelPawn.IsBi(true))
             {
                 text = "WBR.Biromantic";
             }
-            else if (SelPawn.AttractedTo(SelPawn.gender, true))
+            else if (SelPawn.IsGay(true))
             {
                 text = "WBR.Homoromantic";
             }
-            else if (SelPawn.AttractedTo(SelPawn.gender.Opposite(), true))
+            else if (SelPawn.IsStraight(true))
             {
                 text = "WBR.Heteroromantic";
             }

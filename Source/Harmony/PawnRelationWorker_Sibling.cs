@@ -15,34 +15,38 @@ namespace BetterRomance.HarmonyPatches
         {
             if (!other.SpouseAllowed() || !generated.SpouseAllowed())
             {
-                bool hasMother = other.GetMother() != null;
-                bool hasFather = other.GetFather() != null;
+                Pawn mother = other.GetMother();
+                Pawn father = other.GetFather();
+                bool hasMother = mother != null;
+                bool hasFather = father != null;
                 bool tryMakeLovers = Rand.Value < 0.85f;
-                if (hasMother && LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()))
+                if (hasMother && LovePartnerRelationUtility.HasAnyLovePartner(mother))
                 {
                     tryMakeLovers = false;
                 }
-                if (hasFather && LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()))
+                if (hasFather && LovePartnerRelationUtility.HasAnyLovePartner(father))
+                {
+                    tryMakeLovers = false;
+                }
+                if (hasMother && hasFather && !OrientationUtility.AttractionBetween(mother, father, false))
                 {
                     tryMakeLovers = false;
                 }
                 if (!hasMother)
                 {
-                    Pawn newMother = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, [generated, other, Gender.Female, request, false]);
-                    other.SetMother(newMother);
+                    mother = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, [generated, other, Gender.Female, request, false]);
+                    other.SetMother(mother);
                 }
-                generated.SetMother(other.GetMother());
+                generated.SetMother(mother);
                 if (!hasFather)
                 {
-                    Pawn newFather = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, [generated, other, Gender.Male, request, false]);
-                    other.SetFather(newFather);
+                    father = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, [generated, other, Gender.Male, request, false]);
+                    other.SetFather(father);
                 }
-                generated.SetFather(other.GetFather());
+                generated.SetFather(father);
                 if (!hasMother || !hasFather)
                 {
-                    Pawn mother = other.GetMother();
-                    Pawn father = other.GetFather();
-                    if (tryMakeLovers && !mother.CouldMarryOtherParent() && !father.CouldMarryOtherParent())
+                    if (tryMakeLovers && !OrientationUtility.AttractionBetween(mother, father, true))
                     {
                         father.relations.AddDirectRelation(PawnRelationDefOf.Lover, mother);
                     }
