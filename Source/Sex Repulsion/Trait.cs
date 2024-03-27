@@ -10,7 +10,7 @@ namespace BetterRomance.HarmonyPatches
     public static class Trait_TipString
     {
         [HarmonyPostfix]
-        public static void AsexualPostfix(Pawn pawn, ref string __result, Trait __instance)
+        public static void AsexualPostfix(ref string __result, Trait __instance)
         {
             if (__instance.def == RomanceDefOf.DynamicOrientation && Current.ProgramState == ProgramState.Playing)
             {

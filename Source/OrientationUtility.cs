@@ -119,16 +119,12 @@ namespace BetterRomance
         {
             Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
             Comp_Orientation.AttractionVars type = romance ? comp.romantic : comp.sexual;
-            switch(gender)
+            return gender switch
             {
-                case Gender.Male:
-                    return type.men;
-                case Gender.Female:
-                    return type.women;
-                case (Gender)3:
-                    return type.enby;
-                default:
-                    return false;
+                Gender.Male => type.men,
+                Gender.Female => type.women,
+                (Gender)3 => type.enby,
+                _ => false,
             };
         }
 
