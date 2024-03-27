@@ -124,10 +124,10 @@ namespace BetterRomance
             list.Begin(canvas);
             if (settings.complex)
             {
-                Rect rect = new Rect(0f, 0f, list.ColumnWidth, canvas.height);
-                Listing_Standard scrollList = new Listing_Standard(rect, () => scrollPos);
+                Rect rect = new(0f, 0f, list.ColumnWidth, canvas.height);
+                Listing_Standard scrollList = new(rect, () => scrollPos);
                 float height = (scrollViewHeight == 0f) ? canvas.height * 2 : scrollViewHeight;
-                Rect viewRect = new Rect(rect)
+                Rect viewRect = new(rect)
                 {
                     height = height
                 };
@@ -400,7 +400,7 @@ namespace BetterRomance
             }
             if (listing.ButtonTextLabeled("Fertility Mod", Settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(Settings.fertilityMod) : "None"))
             {
-                List<FloatMenuOption> options = new List<FloatMenuOption>();
+                List<FloatMenuOption> options = new();
                 foreach (KeyValuePair<string, string> item in Settings.FertilityMods)
                 {
                     options.Add(new FloatMenuOption(item.Value, delegate

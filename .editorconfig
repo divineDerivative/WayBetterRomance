@@ -8,3 +8,6 @@ dotnet_diagnostic.IDE0022.severity = silent
 
 # IDE0305: Simplify collection initialization
 dotnet_diagnostic.IDE0305.severity = none
+
+# IDE0028: Simplify collection initialization
+dotnet_diagnostic.IDE0028.severity = none
