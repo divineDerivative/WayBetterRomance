@@ -33,20 +33,44 @@ namespace BetterRomance
             return pawn.TryGetComp<Comp_Orientation>()?.Asexual ?? false;
         }
 
+        public static bool IsAromantic(this Pawn pawn)
+        {
+            return pawn.TryGetComp<Comp_Orientation>()?.Aromantic ?? false;
+        }
+
+        public static bool IsGay(this Pawn pawn, bool romance)
+        {
+            Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
+            return (romance ? comp.romantic : comp.sexual).Gay;
+        }
+
+        public static bool IsStraight(this Pawn pawn, bool romance)
+        {
+            Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
+            return (romance ? comp.romantic : comp.sexual).Straight;
+        }
+
+        public static bool IsBi(this Pawn pawn, bool romance)
+        {
+            Comp_Orientation comp = pawn.GetComp<Comp_Orientation>();
+            return (romance ? comp.romantic : comp.sexual).Bi;
+        }
+
         public static bool AttractedTo(this Pawn pawn, Gender gender, bool romance)
         {
             Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
-            switch (gender)
+            Comp_Orientation.AttractionVars type = romance ? comp.romantic : comp.sexual;
+            switch(gender)
             {
                 case Gender.Male:
-                    return romance ? comp.romantic.men : comp.sexual.men;
+                    return type.men;
                 case Gender.Female:
-                    return romance ? comp.romantic.women : comp.sexual.women;
+                    return type.women;
                 case (Gender)3:
-                    return romance ? comp.romantic.enby : comp.sexual.enby;
+                    return type.enby;
                 default:
                     return false;
-            }
+            };
         }
 
         public static bool AttractedTo(this Pawn pawn, Pawn other, bool romance)
@@ -55,18 +79,16 @@ namespace BetterRomance
         }
 
         //Might need to adjust this for HAR races that can reproduce differently
+        //I also don't like the binary-ness. I think I'll pass in the other pawn or their gender and just check attraction
         public static bool CouldMarryOtherParent(this Pawn pawn)
         {
             Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
-            switch (pawn.gender)
+            return pawn.gender switch
             {
-                case Gender.Male:
-                    return comp.sexual.women;
-                case Gender.Female:
-                    return comp.sexual.men;
-                default:
-                    return false;
-            }
+                Gender.Male => comp.sexual.women,
+                Gender.Female => comp.sexual.men,
+                _ => false,
+            };
         }
     }
 }
