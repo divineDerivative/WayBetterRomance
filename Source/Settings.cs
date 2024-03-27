@@ -150,13 +150,15 @@ namespace BetterRomance
 
                 DrawSexualOrientationChance(scrollListLeft);
                 scrollListLeft.Gap();
-                TwoButtonText(list, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+                TwoButtonText(scrollListLeft, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
                 { settings.sexualOrientations.Reset(); });
+                scrollListLeft.Gap();
 
                 DrawRomanticOrientationChance(scrollListLeft);
                 scrollListLeft.Gap();
-                TwoButtonText(list, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+                TwoButtonText(scrollListLeft, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
                 { settings.asexualOrientations.Reset(); });
+                scrollListLeft.Gap();
 
                 DrawExtraStuff(scrollListLeft);
                 scrollListLeft.Gap();
