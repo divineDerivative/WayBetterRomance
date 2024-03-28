@@ -14,9 +14,12 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Pawn_IdeoTracker), "CertaintyChangeFactor", MethodType.Getter)]
     public static class Pawn_IdeoTracker_CertaintyChangeFactor
     {
-        public static bool Prefix(ref SimpleCurve ___pawnAgeCertaintyCurve)
+        public static bool Prefix(ref SimpleCurve ___pawnAgeCertaintyCurve, Pawn ___pawn)
         {
-            ___pawnAgeCertaintyCurve = null;
+            if (___pawn.def.defName != "PRFDrone")
+            {
+                ___pawnAgeCertaintyCurve = null;
+            }
             return true;
         }
 
