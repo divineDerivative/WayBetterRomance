@@ -13,6 +13,7 @@ namespace BetterRomance
         internal const int walkingTicks = 1875;
         //30 min
         internal const int waitingTicks = 1250;
+        internal const int distanceLimit = 50;
         public static bool CanInteractWith(Pawn pawn, Thing t)
         {
             if (!pawn.CanReserve(t))
@@ -184,6 +185,44 @@ namespace BetterRomance
                 {
                     return false;
                 }
+            }
+            return true;
+        }
+
+        public static bool WalkCellValidator(this IntVec3 cell, Map map)
+        {
+            if (!cell.InBounds(map))
+            {
+                return false;
+            }
+            if (!cell.Standable(map))
+            {
+                return false;
+            }
+            if (cell.GetTerrain(map).avoidWander)
+            {
+                return false;
+            }
+            if (cell.Roofed(map))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool WalkCellValidator(this IntVec3 cell, Pawn pawn)
+        {
+            if (PawnUtility.KnownDangerAt(cell, pawn.Map, pawn))
+            {
+                return false;
+            }
+            if (cell.IsForbidden(pawn))
+            {
+                return false;
+            }
+            if (!pawn.CanReach(cell, PathEndMode.OnCell, Danger.Some))
+            {
+                return false;
             }
             return true;
         }

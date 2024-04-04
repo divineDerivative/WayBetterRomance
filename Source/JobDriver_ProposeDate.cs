@@ -109,7 +109,7 @@ namespace BetterRomance
                 {
                     //nextCell is the cell being evaluated to potentially be added to the result list
                     IntVec3 nextCell = currentCell + GenRadial.RadialPattern[j];
-                    if (nextCell.InBounds(p1.Map) && nextCell.Standable(p1.Map) && !nextCell.IsForbidden(p1) && !nextCell.IsForbidden(p2) && !nextCell.GetTerrain(p1.Map).avoidWander && GenSight.LineOfSight(currentCell, nextCell, p1.Map) && !nextCell.Roofed(p1.Map) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p1) && !PawnUtility.KnownDangerAt(nextCell, p1.Map, p2))
+                    if (nextCell.WalkCellValidator(p1.Map) && nextCell.WalkCellValidator(p1) && nextCell.WalkCellValidator(p2) && GenSight.LineOfSight(currentCell, nextCell, p1.Map))
                     {
                         //Not sure why we start with 10k
                         float score = 10000f;
@@ -164,6 +164,7 @@ namespace BetterRomance
                 //Fail if we never found a suitable cell
                 if (tempDistance < 0f)
                 {
+                    LogUtil.Message($"Failed to find path after {cellList.Count} cells", true);
                     result = null;
                     return false;
                 }
@@ -209,8 +210,7 @@ namespace BetterRomance
             for (int i = 0; i < 200; i++)
             {
                 if (CellFinder.TryFindRandomCellNear(p1.Position, p1.Map, distance,
-                    c => c.InBounds(p1.Map) && !c.IsForbidden(p1) && !c.IsForbidden(p2) &&
-                         p1.CanReach(c, PathEndMode.OnCell, Danger.Some), out IntVec3 item))
+                    c => c.WalkCellValidator(p1.Map) && c.WalkCellValidator(p1) && c.WalkCellValidator(p2), out IntVec3 item))
                 {
                     list.Add(item);
                 }
