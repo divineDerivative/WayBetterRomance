@@ -376,6 +376,28 @@ namespace BetterRomance
             }
             return null;
         }
+
+        public static PawnRelationDef GetAppropriateParentRelationship(Pawn first, Pawn second)
+        {
+            Pawn mom = first.gender == Gender.Female ? first : second;
+            Pawn dad = first.gender == Gender.Male ? first : second;
+            //Warning if the genders are not right?
+            if (mom == null || dad == null)
+            {
+                LogUtil.Error($"Error determining relationship for {first.Name.ToStringShort} and {second.Name.ToStringShort}, must be opposite genders");
+                return null;
+            }
+            //I'd like to eventually allow for non-male/female parents
+            if (mom.CouldWeBeMarried(dad))
+            {
+                return PawnRelationDefOf.Spouse;
+            }
+            if (mom.CouldWeBeLovers(dad))
+            {
+                return PawnRelationDefOf.Lover;
+            }
+            return PawnRelationDefOf.ExLover;
+        }
     }
 
     internal static class LogUtil

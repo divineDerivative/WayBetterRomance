@@ -94,6 +94,44 @@ namespace BetterRomance
         {
             return pawn.GetOrientation() == Orientation.Homo;
         }
+
+        public static bool CouldWeBeMarried(this Pawn first, Pawn second)
+        {
+            if (!first.SpouseAllowed() || first.IsAro() || !RelationsUtility.AttractedToGender(first, second.gender))
+            {
+                return false;
+            }
+            if (!second.SpouseAllowed() || second.IsAro() || !RelationsUtility.AttractedToGender(second, first.gender))
+            {
+                return false;
+            }
+            if (first.IsAsexual() && second.IsAsexual())
+            {
+                return true;
+            }
+            if (first.IsAsexual() && first.AsexualRating() < 0.2f)
+            {
+                return false;
+            }
+            if (second.IsAsexual() && second.AsexualRating() < 0.2f)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool CouldWeBeLovers(this Pawn first, Pawn second)
+        {
+            if (first.IsAro() || !RelationsUtility.AttractedToGender(first, second.gender))
+            {
+                return false;
+            }
+            if (second.IsAro() || !RelationsUtility.AttractedToGender(second, first.gender))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 
     public enum Orientation

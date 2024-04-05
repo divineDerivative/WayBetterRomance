@@ -42,13 +42,13 @@ namespace BetterRomance.HarmonyPatches
                 {
                     Pawn mother = other.GetMother();
                     Pawn father = other.GetFather();
-                    if (tryMakeLovers && !mother.IsHomo() && !father.IsHomo())
+                    if (!tryMakeLovers)
                     {
-                        father.relations.AddDirectRelation(PawnRelationDefOf.Lover, mother);
+                        father.relations.AddDirectRelation(PawnRelationDefOf.ExLover, mother);
                     }
                     else
                     {
-                        father.relations.AddDirectRelation(PawnRelationDefOf.ExLover, mother);
+                        father.relations.AddDirectRelation(RomanceUtilities.GetAppropriateParentRelationship(father, mother), mother);
                     }
                 }
                 AccessTools.Method(typeof(PawnRelationWorker_Sibling), "ResolveMyName").Invoke(__instance, [request, generated]);

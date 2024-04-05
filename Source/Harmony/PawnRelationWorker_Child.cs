@@ -29,32 +29,34 @@ namespace BetterRomance.HarmonyPatches
                 if (generated.gender == Gender.Male)
                 {
                     other.SetFather(generated);
-                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, other.GetMother()]);
-                    if (other.GetMother() != null)
+                    Pawn mother = other.GetMother();
+                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, mother]);
+                    if (mother != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()) && !generated.IsHomo() && !other.GetMother().IsHomo())
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(mother))
                         {
-                            generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetMother());
+                            generated.relations.AddDirectRelation(RomanceUtilities.GetAppropriateParentRelationship(generated, mother), mother);
                         }
                         else
                         {
-                            generated.relations.AddDirectRelation(PawnRelationDefOf.ExLover, other.GetMother());
+                            generated.relations.AddDirectRelation(PawnRelationDefOf.ExLover, mother);
                         }
                     }
                 }
                 else if (generated.gender == Gender.Female)
                 {
                     other.SetMother(generated);
-                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, other.GetFather()]);
-                    if (other.GetFather() != null)
+                    Pawn father = other.GetFather();
+                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, father]);
+                    if (father != null)
                     {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()) && !generated.IsHomo() && !other.GetFather().IsHomo())
+                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(father))
                         {
-                            generated.relations.AddDirectRelation(PawnRelationDefOf.Lover, other.GetFather());
+                            generated.relations.AddDirectRelation(RomanceUtilities.GetAppropriateParentRelationship(generated, father), father);
                         }
                         else
                         {
-                            generated.relations.AddDirectRelation(PawnRelationDefOf.ExLover, other.GetFather());
+                            generated.relations.AddDirectRelation(PawnRelationDefOf.ExLover, father);
                         }
                     }
                 }
