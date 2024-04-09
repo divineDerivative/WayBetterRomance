@@ -1,5 +1,9 @@
 ﻿using HarmonyLib;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using Verse;
 
 namespace BetterRomance.HarmonyPatches
@@ -10,59 +14,81 @@ namespace BetterRomance.HarmonyPatches
     public static class PawnRelationWorker_Child_CreateRelation
     {
         //generated is the parent, other is the child
-        public static bool Prefix(Pawn generated, Pawn other, ref PawnGenerationRequest request, PawnRelationWorker_Child __instance)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            //This patch only runs if spouses are not allowed by the new parent's race/pawnkind settings or they're gay
-            //I think I also need to check if spouses are allowed for the kid's existing parent
-            bool existingParentNoSpouse = false;
-            if (other.GetMother() != null)
-            {
-                existingParentNoSpouse = !other.GetMother().SpouseAllowed();
-            }
-            else if (other.GetFather() != null)
-            {
-                existingParentNoSpouse = !other.GetFather().SpouseAllowed();
-            }
+            FieldInfo Gay = AccessTools.Field(typeof(TraitDefOf), nameof(TraitDefOf.Gay));
+            FieldInfo DefOfSpouse = AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Spouse));
+            LocalBuilder otherParent = ilg.DeclareLocal(typeof(Pawn));
+            Label endLabel = ilg.DefineLabel();
 
-            if (!generated.SpouseAllowed() || generated.IsHomo() || existingParentNoSpouse)
+            List<CodeInstruction> codes = instructions.ToList();
+            codes[codes.Count - 1].labels.Add(endLabel);
+
+            bool gayFound = false;
+            bool retAdded = false;
+            foreach (CodeInstruction code in codes)
             {
-                if (generated.gender == Gender.Male)
+                //This bit gets rid of the gay check by changing brfalse to br
+                //Should do it twice, since there's two gay checks
+                if (code.LoadsField(Gay))
                 {
-                    other.SetFather(generated);
-                    Pawn mother = other.GetMother();
-                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, mother]);
-                    if (mother != null)
-                    {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(mother))
-                        {
-                            generated.relations.AddDirectRelation(RomanceUtilities.GetAppropriateParentRelationship(generated, mother), mother);
-                        }
-                        else
-                        {
-                            generated.relations.AddDirectRelation(PawnRelationDefOf.ExLover, mother);
-                        }
-                    }
+                    gayFound = true;
                 }
-                else if (generated.gender == Gender.Female)
+                if (gayFound && code.Branches(out _))
                 {
-                    other.SetMother(generated);
-                    Pawn father = other.GetFather();
-                    AccessTools.Method(typeof(PawnRelationWorker_Child), "ResolveMyName").Invoke(__instance, [request, other, father]);
-                    if (father != null)
-                    {
-                        if (Rand.Value < 0.85f && !LovePartnerRelationUtility.HasAnyLovePartner(father))
-                        {
-                            generated.relations.AddDirectRelation(RomanceUtilities.GetAppropriateParentRelationship(generated, father), father);
-                        }
-                        else
-                        {
-                            generated.relations.AddDirectRelation(PawnRelationDefOf.ExLover, father);
-                        }
-                    }
+                    //Need to remove the bool from the stack first
+                    yield return new CodeInstruction(OpCodes.Pop);
+                    code.opcode = OpCodes.Br_S;
+                    gayFound = false;
                 }
-                return false;
+                //Add my label to the end
+                if (!retAdded && code.opcode == OpCodes.Ret)
+                {
+                    code.labels.Add(endLabel);
+                    retAdded = true;
+                }
+                //This checks if spouse was added before trying to resolve the name
+                if (code.Calls(typeof(SpouseRelationUtility), nameof(SpouseRelationUtility.ResolveNameForSpouseOnGeneration)))
+                {
+                    //if (generated.relations.DirectRelationExists(PawnRelationDefOf.Spouse, otherParent))
+                    yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.relations));
+                    yield return DefOfSpouse.LoadField();
+                    yield return new CodeInstruction(OpCodes.Ldloc, otherParent.LocalIndex);
+                    yield return CodeInstruction.Call(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.DirectRelationExists));
+                    //request is left on the stack, so get rid of it
+                    yield return new CodeInstruction(OpCodes.Pop);
+                    yield return new CodeInstruction(OpCodes.Brfalse_S, endLabel);
+                    yield return new CodeInstruction(OpCodes.Ldarg_3);
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                }
+                //This is the only code we're actually replacing
+                if (code.LoadsField(DefOfSpouse))
+                {
+                    //RomanceUtilities.GetAppropriateParentRelationship(generated, otherParent)
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return new CodeInstruction(OpCodes.Ldloc, otherParent.LocalIndex);
+                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetAppropriateParentRelationship));
+                }
+                else
+                {
+                    yield return code;
+                }
+                //This is just to save info to a local variable
+                if (code.Calls(AccessTools.Method(typeof(ParentRelationUtility), nameof(ParentRelationUtility.SetFather))))
+                {
+                    //otherParent = other.GetMother();
+                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return CodeInstruction.Call(typeof(ParentRelationUtility), nameof(ParentRelationUtility.GetMother));
+                    yield return new CodeInstruction(OpCodes.Stloc, otherParent.LocalIndex);
+                }
+                if (code.Calls(AccessTools.Method(typeof(ParentRelationUtility), nameof(ParentRelationUtility.SetMother))))
+                {
+                    //otherParent = other.GetFather();
+                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return CodeInstruction.Call(typeof(ParentRelationUtility), nameof(ParentRelationUtility.GetFather));
+                    yield return new CodeInstruction(OpCodes.Stloc, otherParent.LocalIndex);
+                }
             }
-            return true;
         }
     }
 }

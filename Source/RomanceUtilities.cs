@@ -454,5 +454,53 @@ namespace BetterRomance
             }
             return new CodeInstruction((!useAddress) ? (fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld) : (fieldInfo.IsStatic ? OpCodes.Ldsflda : OpCodes.Ldflda), fieldInfo);
         }
+
+        public static bool Calls(this CodeInstruction code, Type type, string name)
+        {
+            MethodInfo method = AccessTools.Method(type, name);
+            return code.Calls(method);
+        }
+
+        public static int LocalIndex(this CodeInstruction code)
+        {
+            if (code.opcode == OpCodes.Ldloc_S || code.opcode == OpCodes.Ldloc)
+            {
+                return ((LocalVariableInfo)code.operand).LocalIndex;
+            }
+
+            if (code.opcode == OpCodes.Stloc_S || code.opcode == OpCodes.Stloc)
+            {
+                return ((LocalVariableInfo)code.operand).LocalIndex;
+            }
+
+            if (code.opcode == OpCodes.Ldloca_S || code.opcode == OpCodes.Ldloca)
+            {
+                return ((LocalVariableInfo)code.operand).LocalIndex;
+            }
+#if v1_5
+            return CodeInstructionExtensions.LocalIndex(code);
+#else
+            if (code.opcode == OpCodes.Ldloc_0 || code.opcode == OpCodes.Stloc_0)
+            {
+                return 0;
+            }
+
+            if (code.opcode == OpCodes.Ldloc_1 || code.opcode == OpCodes.Stloc_1)
+            {
+                return 1;
+            }
+
+            if (code.opcode == OpCodes.Ldloc_2 || code.opcode == OpCodes.Stloc_2)
+            {
+                return 2;
+            }
+
+            if (code.opcode == OpCodes.Ldloc_3 || code.opcode == OpCodes.Stloc_3)
+            {
+                return 3;
+            }
+            throw new ArgumentException("Instruction is not a load or store", "code");
+#endif
+        }
     }
 }

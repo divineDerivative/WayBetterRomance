@@ -311,7 +311,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static bool Prefix(Pawn first, Pawn second)
         {
-            if (!first.SpouseAllowed() || !second.SpouseAllowed())
+            if (!first.SpouseAllowed() || !second.SpouseAllowed() || !first.CouldWeBeMarried(second))
             {
                 first.relations.AddDirectRelation(PawnRelationDefOf.ExLover, second);
                 return false;

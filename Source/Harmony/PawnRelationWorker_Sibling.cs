@@ -1,6 +1,8 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
@@ -11,50 +13,103 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(PawnRelationWorker_Sibling), "CreateRelation")]
     public static class PawnRelationWorker_Sibling_CreateRelation
     {
-        public static bool Prefix(Pawn generated, Pawn other, ref PawnGenerationRequest request, PawnRelationWorker_Sibling __instance)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg, MethodBase original)
         {
-            if (!other.SpouseAllowed() || !generated.SpouseAllowed())
+            FieldInfo DefOfSpouse = AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Spouse));
+            Label myLabel = ilg.DefineLabel();
+            Label? endLabel = new();
+
+            //This is just to get a label for the end of the method
+            bool birthNameFound = false;
+            foreach (CodeInstruction code in instructions)
             {
-                bool hasMother = other.GetMother() != null;
-                bool hasFather = other.GetFather() != null;
-                bool tryMakeLovers = Rand.Value < 0.85f;
-                if (hasMother && LovePartnerRelationUtility.HasAnyLovePartner(other.GetMother()))
+                if (!birthNameFound && code.LoadsField(AccessTools.Field(typeof(Pawn_StoryTracker), nameof(Pawn_StoryTracker.birthLastName))))
                 {
-                    tryMakeLovers = false;
+                    birthNameFound = true;
                 }
-                if (hasFather && LovePartnerRelationUtility.HasAnyLovePartner(other.GetFather()))
+                if (birthNameFound && code.Branches(out endLabel))
                 {
-                    tryMakeLovers = false;
+                    break;
                 }
-                if (!hasMother)
-                {
-                    Pawn newMother = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, [generated, other, Gender.Female, request, false]);
-                    other.SetMother(newMother);
-                }
-                generated.SetMother(other.GetMother());
-                if (!hasFather)
-                {
-                    Pawn newFather = (Pawn)AccessTools.Method(typeof(PawnRelationWorker_Sibling), "GenerateParent").Invoke(__instance, [generated, other, Gender.Male, request, false]);
-                    other.SetFather(newFather);
-                }
-                generated.SetFather(other.GetFather());
-                if (!hasMother || !hasFather)
-                {
-                    Pawn mother = other.GetMother();
-                    Pawn father = other.GetFather();
-                    if (!tryMakeLovers)
-                    {
-                        father.relations.AddDirectRelation(PawnRelationDefOf.ExLover, mother);
-                    }
-                    else
-                    {
-                        father.relations.AddDirectRelation(RomanceUtilities.GetAppropriateParentRelationship(father, mother), mother);
-                    }
-                }
-                AccessTools.Method(typeof(PawnRelationWorker_Sibling), "ResolveMyName").Invoke(__instance, [request, generated]);
-                return false;
             }
-            return true;
+
+            //This is get the correct local index, in case it changes
+            int motherIndex = -1;
+            int fatherIndex = -1;
+            List<CodeInstruction> codes = instructions.ToList();
+            for (int i = 0; i < codes.Count; i++)
+            {
+                CodeInstruction code = codes[i];
+                CodeInstruction nextCode = codes[i + 1];
+                if (code.Calls(typeof(ParentRelationUtility), nameof(ParentRelationUtility.GetMother)) && nextCode.IsStloc())
+                {
+                    motherIndex = nextCode.LocalIndex();
+                }
+                if (code.Calls(typeof(ParentRelationUtility), nameof(ParentRelationUtility.GetFather)) && nextCode.IsStloc())
+                {
+                    fatherIndex = nextCode.LocalIndex();
+                }
+                if (motherIndex >= 0 && fatherIndex >= 0)
+                {
+                    break;
+                }
+            }
+
+            //Add my label to the jump point
+            for (int i = 0; i < codes.Count; ++i)
+            {
+                CodeInstruction code = codes[i];
+                CodeInstruction nextCode = codes[i + 1];
+                if (code.opcode == OpCodes.Ldloc_1 && nextCode.Branches(out _))
+                {
+                    code.labels.Add(myLabel);
+                    break;
+                }
+            }
+
+            bool gayFound = false;
+            bool spouseFound = false;
+            //Since I change a code in the codes list above, iterate through that instead of instructions
+            foreach (CodeInstruction code in codes)
+            {
+                //Skip the gay stuff
+                if (code.LoadsField(AccessTools.Field(typeof(TraitDefOf), nameof(TraitDefOf.Gay))))
+                {
+                    gayFound = true;
+                }
+                if (gayFound && code.Branches(out _))
+                {
+                    //Remove the bool from the stack and skip
+                    yield return new CodeInstruction(OpCodes.Pop);
+                    yield return new CodeInstruction(OpCodes.Br, myLabel);
+                    gayFound = false;
+                }
+                //Replace spouse with the method to find the correct relationship
+                else if (code.LoadsField(DefOfSpouse))
+                {
+                    spouseFound = true;
+                    yield return new CodeInstruction(OpCodes.Ldloc_S, fatherIndex);
+                    yield return new CodeInstruction(OpCodes.Ldloc_S, motherIndex);
+                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetAppropriateParentRelationship));
+                }
+                else
+                {
+                    yield return code;
+                }
+
+                //Check if spouse was added before doing the other stuff
+                if (spouseFound && code.Calls(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.AddDirectRelation)))
+                {
+                    // if (father.relations.DirectRelationExists(PawnRelationDefOf.Spouse, mother))
+                    yield return new CodeInstruction(OpCodes.Ldloc_S, fatherIndex);
+                    yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.relations));
+                    yield return DefOfSpouse.LoadField();
+                    yield return new CodeInstruction(OpCodes.Ldloc, motherIndex);
+                    yield return CodeInstruction.Call(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.DirectRelationExists));
+                    yield return new CodeInstruction(OpCodes.Brfalse_S, (Label)endLabel);
+                    spouseFound = false;
+                }
+            }
         }
     }
 
