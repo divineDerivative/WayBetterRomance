@@ -394,6 +394,7 @@ namespace BetterRomance
             }
             if (mom.CouldWeBeLovers(dad))
             {
+                //Maybe check for possible custom love relations?
                 return PawnRelationDefOf.Lover;
             }
             return PawnRelationDefOf.ExLover;
@@ -455,6 +456,17 @@ namespace BetterRomance
             return new CodeInstruction((!useAddress) ? (fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld) : (fieldInfo.IsStatic ? OpCodes.Ldsflda : OpCodes.Ldflda), fieldInfo);
         }
 
+        //Need to make this determine if call or callvirt should be used
+        public static CodeInstruction Call(this MethodInfo methodInfo)
+        {
+            if (methodInfo is null)
+            {
+                throw new ArgumentException($"methodInfo is null");
+            }
+
+            return new CodeInstruction(OpCodes.Call, methodInfo);
+        }
+
         public static bool Calls(this CodeInstruction code, Type type, string name)
         {
             MethodInfo method = AccessTools.Method(type, name);
@@ -502,5 +514,7 @@ namespace BetterRomance
             throw new ArgumentException("Instruction is not a load or store", "code");
 #endif
         }
+
+        public static MethodInfo AdultMinAge = AccessTools.PropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AdultMinAge));
     }
 }
