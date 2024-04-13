@@ -101,6 +101,11 @@ namespace BetterRomance
             {
                 harmony.PatchForceLoveHate();
             }
+            if (ModsConfig.IsActive("Dra.RimderRomanceControl"))
+            {
+                harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("Rimder.HarmonyPatches.ChangeStatusOnRelationshipChange,RimderRomanceControl"), "Postfix"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RimderLoveRelationTranspiler)));
+                harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("Rimder.HarmonyPatches.ChangeStatusOnRelationshipChange,RimderRomanceControl"), "Postfix"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RimderExLoveRelationTranspiler)));
+            }
 
             MakeFertilityModList();
             Settings.ApplyJoySettings();

@@ -38,6 +38,7 @@ namespace BetterRomance.HarmonyPatches
 
     //Adds a button for ordered hookups to the social card
     [HarmonyPatch(typeof(SocialCardUtility), nameof(SocialCardUtility.DrawRelationsAndOpinions))]
+    [HarmonyBefore(["Dra.RimderRomanceControl"])]
     public static class SocialCardUtility_DrawRelationsAndOpinions
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
