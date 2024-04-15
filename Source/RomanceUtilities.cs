@@ -325,6 +325,10 @@ namespace BetterRomance
         /// <returns></returns>
         public static bool WillingToDoGendered(this HistoryEventDef def, Ideo ideo, Gender gender)
         {
+            if (ideo == null)
+            {
+                return true;
+            }
             //Look at each precept
             foreach (Precept precept in (List<Precept>)AccessTools.Field(typeof(Ideo), "precepts").GetValue(ideo))
             {

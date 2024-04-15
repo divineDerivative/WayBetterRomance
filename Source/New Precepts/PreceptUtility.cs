@@ -16,8 +16,8 @@ namespace BetterRomance
         //These should only be called if the total love relations is at or above the spouse count precept
         public static HistoryEventDef GetHistoryEventLoverCount(this Pawn pawn)
         {
-            CheckIdeo(pawn.ideo.Ideo);
-            int count = pawn.GetLoveRelations(includeDead: false).Count - AllowedSpouseCount(pawn.ideo.Ideo, pawn.gender);
+            CheckIdeo(pawn.ideo?.Ideo);
+            int count = pawn.GetLoveRelations(includeDead: false).Count - AllowedSpouseCount(pawn.ideo?.Ideo, pawn.gender);
             if (count <= 1)
             {
                 return RomanceDefOf.TookLover_LoverCount_OneOrFewer;
@@ -39,8 +39,8 @@ namespace BetterRomance
 
         public static HistoryEventDef GetHistoryEventLoverCountPlusOne(this Pawn pawn)
         {
-            CheckIdeo(pawn.ideo.Ideo);
-            int count = pawn.GetLoveRelations(includeDead: false).Count - AllowedSpouseCount(pawn.ideo.Ideo, pawn.gender);
+            CheckIdeo(pawn.ideo?.Ideo);
+            int count = pawn.GetLoveRelations(includeDead: false).Count - AllowedSpouseCount(pawn.ideo?.Ideo, pawn.gender);
             if (count == 0)
             {
                 return RomanceDefOf.TookLover_LoverCount_OneOrFewer;
@@ -62,7 +62,7 @@ namespace BetterRomance
 
         public static SpouseCountComparison CompareSpouseAndLoverCount(this Pawn pawn)
         {
-            int allowed = AllowedSpouseCount(pawn.ideo.Ideo, pawn.gender);
+            int allowed = AllowedSpouseCount(pawn.ideo?.Ideo, pawn.gender);
             if (allowed == 5)
             {
                 return SpouseCountComparison.Below;
@@ -90,7 +90,7 @@ namespace BetterRomance
             switch (gender)
             {
                 case Gender.Male:
-                    if (ideo.HasPrecept(RomanceDefOf.SpouseCount_Male_MaxOne))
+                    if (ideo == null || ideo.HasPrecept(RomanceDefOf.SpouseCount_Male_MaxOne))
                     {
                         return 1;
                     }
@@ -112,7 +112,7 @@ namespace BetterRomance
                     }
                     return 0;
                 case Gender.Female:
-                    if (ideo.HasPrecept(RomanceDefOf.SpouseCount_Female_MaxOne))
+                    if (ideo == null || ideo.HasPrecept(RomanceDefOf.SpouseCount_Female_MaxOne))
                     {
                         return 1;
                     }
