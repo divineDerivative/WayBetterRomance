@@ -1,11 +1,11 @@
-﻿using RimWorld;
-using Verse;
-using HarmonyLib;
-using Verse.AI;
-using System.Text;
-using System.Collections.Generic;
+﻿using HarmonyLib;
+using RimWorld;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Verse;
+using Verse.AI;
 
 namespace BetterRomance
 {

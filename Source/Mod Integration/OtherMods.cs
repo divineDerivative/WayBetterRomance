@@ -1,13 +1,13 @@
-using System.Collections.Generic;
-using RimWorld;
-using Verse;
 using HarmonyLib;
-using VFECore;
-using VanillaRacesExpandedHighmate;
-using System.Reflection.Emit;
-using System.Reflection;
+using RimWorld;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using VanillaRacesExpandedHighmate;
+using Verse;
+using VFECore;
 
 namespace BetterRomance.HarmonyPatches
 {

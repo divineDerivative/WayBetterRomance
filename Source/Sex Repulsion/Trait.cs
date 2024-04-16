@@ -1,7 +1,7 @@
-﻿using System.Text;
+﻿using HarmonyLib;
 using RimWorld;
+using System.Text;
 using Verse;
-using HarmonyLib;
 
 namespace BetterRomance.HarmonyPatches
 {

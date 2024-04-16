@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Verse;
-using HarmonyLib;
-using System.Reflection.Emit;
+﻿using HarmonyLib;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Emit;
+using Verse;
 
 namespace BetterRomance.HarmonyPatches
 {

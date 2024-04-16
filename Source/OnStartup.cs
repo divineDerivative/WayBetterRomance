@@ -1,10 +1,10 @@
+using BetterRomance.HarmonyPatches;
 using HarmonyLib;
-using Verse;
 using RimWorld;
 using System;
 using System.Linq;
 using System.Reflection;
-using BetterRomance.HarmonyPatches;
+using Verse;
 
 namespace BetterRomance
 {

@@ -1,9 +1,9 @@
-﻿using RimWorld;
+﻿using HarmonyLib;
+using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using Verse.AI;
-using HarmonyLib;
 
 namespace BetterRomance
 {

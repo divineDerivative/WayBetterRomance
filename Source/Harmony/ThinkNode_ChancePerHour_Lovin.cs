@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
 using RimWorld;
-using HarmonyLib;
+using System.Collections.Generic;
 using Verse.AI;
 
 namespace BetterRomance.HarmonyPatches

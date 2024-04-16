@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Verse;
-using HarmonyLib;
+﻿using HarmonyLib;
 using System;
-using System.Reflection.Emit;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
+using Verse;
 
 namespace BetterRomance.HarmonyPatches
 {

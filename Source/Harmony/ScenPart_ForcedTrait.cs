@@ -1,5 +1,5 @@
-﻿using RimWorld;
-using HarmonyLib;
+﻿using HarmonyLib;
+using RimWorld;
 
 namespace BetterRomance.HarmonyPatches
 {

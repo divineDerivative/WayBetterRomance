@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using Verse;
 using UnityEngine;
+using Verse;
 
 namespace BetterRomance.HarmonyPatches
 {

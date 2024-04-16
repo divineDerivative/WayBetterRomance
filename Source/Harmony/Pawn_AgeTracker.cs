@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Verse;
-using HarmonyLib;
+﻿using HarmonyLib;
+using System.Collections.Generic;
 using System.Reflection.Emit;
+using Verse;
 
 namespace BetterRomance.HarmonyPatches
 {
