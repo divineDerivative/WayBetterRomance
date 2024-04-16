@@ -16,16 +16,16 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.Is(OpCodes.Ldc_R4, 16f))
+                if (code.LoadsConstant(16f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }

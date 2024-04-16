@@ -20,7 +20,6 @@ namespace BetterRomance.HarmonyPatches
             SimpleCurve curve = new(pawn.GetFertilityAgeCurve());
             __result = curve.Evaluate(pawn.ageTracker.AgeBiologicalYearsFloat);
             return false;
-
         }
     }
 }

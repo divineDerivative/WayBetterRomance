@@ -14,16 +14,16 @@ namespace BetterRomance.HarmonyPatches
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> MinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.Is(OpCodes.Ldc_R4, 16f))
+                if (code.LoadsConstant(16f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }
@@ -106,16 +106,16 @@ namespace BetterRomance.HarmonyPatches
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> MinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.Is(OpCodes.Ldc_R4, 16f))
+                if (code.LoadsConstant(16f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }
@@ -132,7 +132,8 @@ namespace BetterRomance.HarmonyPatches
 
             for (int i = 0; i < codes.Count; i++)
             {
-                if (!foundStart && codes[i].opcode == OpCodes.Ldarg_1)
+                CodeInstruction code = codes[i];
+                if (!foundStart && code.opcode == OpCodes.Ldarg_1)
                 {
                     if (codes[i + 1].opcode == OpCodes.Ldarg_0)
                     {
@@ -140,15 +141,15 @@ namespace BetterRomance.HarmonyPatches
                         foundStart = true;
                     }
                 }
-                else if (foundStart && !foundEnd && codes[i].opcode == OpCodes.Brtrue_S)
+                else if (foundStart && !foundEnd && code.opcode == OpCodes.Brtrue_S)
                 {
                     endIndex = i - 1;
                     foundEnd = true;
                 }
 
-                if (codes[i].opcode == OpCodes.Ldstr && (string)codes[i].operand == "CantRomanceTargetSexuality")
+                if (code.opcode == OpCodes.Ldstr && (string)code.operand == "CantRomanceTargetSexuality")
                 {
-                    codes[i].operand = "WBR.CantHookupTargetGender";
+                    code.operand = "WBR.CantHookupTargetGender";
                 }
             }
             if (startIndex > -1 && endIndex > -1)
@@ -167,12 +168,13 @@ namespace BetterRomance.HarmonyPatches
 
             for (int i = 0; i < codes.Count; i++)
             {
-                if (!foundStart && codes[i].opcode == OpCodes.Ldarg_1)
+                CodeInstruction code = codes[i];
+                if (!foundStart && code.opcode == OpCodes.Ldarg_1)
                 {
                     if (codes[i + 1].opcode == OpCodes.Ldfld && codes[i + 2].opcode == OpCodes.Ldarg_0)
                     {
                         foundStart = true;
-                        yield return new CodeInstruction(OpCodes.Ldarg_0) { labels = codes[i].ExtractLabels() };
+                        yield return new CodeInstruction(OpCodes.Ldarg_0) { labels = code.ExtractLabels() };
                         yield return codes[i + 1];
                         yield return new CodeInstruction(OpCodes.Ldarg_1);
                         yield return codes[i + 3];
@@ -182,12 +184,12 @@ namespace BetterRomance.HarmonyPatches
                     }
                     else
                     {
-                        yield return codes[i];
+                        yield return code;
                     }
                 }
                 else
                 {
-                    yield return codes[i];
+                    yield return code;
                 }
             }
         }

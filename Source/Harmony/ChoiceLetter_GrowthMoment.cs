@@ -13,9 +13,9 @@ namespace BetterRomance.HarmonyPatches
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             FieldInfo pawn = AccessTools.Field(typeof(ChoiceLetter_GrowthMoment), "pawn");
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.Is(OpCodes.Ldc_I4_S, 13))
+                if (code.LoadsConstant(13))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Ldfld, pawn);
@@ -24,7 +24,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }
@@ -41,8 +41,8 @@ namespace BetterRomance.HarmonyPatches
 
             for (int i = 0; i < codes.Count; i++)
             {
-                CodeInstruction instruction = codes[i];
-                if (instruction.LoadsField(GrowthMomentAges))
+                CodeInstruction code = codes[i];
+                if (code.LoadsField(GrowthMomentAges))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(typeof(ChoiceLetter_GrowthMoment), nameof(ChoiceLetter_GrowthMoment.pawn));
@@ -52,7 +52,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }

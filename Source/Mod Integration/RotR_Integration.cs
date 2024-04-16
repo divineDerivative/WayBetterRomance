@@ -323,7 +323,7 @@ namespace BetterRomance
                     {
                         yield return new CodeInstruction(OpCodes.Ldarg_0);
                         yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                        yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AdultMinAge)));
+                        yield return new CodeInstruction(OpCodes.Callvirt, CodeInstructionMethods.AdultMinAge);//test the change to virt
                         yield return new CodeInstruction(OpCodes.Conv_I4);
                     }
                     else if (code.LoadsConstant(8))

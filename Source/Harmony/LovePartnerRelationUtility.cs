@@ -137,9 +137,9 @@ namespace BetterRomance.HarmonyPatches
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             LocalBuilder local_maxAgeGap = ilg.DeclareLocal(typeof(float));
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(40f))
+                if (code.LoadsConstant(40f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
@@ -150,20 +150,20 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Stloc, local_maxAgeGap.LocalIndex);
                     yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
                 }
-                else if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(20f))
+                else if (code.LoadsConstant(20f))
                 {
                     //put the stored value on the stack
                     yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
                     yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
                     yield return new CodeInstruction(OpCodes.Div);
                 }
-                else if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(0.001f))
+                else if (code.LoadsConstant(0.001f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 0.01f);
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }
@@ -184,22 +184,22 @@ namespace BetterRomance.HarmonyPatches
             yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
             yield return new CodeInstruction(OpCodes.Stloc, local_p2MinAgeForSex.LocalIndex);
 
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(14f) && !firstFound)
+                if (code.LoadsConstant(14f) && !firstFound)
                 {
                     firstFound = true;
 
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                 }
-                else if (instruction.opcode == OpCodes.Ldc_R4 && instruction.OperandIs(14f))
+                else if (code.LoadsConstant(14f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldloc, local_p2MinAgeForSex.LocalIndex);
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }
@@ -214,40 +214,33 @@ namespace BetterRomance.HarmonyPatches
         //No adjustment made for asexual pawns as that is handled elsewhere
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.opcode == OpCodes.Ldc_R4)
+                if (code.LoadsConstant(14f))
                 {
-                    if (instruction.OperandIs(14f))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                        yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
-                        yield return new CodeInstruction(OpCodes.Sub);
-                    }
-                    else if (instruction.OperandIs(16f))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                    }
-                    else if (instruction.OperandIs(25f))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.DeclineAtAge));
-                    }
-                    else if (instruction.OperandIs(80f))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
-                    }
-                    else
-                    {
-                        yield return instruction;
-                    }
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
+                    yield return new CodeInstruction(OpCodes.Sub);
+                }
+                else if (code.LoadsConstant(16f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                }
+                else if (code.LoadsConstant(25f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.DeclineAtAge));
+                }
+                else if (code.LoadsConstant(80f))
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }

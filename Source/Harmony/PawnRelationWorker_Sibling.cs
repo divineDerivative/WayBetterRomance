@@ -13,7 +13,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(PawnRelationWorker_Sibling), "CreateRelation")]
     public static class PawnRelationWorker_Sibling_CreateRelation
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg, MethodBase original)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             FieldInfo DefOfSpouse = AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Spouse));
             Label myLabel = ilg.DefineLabel();
@@ -145,9 +145,9 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.Is(OpCodes.Ldc_R4, 40f))
+                if (code.Is(OpCodes.Ldc_R4, 40f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
@@ -157,7 +157,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Div);
                     yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), [typeof(float), typeof(float)]);
                 }
-                else if (instruction.Is(OpCodes.Ldc_R4, 10f))
+                else if (code.Is(OpCodes.Ldc_R4, 10f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
@@ -169,7 +169,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }

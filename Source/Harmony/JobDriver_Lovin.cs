@@ -13,20 +13,19 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            FieldInfo LovinIntervalHoursFromAgeCurve = AccessTools.Field(typeof(JobDriver_Lovin), "LovinIntervalHoursFromAgeCurve");
 
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
                 //If HAR is active, this will put my curve in place of humanDefault, which is only used if lovinIntervalHoursFromAge is not set
-                if (instruction.LoadsField(LovinIntervalHoursFromAgeCurve))
+                if (code.LoadsField(AccessTools.Field(typeof(JobDriver_Lovin), "LovinIntervalHoursFromAgeCurve")))
                 {
                     //Because the instruction I'm replacing is used as a jump to point, the new instruction needs to have the same label as the old one
-                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = instruction.ExtractLabels() };
+                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = code.ExtractLabels() };
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetLovinCurve));
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }

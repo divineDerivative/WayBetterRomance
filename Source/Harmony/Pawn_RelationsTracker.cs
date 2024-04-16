@@ -1,7 +1,5 @@
 ﻿using HarmonyLib;
 using RimWorld;
-using Verse;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Reflection;
@@ -52,7 +50,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 crossSpecies = ___pawn.AlienLoveChance() / 100;
             }
-            //Not reducing chances to 0, but lowering if gender and sexuality do not match
+
             ___pawn.EnsureTraits();
             //Don't allow for ace/aro
             if (___pawn.IsAro())
@@ -109,9 +107,9 @@ namespace BetterRomance.HarmonyPatches
         {
             FieldInfo def = AccessTools.Field(typeof(Thing), nameof(Thing.def));
 
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.Is(OpCodes.Ldc_R4, 20f))
+                if (code.LoadsConstant(20f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(typeof(Pawn_RelationsTracker), "pawn");
@@ -119,14 +117,14 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 2f);
                     yield return new CodeInstruction(OpCodes.Div);
                 }
-                else if (instruction.LoadsField(def))
+                else if (code.LoadsField(def))
                 {
                     yield return CodeInstruction.Call(typeof(Pawn), "get_RaceProps");
                     yield return CodeInstruction.Call(typeof(RaceProperties), "get_Humanlike");
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }

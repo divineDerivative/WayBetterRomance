@@ -10,9 +10,9 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction instruction in instructions)
+            foreach (CodeInstruction code in instructions)
             {
-                if (instruction.Is(OpCodes.Ldc_R4, 14f))
+                if (code.LoadsConstant(14f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return new CodeInstruction(OpCodes.Ldc_I4_0);
@@ -20,7 +20,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else
                 {
-                    yield return instruction;
+                    yield return code;
                 }
             }
         }

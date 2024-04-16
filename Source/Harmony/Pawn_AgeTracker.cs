@@ -12,7 +12,7 @@ namespace BetterRomance.HarmonyPatches
         {
             foreach (CodeInstruction code in instructions)
             {
-                if (code.Is(OpCodes.Ldc_R4, 11f))
+                if (code.LoadsConstant(11f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0)
                     {
@@ -24,7 +24,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
                     yield return new CodeInstruction(OpCodes.Add);
                 }
-                else if (code.Is(OpCodes.Ldc_R4, 20f))
+                else if (code.LoadsConstant(20f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(typeof(Pawn_AgeTracker), "pawn");
@@ -46,7 +46,7 @@ namespace BetterRomance.HarmonyPatches
         {
             foreach (CodeInstruction code in instructions)
             {
-                if (code.Is(OpCodes.Ldc_R4, 7f))
+                if (code.LoadsConstant(7f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(typeof(Pawn_AgeTracker), "pawn");

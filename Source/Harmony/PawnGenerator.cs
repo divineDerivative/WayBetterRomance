@@ -27,7 +27,7 @@ namespace BetterRomance.HarmonyPatches
             bool done = false;
             foreach (CodeInstruction code in instructions)
             {
-                if (code.Is(OpCodes.Ldc_I4_S, 13))
+                if (code.LoadsConstant(13))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Ldc_I4, 2);

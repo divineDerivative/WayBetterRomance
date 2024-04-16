@@ -18,13 +18,13 @@ namespace BetterRomance.HarmonyPatches
             List<CodeInstruction> codes = instructions.ToList();
             for (int i = 0; i < codes.Count; i++)
             {
-                CodeInstruction instruction = codes[i];
-                yield return instruction;
-                if (instruction.Is(OpCodes.Callvirt, AccessTools.DeclaredPropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AgeBiologicalYears))))
+                CodeInstruction code = codes[i];
+                yield return code;
+                if (code.Is(OpCodes.Callvirt, AccessTools.DeclaredPropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AgeBiologicalYears))))
                 {
                     yield return new CodeInstruction(OpCodes.Ldloc_2);
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.DeclaredPropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AdultMinAge)));
+                    yield return new CodeInstruction(OpCodes.Callvirt, CodeInstructionMethods.AdultMinAge);
                     yield return new CodeInstruction(OpCodes.Conv_I4);
                     i++;
                 }

@@ -97,7 +97,6 @@ namespace BetterRomance
 
         public BetterRomanceMod(ModContentPack content) : base(content)
         {
-
             settings = GetSettings<Settings>();
         }
 
