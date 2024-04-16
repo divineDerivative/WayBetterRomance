@@ -118,57 +118,12 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(PawnRelationWorker_Sibling), "GenerateParent")]
     public static class PawnRelationWorker_Sibling_GenerateParent
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> PawnkindTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             foreach (CodeInstruction code in instructions)
             {
-                if (code.opcode == OpCodes.Ldc_R4)
-                {
-                    if (code.OperandIs(14f))
-                    {
-                        //Because the instruction I'm replacing is used as a jump to point, the new instruction needs to have the same label as the old one
-                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
-                        //Since Gender is an enum, I need to load the value of Male, which is 1
-                        yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
-                    }
-                    else if (code.OperandIs(16f))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
-                        //Since Gender is an enum, I need to load the value of Female, which is 2
-                        yield return new CodeInstruction(OpCodes.Ldc_I4_2);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
-                    }
-                    else if (code.OperandIs(50f))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
-                        yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren));
-                    }
-                    else if (code.OperandIs(45f))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
-                        yield return new CodeInstruction(OpCodes.Ldc_I4_2);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren));
-                    }
-                    else if (code.OperandIs(30f))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
-                        yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren));
-                    }
-                    else if (code.OperandIs(27f))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(code);
-                        yield return new CodeInstruction(OpCodes.Ldc_I4_2);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren));
-                    }
-                    else
-                    {
-                        yield return code;
-                    }
-                }
-                else if (code.LoadsField(AccessTools.Field(typeof(Pawn), nameof(Pawn.kindDef))))
+                if (code.LoadsField(AccessTools.Field(typeof(Pawn), nameof(Pawn.kindDef))))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_2);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ParentPawnkind));
@@ -179,6 +134,9 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
+
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> AgeTranspiler(IEnumerable<CodeInstruction> instructions) => DynamicTranspilers.AgeToHaveChildrenTranspiler(instructions, OpCodes.Ldarg_1, OpCodes.Ldarg_1, true);
     }
 
     //Add use of age settings
