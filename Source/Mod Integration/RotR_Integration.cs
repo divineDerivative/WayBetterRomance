@@ -317,16 +317,10 @@ namespace BetterRomance
             //Use age settings
             public static IEnumerable<CodeInstruction> CheckAdoptionChanceTranspiler(IEnumerable<CodeInstruction> instructions)
             {
-                foreach (CodeInstruction code in instructions)
+                IEnumerable<CodeInstruction> codes = DynamicTranspilers.AdultMinAgeInt(instructions, OpCodes.Ldarg_0);
+                foreach (CodeInstruction code in codes)
                 {
-                    if (code.LoadsConstant(13))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                        yield return new CodeInstruction(OpCodes.Callvirt, CodeInstructionMethods.AdultMinAge);//test the change to virt
-                        yield return new CodeInstruction(OpCodes.Conv_I4);
-                    }
-                    else if (code.LoadsConstant(8))
+                    if (code.LoadsConstant(8))
                     {
                         yield return new CodeInstruction(OpCodes.Ldarg_0);
                         yield return CodeInstruction.Call(typeof(RotRPatches), nameof(AdoptionAge));

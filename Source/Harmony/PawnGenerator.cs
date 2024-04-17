@@ -24,16 +24,11 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            IEnumerable<CodeInstruction> codes = DynamicTranspilers.AdultMinAgeInt(instructions, OpCodes.Ldarg_0);
             bool done = false;
-            foreach (CodeInstruction code in instructions)
+            foreach (CodeInstruction code in codes)
             {
-                if (code.LoadsConstant(13))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Ldc_I4, 2);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMoment));
-                }
-                else if (!done && code.LoadsConstant(3))
+                if (!done && code.LoadsConstant(3))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ChildAge));
@@ -52,15 +47,10 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction code in instructions)
+            IEnumerable<CodeInstruction> codes = DynamicTranspilers.AdultMinAgeInt(instructions, OpCodes.Ldarg_0);
+            foreach (CodeInstruction code in codes)
             {
-                if (code.LoadsConstant(13))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Ldc_I4, 2);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMoment));
-                }
-                else if (code.LoadsConstant(3))
+                if (code.LoadsConstant(3))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ChildAge));

@@ -10,19 +10,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction code in instructions)
-            {
-                if (code.LoadsConstant(14f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
+            return DynamicTranspilers.AgeToHaveChildrenTranspiler(instructions, OpCodes.Ldarg_1, OpCodes.Ldarg_1, false);
         }
     }
 }
