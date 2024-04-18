@@ -13,12 +13,12 @@ namespace BetterRomance.HarmonyPatches
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             FieldInfo pawn = AccessTools.Field(typeof(ChoiceLetter_GrowthMoment), "pawn");
-            List<CodeInstruction> codes =
+            List<CodeInstruction> codesForPawn =
             [
                 new CodeInstruction(OpCodes.Ldarg_0),
                 new CodeInstruction(OpCodes.Ldfld, pawn)
             ];
-            return DynamicTranspilers.AdultMinAgeInt(instructions, codes);
+            return instructions.AdultMinAgeInt(codesForPawn);
         }
     }
 

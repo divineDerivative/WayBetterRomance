@@ -183,7 +183,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> InitiateLovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
-            return DynamicTranspilers.MinAgeForSexTranspiler(instructions, OpCodes.Ldloc_0);
+            return instructions.MinAgeForSexTranspiler(OpCodes.Ldloc_0);
         }
 
         public static IEnumerable<CodeInstruction> Need_LovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
@@ -193,7 +193,7 @@ namespace BetterRomance.HarmonyPatches
                 new CodeInstruction(OpCodes.Ldarg_0),
                 CodeInstruction.LoadField(typeof(Need_Lovin), "pawn")
             };
-            return DynamicTranspilers.MinAgeForSexTranspiler(instructions, codes);
+            return instructions.MinAgeForSexTranspiler(codes);
         }
 
         public static IEnumerable<CodeInstruction> VREAsexualTranspiler(IEnumerable<CodeInstruction> instructions)

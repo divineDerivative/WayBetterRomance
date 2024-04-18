@@ -42,7 +42,7 @@ namespace BetterRomance.HarmonyPatches
 
         //Use age settings
         [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> AgeTranspiler(IEnumerable<CodeInstruction> instructions) => DynamicTranspilers.AgeToHaveChildrenTranspiler(instructions, OpCodes.Ldarg_1, OpCodes.Ldarg_2, false);
+        public static IEnumerable<CodeInstruction> AgeTranspiler(IEnumerable<CodeInstruction> instructions) => instructions.AgeToHaveChildrenTranspiler(OpCodes.Ldarg_1, OpCodes.Ldarg_2, false);
     }
 
     [HarmonyPatch(typeof(ChildRelationUtility), "NumberOfChildrenFemaleWantsEver")]

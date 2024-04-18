@@ -24,7 +24,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            IEnumerable<CodeInstruction> codes = DynamicTranspilers.AdultMinAgeInt(instructions, OpCodes.Ldarg_0);
+            IEnumerable<CodeInstruction> codes = instructions.AdultMinAgeInt(OpCodes.Ldarg_0);
             bool done = false;
             foreach (CodeInstruction code in codes)
             {
@@ -47,7 +47,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            IEnumerable<CodeInstruction> codes = DynamicTranspilers.AdultMinAgeInt(instructions, OpCodes.Ldarg_0);
+            IEnumerable<CodeInstruction> codes = instructions.AdultMinAgeInt(OpCodes.Ldarg_0);
             foreach (CodeInstruction code in codes)
             {
                 if (code.LoadsConstant(3))

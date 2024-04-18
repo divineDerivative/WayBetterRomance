@@ -15,7 +15,7 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="femaleCode">The OpCode needed to get the appropriate pawn on the stack</param>
         /// <param name="careAboutGender">Whether we load a specific gender or none</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> AgeToHaveChildrenTranspiler(IEnumerable<CodeInstruction> instructions, OpCode maleCode, OpCode femaleCode, bool careAboutGender)
+        public static IEnumerable<CodeInstruction> AgeToHaveChildrenTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode maleCode, OpCode femaleCode, bool careAboutGender)
         {
             foreach (CodeInstruction code in instructions)
             {
@@ -71,7 +71,7 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="instructions">Instructions from the calling transpiler</param>
         /// <param name="toGetPawn">Instructions needed to get the pawn on the stack</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> AdultMinAgeInt(IEnumerable<CodeInstruction> instructions, List<CodeInstruction> toGetPawn)
+        public static IEnumerable<CodeInstruction> AdultMinAgeInt(this IEnumerable<CodeInstruction> instructions, List<CodeInstruction> toGetPawn)
         {
             foreach (CodeInstruction code in instructions)
             {
@@ -98,9 +98,9 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="instructions">Instructions from the calling transpiler</param>
         /// <param name="toGetPawn">OpCode needed to get the pawn on the stack</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> AdultMinAgeInt(IEnumerable<CodeInstruction> instructions, OpCode toGetPawn)
+        public static IEnumerable<CodeInstruction> AdultMinAgeInt(this IEnumerable<CodeInstruction> instructions, OpCode toGetPawn)
         {
-            return AdultMinAgeInt(instructions, [new CodeInstruction(toGetPawn)]);
+            return instructions.AdultMinAgeInt([new CodeInstruction(toGetPawn)]);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="instructions">Instructions from the original transpiler</param>
         /// <param name="loadPawn">Opcode to load the pawn onto the stack</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> RegularSexAgesTranspiler(IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
+        public static IEnumerable<CodeInstruction> RegularSexAgesTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
         {
             foreach (CodeInstruction code in instructions)
             {
@@ -135,7 +135,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        public static IEnumerable<CodeInstruction> MinAgeForSexForTwoTranspiler(IEnumerable<CodeInstruction> instructions, OpCode firstCode, OpCode secondCode, float ageToReplace)
+        public static IEnumerable<CodeInstruction> MinAgeForSexForTwoTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode firstCode, OpCode secondCode, float ageToReplace)
         {
             bool firstFound = false;
             foreach (CodeInstruction code in instructions)
@@ -158,7 +158,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        public static IEnumerable<CodeInstruction> MinAgeForSexTranspiler(IEnumerable<CodeInstruction> instructions, List<CodeInstruction> loadPawn)
+        public static IEnumerable<CodeInstruction> MinAgeForSexTranspiler(this IEnumerable<CodeInstruction> instructions, List<CodeInstruction> loadPawn)
         {
             foreach (CodeInstruction code in instructions)
             {
@@ -177,9 +177,9 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        public static IEnumerable<CodeInstruction> MinAgeForSexTranspiler(IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
+        public static IEnumerable<CodeInstruction> MinAgeForSexTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
         {
-            return MinAgeForSexTranspiler(instructions, [new CodeInstruction(loadPawn)]);
+            return instructions.MinAgeForSexTranspiler([new CodeInstruction(loadPawn)]);
         }
     }
 }

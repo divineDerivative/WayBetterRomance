@@ -10,7 +10,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            return DynamicTranspilers.MinAgeForSexForTwoTranspiler(instructions, OpCodes.Ldloc_0, OpCodes.Ldloc_1, 16f);
+            return instructions.MinAgeForSexForTwoTranspiler(OpCodes.Ldloc_0, OpCodes.Ldloc_1, 16f);
         }
     }
 }

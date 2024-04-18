@@ -14,7 +14,7 @@ namespace BetterRomance.HarmonyPatches
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> MinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            return DynamicTranspilers.MinAgeForSexTranspiler(instructions, OpCodes.Ldarg_0);
+            return instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_0);
         }
 
         [HarmonyTranspiler]
@@ -95,7 +95,7 @@ namespace BetterRomance.HarmonyPatches
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> MinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            return DynamicTranspilers.MinAgeForSexTranspiler(instructions, OpCodes.Ldarg_1);
+            return instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_1);
         }
 
         [HarmonyTranspiler]

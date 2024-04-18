@@ -175,7 +175,7 @@ namespace BetterRomance
             //Use age settings
             public static IEnumerable<CodeInstruction> QuestNode_Root_CrushTranspiler(IEnumerable<CodeInstruction> instructions)
             {
-                return DynamicTranspilers.MinAgeForSexTranspiler(instructions, OpCodes.Ldloc_2);
+                return instructions.MinAgeForSexTranspiler(OpCodes.Ldloc_2);
             }
 
             public static PawnGenerationRequest SuitorRequest;
@@ -306,7 +306,7 @@ namespace BetterRomance
             //Use age settings
             public static IEnumerable<CodeInstruction> CheckAdoptionChanceTranspiler(IEnumerable<CodeInstruction> instructions)
             {
-                IEnumerable<CodeInstruction> codes = DynamicTranspilers.AdultMinAgeInt(instructions, OpCodes.Ldarg_0);
+                IEnumerable<CodeInstruction> codes = instructions.AdultMinAgeInt(OpCodes.Ldarg_0);
                 foreach (CodeInstruction code in codes)
                 {
                     if (code.LoadsConstant(8))
