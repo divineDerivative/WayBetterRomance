@@ -72,12 +72,14 @@ namespace BetterRomance.HarmonyPatches
         /// </summary>
         /// <param name="instructions">Instructions from the calling transpiler</param>
         /// <param name="toGetPawn">Instructions needed to get the pawn on the stack</param>
+        /// <param name="repeat">Whether to replace all occurrences of 13f, or only the first one</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> AdultMinAgeInt(this IEnumerable<CodeInstruction> instructions, List<CodeInstruction> toGetPawn)
+        public static IEnumerable<CodeInstruction> AdultMinAgeInt(this IEnumerable<CodeInstruction> instructions, List<CodeInstruction> toGetPawn, bool repeat = true)
         {
+            bool done = false;
             foreach (CodeInstruction code in instructions)
             {
-                if (code.LoadsConstant(13))
+                if (!done && code.LoadsConstant(13))
                 {
                     foreach (CodeInstruction instruction in toGetPawn)
                     {
@@ -86,6 +88,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
                     yield return new CodeInstruction(OpCodes.Callvirt, CodeInstructionMethods.AdultMinAge);
                     yield return new CodeInstruction(OpCodes.Conv_I4);
+                    done = !repeat;
                 }
                 else
                 {
@@ -100,9 +103,9 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="instructions">Instructions from the calling transpiler</param>
         /// <param name="toGetPawn">OpCode needed to get the pawn on the stack</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> AdultMinAgeInt(this IEnumerable<CodeInstruction> instructions, OpCode toGetPawn)
+        public static IEnumerable<CodeInstruction> AdultMinAgeInt(this IEnumerable<CodeInstruction> instructions, OpCode toGetPawn, bool repeat = true)
         {
-            return instructions.AdultMinAgeInt([new CodeInstruction(toGetPawn)]);
+            return instructions.AdultMinAgeInt([new CodeInstruction(toGetPawn)], repeat);
         }
 
         public static IEnumerable<CodeInstruction> AdultMinAgeFloat(this IEnumerable<CodeInstruction> instructions, OpCode toGetPawn)

@@ -1,9 +1,9 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Verse;
 using Verse.AI.Group;
 
 #if v1_5
@@ -15,35 +15,21 @@ namespace BetterRomance.HarmonyPatches
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
             FieldInfo assignments = AccessTools.Field(original.DeclaringType, "assignments");
-
-            int num = 0;
-            foreach (CodeInstruction code in instructions)
+            List<CodeInstruction> toGetPawn = new()
             {
-                if (code.LoadsConstant(13))
-                {
-                    //The first two are invokerRole
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return assignments.LoadField();
-                    yield return new CodeInstruction(OpCodes.Ldloc_2);
-                    if (num <= 2)
-                    {
-                        yield return CodeInstruction.LoadField(typeof(PsychicRitualDef_Chronophagy), "invokerRole");
-                    }
-                    else
-                    {
-                        yield return CodeInstruction.LoadField(typeof(PsychicRitualDef_Chronophagy), "targetRole");
-                    }
-                    yield return CodeInstruction.Call(typeof(PsychicRitualRoleAssignments), nameof(PsychicRitualRoleAssignments.FirstAssignedPawn));
-                    yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, CodeInstructionMethods.AdultMinAge);
-                    yield return new CodeInstruction(OpCodes.Conv_I4);
-                    num++;
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
+                new CodeInstruction(OpCodes.Ldarg_0),
+                assignments.LoadField(),
+                new CodeInstruction(OpCodes.Ldloc_2),
+                CodeInstruction.LoadField(typeof(PsychicRitualDef_Chronophagy), "invokerRole"),
+                CodeInstruction.Call(typeof(PsychicRitualRoleAssignments), nameof(PsychicRitualRoleAssignments.FirstAssignedPawn)),
+            };
+            //Use invokerRole twice
+            List<CodeInstruction> codes = instructions.AdultMinAgeInt(toGetPawn, false).ToList();
+            codes = codes.AdultMinAgeInt(toGetPawn, false).ToList();
+            //Then use targetRole for the rest
+            toGetPawn[3] = CodeInstruction.LoadField(typeof(PsychicRitualDef_Chronophagy), "targetRole");
+            codes = codes.AdultMinAgeInt(toGetPawn, true).ToList();
+            return codes.AsEnumerable();
         }
     }
 
