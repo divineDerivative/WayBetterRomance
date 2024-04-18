@@ -102,5 +102,84 @@ namespace BetterRomance.HarmonyPatches
         {
             return AdultMinAgeInt(instructions, [new CodeInstruction(toGetPawn)]);
         }
+
+        /// <summary>
+        /// Transpiler to convert hard coded ages with the appropriate RegularSexSettings call
+        /// </summary>
+        /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <param name="loadPawn">Opcode to load the pawn onto the stack</param>
+        /// <returns></returns>
+        public static IEnumerable<CodeInstruction> RegularSexAgesTranspiler(IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(16f))
+                {
+                    yield return new CodeInstruction(loadPawn);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                }
+                else if (code.LoadsConstant(25f))
+                {
+                    yield return new CodeInstruction(loadPawn);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.DeclineAtAge));
+                }
+                else if (code.LoadsConstant(80f))
+                {
+                    yield return new CodeInstruction(loadPawn);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+
+        public static IEnumerable<CodeInstruction> MinAgeForSexForTwoTranspiler(IEnumerable<CodeInstruction> instructions, OpCode firstCode, OpCode secondCode, float ageToReplace)
+        {
+            bool firstFound = false;
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(ageToReplace) && !firstFound)
+                {
+                    yield return new CodeInstruction(firstCode);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                    firstFound = true;
+                }
+                else if (code.LoadsConstant(ageToReplace))
+                {
+                    yield return new CodeInstruction(secondCode);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+
+        public static IEnumerable<CodeInstruction> MinAgeForSexTranspiler(IEnumerable<CodeInstruction> instructions, List<CodeInstruction> loadPawn)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(16f))
+                {
+                    foreach (CodeInstruction instruction in loadPawn)
+                    {
+                        yield return instruction;
+                    }
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+
+        public static IEnumerable<CodeInstruction> MinAgeForSexTranspiler(IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
+        {
+            return MinAgeForSexTranspiler(instructions, [new CodeInstruction(loadPawn)]);
+        }
     }
 }

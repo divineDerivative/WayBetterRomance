@@ -181,28 +181,19 @@ namespace BetterRomance.HarmonyPatches
 
     public static class VREPatches
     {
-        public static IEnumerable<CodeInstruction> VREMinAgeTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
+        public static IEnumerable<CodeInstruction> InitiateLovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
-            foreach (CodeInstruction code in instructions)
+            return DynamicTranspilers.MinAgeForSexTranspiler(instructions, OpCodes.Ldloc_0);
+        }
+
+        public static IEnumerable<CodeInstruction> Need_LovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
+        {
+            List<CodeInstruction> codes = new()
             {
-                if (code.LoadsConstant(16f))
-                {
-                    if (original.DeclaringType == typeof(CompAbilityEffect_InitiateLovin))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    }
-                    else if (original.DeclaringType == typeof(Need_Lovin))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return CodeInstruction.LoadField(typeof(Need_Lovin), "pawn");
-                    }
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
+                new CodeInstruction(OpCodes.Ldarg_0),
+                CodeInstruction.LoadField(typeof(Need_Lovin), "pawn")
+            };
+            return DynamicTranspilers.MinAgeForSexTranspiler(instructions, codes);
         }
 
         public static IEnumerable<CodeInstruction> VREAsexualTranspiler(IEnumerable<CodeInstruction> instructions)
@@ -276,13 +267,13 @@ namespace BetterRomance.HarmonyPatches
 
         public static void PatchVRE(this Harmony harmony)
         {
-            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", [typeof(LocalTargetInfo), typeof(bool)]), transpiler: new(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
+            harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", [typeof(LocalTargetInfo), typeof(bool)]), transpiler: new(typeof(VREPatches).GetMethod(nameof(InitiateLovinMinAgeTranspiler))));
             harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", [typeof(LocalTargetInfo), typeof(bool)]), transpiler: new(typeof(VREPatches).GetMethod(nameof(VREAsexualTranspiler))));
             harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("GetLovers"), prefix: new(typeof(VREPatches).GetMethod(nameof(VREGetLoversPrefix))));
             harmony.Patch(typeof(JobDriver_InitiateLovin).GetMethod("GetLovers"), prefix: new(typeof(VREPatches).GetMethod(nameof(VREGetLoversPrefix))));
             harmony.Patch(typeof(JobDriver_InitiateLovin).GetMethod("ProcessBreakups"), prefix: new(typeof(VREPatches).GetMethod(nameof(VREProcessBreakupsPrefix))), postfix: new(typeof(VREPatches).GetMethod(nameof(VREProcessBreakupsPostfix))));
-            harmony.Patch(typeof(Need_Lovin).GetMethod("get_ShowOnNeedList"), transpiler: new(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
-            harmony.Patch(typeof(Need_Lovin).GetMethod("get_IsFrozen"), transpiler: new(typeof(VREPatches).GetMethod(nameof(VREMinAgeTranspiler))));
+            harmony.Patch(typeof(Need_Lovin).GetMethod("get_ShowOnNeedList"), transpiler: new(typeof(VREPatches).GetMethod(nameof(Need_LovinMinAgeTranspiler))));
+            harmony.Patch(typeof(Need_Lovin).GetMethod("get_IsFrozen"), transpiler: new(typeof(VREPatches).GetMethod(nameof(Need_LovinMinAgeTranspiler))));
             harmony.Patch(AccessTools.Method(typeof(JobDriver_DoLovinCasual), "GenerateRandomMinTicksToNextLovin"), postfix: new(typeof(VanillaRacesExpandedHighmate_JobDriver_Lovin_GenerateRandomMinTicksToNextLovin_Patch), "PawnFucks"));
         }
     }

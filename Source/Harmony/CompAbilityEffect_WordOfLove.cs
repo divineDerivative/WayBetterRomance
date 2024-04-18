@@ -10,25 +10,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            bool firstFound = false;
-            foreach (CodeInstruction code in instructions)
-            {
-                if (code.LoadsConstant(16f) && !firstFound)
-                {
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                    firstFound = true;
-                }
-                else if (code.LoadsConstant(16f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldloc_1);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
+            return DynamicTranspilers.MinAgeForSexForTwoTranspiler(instructions, OpCodes.Ldloc_0, OpCodes.Ldloc_1, 16f);
         }
     }
 }

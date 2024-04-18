@@ -169,7 +169,6 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
-    //This will be a little trickier to turn into a transpilier but should be possible
     [HarmonyPatch(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers")]
     public static class LovePartnerRelationUtility_MinPossibleAgeGapAtMinAgeToGenerateAsLovers
     {
@@ -214,7 +213,8 @@ namespace BetterRomance.HarmonyPatches
         //No adjustment made for asexual pawns as that is handled elsewhere
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction code in instructions)
+            IEnumerable<CodeInstruction> codes = DynamicTranspilers.RegularSexAgesTranspiler(instructions, OpCodes.Ldarg_0);
+            foreach (CodeInstruction code in codes)
             {
                 if (code.LoadsConstant(14f))
                 {
@@ -222,21 +222,6 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                     yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
                     yield return new CodeInstruction(OpCodes.Sub);
-                }
-                else if (code.LoadsConstant(16f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                }
-                else if (code.LoadsConstant(25f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.DeclineAtAge));
-                }
-                else if (code.LoadsConstant(80f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
                 }
                 else
                 {
