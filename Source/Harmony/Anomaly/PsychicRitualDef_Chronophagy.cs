@@ -22,7 +22,6 @@ namespace BetterRomance.HarmonyPatches
                 if (code.LoadsConstant(13))
                 {
                     //The first two are invokerRole
-
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return assignments.LoadField();
                     yield return new CodeInstruction(OpCodes.Ldloc_2);
@@ -53,19 +52,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction code in instructions)
-            {
-                if (code.LoadsConstant(13f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldloc_1);
-                    yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, CodeInstructionMethods.AdultMinAge);
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
+            return instructions.AdultMinAgeFloat(OpCodes.Ldloc_1);
         }
     }
 }

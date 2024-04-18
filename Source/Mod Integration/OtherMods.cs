@@ -106,76 +106,14 @@ namespace BetterRomance.HarmonyPatches
             return pawn.story.traits.HasTrait(trait);
         }
 
-        /// <summary>
-        /// Patches a method to use LovePartnerRelationUtility.Is(Ex)LovePartnerRelation instead of just looking for each def individually
-        /// </summary>
-        /// <param name="instructions"></param>
-        /// <param name="ilg"></param>
-        /// <param name="def">The first PawnRelationDef the original looks for</param>
-        /// <param name="condition">Whether we want to use brtrue or brfalse</param>
-        /// <param name="ex">Whether we want the ex version or not</param>
-        /// <param name="stopSkipping">A validator for the instruction where we want to stop skipping. This is also where the label is added if <paramref name="condition"/> is true</param>
-        /// <param name="addLabel">A validator for the instruction where we want to add our label. Only used if <paramref name="condition"/> is false</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public static IEnumerable<CodeInstruction> LoveRelationUtilityTranspilerMaker(IEnumerable<CodeInstruction> instructions, ILGenerator ilg, PawnRelationDef def, bool condition, bool ex, Func<CodeInstruction, bool> stopSkipping, Func<CodeInstruction, bool> addLabel = null)
-        {
-            bool skip = false;
-            Label label = ilg.DefineLabel();
-            foreach (CodeInstruction code in instructions)
-            {
-                //Pretty sure this is right, if we're using true the label should go at the same place we stop skipping
-                if (condition)
-                {
-                    if (skip && stopSkipping(code))
-                    {
-                        code.labels.Add(label);
-                        skip = false;
-                    }
-                }
-                else if (addLabel is null)
-                {
-                    throw new ArgumentException($"Error in LoveRelationUtilityTranspilerMaker; addLabel validator must be provided if condition is false");
-                }
-                else
-                {
-                    //If it's false then that means the jump to point is different from the stop skipping point
-                    //So for the VSIE patch
-                    if (skip && stopSkipping(code))
-                    {
-                        //So this is required for the VSIE patch, but I'm not sure how to account for it here
-                        //Just gonna leave it for now and figure something out if I ever add another patch that needs this
-                        //I bet my idea of a dictionary with MethodInfo and arguments could help, since I could check which key I'm using
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        skip = false;
-                    }
-                    if (addLabel(code))
-                    {
-                        code.labels.Add(label);
-                    }
-                }
-
-                if (code.LoadsField(AccessTools.Field(typeof(PawnRelationDefOf), def.defName)))
-                {
-                    yield return CodeInstruction.Call(typeof(LovePartnerRelationUtility), ex ? nameof(LovePartnerRelationUtility.IsExLovePartnerRelation) : nameof(LovePartnerRelationUtility.IsLovePartnerRelation));
-                    yield return new CodeInstruction(condition ? OpCodes.Brtrue : OpCodes.Brfalse, label);
-                    skip = true;
-                }
-                if (!skip)
-                {
-                    yield return code;
-                }
-            }
-        }
-
         public static IEnumerable<CodeInstruction> RimderLoveRelationTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            return LoveRelationUtilityTranspilerMaker(instructions, ilg, PawnRelationDefOf.Lover, true, false, stopSkipping: (CodeInstruction code) => code.LoadsField(AccessTools.Field(AccessTools.TypeByName("RimderModCore"), "rimderSettings")));
+            return instructions.LoveRelationUtilityTranspiler(ilg, PawnRelationDefOf.Lover, true, false, stopSkipping: (CodeInstruction code) => code.LoadsField(AccessTools.Field(AccessTools.TypeByName("RimderModCore"), "rimderSettings")));
         }
 
         public static IEnumerable<CodeInstruction> RimderExLoveRelationTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            return LoveRelationUtilityTranspilerMaker(instructions, ilg, PawnRelationDefOf.ExLover, true, true, stopSkipping: (CodeInstruction code) => code.LoadsField(AccessTools.Field(AccessTools.TypeByName("RimderModCore"), "rimderSettings")));
+            return instructions.LoveRelationUtilityTranspiler(ilg, PawnRelationDefOf.ExLover, true, true, stopSkipping: (CodeInstruction code) => code.LoadsField(AccessTools.Field(AccessTools.TypeByName("RimderModCore"), "rimderSettings")));
         }
     }
 
@@ -290,7 +228,7 @@ namespace BetterRomance.HarmonyPatches
         [HarmonyDebug]
         public static IEnumerable<CodeInstruction> AddDirectRelation_PrefixTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            return OtherMod_Patches.LoveRelationUtilityTranspilerMaker(instructions, ilg, PawnRelationDefOf.Lover, false, false, (CodeInstruction code) => code.LoadsField(AccessTools.Field(CompilerType, "___pawn")), (CodeInstruction code) => code.opcode == OpCodes.Ret);
+            return instructions.LoveRelationUtilityTranspiler(ilg, PawnRelationDefOf.Lover, false, false, (CodeInstruction code) => code.LoadsField(AccessTools.Field(CompilerType, "___pawn")), (CodeInstruction code) => code.opcode == OpCodes.Ret);
         }
     }
 }
