@@ -136,7 +136,7 @@ namespace BetterRomance.HarmonyPatches
         }
 
         [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> AgeTranspiler(IEnumerable<CodeInstruction> instructions) => instructions.AgeToHaveChildrenTranspiler(OpCodes.Ldarg_1, OpCodes.Ldarg_1, true);
+        public static IEnumerable<CodeInstruction> AgeTranspiler(IEnumerable<CodeInstruction> instructions) => instructions.AgeToHaveChildren(OpCodes.Ldarg_1, OpCodes.Ldarg_1, true);
     }
 
     //Add use of age settings

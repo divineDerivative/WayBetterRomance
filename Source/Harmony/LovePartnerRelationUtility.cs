@@ -213,7 +213,7 @@ namespace BetterRomance.HarmonyPatches
         //No adjustment made for asexual pawns as that is handled elsewhere
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            IEnumerable<CodeInstruction> codes = instructions.RegularSexAgesTranspiler(OpCodes.Ldarg_0);
+            IEnumerable<CodeInstruction> codes = instructions.RegularSexAges(OpCodes.Ldarg_0);
             foreach (CodeInstruction code in codes)
             {
                 if (code.LoadsConstant(14f))
