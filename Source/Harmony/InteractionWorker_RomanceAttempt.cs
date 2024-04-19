@@ -264,7 +264,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Ldarg_1).WithLabels(newLabel);
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Ldc_I4_1);
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.SexualityFactor));
+                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.OrientationFactor));
                     yield return new CodeInstruction(OpCodes.Stloc, num);
                     //if (num != 1f)
                     yield return new CodeInstruction(OpCodes.Ldloc, num);
