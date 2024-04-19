@@ -69,7 +69,7 @@ namespace BetterRomance
                     else
                     {
                         //Set up romantic orientation chances
-                        OrientationChances asexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.asexual ?? BetterRomanceMod.settings.sexualOrientations;
+                        OrientationChances asexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.asexual ?? BetterRomanceMod.settings.asexualOrientations;
                         float aceAroChance = asexualChances.none;
                         float aceBiChance = asexualChances.bi;
                         float aceHomoChance = asexualChances.homo;
