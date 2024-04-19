@@ -317,11 +317,12 @@ namespace BetterRomance
             return comp;
         }
 
-        /// <summary>Adjustment to success chance based on <paramref name="pawn"/>'s orientation and <paramref name="target"/>'s gender.</summary>
-        public static float SexualityFactor(Pawn pawn, Pawn target, bool romantic = false)
+        /// <summary>Factor based on <paramref name="pawn"/>'s orientation and <paramref name="target"/>'s gender.</summary>
+        public static float OrientationFactor(Pawn pawn, Pawn target, bool romantic = false)
         {
             float factor = 1f;
-            if (pawn.IsAsexual() && !target.IsAsexual())
+            //If this is a sexual encounter for an asexual person, use their rating and adjust further for romantic attraction
+            if (!romantic && pawn.IsAsexual() && !target.IsAsexual())
             {
                 factor *= pawn.AsexualRating() / 2;
                 if (!pawn.AttractedTo(target, true))
@@ -331,6 +332,7 @@ namespace BetterRomance
                 //Exit here because otherwise they could get deducted again for no sexual attraction
                 return factor;
             }
+            //I think that's really the only situation where we wouldn't just check the relevant attraction
             if (!pawn.AttractedTo(target, romantic))
             {
                 factor *= 0.125f;
