@@ -211,59 +211,6 @@ namespace BetterRomance.HarmonyPatches
         {
             return (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, [pawn]);
         }
-
-        //Adds a custom message when clicking on the disabled romance button for an aromantic pawn
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
-        {
-            Label newLabel = ilg.DefineLabel();
-            Label oldLabel = ilg.DefineLabel();
-            bool cooldownFound = false;
-            MethodInfo Accepted = AccessTools.PropertyGetter(typeof(AcceptanceReport), nameof(AcceptanceReport.Accepted));
-
-            List<CodeInstruction> codes = new(instructions);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                CodeInstruction code = codes[i];
-
-                if (code.opcode == OpCodes.Ldstr && (string)code.operand == "CantRomanceInitiateMessageCooldown")
-                {
-                    cooldownFound = true;
-                }
-                if (code.opcode == OpCodes.Brtrue_S && cooldownFound)
-                {
-                    oldLabel = (Label)code.operand;
-                    code.operand = newLabel;
-                    cooldownFound = false;
-                }
-
-                if (code.labels.Contains(oldLabel))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_1)
-                    {
-                        labels = [newLabel]
-                    };
-                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.IsAsexual));
-                    yield return new CodeInstruction(OpCodes.Brfalse_S, oldLabel);
-
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.GetOrientation));
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_3);
-                    yield return new CodeInstruction(OpCodes.Bne_Un_S, oldLabel);
-
-                    yield return new CodeInstruction(OpCodes.Ldstr, "WBR.CantRomanceInitiateMessageAromantic");
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(NamedArgument), "op_Implicit", [typeof(Thing)]);
-                    yield return CodeInstruction.Call(typeof(TranslatorFormattedStringExtensions), nameof(TranslatorFormattedStringExtensions.Translate), [typeof(string), typeof(NamedArgument)]);
-                    yield return CodeInstruction.Call(typeof(TaggedString), "op_Implicit", [typeof(TaggedString)]);
-                    yield return CodeInstruction.LoadField(typeof(MessageTypeDefOf), nameof(MessageTypeDefOf.RejectInput));
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
-                    yield return CodeInstruction.Call(typeof(Messages), nameof(Messages.Message), [typeof(string), typeof(MessageTypeDef), typeof(bool)]);
-                    yield return new CodeInstruction(OpCodes.Ret);
-                }
-
-                yield return code;
-            }
-        }
     }
 
     //Lets the PartnerFactor patch know I don't care about the result of WillPawnContinue

@@ -119,12 +119,12 @@ namespace BetterRomance.HarmonyPatches
 
     public static class VREPatches
     {
-        public static IEnumerable<CodeInstruction> InitiateLovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
+        public static IEnumerable<CodeInstruction> InitiateLovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             return instructions.MinAgeForSexTranspiler(OpCodes.Ldloc_0);
         }
 
-        public static IEnumerable<CodeInstruction> Need_LovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
+        public static IEnumerable<CodeInstruction> Need_LovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> codes = new()
             {

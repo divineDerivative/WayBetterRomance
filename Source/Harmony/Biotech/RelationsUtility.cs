@@ -2,7 +2,6 @@
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
 
@@ -17,64 +16,18 @@ namespace BetterRomance.HarmonyPatches
             return instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_0);
         }
 
+        //Replaces the message when clicking on the disabled romance button for an aromantic pawn
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> AsexualTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            FieldInfo traitDefOf = AccessTools.Field(typeof(TraitDefOf), nameof(TraitDefOf.Asexual));
-            bool foundMessageAsexual = false;
-            bool foundTraitDefOf = false;
-            int startIndex = -1;
-            int endIndex = -1;
-
-            List<CodeInstruction> codes = new(instructions);
-            for (int i = 0; i < codes.Count; i++)
+            foreach (CodeInstruction code in instructions)
             {
-                if (codes[i].opcode == OpCodes.Ret)
+                if (code.LoadsConstant("CantRomanceInitiateMessageAsexual"))
                 {
-                    if (foundMessageAsexual && foundTraitDefOf)
-                    {
-                        endIndex = i;
-                        break;
-                    }
-                    else if (foundTraitDefOf)
-                    {
-                        int middleIndex = i + 1;
-                        for (int k = middleIndex; i < codes.Count; k++)
-                        {
-                            string strOperand = codes[k].operand as string;
-                            if (strOperand == "CantRomanceInitiateMessageAsexual")
-                            {
-                                foundMessageAsexual = true;
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        startIndex = i + 1;
-
-                        for (int j = startIndex; i < codes.Count; j++)
-                        {
-                            if (codes[j].opcode == OpCodes.Ret)
-                            {
-                                break;
-                            }
-                            if (codes[j].LoadsField(traitDefOf))
-                            {
-                                foundTraitDefOf = true;
-                                break;
-                            }
-
-                        }
-                    }
+                    code.operand = "WBR.CantRomanceInitiateMessageAromantic";
                 }
+                yield return code;
             }
-            if (startIndex > -1 && endIndex > -1)
-            {
-                codes[startIndex].opcode = OpCodes.Nop;
-                codes.RemoveRange(startIndex + 1, endIndex - startIndex);
-            }
-            return codes.AsEnumerable();
         }
     }
 
@@ -110,6 +63,7 @@ namespace BetterRomance.HarmonyPatches
 
             for (int i = 0; i < codes.Count; i++)
             {
+                //Find !AttractedToGender(target, initiator.gender) section
                 CodeInstruction code = codes[i];
                 if (!foundStart && code.opcode == OpCodes.Ldarg_1)
                 {
@@ -124,12 +78,13 @@ namespace BetterRomance.HarmonyPatches
                     endIndex = i - 1;
                     foundEnd = true;
                 }
-
+                //Replace the message to reference gender instead of orientation
                 if (code.opcode == OpCodes.Ldstr && (string)code.operand == "CantRomanceTargetSexuality")
                 {
                     code.operand = "WBR.CantHookupTargetGender";
                 }
             }
+            //Remove the check against the target's orientation
             if (startIndex > -1 && endIndex > -1)
             {
                 codes.RemoveRange(startIndex, endIndex - startIndex + 1);
