@@ -46,6 +46,15 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
+
+        //Reduce chances if there's no sexual attraction
+        public static void Postfix(Pawn initiator, Pawn recipient, ref float __result)
+        {
+            if (!initiator.AttractedTo(recipient, false))
+            {
+                __result *= RomanceUtilities.OrientationFactor(initiator, recipient, false);
+            }
+        }
     }
 
     //This determines if a pawn will accept a marriage proposal

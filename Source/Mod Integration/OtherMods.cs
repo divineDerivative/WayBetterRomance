@@ -142,7 +142,7 @@ namespace BetterRomance.HarmonyPatches
         {
             //Add orientation traits to allowed traits list
             AndroidSettings androidSettings = VREA_DefOf.VREA_AndroidSettings;
-            foreach (TraitDef trait in SexualityUtility.OrientationTraits)
+            foreach (TraitDef trait in OrientationUtility.OrientationTraits)
             {
                 androidSettings.allowedTraits.Add(trait.defName);
             }

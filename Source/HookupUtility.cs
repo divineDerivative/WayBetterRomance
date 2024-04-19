@@ -489,7 +489,7 @@ namespace BetterRomance
                 text.AppendLine(HookupFactorLine("WBR.HookupChanceBeautyFactor".Translate(), prettyFactor));
             }
             //Adjustment for any sexuality incompatibilities
-            float sexualityFactor = target.SexAverse() ? 0f : RomanceUtilities.SexualityFactor(target, initiator);
+            float sexualityFactor = target.SexAverse() ? 0f : RomanceUtilities.OrientationFactor(target, initiator);
             if (sexualityFactor != 1f)
             {
                 text.AppendLine(HookupFactorLine("WBR.HookupChanceSexuality".Translate(), sexualityFactor));
