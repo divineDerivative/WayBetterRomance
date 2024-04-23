@@ -54,42 +54,31 @@ namespace BetterRomance.HarmonyPatches
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> OrientationTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            int startIndex = -1;
-            int endIndex = -1;
-            bool foundStart = false;
-            bool foundEnd = false;
-
             List<CodeInstruction> codes = new(instructions);
-
-            for (int i = 0; i < codes.Count; i++)
+            int attractedToFound = 0;
+            foreach (CodeInstruction code in codes)
             {
                 //Find !AttractedToGender(target, initiator.gender) section
-                CodeInstruction code = codes[i];
-                if (!foundStart && code.opcode == OpCodes.Ldarg_1)
+
+                if (code.Calls(AccessTools.Method(typeof(RelationsUtility), nameof(RelationsUtility.AttractedToGender))))
                 {
-                    if (codes[i + 1].opcode == OpCodes.Ldarg_0)
-                    {
-                        startIndex = i - 1;
-                        foundStart = true;
-                    }
+                    attractedToFound++;
                 }
-                else if (foundStart && !foundEnd && code.opcode == OpCodes.Brtrue_S)
+                if (attractedToFound == 2 && code.Branches(out _))
                 {
-                    endIndex = i - 1;
-                    foundEnd = true;
+                    //Remove the bool from the stack
+                    yield return new CodeInstruction(OpCodes.Pop);
+                    //Change to jump unconditionally
+                    code.opcode = OpCodes.Br;
+                    attractedToFound++;
                 }
                 //Replace the message to reference gender instead of orientation
                 if (code.opcode == OpCodes.Ldstr && (string)code.operand == "CantRomanceTargetSexuality")
                 {
                     code.operand = "WBR.CantHookupTargetGender";
                 }
+                yield return code;
             }
-            //Remove the check against the target's orientation
-            if (startIndex > -1 && endIndex > -1)
-            {
-                codes.RemoveRange(startIndex, endIndex - startIndex + 1);
-            }
-            return codes.AsEnumerable();
         }
 
         [HarmonyTranspiler]
