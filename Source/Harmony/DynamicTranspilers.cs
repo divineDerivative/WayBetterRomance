@@ -25,7 +25,6 @@ namespace BetterRomance.HarmonyPatches
                 {
                     //Male
                     yield return new CodeInstruction(maleCode).MoveLabelsFrom(code);
-                    //Just load Gender.None, the method will use the correct gender
                     yield return new CodeInstruction(careAboutGender ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
                 }
@@ -68,11 +67,11 @@ namespace BetterRomance.HarmonyPatches
         }
 
         /// <summary>
-        /// Transpiler to convert a hardcoded 13 to Pawn_AgeTracker.AdultMinAge
+        /// Transpiler to convert a hard coded 13 to Pawn_AgeTracker.AdultMinAge
         /// </summary>
         /// <param name="instructions">Instructions from the calling transpiler</param>
         /// <param name="toGetPawn">Instructions needed to get the pawn on the stack</param>
-        /// <param name="repeat">Whether to replace all occurrences of 13f, or only the first one</param>
+        /// <param name="repeat">Whether to replace all occurrences of 13, or only the first one</param>
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> AdultMinAgeInt(this IEnumerable<CodeInstruction> instructions, List<CodeInstruction> toGetPawn, bool repeat = true)
         {
@@ -98,16 +97,23 @@ namespace BetterRomance.HarmonyPatches
         }
 
         /// <summary>
-        /// Transpiler to convert a hardcoded 13 to Pawn_AgeTracker.AdultMinAge
+        /// Transpiler to convert a hard coded 13 to Pawn_AgeTracker.AdultMinAge
         /// </summary>
         /// <param name="instructions">Instructions from the calling transpiler</param>
         /// <param name="toGetPawn">OpCode needed to get the pawn on the stack</param>
+        /// <param name="repeat">Whether to replace all occurrences of 13, or only the first one</param>
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> AdultMinAgeInt(this IEnumerable<CodeInstruction> instructions, OpCode toGetPawn, bool repeat = true)
         {
             return instructions.AdultMinAgeInt([new CodeInstruction(toGetPawn)], repeat);
         }
 
+        /// <summary>
+        /// Transpiler to convert a hardcoded 13f to Pawn_AgeTracker.AdultMinAge
+        /// </summary>
+        /// <param name="instructions">Instructions from the calling transpiler</param>
+        /// <param name="toGetPawn">OpCode needed to get the pawn on the stack</param>
+        /// <returns></returns>
         public static IEnumerable<CodeInstruction> AdultMinAgeFloat(this IEnumerable<CodeInstruction> instructions, OpCode toGetPawn)
         {
             foreach (CodeInstruction code in instructions)
@@ -126,7 +132,7 @@ namespace BetterRomance.HarmonyPatches
         }
 
         /// <summary>
-        /// Transpiler to convert hard coded ages with the appropriate RegularSexSettings call
+        /// Transpiler to convert hard coded ages to the appropriate RegularSexSettings call
         /// </summary>
         /// <param name="instructions">Instructions from the original transpiler</param>
         /// <param name="loadPawn">Opcode to load the pawn onto the stack</param>
@@ -163,7 +169,7 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="instructions">Instructions from the original transpiler</param>
         /// <param name="firstCode">OpCode needed to load the first pawn on the stack</param>
         /// <param name="secondCode">OpCode needed to load the second pawn on the stack</param>
-        /// <param name="ageToReplace">The exact age to replaces, usually 16f or 14f</param>
+        /// <param name="ageToReplace">The exact age to replace, usually 16f or 14f</param>
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> MinAgeForSexForTwo(this IEnumerable<CodeInstruction> instructions, OpCode firstCode, OpCode secondCode, float ageToReplace)
         {
@@ -192,7 +198,7 @@ namespace BetterRomance.HarmonyPatches
         /// Transpiler to convert hard codded age to MinAgeForSex
         /// </summary>
         /// <param name="instructions">Instructions from the original trasnpiler</param>
-        /// <param name="loadPawn">OpCode needed to load the pawn on the stack</param>
+        /// <param name="loadPawn">List of CodeInstruction needed to load the pawn on the stack</param>
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> MinAgeForSexTranspiler(this IEnumerable<CodeInstruction> instructions, List<CodeInstruction> loadPawn)
         {
@@ -217,7 +223,7 @@ namespace BetterRomance.HarmonyPatches
         /// Transpiler to convert hard codded age to MinAgeForSex
         /// </summary>
         /// <param name="instructions">Instructions from the original trasnpiler</param>
-        /// <param name="loadPawn">List of CodeInstruction needed to load the pawn on the stack</param>
+        /// <param name="loadPawn">OpCode needed to load the pawn on the stack</param>
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> MinAgeForSexTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
         {
