@@ -319,5 +319,29 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
+
+        /// <summary>
+        /// Replaces the curve from RitualOutcomeComp_Quality with a call to GetChildBirthAgeCurve
+        /// </summary>
+        /// <param name="instructions">Instructions from the calling transpiler</param>
+        /// <param name="loadPawn">OpCode needed to load the pawn on the stack</param>
+        /// <returns></returns>
+        public static IEnumerable<CodeInstruction> ChildBirthAgeCurveTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsField(CodeInstructionMethods.RitualPawnAgeCurve))
+                {
+                    //The preceding code loads the instance, which we're not using so yeet
+                    yield return new CodeInstruction(OpCodes.Pop);
+                    yield return new CodeInstruction(loadPawn);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetChildBirthAgeCurve));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
     }
 }
