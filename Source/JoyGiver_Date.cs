@@ -1,4 +1,7 @@
+using HarmonyLib;
 using RimWorld;
+using System;
+using System.Collections.Generic;
 using Verse;
 using Verse.AI;
 
@@ -14,6 +17,15 @@ namespace BetterRomance
             }
             //Prisoners usually can't go outside and all they have to do is talk to each other anyways
             if (pawn.IsPrisoner)
+            {
+                return null;
+            }
+            //Check if there's even anywhere they could go
+#if v1_4
+            if (!RCellFinder.TryFindSkydreamingSpotOutsideColony(pawn.Position, pawn, out _, minDistanceFromColonyThing: 0, maxDistanceFromColonyThing: DateUtility.distanceLimit))
+#else
+            if (!RCellFinder.TryFindAllowedUnroofedSpotOutsideColony(pawn.Position, pawn, out _, minDistanceFromColonyThing: 0, maxDistanceFromColonyThing: DateUtility.distanceLimit))
+#endif
             {
                 return null;
             }
