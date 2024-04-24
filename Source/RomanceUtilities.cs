@@ -524,8 +524,12 @@ namespace BetterRomance
             throw new ArgumentException("Instruction is not a load or store", "code");
 #endif
         }
+    }
 
+    internal static class InfoHelper
+    {
         public static MethodInfo AdultMinAge = AccessTools.PropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AdultMinAge));
         public static FieldInfo RitualPawnAgeCurve = AccessTools.Field(typeof(RitualOutcomeComp_Quality), nameof(RitualOutcomeComp_PawnAge.curve));
+        public static FieldInfo AgeTrackerPawn = AccessTools.Field(typeof(Pawn_AgeTracker), "pawn");
     }
 }

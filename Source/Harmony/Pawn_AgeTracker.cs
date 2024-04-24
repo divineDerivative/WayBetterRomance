@@ -18,7 +18,7 @@ namespace BetterRomance.HarmonyPatches
                     {
                         labels = code.labels
                     };
-                    yield return CodeInstruction.LoadField(typeof(Pawn_AgeTracker), "pawn");
+                    yield return InfoHelper.AgeTrackerPawn.LoadField();
                     yield return new CodeInstruction(OpCodes.Ldc_I4, 1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMomentAsFloat));
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
@@ -27,7 +27,7 @@ namespace BetterRomance.HarmonyPatches
                 else if (code.LoadsConstant(20f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.LoadField(typeof(Pawn_AgeTracker), "pawn");
+                    yield return InfoHelper.AgeTrackerPawn.LoadField();
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetMinAgeForAdulthood));
                 }
                 else
@@ -49,7 +49,7 @@ namespace BetterRomance.HarmonyPatches
                 if (code.LoadsConstant(7f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.LoadField(typeof(Pawn_AgeTracker), "pawn");
+                    yield return InfoHelper.AgeTrackerPawn.LoadField();
                     yield return new CodeInstruction(OpCodes.Ldc_I4, 0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMomentAsFloat));
                 }
@@ -82,7 +82,7 @@ namespace BetterRomance.HarmonyPatches
                 if (code.LoadsConstant(90000000L))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.LoadField(typeof(Pawn_AgeTracker), "pawn");
+                    yield return InfoHelper.AgeTrackerPawn.LoadField();
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.AgeReversalDemandAge));
                     yield return new CodeInstruction(OpCodes.Conv_I8);
                     yield return new CodeInstruction(OpCodes.Ldc_I8, 3600000L);

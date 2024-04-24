@@ -24,7 +24,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return new CodeInstruction(OpCodes.Ldloc_2);
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, CodeInstructionMethods.AdultMinAge);
+                    yield return new CodeInstruction(OpCodes.Callvirt, InfoHelper.AdultMinAge);
                     yield return new CodeInstruction(OpCodes.Conv_I4);
                     i++;
                 }

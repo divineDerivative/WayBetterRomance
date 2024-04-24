@@ -16,7 +16,7 @@ namespace BetterRomance.HarmonyPatches
         {
             foreach (CodeInstruction code in instructions)
             {
-                if (code.LoadsField(CodeInstructionMethods.RitualPawnAgeCurve))
+                if (code.LoadsField(InfoHelper.RitualPawnAgeCurve))
                 {
                     yield return CodeInstruction.LoadField(typeof(RitualOutcomeComp_PawnAge), nameof(RitualOutcomeComp_PawnAge.roleId));
                     yield return new CodeInstruction(OpCodes.Ldarg_1);

@@ -85,7 +85,7 @@ namespace BetterRomance.HarmonyPatches
                         yield return instruction;
                     }
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, CodeInstructionMethods.AdultMinAge);
+                    yield return new CodeInstruction(OpCodes.Callvirt, InfoHelper.AdultMinAge);
                     yield return new CodeInstruction(OpCodes.Conv_I4);
                     done = !repeat;
                 }
@@ -122,7 +122,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     yield return new CodeInstruction(toGetPawn);
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, CodeInstructionMethods.AdultMinAge);
+                    yield return new CodeInstruction(OpCodes.Callvirt, InfoHelper.AdultMinAge);
                 }
                 else
                 {
@@ -330,7 +330,7 @@ namespace BetterRomance.HarmonyPatches
         {
             foreach (CodeInstruction code in instructions)
             {
-                if (code.LoadsField(CodeInstructionMethods.RitualPawnAgeCurve))
+                if (code.LoadsField(InfoHelper.RitualPawnAgeCurve))
                 {
                     //The preceding code loads the instance, which we're not using so yeet
                     yield return new CodeInstruction(OpCodes.Pop);
