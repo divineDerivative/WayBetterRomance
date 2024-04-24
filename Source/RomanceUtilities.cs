@@ -460,6 +460,12 @@ namespace BetterRomance
             return new CodeInstruction((!useAddress) ? (fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld) : (fieldInfo.IsStatic ? OpCodes.Ldsflda : OpCodes.Ldflda), fieldInfo);
         }
 
+        public static bool LoadsField(this CodeInstruction code, Type type, string name)
+        {
+            FieldInfo field = AccessTools.Field(type, name);
+            return code.LoadsField(field);
+        }
+
         //Need to make this determine if call or callvirt should be used
         public static CodeInstruction Call(this MethodInfo methodInfo)
         {

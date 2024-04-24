@@ -198,22 +198,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "OpinionFactor")]
     public static class InteractionWorker_RomanceAttempt_OpinionFactor
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            foreach (CodeInstruction code in instructions)
-            {
-                if (code.LoadsConstant(5f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
-                    yield return new CodeInstruction(OpCodes.Conv_R4);
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.MinOpinionRomanceTranspiler(OpCodes.Ldarg_1);
     }
 
     //Determines factors based on relationships with other pawns, used by SuccessChance

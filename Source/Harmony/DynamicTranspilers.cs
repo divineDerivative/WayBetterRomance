@@ -285,5 +285,33 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
+
+        /// <summary>
+        /// Transpiler to convert a hard codded 5 or 5f to MinOpinionForRomance
+        /// </summary>
+        /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <param name="loadPawn">OpCode needed to load the pawn on the stack</param>
+        /// <returns></returns>
+        public static IEnumerable<CodeInstruction> MinOpinionRomanceTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(5f))
+                {
+                    yield return new CodeInstruction(loadPawn);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
+                    yield return new CodeInstruction(OpCodes.Conv_R4);
+                }
+                else if (code.LoadsConstant(5))
+                {
+                    yield return new CodeInstruction(loadPawn);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
     }
 }
