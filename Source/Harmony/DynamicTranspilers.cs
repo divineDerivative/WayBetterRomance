@@ -67,6 +67,35 @@ namespace BetterRomance.HarmonyPatches
         }
 
         /// <summary>
+        /// Transpiler to convert hard coded 16 to MinAgeToHaveChildren. So far this is only used for fema
+        /// </summary>
+        /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <param name="loadPawn">OpCode needed to get the pawn on the stack</param>
+        /// <param name="recipe">Whether we're replacing a check to recipe.minAllowedAge, where the xml for the recipe uses 16</param>
+        /// <returns></returns>
+        public static IEnumerable<CodeInstruction> AgeToHaveChildrenInt(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn, bool recipe = false)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(16) || (recipe && code.LoadsField(AccessTools.Field(typeof(RecipeDef), nameof(RecipeDef.minAllowedAge)))))
+                {
+                    if (recipe)
+                    {
+                        yield return new CodeInstruction(OpCodes.Pop);
+                    }
+                    yield return new CodeInstruction(loadPawn);
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
+                    yield return new CodeInstruction(OpCodes.Conv_I4);
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+
+        /// <summary>
         /// Transpiler to convert a hard coded 13 to Pawn_AgeTracker.AdultMinAge
         /// </summary>
         /// <param name="instructions">Instructions from the calling transpiler</param>
