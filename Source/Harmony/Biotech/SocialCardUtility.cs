@@ -32,19 +32,16 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            MethodInfo EndGroup = AccessTools.Method(typeof(Widgets), nameof(Widgets.EndGroup));
-            MethodInfo CanDrawTryRomance = AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance");
-
             foreach (CodeInstruction code in instructions)
             {
-                if (code.Calls(EndGroup))
+                if (code.Calls(typeof(Widgets), nameof(Widgets.EndGroup)))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(SocialCardUtility_DrawRelationsAndOpinions), nameof(SocialCardHelper));
                 }
                 yield return code;
-                if (code.Calls(CanDrawTryRomance))
+                if (code.Calls(typeof(SocialCardUtility), "CanDrawTryRomance"))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(HookupUtility), nameof(HookupUtility.CanDrawTryHookup));
@@ -140,44 +137,41 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            MethodInfo RomanceExplanation = AccessTools.Method(typeof(SocialCardUtility), "RomanceExplanation");
             Label newLabel = ilg.DefineLabel();
-            Label oldLabel = ilg.DefineLabel();
-            LocalBuilder text = ilg.DeclareLocal(typeof(string));
-            bool startFound = false;
+            bool insert = false;
 
             foreach (CodeInstruction code in instructions)
             {
-                if (startFound && code.opcode == OpCodes.Brtrue_S)
+                if (insert && code.Branches(out _))
                 {
-                    oldLabel = (Label)code.operand;
                     code.operand = newLabel;
                 }
 
                 yield return code;
 
-                if (startFound && code.opcode == OpCodes.Pop)
+                if (insert && code.opcode == OpCodes.Pop)
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = [newLabel] };
+                    yield return new CodeInstruction(OpCodes.Ldarg_1).WithLabels(newLabel);
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(AccessTools.Inner(typeof(SocialCardUtility), "CachedSocialTabEntry"), "otherPawn");
-                    yield return CodeInstruction.Call(typeof(SocialCardUtility_GetPawnRowTooltip), nameof(HookupExplanation));
-                    yield return new CodeInstruction(OpCodes.Stloc, text);
-                    yield return new CodeInstruction(OpCodes.Ldloc, text);
-                    yield return CodeInstruction.Call(typeof(GenText), nameof(GenText.NullOrEmpty));
-                    yield return new CodeInstruction(OpCodes.Brtrue, oldLabel);
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return new CodeInstruction(OpCodes.Ldloc, text);
-                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), parameters: [typeof(string)]);
-                    yield return new CodeInstruction(OpCodes.Pop);
-
-                    startFound = false;
+                    yield return new CodeInstruction(OpCodes.Ldloca, 0);
+                    yield return CodeInstruction.Call(typeof(SocialCardUtility_GetPawnRowTooltip), nameof(PawnRowTooltipHelper));
+                    insert = false;
                 }
 
-                if (code.Calls(RomanceExplanation))
+                if (code.Calls(typeof(SocialCardUtility), "RomanceExplanation"))
                 {
-                    startFound = true;
+                    insert = true;
                 }
+            }
+        }
+
+        private static void PawnRowTooltipHelper(Pawn initiator, Pawn target, ref StringBuilder stringBuilder)
+        {
+            string text = HookupExplanation(initiator, target);
+            if (!text.NullOrEmpty())
+            {
+                stringBuilder.AppendLine(text);
             }
         }
 

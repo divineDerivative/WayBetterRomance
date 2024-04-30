@@ -10,35 +10,30 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Pawn_IdeoTracker), "CertaintyChangeFactor", MethodType.Getter)]
     public static class Pawn_IdeoTracker_CertaintyChangeFactor
     {
-        public static bool Prefix(ref SimpleCurve ___pawnAgeCertaintyCurve, Pawn ___pawn)
+        public static void Prefix(ref SimpleCurve ___pawnAgeCertaintyCurve, Pawn ___pawn)
         {
             if (___pawn.def.defName != "PRFDrone")
             {
                 ___pawnAgeCertaintyCurve = null;
             }
-            return true;
         }
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            FieldInfo HumanlikeChild = AccessTools.Field(typeof(LifeStageDefOf), nameof(LifeStageDefOf.HumanlikeChild));
-            FieldInfo HumanlikeAdult = AccessTools.Field(typeof(LifeStageDefOf), nameof(LifeStageDefOf.HumanlikeAdult));
-            MethodInfo LifeStageMinAge = AccessTools.Method(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.LifeStageMinAge));
-
             foreach (CodeInstruction code in instructions)
             {
-                if (code.LoadsField(HumanlikeChild))
+                if (code.LoadsField(typeof(LifeStageDefOf), nameof(LifeStageDefOf.HumanlikeChild)))
                 {
                     //get pawn out of the age tracker
-                    yield return CodeInstruction.LoadField(typeof(Pawn_AgeTracker), "pawn");
+                    yield return InfoHelper.AgeTrackerPawn.LoadField();
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ChildAge));
                 }
-                else if (code.LoadsField(HumanlikeAdult))
+                else if (code.LoadsField(typeof(LifeStageDefOf), nameof(LifeStageDefOf.HumanlikeAdult)))
                 {
-                    yield return CodeInstruction.LoadField(typeof(Pawn_AgeTracker), "pawn");
+                    yield return InfoHelper.AgeTrackerPawn.LoadField();
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.AdultAgeForLearning));
                 }
-                else if (code.Calls(LifeStageMinAge))
+                else if (code.Calls(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.LifeStageMinAge)))
                 {
                     yield return new CodeInstruction(OpCodes.Conv_R4);
                 }

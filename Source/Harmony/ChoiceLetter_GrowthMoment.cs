@@ -22,7 +22,9 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
+    //Go before HAR so corrected ages get used
     [HarmonyPatch(typeof(ChoiceLetter_GrowthMoment), "CacheLetterText")]
+    [HarmonyBefore(["rimworld.erdelf.alien_race.main"])]
     public static class ChoiceLetter_GrowthMoment_CacheLetterText
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -31,16 +33,14 @@ namespace BetterRomance.HarmonyPatches
 
             List<CodeInstruction> codes = instructions.ToList();
 
-            for (int i = 0; i < codes.Count; i++)
+            foreach (CodeInstruction code in codes)
             {
-                CodeInstruction code = codes[i];
                 if (code.LoadsField(GrowthMomentAges))
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(typeof(ChoiceLetter_GrowthMoment), nameof(ChoiceLetter_GrowthMoment.pawn));
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMoment));
-                    i += 2;
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetBiotechSettings));
+                    yield return CodeInstruction.LoadField(typeof(CompSettingsBiotech), nameof(CompSettingsBiotech.growthMoments));
                 }
                 else
                 {

@@ -59,7 +59,6 @@ namespace BetterRomance.HarmonyPatches
             foreach (CodeInstruction code in codes)
             {
                 //Find !AttractedToGender(target, initiator.gender) section
-
                 if (code.Calls(AccessTools.Method(typeof(RelationsUtility), nameof(RelationsUtility.AttractedToGender))))
                 {
                     attractedToFound++;
@@ -81,38 +80,30 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        //This changes (target.relations.OpinionOf(initiator) <= 5) to (initiator.relations.OpinionOf(target) <= initiator.MinOpinionForRomance())
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> OpinionTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            bool foundStart = false;
+            List<CodeInstruction> codes = instructions.MinOpinionRomanceTranspiler(OpCodes.Ldarg_0).ToList();
 
-            List<CodeInstruction> codes = new(instructions);
-
+            bool swap = false;
             for (int i = 0; i < codes.Count; i++)
             {
                 CodeInstruction code = codes[i];
-                if (!foundStart && code.opcode == OpCodes.Ldarg_1)
+                if (!swap && code.opcode == OpCodes.Ldarg_1 && codes[i + 1].LoadsField(typeof(Pawn), nameof(Pawn.relations)))
                 {
-                    if (codes[i + 1].opcode == OpCodes.Ldfld && codes[i + 2].opcode == OpCodes.Ldarg_0)
-                    {
-                        foundStart = true;
-                        yield return new CodeInstruction(OpCodes.Ldarg_0) { labels = code.ExtractLabels() };
-                        yield return codes[i + 1];
-                        yield return new CodeInstruction(OpCodes.Ldarg_1);
-                        yield return codes[i + 3];
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
-                        i += 4;
-                    }
-                    else
-                    {
-                        yield return code;
-                    }
+                    swap = true;
                 }
-                else
+                if (swap && code.opcode == OpCodes.Ldarg_1)
                 {
-                    yield return code;
+                    code.opcode = OpCodes.Ldarg_0;
                 }
+                else if (swap && code.opcode == OpCodes.Ldarg_0)
+                {
+                    code.opcode = OpCodes.Ldarg_1;
+                    swap = false;
+                }
+                yield return code;
             }
         }
     }

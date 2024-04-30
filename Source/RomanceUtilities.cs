@@ -460,6 +460,12 @@ namespace BetterRomance
             return new CodeInstruction((!useAddress) ? (fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld) : (fieldInfo.IsStatic ? OpCodes.Ldsflda : OpCodes.Ldflda), fieldInfo);
         }
 
+        public static bool LoadsField(this CodeInstruction code, Type type, string name)
+        {
+            FieldInfo field = AccessTools.Field(type, name);
+            return code.LoadsField(field);
+        }
+
         //Need to make this determine if call or callvirt should be used
         public static CodeInstruction Call(this MethodInfo methodInfo)
         {
@@ -518,7 +524,12 @@ namespace BetterRomance
             throw new ArgumentException("Instruction is not a load or store", "code");
 #endif
         }
+    }
 
+    internal static class InfoHelper
+    {
         public static MethodInfo AdultMinAge = AccessTools.PropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AdultMinAge));
+        public static FieldInfo RitualPawnAgeCurve = AccessTools.Field(typeof(RitualOutcomeComp_Quality), nameof(RitualOutcomeComp_PawnAge.curve));
+        public static FieldInfo AgeTrackerPawn = AccessTools.Field(typeof(Pawn_AgeTracker), "pawn");
     }
 }

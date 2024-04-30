@@ -18,26 +18,23 @@ namespace BetterRomance.HarmonyPatches
 
         [HarmonyPrefix]
         [HarmonyPatch("DrawIdeoExposure")]
-        public static bool DrawIdeoExposurePrefix(Pawn baby, float rectWidth, float heightOffset)
+        public static void DrawIdeoExposurePrefix(Pawn baby)
         {
             IdeoligionChooseAgePawn = baby;
-            return true;
         }
 
         [HarmonyPrefix]
         [HarmonyPatch("DrawIdeoExposureItem")]
-        public static bool DrawIdeoExposureItemPrefix(Pawn baby, Ideo ideo, Rect rect, float ideoExposure, float totalExposure, int rowIndex, float yOff)
+        public static void DrawIdeoExposureItemPrefix(Pawn baby)
         {
             IdeoligionChooseAgePawn = baby;
-            return true;
         }
 
         [HarmonyPrefix]
         [HarmonyPatch("IdeoligionChooseAge", MethodType.Getter)]
-        public static bool IdeoligionChooseAgePrefix(ref float __result)
+        public static void IdeoligionChooseAgePrefix(ref float __result)
         {
-            __result = IdeoligionChooseAgePawn.RaceProps.lifeStageAges.First((LifeStageAge lsa) => lsa.def.developmentalStage.Child()).minAge;
-            return false;
+            __result = SettingsUtilities.ChildAge(IdeoligionChooseAgePawn);
         }
     }
 }

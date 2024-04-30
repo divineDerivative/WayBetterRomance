@@ -225,7 +225,7 @@ namespace BetterRomance.HarmonyPatches
         }
 
         public static Type CompilerType;
-        [HarmonyDebug]
+
         public static IEnumerable<CodeInstruction> AddDirectRelation_PrefixTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             return instructions.LoveRelationUtilityTranspiler(ilg, PawnRelationDefOf.Lover, false, false, (CodeInstruction code) => code.LoadsField(AccessTools.Field(CompilerType, "___pawn")), (CodeInstruction code) => code.opcode == OpCodes.Ret);
