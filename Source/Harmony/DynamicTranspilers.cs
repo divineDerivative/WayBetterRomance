@@ -372,5 +372,33 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
+
+        public static IEnumerable<CodeInstruction> MinAgeForAdulthoodTranspiler(this IEnumerable<CodeInstruction> instructions, List<CodeInstruction> loadPawn, bool integer)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(20) || code.LoadsConstant(20f))
+                {
+                    foreach (CodeInstruction instruction in loadPawn)
+                    {
+                        yield return instruction;
+                    }
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetMinAgeForAdulthood));
+                    if (integer)
+                    {
+                        yield return new CodeInstruction(OpCodes.Conv_I4);
+                    }
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+
+        public static IEnumerable<CodeInstruction> MinAgeForAdulthoodTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn, bool integer)
+        {
+            return instructions.MinAgeForAdulthoodTranspiler([new CodeInstruction(loadPawn)], integer);
+        }
     }
 }

@@ -10,7 +10,12 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction code in instructions)
+            var codes = instructions.MinAgeForAdulthoodTranspiler(
+            [
+                new CodeInstruction(OpCodes.Ldarg_0),
+                InfoHelper.AgeTrackerPawn.LoadField(),
+            ], false);
+            foreach (CodeInstruction code in codes)
             {
                 if (code.LoadsConstant(11f))
                 {
