@@ -24,16 +24,10 @@ namespace BetterRomance.HarmonyPatches
                         labels = code.labels
                     };
                     yield return InfoHelper.AgeTrackerPawn.LoadField();
-                    yield return new CodeInstruction(OpCodes.Ldc_I4, 1);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMomentAsFloat));
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
-                    yield return new CodeInstruction(OpCodes.Add);
-                }
-                else if (code.LoadsConstant(20f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return InfoHelper.AgeTrackerPawn.LoadField();
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetMinAgeForAdulthood));
+                    yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
+                    yield return new CodeInstruction(OpCodes.Callvirt, InfoHelper.AdultMinAge);
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, 2f);
+                    yield return new CodeInstruction(OpCodes.Sub);
                 }
                 else
                 {
