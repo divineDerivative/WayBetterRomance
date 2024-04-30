@@ -16,7 +16,7 @@ namespace BetterRomance.HarmonyPatches
         {
             FieldInfo biologicalAgeTickFactorFromAgeCurve = AccessTools.Field(typeof(GeneDef), nameof(GeneDef.biologicalAgeTickFactorFromAgeCurve));
             int fieldFound = 0;
-            object label = new();
+            Label label = new();
             Type type = original.GetMethodBody().LocalVariables[0].LocalType;
 
             foreach (CodeInstruction code in instructions)
@@ -28,9 +28,10 @@ namespace BetterRomance.HarmonyPatches
                     fieldFound++;
                 }
 
-                if (fieldFound == 1 && code.opcode == OpCodes.Brfalse)
+                if (fieldFound == 1 && code.Branches(out _))
                 {
-                    label = code.operand;
+                    //I do this because every time this if is checked it will overwrite the out variable and I need it to not change after matching
+                    label = (Label)code.operand;
                 }
 
                 if (fieldFound == 2 && code.IsStloc())

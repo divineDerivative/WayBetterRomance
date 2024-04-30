@@ -13,5 +13,4 @@ namespace BetterRomance.HarmonyPatches
             return instructions.AgeToHaveChildrenInt(OpCodes.Ldloc_0);
         }
     }
-
 }

@@ -21,19 +21,6 @@ namespace BetterRomance.HarmonyPatches
         }
 
         //This stop sex repulsed pawns from being considered by partners for regular lovin'
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {//can use method replacer here
-            foreach (CodeInstruction code in instructions)
-            {
-                if (code.Calls(AccessTools.Method(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.GetPartnerInMyBed))))
-                {
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetPartnerInMyBedForLovin));
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => Transpilers.MethodReplacer(instructions, AccessTools.Method(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.GetPartnerInMyBed)), AccessTools.Method(typeof(RomanceUtilities), nameof(RomanceUtilities.GetPartnerInMyBedForLovin)));
     }
 }

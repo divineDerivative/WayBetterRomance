@@ -296,13 +296,13 @@ namespace BetterRomance.HarmonyPatches
         {
             MethodInfo PrettinessFactor = AccessTools.Method(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.PrettinessFactor));
             Label newLabel = ilg.DefineLabel();
-            Label oldLabel = ilg.DefineLabel();
+            Label oldLabel = new();
             LocalBuilder num = ilg.DeclareLocal(typeof(float));
             bool startFound = false;
 
             foreach (CodeInstruction code in instructions)
             {
-                if (startFound && code.opcode == OpCodes.Beq_S)
+                if (startFound && code.Branches(out _))
                 {
                     oldLabel = (Label)code.operand;
                     code.operand = newLabel;
@@ -312,13 +312,16 @@ namespace BetterRomance.HarmonyPatches
 
                 if (startFound && code.opcode == OpCodes.Pop)
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_1) { labels = [newLabel] };
+                    //num = RomanceUtilities.SexualityFactor(romanceTarget, romancer);
+                    yield return new CodeInstruction(OpCodes.Ldarg_1).WithLabels(newLabel);
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.SexualityFactor));
                     yield return new CodeInstruction(OpCodes.Stloc, num);
+                    //if (num != 1f)
                     yield return new CodeInstruction(OpCodes.Ldloc, num);
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
                     yield return new CodeInstruction(OpCodes.Beq_S, oldLabel);
+                    //stringBuilder.AppendLine(RomanceFactorLine("WBR.HookupChanceSexuality".Translate(), num);
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     yield return new CodeInstruction(OpCodes.Ldstr, "WBR.HookupChanceSexuality");
                     yield return CodeInstruction.Call(typeof(Translator), nameof(Translator.Translate), [typeof(string)]);
@@ -330,7 +333,7 @@ namespace BetterRomance.HarmonyPatches
 
                     startFound = false;
                 }
-
+                //We want to insert our stuff after the beauty line
                 if (code.Calls(PrettinessFactor))
                 {
                     startFound = true;
