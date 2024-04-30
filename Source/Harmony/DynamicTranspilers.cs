@@ -373,6 +373,13 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        /// <summary>
+        /// Replaces a hard coded 20 or 2f to call GetMinAgeForAdulthood
+        /// </summary>
+        /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <param name="loadPawn">List of instructions to load the pawn on the stack</param>
+        /// <param name="integer">Whether to convert the result to an int</param>
+        /// <returns></returns>
         public static IEnumerable<CodeInstruction> MinAgeForAdulthoodTranspiler(this IEnumerable<CodeInstruction> instructions, List<CodeInstruction> loadPawn, bool integer)
         {
             foreach (CodeInstruction code in instructions)
@@ -396,6 +403,13 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        /// <summary>
+        /// Replaces a hard coded 20 or 2f to call GetMinAgeForAdulthood
+        /// </summary>
+        /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <param name="loadPawn">OpCode to load the pawn on the stack</param>
+        /// <param name="integer">Whether to convert the result to an int</param>
+        /// <returns></returns>
         public static IEnumerable<CodeInstruction> MinAgeForAdulthoodTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn, bool integer)
         {
             return instructions.MinAgeForAdulthoodTranspiler([new CodeInstruction(loadPawn)], integer);
