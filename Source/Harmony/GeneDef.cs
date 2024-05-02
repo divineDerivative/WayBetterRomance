@@ -11,12 +11,15 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(GeneDef), "GetDescriptionFull")]
     public static class GeneDef_GetDescriptionFull
     {
+        [HarmonyDebug]
         [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> AgeCurveTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
+        public static IEnumerable<CodeInstruction> AgeCurveTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original, ILGenerator ilg)
         {
             FieldInfo biologicalAgeTickFactorFromAgeCurve = AccessTools.Field(typeof(GeneDef), nameof(GeneDef.biologicalAgeTickFactorFromAgeCurve));
             int fieldFound = 0;
-            Label label = new();
+            Label oldLabel = new();
+            Label newLabel = ilg.DefineLabel();
+            bool labelAdded = false;
             Type type = original.GetMethodBody().LocalVariables[0].LocalType;
 
             foreach (CodeInstruction code in instructions)
@@ -28,18 +31,20 @@ namespace BetterRomance.HarmonyPatches
                     fieldFound++;
                 }
 
-                if (fieldFound == 1 && code.Branches(out _))
+                if (fieldFound == 1 && code.Branches(out _) && !labelAdded)
                 {
                     //I do this because every time this if is checked it will overwrite the out variable and I need it to not change after matching
-                    label = (Label)code.operand;
+                    oldLabel = (Label)code.operand;
+                    code.operand = newLabel;
+                    labelAdded = true;
                 }
 
                 if (fieldFound == 2 && code.IsStloc())
                 {
                     //if Settings.HARActive && geneDef.defName == "Ageless"
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Ldarg_0).WithLabels(newLabel);
                     yield return CodeInstruction.Call(typeof(GeneDef_GetDescriptionFull), nameof(CheckDef));
-                    yield return new CodeInstruction(OpCodes.Brfalse_S, label);
+                    yield return new CodeInstruction(OpCodes.Brfalse_S, oldLabel);
                     yield return new CodeInstruction(OpCodes.Ldloc_0);
                     //sb.AppendLine("WBR.AgelessGeneWarning".Translate());
                     yield return CodeInstruction.LoadField(type, "sb");
