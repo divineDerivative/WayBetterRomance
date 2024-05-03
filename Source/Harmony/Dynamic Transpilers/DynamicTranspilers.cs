@@ -574,5 +574,10 @@ namespace BetterRomance.HarmonyPatches
             }
             return instructions.MaxAgeGapTranspiler(ilg, [new CodeInstruction(firstPawn)], secondList);
         }
+
+        //public static IEnumerable<CodeInstruction> Transpiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
+        //{
+
+        //}
     }
 }
