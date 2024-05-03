@@ -64,48 +64,6 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        //Replaces trait checks with appropriate orientation check without removing a bunch of other instructions
-        public static IEnumerable<CodeInstruction> TraitToOrientationTranspiler(IEnumerable<CodeInstruction> instructions)
-        {
-            foreach (CodeInstruction code in instructions)
-            {
-                if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
-                {
-                    yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(TraitConversion));
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
-        }
-
-        private static List<TraitDef> traits = [TraitDefOf.Gay, TraitDefOf.Bisexual, TraitDefOf.Asexual, RomanceDefOf.Straight];
-        public static bool TraitConversion(TraitSet set, TraitDef trait)
-        {
-            Pawn pawn = (Pawn)AccessTools.Field(typeof(TraitSet), "pawn").GetValue(set);
-            if (traits.Contains(trait))
-            {
-                if (trait == TraitDefOf.Gay)
-                {
-                    return pawn.IsHomo();
-                }
-                if (trait == TraitDefOf.Bisexual)
-                {
-                    return pawn.IsBi();
-                }
-                if (trait == TraitDefOf.Asexual)
-                {
-                    return pawn.IsAro();
-                }
-                if (trait == RomanceDefOf.Straight)
-                {
-                    return pawn.IsHetero();
-                }
-            }
-            return pawn.story.traits.HasTrait(trait);
-        }
-
         public static IEnumerable<CodeInstruction> RimderLoveRelationTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             return instructions.LoveRelationUtilityTranspiler(ilg, PawnRelationDefOf.Lover, true, false, stopSkipping: (CodeInstruction code) => code.LoadsField(AccessTools.Field(AccessTools.TypeByName("RimderModCore"), "rimderSettings")));

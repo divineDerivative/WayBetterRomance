@@ -101,7 +101,7 @@ namespace BetterRomance.HarmonyPatches
                     }
                     else if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
                     {
-                        yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(OtherMod_Patches.TraitConversion));
+                        yield return CodeInstruction.Call(typeof(DynamicTranspilers), nameof(DynamicTranspilers.TraitConversion));
                         nextBranch = true;
                         firstFound = true;
                     }
@@ -117,7 +117,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else if (firstFound && code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
                 {
-                    yield return CodeInstruction.Call(typeof(OtherMod_Patches), nameof(OtherMod_Patches.TraitConversion));
+                    yield return CodeInstruction.Call(typeof(DynamicTranspilers), nameof(DynamicTranspilers.TraitConversion));
                 }
                 else
                 {
@@ -137,7 +137,7 @@ namespace BetterRomance.HarmonyPatches
                 "ThoughtWorker_PositiveViewOnSameSexCouples",
                 "ThoughtWorker_NegativeViewOnSameSexCouples",
             ];
-            HarmonyMethod TraitToOrientationTranspiler = new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.TraitToOrientationTranspiler));
+            HarmonyMethod TraitToOrientationTranspiler = new(typeof(OtherMod_Patches), nameof(DynamicTranspilers.TraitToOrientationTranspiler));
             HarmonyMethod IsInSameSexRelationshipPostfix = new(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipPostfix)));
             HarmonyMethod IsInSameSexRelationshipWithPostfix = new(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipWithPostfix)));
             foreach (string name in typeNames)

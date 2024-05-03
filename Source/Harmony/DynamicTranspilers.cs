@@ -414,5 +414,51 @@ namespace BetterRomance.HarmonyPatches
         {
             return instructions.MinAgeForAdulthoodTranspiler([new CodeInstruction(loadPawn)], integer);
         }
+
+        private static List<TraitDef> traits = [TraitDefOf.Gay, TraitDefOf.Bisexual, TraitDefOf.Asexual, RomanceDefOf.Straight];
+        /// <summary>
+        /// Replaces trait checks with appropriate orientation check without removing a bunch of other instructions
+        /// </summary>
+        /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <returns></returns>
+        public static IEnumerable<CodeInstruction> TraitToOrientationTranspiler(this IEnumerable<CodeInstruction> instructions)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
+                {
+                    yield return CodeInstruction.Call(typeof(DynamicTranspilers), nameof(TraitConversion));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+
+        public static bool TraitConversion(TraitSet set, TraitDef trait)
+        {
+            Pawn pawn = (Pawn)AccessTools.Field(typeof(TraitSet), "pawn").GetValue(set);
+            if (traits.Contains(trait))
+            {
+                if (trait == TraitDefOf.Gay)
+                {
+                    return pawn.IsHomo();
+                }
+                if (trait == TraitDefOf.Bisexual)
+                {
+                    return pawn.IsBi();
+                }
+                if (trait == TraitDefOf.Asexual)
+                {
+                    return pawn.IsAro();
+                }
+                if (trait == RomanceDefOf.Straight)
+                {
+                    return pawn.IsHetero();
+                }
+            }
+            return pawn.story.traits.HasTrait(trait);
+        }
     }
 }
