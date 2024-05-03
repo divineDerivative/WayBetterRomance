@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
@@ -12,87 +12,60 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.LovePartnerRelationGenerationChance))]
     public static class LovePartnerRelationUtility_LovePartnerRelationGenerationChance
     {
-        //Changes From Vanilla:
-        //Updated with new orientation options
-        //Accounts for age settings
-        public static bool Prefix(Pawn generated, Pawn other, PawnGenerationRequest request, bool ex, ref float __result)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            //Do not allow if either pawn is not old enough for sex
-            if (generated.ageTracker.AgeBiologicalYearsFloat < generated.MinAgeForSex() || other.ageTracker.AgeBiologicalYearsFloat < other.MinAgeForSex())
+            //Use age settings
+            IEnumerable<CodeInstruction> codes = instructions.MinAgeForSexForTwo(OpCodes.Ldarg_0, OpCodes.Ldarg_1, 14f);
+            MethodInfo BiotechActive = AccessTools.PropertyGetter(typeof(ModsConfig), nameof(ModsConfig.BiotechActive));
+            Label firstLabel = ilg.DefineLabel();
+            Label secondLabel = ilg.DefineLabel();
+            int step = 0;
+            foreach (CodeInstruction code in codes)
             {
-                __result = 0f;
-                return false;
-            }
-            //Leaving this in for cases where the request specifically states gay is not allowed
-            if (generated.gender == other.gender && !request.AllowGay)
-            {
-                __result = 0f;
-                return false;
-            }
-            //Don't generate relations for pawns that grew up in the colony
-            if (ModsConfig.BiotechActive)
-            {
-                if (generated?.records != null && generated.records.GetValue(RecordDefOf.TimeAsChildInColony) > 0f)
+                if (code.Calls(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex)))
                 {
-                    __result = 0f;
-                    return false;
+                    step++;
                 }
-                if (other?.records != null && other.records.GetValue(RecordDefOf.TimeAsChildInColony) > 0f)
+                //Add our stuff right before the Biotech section
+                if (code.Calls(BiotechActive))
                 {
-                    __result = 0f;
-                    return false;
+                    //Removing wrong orientation matches for randomly generated relationships, since this is used for both spouses and lovers
+                    //if (!generated.CouldWeBeLovers(other)) { return 0f; }
+                    code.labels.Add(secondLabel);
+                    yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code).WithLabels(firstLabel);
+                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.CouldWeBeLovers));
+                    yield return new CodeInstruction(OpCodes.Brtrue, secondLabel);
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, 0f);
+                    yield return new CodeInstruction(OpCodes.Ret);
                 }
-            }
-            //Removing wrong orientation matches for randomly generated relationships, since this is used for both spouses and lovers
-            //Do not allow if gender and sexuality do not match
-            float sexualityFactor = 1f;
-            if (generated.IsHumanlike())
-            {
-                if (generated.IsAsexual())
+                //Remove the gay reduction by storing 1f no matter what
+                if (code.opcode == OpCodes.Stloc_1)
                 {
-                    sexualityFactor = generated.AsexualRating();
+                    yield return new CodeInstruction(OpCodes.Pop);
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
                 }
-                //Separate now that asexuality is a spectrum
-                if (!RelationsUtility.AttractedToGender(generated, other.gender))
-                {
-                    __result = 0f;
-                    return false;
-                }
-            }
-            float exFactor = 1f;
-            //Reduce chances of generating an ex relation for each existing ex relation
-            if (ex)
-            {
-                int num = 0;
-                List<DirectPawnRelation> directRelations = other.relations.DirectRelations;
-                foreach (DirectPawnRelation directPawnRelation in directRelations)
-                {
-                    if (LovePartnerRelationUtility.IsExLovePartnerRelation(directPawnRelation.def))
-                    {
-                        num++;
-                    }
-                }
-                exFactor = Mathf.Pow(0.2f, num);
-            }
-            //If we're not generating an ex relation, and other already has a partner, do not allow
-            else if (LovePartnerRelationUtility.HasAnyLovePartner(other))
-            {
-                __result = 0f;
-                return false;
-            }
-            //Bunch of age calculations
-            float generatedAgeFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor").Invoke(null, [generated]);
-            float otherAgeFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeFactor").Invoke(null, [other]);
-            float ageGapFactor = (float)AccessTools.Method(typeof(LovePartnerRelationUtility), "GetGenerationChanceAgeGapFactor").Invoke(null, [generated, other, ex]);
-            float existingFamilyFactor = 1f;
-            //This reduces chances if they're already related by blood
-            if (generated.GetRelations(other).Any(x => x.familyByBloodRelation))
-            {
-                existingFamilyFactor = 0.01f;
-            }
 
-            __result = exFactor * generatedAgeFactor * otherAgeFactor * ageGapFactor * existingFamilyFactor * sexualityFactor;
-            return false;
+                yield return code;
+
+                //Make this jump to my section, skipping the gay checks entirely
+                if (step == 2 && code.Branches(out _))
+                {
+                    code.operand = firstLabel;
+                    step++;
+                }
+            }
+        }
+
+        public static void Postfix(Pawn generated, Pawn other, ref float __result)
+        {
+            //Adjust with asexual rating
+            float sexualityFactor = 1f;
+            if (generated.IsAsexual())
+            {
+                sexualityFactor = generated.SexRepulsed(other) ? 0f : generated.AsexualRating();
+            }
+            __result *= sexualityFactor;
         }
     }
 
