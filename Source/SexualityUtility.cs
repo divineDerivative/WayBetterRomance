@@ -96,7 +96,7 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// If marriage would be allowed between <paramref name="first"/> and <paramref name="second"/>. Checks is spouses are allowed, attraction, and asexual rating.
+        /// Checks if a marriage between <paramref name="first"/> and <paramref name="second"/> is allowed by orientation, settings, and sex repulsion rules
         /// </summary>
         /// <param name="first"></param>
         /// <param name="second"></param>
@@ -133,6 +133,7 @@ namespace BetterRomance
             return true;
         }
 
+        /// Checks if a love relation between <paramref name="first"/> and <paramref name="second"/> is allowed by both orientations
         public static bool CouldWeBeLovers(this Pawn first, Pawn second)
         {
             if (first.IsAro() || !RelationsUtility.AttractedToGender(first, second.gender))

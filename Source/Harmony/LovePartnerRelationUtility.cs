@@ -153,7 +153,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static void Postfix(Pawn first, Pawn second, ref bool __result)
         {
-            if (!__result)
+            if (!__result && Settings.LoveRelationsLoaded)
             {
                 __result = CustomLoveRelationUtility.CheckCustomLoveRelations(first, second) != null;
             }
@@ -166,7 +166,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static void Postfix(Pawn first, Pawn second, ref bool __result)
         {
-            if (!__result)
+            if (!__result && Settings.LoveRelationsLoaded)
             {
                 __result = CustomLoveRelationUtility.CheckCustomLoveRelations(first, second, true) != null;
             }
