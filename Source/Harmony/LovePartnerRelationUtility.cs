@@ -120,28 +120,10 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            LocalBuilder local_maxAgeGap = ilg.DeclareLocal(typeof(float));
-            foreach (CodeInstruction code in instructions)
+            IEnumerable<CodeInstruction> codes = instructions.MaxAgeGapTranspiler(ilg, OpCodes.Ldarg_0, OpCodes.Ldarg_1);
+            foreach (CodeInstruction code in codes)
             {
-                if (code.LoadsConstant(40f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
-                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), parameters: [typeof(float), typeof(float)]);
-                    //need to store this value somewhere
-                    yield return new CodeInstruction(OpCodes.Stloc, local_maxAgeGap.LocalIndex);
-                    yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
-                }
-                else if (code.LoadsConstant(20f))
-                {
-                    //put the stored value on the stack
-                    yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
-                    yield return new CodeInstruction(OpCodes.Div);
-                }
-                else if (code.LoadsConstant(0.001f))
+                if (code.LoadsConstant(0.001f))
                 {
                     yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 0.01f);
                 }
@@ -156,36 +138,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(LovePartnerRelationUtility), "MinPossibleAgeGapAtMinAgeToGenerateAsLovers")]
     public static class LovePartnerRelationUtility_MinPossibleAgeGapAtMinAgeToGenerateAsLovers
     {
-        //I don't really understand what this does, but it's updated to use proper ages
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
-        {
-            bool firstFound = false;
-            LocalBuilder local_p2MinAgeForSex = ilg.DeclareLocal(typeof(float));
-
-            //Calculate and store p2MinAgeForSex first so we can call it easier later
-            yield return new CodeInstruction(OpCodes.Ldarg_1);
-            yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-            yield return new CodeInstruction(OpCodes.Stloc, local_p2MinAgeForSex.LocalIndex);
-
-            foreach (CodeInstruction code in instructions)
-            {
-                if (code.LoadsConstant(14f) && !firstFound)
-                {
-                    firstFound = true;
-
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                }
-                else if (code.LoadsConstant(14f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldloc, local_p2MinAgeForSex.LocalIndex);
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg) => instructions.MinAgeForSexForTwo(OpCodes.Ldarg_0, OpCodes.Ldarg_1, 14f, true, ilg);
     }
 
     //Determines how often a pawn would want to have sex only considering factors on them

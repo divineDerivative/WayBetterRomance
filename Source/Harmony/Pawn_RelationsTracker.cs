@@ -102,24 +102,20 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.CompatibilityWith))]
     public static class Pawn_RelationsTracker_CompatibilityWith
     {
-        //Change from Vanilla:
-        //Age adjustments
-        //Check for humanlike instead of def
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            FieldInfo def = AccessTools.Field(typeof(Thing), nameof(Thing.def));
+            List<CodeInstruction> list =
+            [
+                new CodeInstruction(OpCodes.Ldarg_0),
+                CodeInstruction.LoadField(typeof(Pawn_RelationsTracker), "pawn"),
+            ];
+            IEnumerable<CodeInstruction> codes = instructions.MaxAgeGapTranspiler(ilg, list, null);
 
-            foreach (CodeInstruction code in instructions)
+            FieldInfo def = AccessTools.Field(typeof(Thing), nameof(Thing.def));
+            foreach (CodeInstruction code in codes)
             {
-                if (code.LoadsConstant(20f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.LoadField(typeof(Pawn_RelationsTracker), "pawn");
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 2f);
-                    yield return new CodeInstruction(OpCodes.Div);
-                }
-                else if (code.LoadsField(def))
+                //Check for humanlike instead of def
+                if (code.LoadsField(def))
                 {
                     yield return CodeInstruction.Call(typeof(CompatUtility), nameof(CompatUtility.IsHumanlike));
                 }

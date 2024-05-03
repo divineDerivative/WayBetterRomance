@@ -460,5 +460,90 @@ namespace BetterRomance.HarmonyPatches
             }
             return pawn.story.traits.HasTrait(trait);
         }
+
+        /// <summary>
+        /// Converts hard coded 40f and 20f to call MaxAgeGap and MaxAgeGap / 2f respectively
+        /// </summary>
+        /// <param name="instructions">Instructions from original transpiler</param>
+        /// <param name="ilg">ILGenerator from the original transpiler</param>
+        /// <param name="firstPawn">List of instructions to get the first pawn on the stack</param>
+        /// <param name="secondPawn">If there is a second pawn, list of instructions to get them on the stack</param>
+        /// <returns></returns>
+        public static IEnumerable<CodeInstruction> MaxAgeGapTranspiler(this IEnumerable<CodeInstruction> instructions, ILGenerator ilg, List<CodeInstruction> firstPawn, List<CodeInstruction> secondPawn)
+        {
+            LocalBuilder local_maxAgeGap = null;
+            bool localExists = false;
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsConstant(40f))
+                {
+                    if (!localExists)
+                    {
+                        local_maxAgeGap = ilg.DeclareLocal(typeof(float));
+                        localExists = true;
+                    }
+                    foreach (CodeInstruction instruction in firstPawn)
+                    {
+                        yield return instruction;
+                    }
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
+                    //If there's two pawns, we want to take the lowest result
+                    if (secondPawn != null)
+                    {
+                        foreach (CodeInstruction instruction in secondPawn)
+                        {
+                            yield return instruction;
+                        }
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
+                        yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), parameters: [typeof(float), typeof(float)]);
+                    }
+                    //need to store this value somewhere
+                    yield return new CodeInstruction(OpCodes.Stloc, local_maxAgeGap.LocalIndex);
+                    yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
+                }
+                else if (code.LoadsConstant(20f))
+                {
+                    //If we're only replacing 20f, there's no local variable to load
+                    if (localExists)
+                    {
+                        //put the stored value on the stack
+                        yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
+                    }
+                    else
+                    {
+                        //The only use for this so far only has one pawn
+                        foreach (CodeInstruction instruction in firstPawn)
+                        {
+                            yield return instruction;
+                        }
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
+                    }
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
+                    yield return new CodeInstruction(OpCodes.Div);
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Converts hard coded 40f and 20f to call MaxAgeGap and MaxAgeGap / 2f respectively
+        /// </summary>
+        /// <param name="instructions">Instructions from original transpiler</param>
+        /// <param name="ilg">ILGenerator from the original transpiler</param>
+        /// <param name="firstPawn">OpCode to get the first pawn on the stack</param>
+        /// <param name="secondPawn">If there is a second pawn, OpCode to get them on the stack</param>
+        /// <returns></returns>
+        public static IEnumerable<CodeInstruction> MaxAgeGapTranspiler(this IEnumerable<CodeInstruction> instructions, ILGenerator ilg, OpCode firstPawn, OpCode? secondPawn)
+        {
+            List<CodeInstruction> secondList = null;
+            if (secondPawn != null)
+            {
+                secondList = [new CodeInstruction((OpCode)secondPawn)];
+            }
+            return instructions.MaxAgeGapTranspiler(ilg, [new CodeInstruction(firstPawn)], secondList);
+        }
     }
 }
