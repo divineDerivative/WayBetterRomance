@@ -145,27 +145,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(LovePartnerRelationUtility), "LovinMtbSinglePawnFactor")]
     public static class LovePartnerRelationUtility_LovinMtbSinglePawnFactor
     {
-        //Changes from vanilla:
-        //Age adjustments
-        //No adjustment made for asexual pawns as that is handled elsewhere
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            IEnumerable<CodeInstruction> codes = instructions.RegularSexAges(OpCodes.Ldarg_0);
-            foreach (CodeInstruction code in codes)
-            {
-                if (code.LoadsConstant(14f))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
-                    yield return new CodeInstruction(OpCodes.Sub);
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.RegularSexAges(OpCodes.Ldarg_0).MinAgeForSexTranspiler(OpCodes.Ldarg_0);
     }
 
     //If no vanilla love relations were found, checks custom ones

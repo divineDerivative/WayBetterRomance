@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using UnityEngine;
 using Verse;
 
 namespace BetterRomance.HarmonyPatches
@@ -199,9 +200,20 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="firstCode">OpCode needed to load the first pawn on the stack</param>
         /// <param name="secondCode">OpCode needed to load the second pawn on the stack</param>
         /// <param name="ageToReplace">The exact age to replace, usually 16f or 14f</param>
+        /// <param name="saveSecond">Whether to save the second pawn's min age as a local variable and use it in all but the first replacement</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> MinAgeForSexForTwo(this IEnumerable<CodeInstruction> instructions, OpCode firstCode, OpCode secondCode, float ageToReplace)
+        public static IEnumerable<CodeInstruction> MinAgeForSexForTwo(this IEnumerable<CodeInstruction> instructions, OpCode firstCode, OpCode secondCode, float ageToReplace, bool saveSecond = false, ILGenerator ilg = null)
         {
+            LocalBuilder local_p2MinAgeForSex = null;
+            if (saveSecond)
+            {
+                local_p2MinAgeForSex = ilg.DeclareLocal(typeof(float));
+
+                //Calculate and store p2MinAgeForSex first so we can call it easier later
+                yield return new CodeInstruction(OpCodes.Ldarg_1);
+                yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                yield return new CodeInstruction(OpCodes.Stloc, local_p2MinAgeForSex.LocalIndex);
+            }
             bool firstFound = false;
             foreach (CodeInstruction code in instructions)
             {
@@ -213,8 +225,15 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else if (code.LoadsConstant(ageToReplace))
                 {
-                    yield return new CodeInstruction(secondCode);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                    if (saveSecond)
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldloc, local_p2MinAgeForSex.LocalIndex);
+                    }
+                    else
+                    {
+                        yield return new CodeInstruction(secondCode);
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                    }
                 }
                 else
                 {
@@ -240,6 +259,16 @@ namespace BetterRomance.HarmonyPatches
                         yield return instruction;
                     }
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                }
+                else if (code.LoadsConstant(14f))
+                {
+                    foreach (CodeInstruction instruction in loadPawn)
+                    {
+                        yield return instruction;
+                    }
+                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
+                    yield return new CodeInstruction(OpCodes.Sub);
                 }
                 else
                 {
