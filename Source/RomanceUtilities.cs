@@ -27,7 +27,7 @@ namespace BetterRomance
         /// <param name="pawn"></param>
         /// <param name="otherPawn"></param>
         /// <param name="cheaterList">A list of pawns who will think that <paramref name="pawn"/> cheated on them, regardless of what <paramref name="pawn"/> thinks</param>
-        /// <param name="loverCountOnly">Whether to look at lover count only, otherwise cheating setting/precept is also looked at</param>
+        /// <param name="loverCountOnly">Whether this check is in regards to relationships, as opposed to sex</param>
         /// <returns>True or False</returns>
         public static bool IsThisCheating(Pawn pawn, Pawn otherPawn, out List<Pawn> cheaterList, bool loverCountOnly = false)
         {
@@ -38,6 +38,11 @@ namespace BetterRomance
             {
                 return false;
             }
+            //loverCountOnly is used to differentiate between cheating by having sex with someone and cheating by taking a new lover
+            //The free and approved precept is meant to represent thoughts about sex, not relationships
+            //So you can be totally fine hooking up with other people, but starting a new relationship is not cool
+            //Or the other way around, you can be in as many relationships as you want, but having sex without a relationship first is not cool
+            //Currently used only for the romance attempt interaction worker
             foreach (Pawn p in GetAllLoveRelationPawns(pawn, false, false))
             {
                 //If the pawns have different ideos, I think this will check if the partner would feel cheated on per their ideo and settings
@@ -61,6 +66,7 @@ namespace BetterRomance
         /// <param name="pawn"></param>
         /// <param name="otherPawn"></param>
         /// <param name="cheatOn">The pawn they feel worst about cheating on</param>
+        /// <param name="loverCountOnly">Whether the cheating check should only check the lover count</param>
         /// <returns></returns>
         public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out Pawn cheatOn, bool loverCountOnly = false)
         {

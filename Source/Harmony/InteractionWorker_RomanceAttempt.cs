@@ -119,7 +119,7 @@ namespace BetterRomance.HarmonyPatches
             //This has to happen no matter what, so that it can be passed out
             oldLoversAndFiances = new();
             //If they don't think they're cheating, don't break up with anyone, but keep list for later
-            if (RomanceUtilities.IsThisCheating(pawn, null, out List<Pawn> cheatList))
+            if (RomanceUtilities.IsThisCheating(pawn, null, out List<Pawn> cheatList, true))
             {
                 //Grab all relations
                 int num = 200;

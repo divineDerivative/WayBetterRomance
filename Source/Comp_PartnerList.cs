@@ -87,7 +87,7 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Builds a list of up to five other pawns that <paramref name="pawn"/> finds suitable for the given activity. Looks at romance chance factor for hookups and opinion for dates.
+        /// Builds a list of up to five other people that <paramref name="pawn"/> finds suitable for the given activity. Looks at romance chance factor for hookups and opinion for dates.
         /// </summary>
         /// <param name="pawn">The pawn who is looking</param>
         /// <param name="hookup">Whether this list is for a hookup or a date</param>
@@ -124,7 +124,7 @@ namespace BetterRomance
                 foreach (Pawn p in RomanceUtilities.GetAllSpawnedHumanlikesOnMap(pawn.Map))
                 {
                     //Skip them if they're already in the list, or they share a bed if it's a hookup
-                    if (result.Contains(p) || pawn == p || (RomanceUtilities.DoWeShareABed(pawn, p) && hookup))
+                    if (result.Contains(p) || pawn == p || (hookup && RomanceUtilities.DoWeShareABed(pawn, p)))
                     {
                         continue;
                     }
@@ -139,7 +139,7 @@ namespace BetterRomance
                         continue;
                     }
                     //For hookup check romance factor, for date check opinion
-                    else if ((pawn.relations.SecondaryRomanceChanceFactor(p) > num && hookup) || (pawn.relations.OpinionOf(p) > num && !hookup))
+                    else if ((hookup && pawn.relations.SecondaryRomanceChanceFactor(p) > num) || (!hookup && pawn.relations.OpinionOf(p) > num))
                     {
                         //This will skip people who recently turned them down
                         Thought_Memory memory = pawn.needs.mood.thoughts.memories.Memories.Find(delegate (Thought_Memory x)
@@ -147,7 +147,7 @@ namespace BetterRomance
                             return x.def == (hookup ? RomanceDefOf.RebuffedMyHookupAttempt : RomanceDefOf.RebuffedMyDateAttempt) && x.otherPawn == p;
                         });
                         //Need to also check opinion against setting for a hookup
-                        if ((memory == null && pawn.relations.OpinionOf(p) >= pawn.MinOpinionForHookup()) || !hookup)
+                        if (!hookup || (memory == null && pawn.relations.OpinionOf(p) >= pawn.MinOpinionForHookup()))
                         {
                             //romance factor for hookup, opinion for date
                             num = hookup ? pawn.relations.SecondaryRomanceChanceFactor(p) : pawn.relations.OpinionOf(p);

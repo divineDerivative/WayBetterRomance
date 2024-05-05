@@ -111,7 +111,7 @@ namespace BetterRomance
             {
                 return true;
             }
-            if (RomanceUtilities.WillPawnContinue(target, asker, out _))
+            if (RomanceUtilities.WillPawnContinue(target, asker, out _, true))
             {
                 //Definitely not cheating, or they decided to cheat
                 //Same math as agreeing to a hookup but no asexual check

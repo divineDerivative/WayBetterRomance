@@ -1,7 +1,4 @@
-using HarmonyLib;
 using RimWorld;
-using System;
-using System.Collections.Generic;
 using Verse;
 using Verse.AI;
 
@@ -45,7 +42,16 @@ namespace BetterRomance
             {
                 return null;
             }
-            //should I add something for cheating? like,if it's cheating, change it to a hangout, or cancel it?
+            //Check for cheating and turn it into hanging out if they don't want to cheat
+            //Use true because this is not about sex
+            if (RomanceUtilities.IsThisCheating(pawn, partner, out _, true))
+            {
+                //Also check if they even want a date
+                if (RomanceUtilities.CheatingChance(pawn) == 0f || !DateUtility.IsDateAppealing(pawn, partner))
+                {
+                    return JobMaker.MakeJob(RomanceDefOf.ProposeHangout, partner);
+                }
+            }
             //Create the job based on romance factor
             return pawn.relations.SecondaryRomanceChanceFactor(partner) > 0.2f ? JobMaker.MakeJob(RomanceDefOf.ProposeDate, partner) : JobMaker.MakeJob(RomanceDefOf.ProposeHangout, partner);
         }
