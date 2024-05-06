@@ -179,24 +179,3 @@ namespace BetterRomance
         public bool listMadeEver = false;
     }
 }
-
-//This is the patch to apply the comp only to pawns with the joy need, since it's only used for joy activities
-//Also adds the asexual comp to asexual pawns
-namespace BetterRomance.HarmonyPatches
-{
-    [HarmonyPatch(typeof(Pawn_NeedsTracker), nameof(Pawn_NeedsTracker.AddOrRemoveNeedsAsAppropriate))]
-    public static class Pawn_NeedsTracker_AddOrRemoveNeedsAsAppropriate
-    {
-        public static void Postfix(Pawn_NeedsTracker __instance, Pawn ___pawn)
-        {
-            if (__instance.joy != null)
-            {
-                ___pawn.CheckForComp<Comp_PartnerList>();
-            }
-            if (___pawn.IsAsexual())
-            {
-                ___pawn.CheckForComp<Comp_SexRepulsion>();
-            }
-        }
-    }
-}
