@@ -16,7 +16,7 @@ namespace BetterRomance.HarmonyPatches
         //Turns the asexual trait rect into a button that opens the sexuality tab
         public static void Postfix(ref Rect r, Trait trait)
         {
-            if (SexualityUtility.asexualTraits.Contains(trait.def))
+            if (SexualityUtility.asexualTraits.Contains(trait.def) && Current.ProgramState == ProgramState.Playing)
             {
                 if (Widgets.ButtonInvisible(r))
                 {
