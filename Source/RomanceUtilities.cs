@@ -73,18 +73,16 @@ namespace BetterRomance
             cheatOn = null;
             if (IsThisCheating(pawn, otherPawn, out List<Pawn> cheatedOnList, loverCountOnly))
             {
-                if (!cheatedOnList.NullOrEmpty())
+                //If pawn thinks they're cheating but no one would be upset about it, just use their love relations to decide
+                if (cheatedOnList.NullOrEmpty())
                 {
-                    //At this point, both the pawn and a non-zero number of partners consider this cheating
-                    //Generate random value, and compare to opinion of most liked partner and base cheat chance
-                    if (Rand.Value > CheatingChance(pawn) * PartnerFactor(pawn, cheatedOnList, out cheatOn))
-                    {
-                        return false;
-                    }
+                    cheatedOnList = GetAllLoveRelationPawns(pawn, false, false);
                 }
-                //Pawn thinks they are cheating, even though no partners will be upset
-                //This can happen with the no spouses mod, which is a bit weird
-                //Letting this continue for now, might change later
+                //Generate random value, and compare to opinion of most liked partner and base cheat chance
+                if (Rand.Value > CheatingChance(pawn) * PartnerFactor(pawn, cheatedOnList, out cheatOn))
+                {
+                    return false;
+                }
             }
             return true;
         }
