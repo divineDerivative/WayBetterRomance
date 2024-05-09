@@ -55,6 +55,13 @@ namespace BetterRomance
         }
 
         public bool TotalCorrect => hetero + homo + bi + none == 100f;
+        public void Reset()
+        {
+            none = 10f;
+            bi = 50f;
+            homo = 20f;
+            hetero = 20f;
+        }
     }
 
     public class CompSettingsCasualSexRace

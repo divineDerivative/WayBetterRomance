@@ -1,4 +1,5 @@
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -120,23 +121,13 @@ namespace BetterRomance
             list.Begin(canvas);
             DrawBaseSexualityChance(list);
             list.Gap();
-            if (list.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
-            {
-                settings.sexualOrientations.none = 10f;
-                settings.sexualOrientations.bi = 50f;
-                settings.sexualOrientations.homo = 20f;
-                settings.sexualOrientations.hetero = 20f;
-            }
+            TwoButtonText(list, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+            { settings.sexualOrientations.Reset(); });
 
             DrawAceOrientationChance(list);
             list.Gap();
-            if (list.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
-            {
-                settings.asexualOrientations.none = 10f;
-                settings.asexualOrientations.bi = 50f;
-                settings.asexualOrientations.homo = 20f;
-                settings.asexualOrientations.hetero = 20f;
-            }
+            TwoButtonText(list, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+            { settings.asexualOrientations.Reset(); });
 
             list.NewColumn();
             DrawCustomRight(list);
@@ -157,6 +148,31 @@ namespace BetterRomance
             list.End();
         }
 
+        public void TwoButtonText(Listing_Standard listing, string firstLabel, Action firstAction, string secondLabel, Action secondAction)
+        {
+            Rect firstRect = listing.GetRect(30f, 0.5f);
+            Rect secondRect = new(firstRect);
+            secondRect.x += secondRect.width;
+            bool firstResult = false;
+            if (!listing.BoundingRectCached.HasValue || firstRect.Overlaps(listing.BoundingRectCached.Value))
+            {
+                firstResult = Widgets.ButtonText(firstRect, firstLabel);
+            }
+            if (firstResult)
+            {
+                firstAction.Invoke();
+            }
+            bool secondResult = false;
+            if (!listing.BoundingRectCached.HasValue || secondRect.Overlaps(listing.BoundingRectCached.Value))
+            {
+                secondResult = Widgets.ButtonText(secondRect, secondLabel);
+            }
+            if (secondResult)
+            {
+                secondAction.Invoke();
+            }
+            listing.Gap(listing.verticalSpacing);
+        }
         private static float sectionHeightOrientation = 0f;
         private static float sectionHeightOther = 0f;
 
