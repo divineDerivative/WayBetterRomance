@@ -37,7 +37,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static Orientation GetOrientation(this Pawn pawn)
         {
-            if (pawn.story != null && pawn.story.traits != null)
+            if (pawn.story?.traits != null)
             {
                 TraitSet traits = pawn.story.traits;
                 if (traits.HasTrait(TraitDefOf.Gay) || traits.HasTrait(RomanceDefOf.HomoAce))
@@ -62,7 +62,7 @@ namespace BetterRomance
 
         public static bool IsAsexual(this Pawn pawn)
         {
-            if (pawn.story != null && pawn.story.traits != null)
+            if (pawn.story?.traits != null)
             {
                 foreach (Trait trait in pawn.story.traits.allTraits)
                 {

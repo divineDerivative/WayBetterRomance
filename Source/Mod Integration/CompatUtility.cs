@@ -23,7 +23,11 @@ namespace BetterRomance
             {
                 return true;
             }
+#if v1_4
             return !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
+#else
+            return pawn.IsMutant || !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
+#endif
         }
 
         public static bool HasNoGrowth(this Pawn pawn)

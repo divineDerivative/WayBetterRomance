@@ -285,6 +285,5 @@ namespace BetterRomance
                 list.CheckboxLabeled("Enable dev logging", ref Settings.debugLogging);
             }
         }
-
     }
 }

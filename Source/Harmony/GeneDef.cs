@@ -11,7 +11,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(GeneDef), "GetDescriptionFull")]
     public static class GeneDef_GetDescriptionFull
     {
-        [HarmonyDebug]
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> AgeCurveTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original, ILGenerator ilg)
         {
