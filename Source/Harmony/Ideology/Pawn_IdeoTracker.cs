@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
 
@@ -12,7 +11,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static void Prefix(ref SimpleCurve ___pawnAgeCertaintyCurve, Pawn ___pawn)
         {
-            if (___pawn.def.defName != "PRFDrone")
+            if (___pawn.def.race.Humanlike)
             {
                 ___pawnAgeCertaintyCurve = null;
             }
