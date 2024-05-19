@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using System;
+using Verse;
 
 namespace BetterRomance
 {
@@ -239,6 +240,160 @@ namespace BetterRomance
                     new CurvePoint((regularSex.maxAgeForSex / 4) + regularSex.declineAtAge, 12f),
                     new CurvePoint(regularSex.maxAgeForSex, 36f)
                 ];
+            }
+        }
+
+        internal void LogToConsole()
+        {
+            LogUtil.Message("--------------------");
+            LogUtil.Error($"WBR_SettingsComp info for {Pawn.Name}");
+            if (orientation is null)
+            {
+                LogUtil.Message("Orientation is null");
+            }
+            else
+            {
+                if (orientation.sexual is null)
+                {
+                    LogUtil.Message($"Sexual orientation is null");
+                }
+                else
+                {
+                    LogUtil.Message($"Sexual orientation: {orientation.sexual.hetero} hetero, {orientation.sexual.homo} homo, {orientation.sexual.bi} bi, {orientation.sexual.none}");
+                }
+                if (orientation.asexual is null)
+                {
+                    LogUtil.Message($"Asexual orientation is null");
+                }
+                else
+                {
+                    LogUtil.Message($"Asexual orientation: {orientation.asexual.hetero} hetero, {orientation.asexual.homo} homo, {orientation.asexual.bi} bi, {orientation.asexual.none}");
+                }
+            }
+
+            if (casualSex is null)
+            {
+                LogUtil.Message("Casual sex is null");
+            }
+            else
+            {
+                LogUtil.Message("========Casual sex settings========");
+                LogUtil.Message($"Cares about cheating: {casualSex.caresAboutCheating}");
+                LogUtil.Message($"Will do hookup: {casualSex.willDoHookup}");
+                LogUtil.Message($"Can do ordered hookup: {casualSex.canDoOrderedHookup}");
+                LogUtil.Message($"Hookup rate: {casualSex.hookupRate?.ToString() ?? "null"}");
+                LogUtil.Message($"Alien love chance: {casualSex.alienLoveChance?.ToString() ?? "null"}");
+                LogUtil.Message($"Min opinion for hookup: {casualSex.minOpinionForHookup?.ToString() ?? "null"}");
+                LogUtil.Message($"Min opinion for ordered hookup: {casualSex.minOpinionForOrderedHookup?.ToString() ?? "null"}");
+                LogUtil.Message($"For breeding only: {casualSex.forBreedingOnly}");
+            }
+
+            if (regularSex is null)
+            {
+                LogUtil.Message("Regular sex is null");
+            }
+            else
+            {
+                LogUtil.Message("========Regular sex settings========");
+                LogUtil.Message($"Min age for sex: {regularSex.minAgeForSex}");
+                LogUtil.Message($"Max age for sex: {regularSex.maxAgeForSex}");
+                LogUtil.Message($"Max age gap: {regularSex.maxAgeGap}");
+                LogUtil.Message($"Decline at age: {regularSex.declineAtAge}");
+            }
+
+            if (relations is null)
+            {
+                LogUtil.Message("Relations is null");
+            }
+            else
+            {
+                LogUtil.Message("========Relation settings========");
+                LogUtil.Message($"Spouses allowed: {relations.spousesAllowed}");
+                LogUtil.Message($"Children allowed: {relations.childrenAllowed}");
+                LogUtil.Message($"PawnKind for parent, global: {relations.pawnKindForParentGlobal?.defName ?? "null"}");
+                LogUtil.Message($"PawnKind for parent, female: {relations.pawnKindForParentFemale?.defName ?? "null"}");
+                LogUtil.Message($"PawnKind for parent, male: {relations.pawnKindForParentMale?.defName ?? "null"}");
+                LogUtil.Message($"Min female age to have children: {relations.minFemaleAgeToHaveChildren}");
+                LogUtil.Message($"Usual female age to have children: {relations.usualFemaleAgeToHaveChildren}");
+                LogUtil.Message($"Max female age to have children: {relations.maxFemaleAgeToHaveChildren}");
+                LogUtil.Message($"Min male age to have children: {relations.minMaleAgeToHaveChildren}");
+                LogUtil.Message($"Usual male age to have children: {relations.usualMaleAgeToHaveChildren}");
+                LogUtil.Message($"Max male age to have children: {relations.maxMaleAgeToHaveChildren}");
+                LogUtil.Message($"Max children desired: {relations.maxChildrenDesired}");
+                LogUtil.Message($"Min opinion for romance: {relations.minOpinionRomance?.ToString() ?? "null"}");
+            }
+
+            if (biotech is null)
+            {
+                LogUtil.Message("Biotech is null");
+            }
+            else
+            {
+                LogUtil.Message("========Biotech settings========");
+                //Decide how to represent the curves
+                string str = "";
+                foreach (var point in biotech.maleFertilityAgeFactor)
+                {
+                    str += $"\n({point.x}, {point.y})";
+                }
+                LogUtil.Message($"Male fertility age factor: {str}");
+
+                str = "";
+                foreach (var point in biotech.femaleFertilityAgeFactor)
+                {
+                    str += $"\n({point.x}, {point.y})";
+                }
+                LogUtil.Message($"Female fertility age factor: {str}");
+
+                str = "";
+                foreach (var point in biotech.noneFertilityAgeFactor)
+                {
+                    str += $"\n({point.x}, {point.y})";
+                }
+                LogUtil.Message($"None fertility age factor: {str}");
+
+                str = "";
+                foreach (var point in biotech.ageEffectOnChildbirth)
+                {
+                    str += $"\n({point.x}, {point.y})";
+                }
+                LogUtil.Message($"Age effect on childbirth: {str}");
+
+                LogUtil.Message($"Growth moment ages: {(NoGrowth ? "none" : biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2])}");
+            }
+
+            if (misc is null)
+            {
+                LogUtil.Message("Misc is null");
+            }
+            else
+            {
+                LogUtil.Message("========Misc settings========");
+                LogUtil.Message($"Min age for adulthood: {misc.minAgeForAdulthood}");
+                LogUtil.Message($"Child age: {misc.childAge}");
+                LogUtil.Message($"Adult age for learning: {misc.adultAgeForLearning}");
+                LogUtil.Message($"Age reversal demand age: {misc.ageReversalDemandAge}");
+
+                string str = "";
+                foreach (var point in misc.ageSkillFactor)
+                {
+                    str += $"\n({point.x}, {point.y})";
+                }
+                LogUtil.Message($"Age skill factor: {str}");
+
+                str = "";
+                foreach (var point in misc.ageSkillMaxFactorCurve)
+                {
+                    str += $"\n({point.x}, {point.y})";
+                }
+                LogUtil.Message($"Age skill max factor: {str}");
+
+                str = "";
+                foreach (var point in misc.lovinCurve)
+                {
+                    str += $"\n({point.x}, {point.y})";
+                }
+                LogUtil.Message($"Lovin' MTB curve: {str}");
             }
         }
     }

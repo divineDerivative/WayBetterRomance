@@ -94,6 +94,19 @@ namespace BetterRomance.HarmonyPatches
                     };
                     yield return action3;
                 }
+
+                if (__instance.TryGetComp<WBR_SettingsComp>() is WBR_SettingsComp settingsComp)
+                {
+                    Command_Action action4 = new()
+                    {
+                        defaultLabel = "DEV: Log settings comp",
+                        action = delegate
+                        {
+                            settingsComp.LogToConsole();
+                        }
+                    };
+                    yield return action4;
+                }
             }
         }
     }
