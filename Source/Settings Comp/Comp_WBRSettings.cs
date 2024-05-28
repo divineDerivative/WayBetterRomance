@@ -16,6 +16,9 @@ namespace BetterRomance
         public CompSettingsMisc misc;
 
         public bool NoGrowth => biotech.growthMoments == null;
+        private bool calculated = false;
+        public bool Calculated => calculated;
+
         public WBR_SettingsComp Copy() => (WBR_SettingsComp)MemberwiseClone();
 
         public override void Initialize(CompProperties props)
@@ -27,6 +30,7 @@ namespace BetterRomance
             relations = new CompSettingsRelationsPawn();
             biotech = new CompSettingsBiotech();
             misc = new CompSettingsMisc();
+            calculated = false;
 
             foreach (RaceSettings rs in Settings.RaceSettingsList)
             {
@@ -41,12 +45,22 @@ namespace BetterRomance
         //This needs to be done separately from initialization because newly generated pawns won't have their pawnkind set yet
         public void ApplySettings()
         {
-            SetOrientationChances();
-            SetCasualSexSettings();
-            SetRegularSexSettings();
-            SetRelationSettings();
-            SetBiotechSettings();
-            SetMiscSettings();
+            if (!calculated)
+            {
+                SetOrientationChances();
+                SetCasualSexSettings();
+                SetRegularSexSettings();
+                SetRelationSettings();
+                SetBiotechSettings();
+                SetMiscSettings();
+                calculated = true;
+            }
+        }
+
+        public void RedoSettings()
+        {
+            calculated = false;
+            ApplySettings();
         }
 
         private void SetIfNotNull<T>(ref T result, T nullable)
