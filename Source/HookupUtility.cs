@@ -505,7 +505,11 @@ namespace BetterRomance
                 {
                     foreach (Gene gene in initiator.genes.GenesListForReading)
                     {
+#if v1_4
                         if (gene.Active && gene.def.missingGeneRomanceChanceFactor != 1f && (target.genes == null || !target.genes.HasGene(gene.def)))
+#else
+                        if (gene.Active && gene.def.missingGeneRomanceChanceFactor != 1f && (target.genes == null || !target.genes.HasActiveGene(gene.def)))
+#endif
                         {
                             float value = gene.def.missingGeneRomanceChanceFactor;
                             string kind = string.Empty;
@@ -523,7 +527,11 @@ namespace BetterRomance
                 {
                     foreach (Gene gene in target.genes.GenesListForReading)
                     {
+#if v1_4
                         if (gene.Active && gene.def.missingGeneRomanceChanceFactor != 1f && (initiator.genes == null || !initiator.genes.HasGene(gene.def)))
+#else
+                        if (gene.Active && gene.def.missingGeneRomanceChanceFactor != 1f && (initiator.genes == null || !initiator.genes.HasActiveGene(gene.def)))
+#endif
                         {
                             float value = gene.def.missingGeneRomanceChanceFactor;
                             string kind = string.Empty;
