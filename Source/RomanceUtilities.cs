@@ -281,7 +281,7 @@ namespace BetterRomance
                 comp = p.TryGetComp<T>();
                 if (comp == null)
                 {
-                    LogUtil.Error($"Unable to add {typeof(T).GetType().Name}");
+                    LogUtil.Error($"Unable to add {typeof(T).GetType().Name} to {p.Name}");
                 }
             }
             return comp;

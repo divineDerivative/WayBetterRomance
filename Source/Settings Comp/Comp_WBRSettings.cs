@@ -16,6 +16,7 @@ namespace BetterRomance
         public CompSettingsMisc misc;
 
         public bool NoGrowth => biotech.growthMoments == null;
+        public WBR_SettingsComp Copy() => (WBR_SettingsComp)MemberwiseClone();
 
         public override void Initialize(CompProperties props)
         {
@@ -247,6 +248,7 @@ namespace BetterRomance
         {
             LogUtil.Message("--------------------");
             LogUtil.Error($"WBR_SettingsComp info for {Pawn.Name}");
+            LogUtil.Message($"Race is {raceSettings.race.defName}");
             if (orientation is null)
             {
                 LogUtil.Message("Orientation is null");
