@@ -98,17 +98,19 @@ namespace BetterRomance
         {
             partner = null;
             float partnerFactor = 99999f;
+            float maxOpinion = BetterRomanceMod.settings.maxOpinionCheating;
             foreach (Pawn p in partnerList)
             {
                 float opinion = pawn.relations.OpinionOf(p);
                 float tempOpinionFactor;
                 if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
                 {
-                    tempOpinionFactor = pawn.Map == p.Map ? Mathf.InverseLerp(70f, 15f, opinion) : Mathf.InverseLerp(100f, 50f, opinion);
+                    //Adjust these with new setting
+                    tempOpinionFactor = pawn.Map == p.Map ? Mathf.InverseLerp(maxOpinion + 40f, maxOpinion - 20f, opinion) : Mathf.InverseLerp(100f, maxOpinion, opinion);
                 }
                 else
                 {
-                    tempOpinionFactor = Mathf.InverseLerp(30f, -80f, opinion);
+                    tempOpinionFactor = Mathf.InverseLerp(maxOpinion, -80f, opinion);
                 }
                 if (tempOpinionFactor < partnerFactor)
                 {

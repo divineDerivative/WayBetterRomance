@@ -1,7 +1,9 @@
+using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -30,6 +32,7 @@ namespace BetterRomance
         public float alienLoveChance = 33f;
         public int minOpinionRomance = 5;
         public int minOpinionHookup = 0;
+        public int maxOpinionCheating = 30;
 
         public static string fertilityMod = "None";
         public bool joyOnSlaves = false;
@@ -66,6 +69,7 @@ namespace BetterRomance
             Scribe_Values.Look(ref minOpinionRomance, "minOpinionRomance", 5);
             Scribe_Values.Look(ref cheatChance, "cheatChance", 100.0f);
             Scribe_Values.Look(ref minOpinionHookup, "minOpinionHookup", 0);
+            Scribe_Values.Look(ref maxOpinionCheating, "maxOpinionCheating", 30);
 
             Scribe_Values.Look(ref fertilityMod, "fertilityMod", "None");
             Scribe_Values.Look(ref joyOnSlaves, "joyOnSlaves", false);
@@ -112,17 +116,24 @@ namespace BetterRomance
             Settings.ApplyJoySettings();
         }
 
+        Vector2 scrollPos;
+        static FieldInfo curX = AccessTools.Field(typeof(Listing_Standard), "curX");
+        const float scrollListPadding = 20f;
+        const float secondBoxOffset = -12.01f;
         public override void DoSettingsWindowContents(Rect canvas)
         {
+
             Listing_Standard list = new()
             {
-                ColumnWidth = (canvas.width / 2f) - 17f
+                ColumnWidth = (canvas.width / 2f) - 17f + secondBoxOffset
             };
             list.Begin(canvas);
+
             DrawBaseSexualityChance(list);
             list.Gap();
             TwoButtonText(list, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
             { settings.sexualOrientations.Reset(); });
+            list.Gap();
 
             DrawAceOrientationChance(list);
             list.Gap();
@@ -130,9 +141,22 @@ namespace BetterRomance
             { settings.asexualOrientations.Reset(); });
 
             list.NewColumn();
-            DrawCustomRight(list);
-            list.Gap();
-            if (list.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
+            Rect rightRect = new(0f, 0f, canvas.width, canvas.height)
+            {
+                xMin = (float)curX.GetValue(list)
+            };
+            Rect viewRect = new(0f, 0f, rightRect.width - scrollListPadding, scrollViewHeight);
+
+            Widgets.BeginScrollView(rightRect, ref scrollPos, viewRect, true);
+            Listing_Standard scrollList = new(rightRect, () => scrollPos)
+            {
+                maxOneColumn = true
+            };
+            scrollList.Begin(viewRect);
+
+            DrawCustomRight(scrollList);
+            scrollList.Gap();
+            if (scrollList.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
             {
                 settings.dateRate = 100f;
                 settings.hookupRate = 100f;
@@ -140,11 +164,15 @@ namespace BetterRomance
                 settings.minOpinionRomance = 5;
                 settings.cheatChance = 100f;
                 settings.minOpinionHookup = 0;
+                settings.maxOpinionCheating = 30;
             }
 
-            list.Gap();
-            DrawRightMisc(list);
+            scrollList.Gap();
+            DrawRightMisc(scrollList);
 
+            scrollViewHeight = scrollList.MaxColumnHeightSeen;
+            scrollList.End();    
+            Widgets.EndScrollView();
             list.End();
         }
 
@@ -175,10 +203,10 @@ namespace BetterRomance
         }
         private static float sectionHeightOrientation = 0f;
         private static float sectionHeightOther = 0f;
+        private static float scrollViewHeight = 0f;
 
         private static Listing_Standard DrawCustomSectionStart(Listing_Standard listing, float height, string label, string tooltip = null)
         {
-            listing.Gap();
             listing.Label(label, -1f, tooltip);
             Listing_Standard listing_Standard = listing.BeginSection(height, 8f, 6f);
             listing_Standard.maxOneColumn = true;
@@ -258,6 +286,8 @@ namespace BetterRomance
             settings.minOpinionRomance = Mathf.RoundToInt(list.Slider(settings.minOpinionRomance, -100f, 100f));
             list.Label("WBR.MinOpinionHookup".Translate() + " " + settings.minOpinionHookup, tooltip: "WBR.MinOpinionHookupTip".Translate());
             settings.minOpinionHookup = Mathf.RoundToInt(list.Slider(settings.minOpinionHookup, -100f, 50f));
+            list.Label("WBR.MaxOpinionCheating".Translate() + " " + settings.maxOpinionCheating, tooltip: "WBR.MaxOpinionCheatingTip".Translate());
+            settings.maxOpinionCheating = Mathf.RoundToInt(list.Slider(settings.maxOpinionCheating, 0f, 100f));
             DrawCustomSectionEnd(listing, list, out sectionHeightOther);
         }
 
