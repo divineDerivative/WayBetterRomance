@@ -97,7 +97,10 @@
   <ItemGroup>
     <Compile Include="Harmony\Anomaly\PsychicRitualDef_Chronophagy.cs" />
     <Compile Include="Harmony\Anomaly\PsychicRitualToil_Chronophagy.cs" />
-    <Compile Include="Harmony\DynamicTranspilers.cs" />
+    <Compile Include="Harmony\Dynamic Transpilers\AdultMinAge.cs" />
+    <Compile Include="Harmony\Dynamic Transpilers\DynamicTranspilers.cs" />
+    <Compile Include="Harmony\Dynamic Transpilers\RegularSexSettings.cs" />
+    <Compile Include="Harmony\Dynamic Transpilers\RelationsSettings.cs" />
     <Compile Include="Harmony\Ideology\Pawn_IdeoTracker.cs" />
     <Compile Include="Harmony\PawnRelationWorker_Spouse.cs" />
     <Compile Include="Harmony\Pawn_NeedsTracker.cs" />

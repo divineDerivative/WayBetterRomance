@@ -109,21 +109,7 @@ namespace BetterRomance.HarmonyPatches
                 new CodeInstruction(OpCodes.Ldarg_0),
                 CodeInstruction.LoadField(typeof(Pawn_RelationsTracker), "pawn"),
             ];
-            IEnumerable<CodeInstruction> codes = instructions.MaxAgeGapTranspiler(ilg, list, null);
-
-            FieldInfo def = AccessTools.Field(typeof(Thing), nameof(Thing.def));
-            foreach (CodeInstruction code in codes)
-            {
-                //Check for humanlike instead of def
-                if (code.LoadsField(def))
-                {
-                    yield return CodeInstruction.Call(typeof(CompatUtility), nameof(CompatUtility.IsHumanlike));
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
+            return instructions.MaxAgeGapTranspiler(ilg, list, null).DefToHumanlike(false);
         }
     }
 

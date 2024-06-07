@@ -2,6 +2,7 @@
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
 
@@ -181,6 +182,31 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
             return pawn.story.traits.HasTrait(trait);
+        }
+
+        public static IEnumerable<CodeInstruction> DefToHumanlike(this IEnumerable<CodeInstruction> instructions, bool useRaceProps)
+        {
+            FieldInfo def = AccessTools.Field(typeof(Thing), nameof(Thing.def));
+            foreach (CodeInstruction code in instructions)
+            {
+                //Check for humanlike instead of def
+                if (code.LoadsField(def))
+                {
+                    if (useRaceProps)
+                    {
+                        yield return CodeInstructionMethods.Call(AccessTools.PropertyGetter(typeof(Pawn), nameof(Pawn.RaceProps)));
+                        yield return CodeInstructionMethods.Call(AccessTools.PropertyGetter(typeof(RaceProperties), nameof(RaceProperties.Humanlike)));
+                    }
+                    else
+                    {
+                        yield return CodeInstruction.Call(typeof(CompatUtility), nameof(CompatUtility.IsHumanlike));
+                    }
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
         }
     }
 }
