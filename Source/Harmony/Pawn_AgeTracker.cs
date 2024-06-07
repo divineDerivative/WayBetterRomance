@@ -10,19 +10,17 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            var codes = instructions.MinAgeForAdulthoodTranspiler(
+            IEnumerable<CodeInstruction> codes = instructions.MinAgeForAdulthoodTranspiler(
             [
                 new CodeInstruction(OpCodes.Ldarg_0),
                 InfoHelper.AgeTrackerPawn.LoadField(),
             ], false);
+
             foreach (CodeInstruction code in codes)
             {
                 if (code.LoadsConstant(11f))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0)
-                    {
-                        labels = code.labels
-                    };
+                    yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code);
                     yield return InfoHelper.AgeTrackerPawn.LoadField();
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
                     yield return new CodeInstruction(OpCodes.Callvirt, InfoHelper.AdultMinAge);

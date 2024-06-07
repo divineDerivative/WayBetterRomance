@@ -10,11 +10,10 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(PawnGenerator), nameof(PawnGenerator.TryGenerateSexualityTraitFor))]
     public static class PawnGenerator_TryGenerateSexualityTraitFor
     {
-        public static bool Prefix(Pawn pawn, bool allowGay)
+        public static bool Prefix(Pawn pawn)
         {
             //Just use my method instead
             pawn.EnsureTraits();
-            //Do anything with the allowGay bool?
             return false;
         }
     }

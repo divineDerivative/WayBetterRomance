@@ -7,7 +7,6 @@ using Verse;
 
 namespace BetterRomance.HarmonyPatches
 {
-
     [HarmonyPatch(typeof(Pawn), nameof(Pawn.GetGizmos))]
     public static class Pawn_GetGizmos
     {
@@ -15,6 +14,7 @@ namespace BetterRomance.HarmonyPatches
         [HarmonyPatch(MethodType.Enumerator)]
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            //Can't just replace 13 because the exact same instruction is used as part of the MoveNext process
             List<CodeInstruction> codes = instructions.ToList();
             for (int i = 0; i < codes.Count; i++)
             {
