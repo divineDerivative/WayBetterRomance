@@ -91,11 +91,18 @@ namespace BetterRomance
                     //Something has gone wrong and growth moments need to be calculated
                     Log.Warning("Growth moment ages for " + race.defName + " do not make sense. Child at " + childAge + ", adult at " + adultAge + ", growth ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
                     biotech.growthMoments = GrowthMomentArray(childAge, adultAge);
-                    Log.Warning("New ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
+                    if (biotech.growthMoments is null)
+                    {
+                        Log.Warning($"Growth moments removed");
+                    }
+                    else
+                    {
+                        Log.Warning("New ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
+                    }
                     //Do I need to reassign the HAR growth moments?
                     if (Settings.HARActive)
                     {
-                        HAR_Integration.SetGrowthMoments(race, biotech.growthMoments.ToList());
+                        HAR_Integration.SetGrowthMoments(race, biotech.growthMoments?.ToList());
                     }
                 }
             }
@@ -104,6 +111,10 @@ namespace BetterRomance
 
         private int[] GrowthMomentArray(int childAge, int adultAge)
         {
+            if (childAge == 0 && adultAge == 0)
+            {
+                return null;
+            }
             int difference = adultAge - childAge;
             int interval = difference / 3;
             if (difference % 3 == 0)
@@ -132,7 +143,8 @@ namespace BetterRomance
             }
             else
             {
-                throw new Exception("Somehow " + difference + " % 3 does not equal 0, 1, or 2");
+                LogUtil.Error($"Error in calculating growth moments for {race.defName}, keeping nonsensical ages. Race mod author needs to fix their life stage ages.");
+                return biotech.growthMoments;
             }
         }
 
