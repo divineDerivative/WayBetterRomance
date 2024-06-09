@@ -46,6 +46,7 @@ namespace BetterRomance
         public static Dictionary<string, string> FertilityMods = new();
         public static bool debugLogging = false;
         public static bool AsimovActive;
+        public static bool PawnmorpherActive;
 
         public static bool LoveRelationsLoaded => !CustomLoveRelationUtility.LoveRelations.EnumerableNullOrEmpty();
         public static List<RaceSettings> RaceSettingsList = new();

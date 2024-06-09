@@ -69,6 +69,10 @@
       <HintPath>..\..\..\..\..\workshop\content\294100\2640710953\1.5\Assemblies\AlienRace.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Pawnmorph">
+      <HintPath>..\..\..\..\..\workshop\content\294100\1786466855\1.5\Assemblies\Pawnmorph.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="RomanceOnTheRim">
       <HintPath>..\..\..\..\..\workshop\content\294100\2654432921\1.4\Assemblies\RomanceOnTheRim.dll</HintPath>
       <Private>False</Private>
@@ -98,6 +102,7 @@
     <Compile Include="Harmony\PawnRelationWorker_Spouse.cs" />
     <Compile Include="Harmony\Pawn_NeedsTracker.cs" />
     <Compile Include="Harmony\StatPart_Age.cs" />
+    <Compile Include="Mod Integration\Pawnmorpher_Integration.cs" />
     <Compile Include="Settings Comp\CompSettingsClasses.cs" />
     <Compile Include="Settings Comp\Comp_WBRSettings.cs" />
     <Compile Include="Harmony\ThinkNode_ChancePerHour_Lovin.cs" />

@@ -106,6 +106,11 @@ namespace BetterRomance
                 harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("Rimder.HarmonyPatches.ChangeStatusOnRelationshipChange,RimderRomanceControl"), "Postfix"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RimderLoveRelationTranspiler)));
                 harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("Rimder.HarmonyPatches.ChangeStatusOnRelationshipChange,RimderRomanceControl"), "Postfix"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RimderExLoveRelationTranspiler)));
             }
+            if (ModsConfig.IsActive("tachyonite.pawnmorpherpublic"))
+            {
+                Settings.PawnmorpherActive = true;
+                harmony.PatchPawnmorpher();
+            }
 
 
             MakeFertilityModList();

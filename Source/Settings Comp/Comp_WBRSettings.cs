@@ -19,7 +19,21 @@ namespace BetterRomance
         private bool calculated = false;
         public bool Calculated => calculated;
 
-        public WBR_SettingsComp Copy() => (WBR_SettingsComp)MemberwiseClone();
+        public void Copy(Pawn newPawn)
+        {
+            WBR_SettingsComp newComp = new()
+            {
+                parent = newPawn,
+                raceSettings = raceSettings,
+                orientation = orientation.Copy(),
+                casualSex = casualSex.Copy(),
+                regularSex = regularSex.Copy(),
+                relations = relations.Copy(),
+                biotech = biotech.Copy(),
+                misc = misc.Copy()
+            };
+            newPawn.AllComps.Add(newComp);
+        }
 
         public override void Initialize(CompProperties props)
         {
@@ -57,10 +71,18 @@ namespace BetterRomance
             }
         }
 
-        public void RedoSettings()
+        public void RedoSettings(bool forRaceChange)
         {
-            calculated = false;
-            ApplySettings();
+            if (forRaceChange && Settings.PawnmorpherActive)
+            {
+                Pawnmorpher_Integration.AdjustAges(this, raceSettings.race, Pawn.def);
+                calculated = true;
+            }
+            else
+            {
+                calculated = false;
+                ApplySettings();
+            }
         }
 
         private void SetIfNotNull<T>(ref T result, T nullable)
@@ -348,28 +370,28 @@ namespace BetterRomance
                 LogUtil.Message("========Biotech settings========");
                 //Decide how to represent the curves
                 string str = "";
-                foreach (var point in biotech.maleFertilityAgeFactor)
+                foreach (CurvePoint point in biotech.maleFertilityAgeFactor)
                 {
                     str += $"\n({point.x}, {point.y})";
                 }
                 LogUtil.Message($"Male fertility age factor: {str}");
 
                 str = "";
-                foreach (var point in biotech.femaleFertilityAgeFactor)
+                foreach (CurvePoint point in biotech.femaleFertilityAgeFactor)
                 {
                     str += $"\n({point.x}, {point.y})";
                 }
                 LogUtil.Message($"Female fertility age factor: {str}");
 
                 str = "";
-                foreach (var point in biotech.noneFertilityAgeFactor)
+                foreach (CurvePoint point in biotech.noneFertilityAgeFactor)
                 {
                     str += $"\n({point.x}, {point.y})";
                 }
                 LogUtil.Message($"None fertility age factor: {str}");
 
                 str = "";
-                foreach (var point in biotech.ageEffectOnChildbirth)
+                foreach (CurvePoint point in biotech.ageEffectOnChildbirth)
                 {
                     str += $"\n({point.x}, {point.y})";
                 }
@@ -391,21 +413,21 @@ namespace BetterRomance
                 LogUtil.Message($"Age reversal demand age: {misc.ageReversalDemandAge}");
 
                 string str = "";
-                foreach (var point in misc.ageSkillFactor)
+                foreach (CurvePoint point in misc.ageSkillFactor)
                 {
                     str += $"\n({point.x}, {point.y})";
                 }
                 LogUtil.Message($"Age skill factor: {str}");
 
                 str = "";
-                foreach (var point in misc.ageSkillMaxFactorCurve)
+                foreach (CurvePoint point in misc.ageSkillMaxFactorCurve)
                 {
                     str += $"\n({point.x}, {point.y})";
                 }
                 LogUtil.Message($"Age skill max factor: {str}");
 
                 str = "";
-                foreach (var point in misc.lovinCurve)
+                foreach (CurvePoint point in misc.lovinCurve)
                 {
                     str += $"\n({point.x}, {point.y})";
                 }

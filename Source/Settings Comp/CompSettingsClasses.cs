@@ -99,6 +99,8 @@ namespace BetterRomance
         public int? minOpinionForOrderedHookup;
         public bool forBreedingOnly;
         //Maybe put the hookup traits here
+
+        public CompSettingsCasualSexPawn Copy() => (CompSettingsCasualSexPawn)MemberwiseClone();
     }
 
     public class CompSettingsRegularSex
@@ -189,6 +191,8 @@ namespace BetterRomance
 
         public int maxChildrenDesired;
         public int? minOpinionRomance;
+
+        public CompSettingsRelationsPawn Copy() => (CompSettingsRelationsPawn)MemberwiseClone();
     }
 
     public class CompSettingsBiotech
