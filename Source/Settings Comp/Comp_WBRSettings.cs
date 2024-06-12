@@ -46,6 +46,11 @@ namespace BetterRomance
             misc = new CompSettingsMisc();
             calculated = false;
 
+            FindRaceSettings();
+        }
+
+        private void FindRaceSettings()
+        {
             foreach (RaceSettings rs in Settings.RaceSettingsList)
             {
                 if (rs.race == parent.def)
@@ -80,7 +85,7 @@ namespace BetterRomance
             }
             else
             {
-                calculated = false;
+                Initialize(props);
                 ApplySettings();
             }
         }
