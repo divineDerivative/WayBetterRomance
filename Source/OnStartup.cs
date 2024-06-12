@@ -110,6 +110,7 @@ namespace BetterRomance
             {
                 Settings.PawnmorpherActive = true;
                 harmony.PatchPawnmorpher();
+                HelperClasses.IsHumanlikePM = AccessTools.Method(Type.GetType("Pawnmorph.FormerHumanUtilities, Pawnmorph"), "IsHumanlike");
             }
 
 
@@ -169,6 +170,7 @@ namespace BetterRomance
         public static FieldInfo AsimovGrowth;
         public static FieldInfo pawnSettings;
         public static Type PawnDef;
+        public static MethodInfo IsHumanlikePM;
     }
 
     public class MayRequireHARAttribute : MayRequireAttribute

@@ -11,7 +11,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static void Prefix(ref SimpleCurve ___pawnAgeCertaintyCurve, Pawn ___pawn)
         {
-            if (___pawn.def.race.Humanlike)
+            if (___pawn.IsHumanlike())
             {
                 ___pawnAgeCertaintyCurve = null;
             }

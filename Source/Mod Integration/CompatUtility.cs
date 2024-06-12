@@ -38,6 +38,25 @@ namespace BetterRomance
         }
 
         /// <summary>
+        /// Allows former humans from Pawnmorpher to be considered as humanlikes
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <returns></returns>
+        public static bool IsHumanlike(this Pawn pawn)
+        {
+            if (pawn.RaceProps.Humanlike)
+            {
+                return true;
+            }
+            if (Settings.PawnmorpherActive)
+            {
+                bool result = (bool)HelperClasses.IsHumanlikePM.Invoke(null, [pawn]);
+                return result;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Checks for various robots that should not have growth moments
         /// </summary>
         /// <param name="race"></param>

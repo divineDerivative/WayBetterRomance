@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //Both should be humanlikes
-            if (!___pawn.RaceProps.Humanlike || !otherPawn.RaceProps.Humanlike)
+            if (!___pawn.IsHumanlike() || !otherPawn.IsHumanlike())
             {
                 __result = 0f;
                 return false;
@@ -121,8 +122,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else if (code.LoadsField(def))
                 {
-                    yield return CodeInstruction.Call(typeof(Pawn), "get_RaceProps");
-                    yield return CodeInstruction.Call(typeof(RaceProperties), "get_Humanlike");
+                    yield return CodeInstruction.Call(typeof(CompatUtility), nameof(CompatUtility.IsHumanlike));
                 }
                 else
                 {

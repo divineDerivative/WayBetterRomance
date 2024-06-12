@@ -1,38 +1,26 @@
 ﻿using HarmonyLib;
 using Pawnmorph;
+using RimWorld;
+using System;
+using System.Reflection;
 using Verse;
 
 namespace BetterRomance
 {
     public static class Pawnmorpher_Integration
     {
-        public static bool IsActuallyHuman(this Pawn pawn)
-        {
-            if (pawn.RaceProps.Humanlike)
-            {
-                return true;
-            }
-            //So far a null original happens when the 'original' is no longer a former human, i.e. has been reverted back to actual human
-            //So the 'pawn' in this case is just an artifact of the transformation hanging around in the save file
-            //And I'm pretty sure they don't need the comp
-            if (pawn.IsFormerHuman(false) && FormerHumanUtilities.GetOriginalPawnOfFormerHuman(pawn) is not null)
-            {
-                return true;
-            }
-            return false;
-        }
-
         /// <summary>
-        /// If <paramref name="pawn"/> is a former human, try to get the original and copy their <see cref="WBR_SettingsComp"/>
+        /// If <paramref name="pawn"/> is a former human, try to get the original and copy their <see cref="WBR_SettingsComp"/>. Gets called when loading pawns from the save file.
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns></returns>
         public static void FormerHumanCompCheck(this Pawn pawn)
         {
-            if (pawn.IsFormerHuman(false))
+            //So far a null original happens when the 'real' pawn is no longer a former human, i.e. has been reverted back to actual human
+            //So the animal pawn in this case is just an artifact of the transformation hanging around in the save file
+            //And I'm pretty sure they don't need the comp
+            if (pawn.IsFormerHuman(false) && FormerHumanUtilities.GetOriginalPawnOfFormerHuman(pawn) is Pawn original)
             {
-                //Should not get to this point if the original is null
-                Pawn original = FormerHumanUtilities.GetOriginalPawnOfFormerHuman(pawn);
                 if (original.TryGetComp<WBR_SettingsComp>() is WBR_SettingsComp originalComp)
                 {
                     //Copy the comp and then redo the ages
@@ -88,7 +76,7 @@ namespace BetterRomance
             comp.misc.lovinCurve = comp.misc.lovinCurve.ConvertCurve(oldLE, newLE);
         }
 
-        public static SimpleCurve ConvertCurve(this SimpleCurve curve, float oldLE, float newLE)
+        private static SimpleCurve ConvertCurve(this SimpleCurve curve, float oldLE, float newLE)
         {
             SimpleCurve newCurve = new();
             foreach (CurvePoint point in curve)
@@ -97,7 +85,8 @@ namespace BetterRomance
             }
             return newCurve;
         }
-        public static int[] ConvertGrowthMoments(this int[] array, float oldLE, float newLE)
+
+        private static int[] ConvertGrowthMoments(this int[] array, float oldLE, float newLE)
         {
             return
             [
@@ -115,6 +104,11 @@ namespace BetterRomance
             public static void PatchPawnmorpher(this Harmony harmony)
             {
                 harmony.Patch(typeof(FormerHumanUtilities).GetMethod(nameof(FormerHumanUtilities.TransferEverything)), postfix: new HarmonyMethod(typeof(PawnmorpherPatches).GetMethod(nameof(TransferEverythingPostfix))));
+                Type InteractionPatches = AccessTools.TypeByName("Pawnmorph.HPatches.InteractionPatches");
+                MethodInfo lovin = AccessTools.Method(AccessTools.Inner(InteractionPatches, "SecondaryLoveFactorPatch"), "SecondaryLovinChanceFactor");
+                harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod(nameof(Pawn_RelationsTracker.SecondaryLovinChanceFactor)), lovin);
+                MethodInfo compatibility = AccessTools.Method(AccessTools.Inner(InteractionPatches, "RelationshipPatches"), "CompatibilityWithPostfix");
+                harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), compatibility);
             }
 
             //This happens whenever a former human is generated, either on its own or by transforming an existing pawn
