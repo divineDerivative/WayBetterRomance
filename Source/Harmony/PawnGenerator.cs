@@ -86,6 +86,8 @@ namespace BetterRomance.HarmonyPatches
     }
 
     [HarmonyPatch(typeof(PawnGenerator), "FinalLevelOfSkill")]
+    [HarmonyAfter(["rimworld.erdelf.alien_race.main"])]
+    //I go second, so my curves will be used if there's not one provided for HAR
     public static class PawnGenerator_FinalLevelOfSkill
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
