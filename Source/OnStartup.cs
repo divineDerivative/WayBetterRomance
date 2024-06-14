@@ -20,12 +20,6 @@ namespace BetterRomance
                 SettingsUtilities.GrabBiotechStuff();
             }
             Harmony harmony = new(id: "rimworld.divineDerivative.romance");
-
-            if (ModsConfig.IsActive("GrillMaster.integratedcreepjoiners"))
-            {
-                harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod(nameof(Pawn_RelationsTracker.CompatibilityWith)), AccessTools.Method("Harmony_Pawn_RelationsTracker_CompatibilityWith:Transpiler"));
-            }
-
             harmony.PatchAll();
 
             if (ModsConfig.IsActive("erdelf.humanoidalienraces") || ModsConfig.IsActive("erdelf.humanoidalienraces.dev"))
