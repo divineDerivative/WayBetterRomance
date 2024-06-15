@@ -379,7 +379,7 @@ namespace BetterRomance
             {
                 if (curOccupant != pawn && LovePartnerRelationUtility.LovePartnerRelationExists(pawn, curOccupant))
                 {
-                    if (curOccupant.IsAsexual() && curOccupant.AsexualRating() < 0.2f)
+                    if (curOccupant.SexRepulsed())
                     {
                         continue;
                     }

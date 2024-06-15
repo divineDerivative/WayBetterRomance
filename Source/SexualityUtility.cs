@@ -105,15 +105,7 @@ namespace BetterRomance
             {
                 return false;
             }
-            if (first.IsAsexual() && second.IsAsexual())
-            {
-                return true;
-            }
-            if (first.IsAsexual() && first.AsexualRating() < 0.2f)
-            {
-                return false;
-            }
-            if (second.IsAsexual() && second.AsexualRating() < 0.2f)
+            if (first.SexRepulsed(second) || second.SexRepulsed(first))
             {
                 return false;
             }
@@ -131,6 +123,28 @@ namespace BetterRomance
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// If <paramref name="pawn"/>'s asexual rating is low enough to refuse all sex. If <paramref name="other"/> is provided, they must also be asexual for result to be false.
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static bool SexRepulsed(this Pawn pawn, Pawn other = null)
+        {
+            return pawn.IsAsexual() && pawn.AsexualRating() < 0.2f && (other == null || !other.IsAsexual());
+        }
+
+        /// <summary>
+        /// If <paramref name="pawn"/>'s asexual rating is low enough to only accept sex from existing partners. If <paramref name="other"/> is provided, checks whether they are in a relationship.
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static bool SexAverse(this Pawn pawn, Pawn other = null)
+        {
+            return pawn.IsAsexual() && pawn.AsexualRating() < 0.5f && (other == null || !LovePartnerRelationUtility.LovePartnerRelationExists(pawn, other));
         }
     }
 

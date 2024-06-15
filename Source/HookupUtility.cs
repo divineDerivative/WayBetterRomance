@@ -343,13 +343,10 @@ namespace BetterRomance
                 return 0f;
             }
             //Asexual pawns below a certain rating will only agree to sex with existing partners
-            if (target.IsAsexual() && target.AsexualRating() < 0.5f)
+            //They'll also refuse partners if rating is low enough
+            if (target.SexRepulsed() || target.SexAverse(asker))
             {
-                //They'll also refuse partners if rating is low enough
-                if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker) || target.AsexualRating() < 0.2f)
-                {
-                    return 0f;
-                }
+                return 0f;
                 //Otherwise their rating is already factored in via secondary romance chance factor
             }
 
@@ -493,7 +490,7 @@ namespace BetterRomance
                 text.AppendLine(HookupFactorLine("WBR.HookupChanceBeautyFactor".Translate(), prettyFactor));
             }
             //Adjustment for any sexuality incompatibilities
-            float sexualityFactor = target.IsAsexual() && target.AsexualRating() < 0.5f ? 0f : RomanceUtilities.SexualityFactor(target, initiator);
+            float sexualityFactor = target.SexAverse() ? 0f : RomanceUtilities.SexualityFactor(target, initiator);
             if (sexualityFactor != 1f)
             {
                 text.AppendLine(HookupFactorLine("WBR.HookupChanceSexuality".Translate(), sexualityFactor));

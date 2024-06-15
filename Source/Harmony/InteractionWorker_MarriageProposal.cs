@@ -43,13 +43,10 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //If they are asexual and sex repulsed, do not allow unless partner is also asexual
-            if (initiator.IsAsexual() && initiator.AsexualRating() < 0.2f)
+            if (initiator.SexRepulsed(recipient))
             {
-                if (!recipient.IsAsexual())
-                {
-                    __result = 0f;
-                    return false;
-                }
+                __result = 0f;
+                return false;
             }
             return true;
         }
@@ -108,13 +105,10 @@ namespace BetterRomance.HarmonyPatches
             }
             //If pawn is asexual and sex repulsed, they will only accept from another asexual pawn
             //Not sure about this
-            if (recipient.IsAsexual() && recipient.AsexualRating() < 0.2f)
+            if (recipient.SexRepulsed(initiator))
             {
-                if (!initiator.IsAsexual())
-                {
-                    __result = 0f;
-                    return;
-                }
+                __result = 0f;
+                return;
             }
             //If pawnkind/race doesn't allow spouses, they will not accept
             if (!recipient.SpouseAllowed())

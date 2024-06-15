@@ -10,12 +10,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static void Postfix(Pawn generated, Pawn other, ref float __result)
         {
-            if (generated.IsAsexual() && generated.AsexualRating() < 0.2f && !other.IsAsexual())
-            {
-                __result = 0f;
-                return;
-            }
-            if (other.IsAsexual() && other.AsexualRating() < 0.2f && !generated.IsAsexual())
+            if (generated.SexRepulsed(other) || other.SexRepulsed(generated))
             {
                 __result = 0f;
                 return;
