@@ -298,7 +298,7 @@ namespace BetterRomance
         public static float SexualityFactor(Pawn pawn, Pawn target)
         {
             float factor = 1f;
-            if (pawn.IsAsexual())
+            if (pawn.IsAsexual() && !target.IsAsexual())
             {
                 factor *= pawn.AsexualRating() / 2;
             }
