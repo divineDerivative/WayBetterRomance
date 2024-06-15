@@ -21,67 +21,19 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(PawnGenerator), "GenerateSkills")]
     public static class PawnGenerator_GenerateSkills
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            IEnumerable<CodeInstruction> codes = instructions.AdultMinAgeInt(OpCodes.Ldarg_0);
-            bool done = false;
-            foreach (CodeInstruction code in codes)
-            {
-                if (!done && code.LoadsConstant(3))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ChildAge));
-                    done = true;
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AdultMinAgeInt(OpCodes.Ldarg_0).ChildAgeTranspiler(new CodeInstruction(OpCodes.Ldarg_0), false);
     }
 
     [HarmonyPatch(typeof(PawnGenerator), "GenerateTraits")]
     public static class PawnGenerator_GenerateTraits
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            IEnumerable<CodeInstruction> codes = instructions.AdultMinAgeInt(OpCodes.Ldarg_0);
-            foreach (CodeInstruction code in codes)
-            {
-                if (code.LoadsConstant(3))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ChildAge));
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AdultMinAgeInt(OpCodes.Ldarg_0).ChildAgeTranspiler(new CodeInstruction(OpCodes.Ldarg_0));
     }
 
     [HarmonyPatch(typeof(PawnGenerator), "GenerateInitialHediffs")]
     public static class PawnGenerator_GenerateInitialHediffs
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            var codes = instructions.MinAgeForAdulthoodTranspiler(OpCodes.Ldarg_0, true);
-            foreach (CodeInstruction code in codes)
-            {
-                if (code.LoadsConstant(16))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                    yield return new CodeInstruction(OpCodes.Conv_I4);
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.MinAgeForAdulthoodTranspiler(OpCodes.Ldarg_0, true).MinAgeForSexTranspiler(OpCodes.Ldarg_0);
     }
 
     [HarmonyPatch(typeof(PawnGenerator), "FinalLevelOfSkill")]

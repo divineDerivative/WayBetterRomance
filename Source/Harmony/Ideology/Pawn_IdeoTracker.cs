@@ -19,15 +19,9 @@ namespace BetterRomance.HarmonyPatches
 
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction code in instructions)
+            foreach (CodeInstruction code in instructions.ChildAgeTranspiler(InfoHelper.AgeTrackerPawn.LoadField()))
             {
-                if (code.LoadsField(typeof(LifeStageDefOf), nameof(LifeStageDefOf.HumanlikeChild)))
-                {
-                    //get pawn out of the age tracker
-                    yield return InfoHelper.AgeTrackerPawn.LoadField();
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ChildAge));
-                }
-                else if (code.LoadsField(typeof(LifeStageDefOf), nameof(LifeStageDefOf.HumanlikeAdult)))
+                if (code.LoadsField(typeof(LifeStageDefOf), nameof(LifeStageDefOf.HumanlikeAdult)))
                 {
                     yield return InfoHelper.AgeTrackerPawn.LoadField();
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.AdultAgeForLearning));

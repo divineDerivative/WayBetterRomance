@@ -98,13 +98,17 @@ namespace BetterRomance.HarmonyPatches
         {
             foreach (CodeInstruction code in instructions)
             {
-                if (code.LoadsConstant(16f))
+                if (code.LoadsConstant(16f) || code.LoadsConstant(16))
                 {
                     foreach (CodeInstruction instruction in loadPawn)
                     {
                         yield return instruction;
                     }
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                    if (code.LoadsConstant(16))
+                    {
+                        yield return new CodeInstruction(OpCodes.Conv_I4);
+                    }
                 }
                 else if (code.LoadsConstant(14f))
                 {
