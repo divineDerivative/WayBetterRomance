@@ -159,9 +159,17 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        private static FieldInfo TraitSetPawn = AccessTools.Field(typeof(TraitSet), "pawn");
+        private static Pawn GetPawn(this TraitSet set) => (Pawn)TraitSetPawn.GetValue(set);
+        /// <summary>
+        /// Checks if a pawn has an orientation matching the original trait
+        /// </summary>
+        /// <param name="set"></param>
+        /// <param name="trait"></param>
+        /// <returns></returns>
         public static bool TraitConversion(TraitSet set, TraitDef trait)
         {
-            Pawn pawn = (Pawn)AccessTools.Field(typeof(TraitSet), "pawn").GetValue(set);
+            Pawn pawn = set.GetPawn();
             if (traits.Contains(trait))
             {
                 if (trait == TraitDefOf.Gay)
@@ -184,12 +192,17 @@ namespace BetterRomance.HarmonyPatches
             return pawn.story.traits.HasTrait(trait);
         }
 
+        /// <summary>
+        /// Changes .def to .RaceProps.Humanlike or .IsHumanlike
+        /// </summary>
+        /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <param name="useRaceProps">Use true if former humans should not be included, false if they should be</param>
+        /// <returns></returns>
         public static IEnumerable<CodeInstruction> DefToHumanlike(this IEnumerable<CodeInstruction> instructions, bool useRaceProps)
         {
             FieldInfo def = AccessTools.Field(typeof(Thing), nameof(Thing.def));
             foreach (CodeInstruction code in instructions)
             {
-                //Check for humanlike instead of def
                 if (code.LoadsField(def))
                 {
                     if (useRaceProps)
@@ -209,6 +222,12 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        /// <summary>
+        /// Skips over anything that comes after checking if a pawn has the Gay trait
+        /// </summary>
+        /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <param name="label">Jump to this label. If not provided, the operand is not changed.</param>
+        /// <returns></returns>
         public static IEnumerable<CodeInstruction> SkipGayCheckTranspiler(this IEnumerable<CodeInstruction> instructions, Label? label = null)
         {
 
