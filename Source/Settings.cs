@@ -172,7 +172,7 @@ namespace BetterRomance
             DrawRightMisc(scrollList);
 
             scrollViewHeight = scrollList.MaxColumnHeightSeen;
-            scrollList.End();    
+            scrollList.End();
             Widgets.EndScrollView();
             list.End();
         }

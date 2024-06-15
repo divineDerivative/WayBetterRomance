@@ -113,7 +113,6 @@ namespace BetterRomance
                 HelperClasses.IsHumanlikePM = AccessTools.Method(Type.GetType("Pawnmorph.FormerHumanUtilities, Pawnmorph"), "IsHumanlike");
             }
 
-
             MakeFertilityModList();
             Settings.ApplyJoySettings();
             MakeRaceSettingsList();
