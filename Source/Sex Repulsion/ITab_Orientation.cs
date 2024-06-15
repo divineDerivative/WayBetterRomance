@@ -17,7 +17,7 @@ namespace BetterRomance
                 {
                     return false;
                 }
-                return SelPawn.RaceProps.Humanlike;
+                return SelPawn.IsHumanlike();
             }
         }
 
@@ -82,7 +82,7 @@ namespace BetterRomance
 
         public bool CanShowSexualityTab()
         {
-            return SelPawn.RaceProps.Humanlike;
+            return SelPawn.IsHumanlike();
         }
     }
 }

@@ -99,6 +99,8 @@ namespace BetterRomance
         public int? minOpinionForOrderedHookup;
         public bool forBreedingOnly;
         //Maybe put the hookup traits here
+
+        public CompSettingsCasualSexPawn Copy() => (CompSettingsCasualSexPawn)MemberwiseClone();
     }
 
     public class CompSettingsRegularSex
@@ -108,10 +110,7 @@ namespace BetterRomance
         public float maxAgeGap = -999f;
         public float declineAtAge = -999f;
 
-        public CompSettingsRegularSex Copy()
-        {
-            return (CompSettingsRegularSex)MemberwiseClone();
-        }
+        public CompSettingsRegularSex Copy() => (CompSettingsRegularSex)MemberwiseClone();
 
         public CompSettingsRegularSex Default()
         {
@@ -192,6 +191,8 @@ namespace BetterRomance
 
         public int maxChildrenDesired;
         public int? minOpinionRomance;
+
+        public CompSettingsRelationsPawn Copy() => (CompSettingsRelationsPawn)MemberwiseClone();
     }
 
     public class CompSettingsBiotech
@@ -202,10 +203,7 @@ namespace BetterRomance
         public SimpleCurve ageEffectOnChildbirth;
         public int[] growthMoments;
 
-        public CompSettingsBiotech Copy()
-        {
-            return (CompSettingsBiotech)MemberwiseClone();
-        }
+        public CompSettingsBiotech Copy() => (CompSettingsBiotech)MemberwiseClone();
     }
 
     public class CompSettingsMisc
@@ -218,9 +216,6 @@ namespace BetterRomance
         public SimpleCurve ageSkillMaxFactorCurve;
         public SimpleCurve lovinCurve;
 
-        public CompSettingsMisc Copy()
-        {
-            return (CompSettingsMisc)MemberwiseClone();
-        }
+        public CompSettingsMisc Copy() => (CompSettingsMisc)MemberwiseClone();
     }
 }

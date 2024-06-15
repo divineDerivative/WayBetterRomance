@@ -1,5 +1,4 @@
-﻿using HarmonyLib;
-using RimWorld;
+﻿using RimWorld;
 using System.Collections.Generic;
 using Verse;
 using Verse.AI;
@@ -121,7 +120,7 @@ namespace BetterRomance
                 //For a date we can start at zero since we're looking at opinion instead of romance factor
                 float num = hookup ? 0.15f : 0f;
                 Pawn tempPawn = null;
-                foreach (Pawn p in RomanceUtilities.GetAllSpawnedHumanlikesOnMap(pawn.Map))
+                foreach (Pawn p in RomanceUtilities.GetAllSpawnedHumanlikesOnMap(pawn.Map, !hookup))
                 {
                     //Skip them if they're already in the list, or they share a bed if it's a hookup
                     if (result.Contains(p) || pawn == p || (hookup && RomanceUtilities.DoWeShareABed(pawn, p)))

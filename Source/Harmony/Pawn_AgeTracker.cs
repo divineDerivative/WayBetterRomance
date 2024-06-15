@@ -63,7 +63,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.ResetAgeReversalDemand))]
     public static class Pawn_AgeTracker_ResetAgeReversalDemand
     {
-        //This is to initialize all the age settings on the comp, because this is right after their age has been determined and right before they are needed
+        //This is to initialize all the age settings on the comp, because this is right after their age has been determined and right before the settings are needed
         //This only works for new pawn generation
         public static void Prefix(Pawn ___pawn, Pawn_AgeTracker.AgeReversalReason reason)
         {
@@ -74,6 +74,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        [HarmonyBefore(["com.pawnmorpher.mod"])]
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             foreach (CodeInstruction code in instructions)
@@ -103,6 +104,12 @@ namespace BetterRomance.HarmonyPatches
         {
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
+                if (Settings.PawnmorpherActive)
+                {
+                    //This will add the comp to an animal that used to be a human, using the original human's race
+                    //May or may not already be calculated, but race will be correct
+                    ___pawn.FormerHumanCompCheck();
+                }
                 WBR_SettingsComp comp = ___pawn.TryGetComp<WBR_SettingsComp>();
                 comp?.ApplySettings();
             }

@@ -1,26 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-  
-  <JoyGiverDef>
-    <defName>TryHookup</defName>
-    <giverClass>BetterRomance.JoyGiver_CasualHookup</giverClass>
-    <baseChance>5.0</baseChance>
-    <jobDef>LeadHookup</jobDef>
-    <joyKind>Lewd</joyKind>
-  </JoyGiverDef>
-  
-  <JoyGiverDef>
-    <defName>GoOnDate</defName>
-    <giverClass>BetterRomance.JoyGiver_Date</giverClass>
-    <baseChance>2.8</baseChance>
-    <jobDef>ProposeDate</jobDef>
-    <joyKind>Social</joyKind>
-  </JoyGiverDef>
-  
-  <JoyKindDef>
-    <defName>Lewd</defName>
-    <label>romantic fun</label>
-    <needsThing>false</needsThing>
-  </JoyKindDef>
-  
+	<JoyGiverDef>
+		<defName>TryHookup</defName>
+		<giverClass>BetterRomance.JoyGiver_CasualHookup</giverClass>
+		<baseChance>5.0</baseChance>
+		<jobDef>LeadHookup</jobDef>
+		<joyKind>Lewd</joyKind>
+		<modExtensions>
+			<!--No former humans allowed-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<invert>true</invert>
+			</li>
+		</modExtensions>
+	</JoyGiverDef>
+
+	<JoyGiverDef>
+		<defName>GoOnDate</defName>
+		<giverClass>BetterRomance.JoyGiver_Date</giverClass>
+		<baseChance>2.8</baseChance>
+		<jobDef>ProposeDate</jobDef>
+		<joyKind>Social</joyKind>
+		<modExtensions>
+			<!--Only sapient former humans can date-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<filter>
+					<isBlackList>false</isBlackList>
+					<filterList>
+						<li>Sapient</li>
+					</filterList>
+				</filter>
+			</li>
+		</modExtensions>
+	</JoyGiverDef>
+
+	<JoyKindDef>
+		<defName>Lewd</defName>
+		<label>romantic fun</label>
+		<needsThing>false</needsThing>
+		<modExtensions>
+			<!--No former humans allowed-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<invert>true</invert>
+			</li>
+		</modExtensions>
+	</JoyKindDef>
 </Defs>

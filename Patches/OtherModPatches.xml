@@ -104,4 +104,16 @@
 		</match>
 	</Operation>
 
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Pawnmorpher</li>
+		</mods>
+		<match Class="PatchOperationAddModExtension">
+			<xpath>Defs/TraitDef[exclusionTags/li[text()="SexualOrientation"]]</xpath>
+			<value>
+				<li Class="Pawnmorph.DefExtensions.TFTransferable" />
+			</value>
+		</match>
+	</Operation>
+
 </Patch>

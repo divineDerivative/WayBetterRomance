@@ -90,7 +90,7 @@ namespace BetterRomance
                 {
                     //Something has gone wrong and growth moments need to be calculated
                     Log.Warning("Growth moment ages for " + race.defName + " do not make sense. Child at " + childAge + ", adult at " + adultAge + ", growth ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
-                    biotech.growthMoments = GrowthMomentArray(childAge, adultAge);
+                    biotech.growthMoments = RecalculateGrowthMoments(childAge, adultAge);
                     if (biotech.growthMoments is null)
                     {
                         Log.Warning($"Growth moments removed");
@@ -109,7 +109,7 @@ namespace BetterRomance
             //We don't assign a default because some races intentionally have null growthAges
         }
 
-        private int[] GrowthMomentArray(int childAge, int adultAge)
+        private int[] RecalculateGrowthMoments(int childAge, int adultAge)
         {
             if (childAge == 0 && adultAge == 0)
             {

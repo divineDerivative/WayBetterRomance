@@ -7,6 +7,12 @@
 		<reportString>attempting hookup.</reportString>
 		<joyMaxParticipants>1</joyMaxParticipants>
 		<joyKind>Lewd</joyKind>
+		<modExtensions>
+			<!--No former humans allowed-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<invert>true</invert>
+			</li>
+		</modExtensions>
 	</JobDef>
 	<JobDef>
 		<defName>DoLovinCasual</defName>
@@ -17,11 +23,23 @@
 		<joyKind>Lewd</joyKind>
 		<joyGainRate>3</joyGainRate>
 		<casualInterruptible>false</casualInterruptible>
+		<modExtensions>
+			<!--No former humans allowed-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<invert>true</invert>
+			</li>
+		</modExtensions>
 	</JobDef>
 	<JobDef>
 		<defName>OrderedHookup</defName>
 		<driverClass>BetterRomance.JobDriver_LeadHookup</driverClass>
 		<reportString>trying to hookup with TargetA.</reportString>
+		<modExtensions>
+			<!--No former humans allowed-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<invert>true</invert>
+			</li>
+		</modExtensions>
 	</JobDef>
 
 	<!--Dates-->
@@ -30,6 +48,17 @@
 		<driverClass>BetterRomance.JobDriver_ProposeDate</driverClass>
 		<reportString>asking for a date.</reportString>
 		<joyKind>Social</joyKind>
+		<modExtensions>
+			<!--Only sapient former humans can date-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<filter>
+					<isBlackList>false</isBlackList>
+					<filterList>
+						<li>Sapient</li>
+					</filterList>
+				</filter>
+			</li>
+		</modExtensions>
 	</JobDef>
 	<JobDef>
 		<defName>JobDateLead</defName>
@@ -38,6 +67,17 @@
 		<joySkill>Social</joySkill>
 		<joyXpPerTick>0.004</joyXpPerTick>
 		<joyKind>Social</joyKind>
+		<modExtensions>
+			<!--Only sapient former humans can date-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<filter>
+					<isBlackList>false</isBlackList>
+					<filterList>
+						<li>Sapient</li>
+					</filterList>
+				</filter>
+			</li>
+		</modExtensions>
 	</JobDef>
 	<JobDef>
 		<defName>JobDateFollow</defName>
@@ -46,6 +86,17 @@
 		<joySkill>Social</joySkill>
 		<joyXpPerTick>0.004</joyXpPerTick>
 		<joyKind>Social</joyKind>
+		<modExtensions>
+			<!--Only sapient former humans can date-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<filter>
+					<isBlackList>false</isBlackList>
+					<filterList>
+						<li>Sapient</li>
+					</filterList>
+				</filter>
+			</li>
+		</modExtensions>
 	</JobDef>
 	<!--<JobDef>
 		<defName>JobDateMovie</defName>
@@ -63,6 +114,17 @@
 		<driverClass>BetterRomance.JobDriver_ProposeDate</driverClass>
 		<reportString>asking to hang out.</reportString>
 		<joyKind>Social</joyKind>
+		<modExtensions>
+			<!--Only sapient former humans can date-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<filter>
+					<isBlackList>false</isBlackList>
+					<filterList>
+						<li>Sapient</li>
+					</filterList>
+				</filter>
+			</li>
+		</modExtensions>
 	</JobDef>
 	<JobDef>
 		<defName>JobHangoutLead</defName>
@@ -71,6 +133,17 @@
 		<joySkill>Social</joySkill>
 		<joyXpPerTick>0.004</joyXpPerTick>
 		<joyKind>Social</joyKind>
+		<modExtensions>
+			<!--Only sapient former humans can date-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<filter>
+					<isBlackList>false</isBlackList>
+					<filterList>
+						<li>Sapient</li>
+					</filterList>
+				</filter>
+			</li>
+		</modExtensions>
 	</JobDef>
 	<JobDef>
 		<defName>JobHangoutFollow</defName>
@@ -79,5 +152,16 @@
 		<joySkill>Social</joySkill>
 		<joyXpPerTick>0.004</joyXpPerTick>
 		<joyKind>Social</joyKind>
+		<modExtensions>
+			<!--Only sapient former humans can date-->
+			<li MayRequire="tachyonite.pawnmorpherpublic" Class="Pawnmorph.DefExtensions.FormerHumanRestriction">
+				<filter>
+					<isBlackList>false</isBlackList>
+					<filterList>
+						<li>Sapient</li>
+					</filterList>
+				</filter>
+			</li>
+		</modExtensions>
 	</JobDef>
 </Defs>

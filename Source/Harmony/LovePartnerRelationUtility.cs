@@ -46,7 +46,7 @@ namespace BetterRomance.HarmonyPatches
             //Removing wrong orientation matches for randomly generated relationships, since this is used for both spouses and lovers
             //Do not allow if gender and sexuality do not match
             float sexualityFactor = 1f;
-            if (generated.RaceProps.Humanlike)
+            if (generated.IsHumanlike())
             {
                 if (generated.IsAsexual())
                 {

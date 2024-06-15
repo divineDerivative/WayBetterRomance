@@ -20,12 +20,6 @@ namespace BetterRomance
                 SettingsUtilities.GrabBiotechStuff();
             }
             Harmony harmony = new(id: "rimworld.divineDerivative.romance");
-
-            if (ModsConfig.IsActive("GrillMaster.integratedcreepjoiners"))
-            {
-                harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod(nameof(Pawn_RelationsTracker.CompatibilityWith)), AccessTools.Method("Harmony_Pawn_RelationsTracker_CompatibilityWith:Transpiler"));
-            }
-
             harmony.PatchAll();
 
             if (ModsConfig.IsActive("erdelf.humanoidalienraces") || ModsConfig.IsActive("erdelf.humanoidalienraces.dev"))
@@ -112,7 +106,12 @@ namespace BetterRomance
                 harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("Rimder.HarmonyPatches.ChangeStatusOnRelationshipChange,RimderRomanceControl"), "Postfix"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RimderLoveRelationTranspiler)));
                 harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("Rimder.HarmonyPatches.ChangeStatusOnRelationshipChange,RimderRomanceControl"), "Postfix"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RimderExLoveRelationTranspiler)));
             }
-
+            if (ModsConfig.IsActive("tachyonite.pawnmorpherpublic"))
+            {
+                Settings.PawnmorpherActive = true;
+                harmony.PatchPawnmorpher();
+                HelperClasses.IsHumanlikePM = AccessTools.Method(Type.GetType("Pawnmorph.FormerHumanUtilities, Pawnmorph"), "IsHumanlike");
+            }
 
             MakeFertilityModList();
             Settings.ApplyJoySettings();
@@ -170,6 +169,7 @@ namespace BetterRomance
         public static FieldInfo AsimovGrowth;
         public static FieldInfo pawnSettings;
         public static Type PawnDef;
+        public static MethodInfo IsHumanlikePM;
     }
 
     public class MayRequireHARAttribute : MayRequireAttribute
