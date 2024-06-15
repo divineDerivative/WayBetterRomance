@@ -74,6 +74,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        [HarmonyBefore(["com.pawnmorpher.mod"])]
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             foreach (CodeInstruction code in instructions)
@@ -103,17 +104,14 @@ namespace BetterRomance.HarmonyPatches
         {
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                if (___pawn.IsHumanlike())
+                if (Settings.PawnmorpherActive)
                 {
-                    if (Settings.PawnmorpherActive)
-                    {
-                        //This will add the comp to an animal that used to be a human, using the original human's race
-                        //May or may not already be calculated, but race will be correct
-                        ___pawn.FormerHumanCompCheck();
-                    }
-                    WBR_SettingsComp comp = ___pawn.TryGetComp<WBR_SettingsComp>();
-                    comp?.ApplySettings();
+                    //This will add the comp to an animal that used to be a human, using the original human's race
+                    //May or may not already be calculated, but race will be correct
+                    ___pawn.FormerHumanCompCheck();
                 }
+                WBR_SettingsComp comp = ___pawn.TryGetComp<WBR_SettingsComp>();
+                comp?.ApplySettings();
             }
         }
     }
