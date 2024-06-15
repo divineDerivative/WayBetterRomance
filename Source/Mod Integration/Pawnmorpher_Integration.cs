@@ -2,6 +2,7 @@
 using Pawnmorph;
 using RimWorld;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Verse;
 
@@ -114,6 +115,7 @@ namespace BetterRomance
                 harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod(nameof(Pawn_RelationsTracker.SecondaryLovinChanceFactor)), lovin);
                 MethodInfo compatibility = AccessTools.Method(AccessTools.Inner(InteractionPatches, "RelationshipPatches"), "CompatibilityWithPostfix");
                 harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), compatibility);
+                harmony.Patch(AccessTools.PropertyGetter(typeof(TraitSet), nameof(TraitSet.TraitsSorted)), postfix: new HarmonyMethod(typeof(PawnmorpherPatches).GetMethod(nameof(TraitSetPostfix))));
             }
 
             //This happens whenever a former human is generated, either on its own or by transforming an existing pawn
@@ -125,6 +127,15 @@ namespace BetterRomance
                     comp.Copy(transformedPawn);
                     //Then adjust the ages
                     transformedPawn.TryGetComp<WBR_SettingsComp>().RedoSettings(true);
+                }
+            }
+
+            //This stops orientation traits from being displayed for former humans with animal sapience
+            public static void TraitSetPostfix(Pawn ___pawn, ref List<Trait> ___tmpTraits)
+            {
+                if (___tmpTraits.Any(x => SexualityUtility.OrientationTraits.Contains(x.def)) && !FormerHumanUtilities.IsHumanlike(___pawn))
+                {
+                    ___tmpTraits.RemoveAll(x => SexualityUtility.OrientationTraits.Contains(x.def));
                 }
             }
         }
