@@ -248,13 +248,15 @@ namespace BetterRomance
             return result;
         }
 
-        public static List<Pawn> GetAllSpawnedHumanlikesOnMap(Map map)
+        public static List<Pawn> GetAllSpawnedHumanlikesOnMap(Map map, bool includeFH = false)
         {
             List<Pawn> result = new();
             foreach (Pawn pawn in map.mapPawns.AllPawnsSpawned)
             {
                 //Exclude animals and enemies and robots
-                if (pawn.RaceProps.Humanlike && !pawn.HostileTo(Faction.OfPlayer) && !pawn.DroneCheck())
+                //I want former humans to be included for dates only
+                //Just changing Humanlike to IsHumanlike won't help because former humans don't pass the drone check
+                if (pawn.IsHumanlike() && !pawn.HostileTo(Faction.OfPlayer) && !pawn.DroneCheck(includeFH))
                 {
                     result.Add(pawn);
                 }

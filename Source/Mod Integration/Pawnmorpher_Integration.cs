@@ -41,6 +41,11 @@ namespace BetterRomance
             }
         }
 
+        public static bool IsFormerHuman(this Pawn pawn)
+        {
+            return pawn.IsFormerHuman(false);
+        }
+
         public static void AdjustAges(WBR_SettingsComp comp, ThingDef oldRace, ThingDef newRace)
         {
             float oldLE = oldRace.race.lifeExpectancy;

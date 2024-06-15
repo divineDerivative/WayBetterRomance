@@ -13,7 +13,7 @@ namespace BetterRomance
             return false;
         }
 
-        public static bool DroneCheck(this Pawn pawn)
+        public static bool DroneCheck(this Pawn pawn, bool includeFH = false)
         {
             if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanicalDrone?.Invoke(null, [pawn]))
             {
@@ -22,6 +22,11 @@ namespace BetterRomance
             if (Settings.AsimovActive && pawn.needs.mood == null)
             {
                 return true;
+            }
+            //I specifically want this to only catch former humans, and not just pass any humanlike
+            if (Settings.PawnmorpherActive && includeFH && pawn.IsFormerHuman())
+            {
+                return false;
             }
 #if v1_4
             return !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
@@ -38,7 +43,7 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Allows former humans from Pawnmorpher to be considered as humanlikes
+        /// Allows former humans from Pawnmorpher to be considered humanlike
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns></returns>
