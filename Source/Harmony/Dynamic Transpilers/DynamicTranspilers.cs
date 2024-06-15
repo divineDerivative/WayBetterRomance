@@ -208,5 +208,31 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
+
+        public static IEnumerable<CodeInstruction> SkipGayCheckTranspiler(this IEnumerable<CodeInstruction> instructions, Label? label = null)
+        {
+
+            bool gayFound = false;
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsField(InfoHelper.GayTraitDefOf))
+                {
+                    gayFound = true;
+                }
+                if (gayFound && code.Branches(out _))
+                {
+                    //Need to remove the bool from the stack first
+                    yield return new CodeInstruction(OpCodes.Pop);
+                    code.opcode = OpCodes.Br_S;
+                    if (label != null)
+                    {
+                        code.operand = label.Value;
+                    }
+                    gayFound = false;
+                }
+                yield return code;
+            }
+        }
+
     }
 }

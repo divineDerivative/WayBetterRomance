@@ -539,5 +539,6 @@ namespace BetterRomance
         public static MethodInfo AdultMinAge = AccessTools.PropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AdultMinAge));
         public static FieldInfo RitualPawnAgeCurve = AccessTools.Field(typeof(RitualOutcomeComp_Quality), nameof(RitualOutcomeComp_PawnAge.curve));
         public static FieldInfo AgeTrackerPawn = AccessTools.Field(typeof(Pawn_AgeTracker), "pawn");
+        public static FieldInfo GayTraitDefOf = AccessTools.Field(typeof(TraitDefOf), nameof(TraitDefOf.Gay));
     }
 }

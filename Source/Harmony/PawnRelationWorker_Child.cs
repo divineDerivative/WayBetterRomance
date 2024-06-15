@@ -16,31 +16,15 @@ namespace BetterRomance.HarmonyPatches
         //generated is the parent, other is the child
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            FieldInfo Gay = AccessTools.Field(typeof(TraitDefOf), nameof(TraitDefOf.Gay));
             FieldInfo DefOfSpouse = AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Spouse));
             LocalBuilder otherParent = ilg.DeclareLocal(typeof(Pawn));
             Label endLabel = ilg.DefineLabel();
 
-            List<CodeInstruction> codes = instructions.ToList();
+            List<CodeInstruction> codes = instructions.SkipGayCheckTranspiler().ToList();
             codes[codes.Count - 1].labels.Add(endLabel);
-
-            bool gayFound = false;
             bool retAdded = false;
             foreach (CodeInstruction code in codes)
             {
-                //This bit gets rid of the gay check by changing brfalse to br
-                //Should do it twice, since there's two gay checks
-                if (code.LoadsField(Gay))
-                {
-                    gayFound = true;
-                }
-                if (gayFound && code.Branches(out _))
-                {
-                    //Need to remove the bool from the stack first
-                    yield return new CodeInstruction(OpCodes.Pop);
-                    code.opcode = OpCodes.Br_S;
-                    gayFound = false;
-                }
                 //Add my label to the end
                 if (!retAdded && code.opcode == OpCodes.Ret)
                 {

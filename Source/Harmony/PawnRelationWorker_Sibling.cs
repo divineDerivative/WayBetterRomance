@@ -10,7 +10,7 @@ using Verse;
 namespace BetterRomance.HarmonyPatches
 {
     //If settings do not allow spouses for either sibling, do not force their parents to be spouses
-    [HarmonyPatch(typeof(PawnRelationWorker_Sibling), "CreateRelation")]
+    [HarmonyPatch(typeof(PawnRelationWorker_Sibling), nameof(PawnRelationWorker_Sibling.CreateRelation))]
     public static class PawnRelationWorker_Sibling_CreateRelation
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
@@ -36,7 +36,7 @@ namespace BetterRomance.HarmonyPatches
             //This is get the correct local index, in case it changes
             int motherIndex = -1;
             int fatherIndex = -1;
-            List<CodeInstruction> codes = instructions.ToList();
+            List<CodeInstruction> codes = instructions.SkipGayCheckTranspiler(myLabel).ToList();
             for (int i = 0; i < codes.Count; i++)
             {
                 CodeInstruction code = codes[i];
@@ -67,25 +67,13 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
 
-            bool gayFound = false;
             bool spouseFound = false;
             //Since I change a code in the codes list above, iterate through that instead of instructions
             foreach (CodeInstruction code in codes)
             {
-                //Skip the gay stuff
-                if (code.LoadsField(AccessTools.Field(typeof(TraitDefOf), nameof(TraitDefOf.Gay))))
-                {
-                    gayFound = true;
-                }
-                if (gayFound && code.Branches(out _))
-                {
-                    //Remove the bool from the stack and skip
-                    yield return new CodeInstruction(OpCodes.Pop);
-                    yield return new CodeInstruction(OpCodes.Br, myLabel);
-                    gayFound = false;
-                }
+
                 //Replace spouse with the method to find the correct relationship
-                else if (code.LoadsField(DefOfSpouse))
+                if (code.LoadsField(DefOfSpouse))
                 {
                     spouseFound = true;
                     yield return new CodeInstruction(OpCodes.Ldloc_S, fatherIndex);
