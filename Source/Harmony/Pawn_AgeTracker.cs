@@ -73,25 +73,7 @@ namespace BetterRomance.HarmonyPatches
         }
 
         [HarmonyBefore(["com.pawnmorpher.mod"])]
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            foreach (CodeInstruction code in instructions)
-            {
-                if (code.LoadsConstant(90000000L))
-                {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return InfoHelper.AgeTrackerPawn.LoadField();
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.AgeReversalDemandAge));
-                    yield return new CodeInstruction(OpCodes.Conv_I8);
-                    yield return new CodeInstruction(OpCodes.Ldc_I8, 3600000L);
-                    yield return new CodeInstruction(OpCodes.Mul);
-                }
-                else
-                {
-                    yield return code;
-                }
-            }
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AgeReversalDemandAgeTranspiler([new CodeInstruction(OpCodes.Ldarg_0), InfoHelper.AgeTrackerPawn.LoadField()]);
     }
 
     [HarmonyPatch(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.ExposeData))]
