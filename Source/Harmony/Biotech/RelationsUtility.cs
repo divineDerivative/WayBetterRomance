@@ -10,17 +10,9 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(RelationsUtility), nameof(RelationsUtility.RomanceEligible))]
     public static class RelationsUtility_RomanceEligible
     {
-        [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> MinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            return instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_0);
-        }
-
-        //Replaces the message when clicking on the disabled romance button for an aromantic pawn
-        [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> AsexualTranspiler(IEnumerable<CodeInstruction> instructions)
-        {
-            foreach (CodeInstruction code in instructions)
+            foreach (CodeInstruction code in instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_0))
             {
                 if (code.LoadsConstant("CantRomanceInitiateMessageAsexual"))
                 {
@@ -43,12 +35,6 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             return true;
-        }
-
-        [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> MinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
-        {
-            return instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_1);
         }
 
         [HarmonyTranspiler]
@@ -84,7 +70,7 @@ namespace BetterRomance.HarmonyPatches
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> OpinionTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            List<CodeInstruction> codes = instructions.MinOpinionRomanceTranspiler(OpCodes.Ldarg_0).ToList();
+            List<CodeInstruction> codes = instructions.MinOpinionRomanceTranspiler(OpCodes.Ldarg_0).MinAgeForSexTranspiler(OpCodes.Ldarg_1).ToList();
 
             bool swap = false;
             for (int i = 0; i < codes.Count; i++)

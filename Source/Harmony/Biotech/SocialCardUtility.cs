@@ -13,10 +13,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(SocialCardUtility), "CanDrawTryRomance")]
     public static class SocialCardUtility_CanDrawTryRomance
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            return instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_0);
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_0);
 
         public static void Postfix(Pawn pawn, ref bool __result)
         {

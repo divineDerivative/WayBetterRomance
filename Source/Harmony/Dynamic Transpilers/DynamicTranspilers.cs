@@ -78,15 +78,19 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="instructions">Instructions from the calling transpiler</param>
         /// <param name="loadPawn">OpCode needed to load the pawn on the stack</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> ChildBirthAgeCurveTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
+        public static IEnumerable<CodeInstruction> ChildBirthAgeCurveTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn, bool useRoleID = false)
         {
             foreach (CodeInstruction code in instructions)
             {
                 if (code.LoadsField(InfoHelper.RitualPawnAgeCurve))
                 {
                     //The preceding code loads the instance, which we're not using so yeet
-                    yield return new CodeInstruction(OpCodes.Pop);
+                    yield return useRoleID ? CodeInstruction.LoadField(typeof(RitualOutcomeComp_PawnAge), nameof(RitualOutcomeComp_PawnAge.roleId)) : new CodeInstruction(OpCodes.Pop);
                     yield return new CodeInstruction(loadPawn);
+                    if (useRoleID)
+                    {
+                        yield return CodeInstruction.Call(typeof(DynamicTranspilers), nameof(RolePawn));
+                    }
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetChildBirthAgeCurve));
                 }
                 else
@@ -94,6 +98,11 @@ namespace BetterRomance.HarmonyPatches
                     yield return code;
                 }
             }
+        }
+
+        private static Pawn RolePawn(string roleID, LordJob_Ritual ritual)
+        {
+            return ritual.PawnWithRole(roleID);
         }
 
         /// <summary>

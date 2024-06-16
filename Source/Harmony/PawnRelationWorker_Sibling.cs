@@ -99,10 +99,9 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(PawnRelationWorker_Sibling), "GenerateParent")]
     public static class PawnRelationWorker_Sibling_GenerateParent
     {
-        [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> PawnkindTranspiler(IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            foreach (CodeInstruction code in instructions)
+            foreach (CodeInstruction code in instructions.AgeToHaveChildren(OpCodes.Ldarg_1, OpCodes.Ldarg_1, true))
             {
                 if (code.LoadsField(AccessTools.Field(typeof(Pawn), nameof(Pawn.kindDef))))
                 {
@@ -115,9 +114,6 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
-
-        [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> AgeTranspiler(IEnumerable<CodeInstruction> instructions) => instructions.AgeToHaveChildren(OpCodes.Ldarg_1, OpCodes.Ldarg_1, true);
     }
 
     //Add use of age settings
