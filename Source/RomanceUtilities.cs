@@ -540,5 +540,6 @@ namespace BetterRomance
         public static FieldInfo RitualPawnAgeCurve = AccessTools.Field(typeof(RitualOutcomeComp_Quality), nameof(RitualOutcomeComp_PawnAge.curve));
         public static FieldInfo AgeTrackerPawn = AccessTools.Field(typeof(Pawn_AgeTracker), "pawn");
         public static FieldInfo GayTraitDefOf = AccessTools.Field(typeof(TraitDefOf), nameof(TraitDefOf.Gay));
+        public static FieldInfo DefOfSpouse = AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Spouse));
     }
 }

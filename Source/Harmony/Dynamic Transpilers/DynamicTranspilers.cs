@@ -253,5 +253,22 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        public static IEnumerable<CodeInstruction> GetAppropriateParentRelationshipTranspiler(this IEnumerable<CodeInstruction> instructions, CodeInstruction loadFirst, CodeInstruction loadSecond)
+        {
+            foreach (CodeInstruction code in instructions)
+            {
+                if (code.LoadsField(InfoHelper.DefOfSpouse))
+                {
+                    //RomanceUtilities.GetAppropriateParentRelationship(first, second)
+                    yield return loadFirst;
+                    yield return loadSecond;
+                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetAppropriateParentRelationship));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
     }
 }

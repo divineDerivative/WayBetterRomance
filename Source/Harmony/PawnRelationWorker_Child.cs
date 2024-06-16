@@ -2,7 +2,6 @@
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Reflection.Emit;
 using Verse;
 
@@ -16,11 +15,10 @@ namespace BetterRomance.HarmonyPatches
         //generated is the parent, other is the child
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            FieldInfo DefOfSpouse = AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Spouse));
             LocalBuilder otherParent = ilg.DeclareLocal(typeof(Pawn));
             Label endLabel = ilg.DefineLabel();
 
-            List<CodeInstruction> codes = instructions.SkipGayCheckTranspiler().ToList();
+            List<CodeInstruction> codes = instructions.SkipGayCheckTranspiler().GetAppropriateParentRelationshipTranspiler(new CodeInstruction(OpCodes.Ldarg_1), new CodeInstruction(OpCodes.Ldloc, otherParent.LocalIndex)).ToList();
             codes[codes.Count - 1].labels.Add(endLabel);
             bool retAdded = false;
             foreach (CodeInstruction code in codes)
@@ -36,7 +34,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     //if (generated.relations.DirectRelationExists(PawnRelationDefOf.Spouse, otherParent))
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.relations));
-                    yield return DefOfSpouse.LoadField();
+                    yield return InfoHelper.DefOfSpouse.LoadField();
                     yield return new CodeInstruction(OpCodes.Ldloc, otherParent.LocalIndex);
                     yield return CodeInstruction.Call(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.DirectRelationExists));
                     //request is left on the stack, so get rid of it
@@ -45,18 +43,9 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Ldarg_3);
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                 }
-                //This is the only code we're actually replacing
-                if (code.LoadsField(DefOfSpouse))
-                {
-                    //RomanceUtilities.GetAppropriateParentRelationship(generated, otherParent)
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return new CodeInstruction(OpCodes.Ldloc, otherParent.LocalIndex);
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetAppropriateParentRelationship));
-                }
-                else
-                {
-                    yield return code;
-                }
+
+                yield return code;
+
                 //This is just to save info to a local variable
                 if (code.Calls(AccessTools.Method(typeof(ParentRelationUtility), nameof(ParentRelationUtility.SetFather))))
                 {

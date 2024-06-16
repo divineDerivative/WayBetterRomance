@@ -33,10 +33,11 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
 
+            List<CodeInstruction> codes = instructions.SkipGayCheckTranspiler(myLabel).ToList();
+
             //This is get the correct local index, in case it changes
             int motherIndex = -1;
             int fatherIndex = -1;
-            List<CodeInstruction> codes = instructions.SkipGayCheckTranspiler(myLabel).ToList();
             for (int i = 0; i < codes.Count; i++)
             {
                 CodeInstruction code = codes[i];
@@ -68,21 +69,13 @@ namespace BetterRomance.HarmonyPatches
             }
 
             bool spouseFound = false;
-            //Since I change a code in the codes list above, iterate through that instead of instructions
-            foreach (CodeInstruction code in codes)
+            foreach (CodeInstruction code in codes.GetAppropriateParentRelationshipTranspiler(new CodeInstruction(OpCodes.Ldloc_S, fatherIndex), new CodeInstruction(OpCodes.Ldloc_S, motherIndex)))
             {
+                yield return code;
 
-                //Replace spouse with the method to find the correct relationship
-                if (code.LoadsField(DefOfSpouse))
+                if (code.Calls(typeof(RomanceUtilities), nameof(RomanceUtilities.GetAppropriateParentRelationship)))
                 {
                     spouseFound = true;
-                    yield return new CodeInstruction(OpCodes.Ldloc_S, fatherIndex);
-                    yield return new CodeInstruction(OpCodes.Ldloc_S, motherIndex);
-                    yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.GetAppropriateParentRelationship));
-                }
-                else
-                {
-                    yield return code;
                 }
 
                 //Check if spouse was added before doing the other stuff
