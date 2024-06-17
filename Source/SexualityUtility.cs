@@ -95,17 +95,38 @@ namespace BetterRomance
             return pawn.GetOrientation() == Orientation.Homo;
         }
 
+        /// <summary>
+        /// If marriage would be allowed between <paramref name="first"/> and <paramref name="second"/>. Checks is spouses are allowed, attraction, and asexual rating.
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
         public static bool CouldWeBeMarried(this Pawn first, Pawn second)
         {
-            if (!first.SpouseAllowed() || first.IsAro() || !RelationsUtility.AttractedToGender(first, second.gender))
+            if (!first.SpouseAllowed() || !RelationsUtility.AttractedToGender(first, second.gender))
             {
                 return false;
             }
-            if (!second.SpouseAllowed() || second.IsAro() || !RelationsUtility.AttractedToGender(second, first.gender))
+            if (!second.SpouseAllowed() || !RelationsUtility.AttractedToGender(second, first.gender))
             {
                 return false;
             }
             if (first.SexRepulsed(second) || second.SexRepulsed(first))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// If <paramref name="first"/> is allowed to marry <paramref name="second"/>. Checks if spouses are allowed, attraction, and asexual rating.
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
+        public static bool WouldConsiderMarriage(this Pawn first, Pawn second)
+        {
+            if (!first.SpouseAllowed() || !RelationsUtility.AttractedToGender(first, second.gender) || first.SexRepulsed(second))
             {
                 return false;
             }

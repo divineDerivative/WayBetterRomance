@@ -17,33 +17,7 @@ namespace BetterRomance.HarmonyPatches
         //Do not allow if recipient's gender does not match initiator's orientation
         public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
         {
-            //If initiator doesn't have a sexuality trait, assign one
-            initiator.EnsureTraits();
-            //If spouses are not allowed by initiator's race/pawnkind, do not allow
-            if (!initiator.SpouseAllowed())
-            {
-                __result = 0f;
-                return false;
-            }
-            //If genders are incorrect for initiator's sexuality, do not allow
-            if (initiator.gender == recipient.gender && initiator.IsHetero())
-            {
-                __result = 0f;
-                return false;
-            }
-            if (initiator.gender != recipient.gender && initiator.IsHomo())
-            {
-                __result = 0f;
-                return false;
-            }
-            //Don't allow for ace/aro pawns
-            if (initiator.IsAro())
-            {
-                __result = 0f;
-                return false;
-            }
-            //If they are asexual and sex repulsed, do not allow unless partner is also asexual
-            if (initiator.SexRepulsed(recipient))
+            if (!initiator.WouldConsiderMarriage(recipient))
             {
                 __result = 0f;
                 return false;
@@ -84,34 +58,7 @@ namespace BetterRomance.HarmonyPatches
         //Will not accept if race/pawnkind settings don't allow spouses
         public static void Postfix(Pawn initiator, Pawn recipient, ref float __result)
         {
-            //If they don't have a sexuality trait, assign one.
-            recipient.EnsureTraits();
-            //If pawns are the wrong gender, they will not accept
-            if (initiator.gender == recipient.gender && recipient.IsHetero())
-            {
-                __result = 0f;
-                return;
-            }
-            if (initiator.gender != recipient.gender && recipient.IsHomo())
-            {
-                __result = 0f;
-                return;
-            }
-            //Don't allow for ace/aro pawns
-            if (initiator.IsAro())
-            {
-                __result = 0f;
-                return;
-            }
-            //If pawn is asexual and sex repulsed, they will only accept from another asexual pawn
-            //Not sure about this
-            if (recipient.SexRepulsed(initiator))
-            {
-                __result = 0f;
-                return;
-            }
-            //If pawnkind/race doesn't allow spouses, they will not accept
-            if (!recipient.SpouseAllowed())
+            if (!recipient.WouldConsiderMarriage(initiator))
             {
                 __result = 0f;
                 return;
