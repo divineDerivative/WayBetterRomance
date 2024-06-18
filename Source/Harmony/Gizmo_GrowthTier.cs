@@ -8,14 +8,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Gizmo_GrowthTier), "GrowthTierTooltip")]
     public static class Gizmo_GrowthTier_GrowthTierTooltip
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            List<CodeInstruction> codesForPawn =
-            [
-                new CodeInstruction(OpCodes.Ldarg_0),
-                CodeInstruction.LoadField(typeof(Gizmo_GrowthTier), "child")
-            ];
-            return instructions.AdultMinAgeInt(codesForPawn);
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AdultMinAgeInt([new CodeInstruction(OpCodes.Ldarg_0), CodeInstruction.LoadField(typeof(Gizmo_GrowthTier), "child")]);
     }
 }

@@ -8,9 +8,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(HumanOvum), "CanFertilizeReport")]
     public static class HumanOvum_CanFertilizeReport
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            return instructions.AgeToHaveChildren(OpCodes.Ldarg_1, OpCodes.Ldarg_1, false);
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AgeToHaveChildren(OpCodes.Ldarg_1, OpCodes.Ldarg_1, false);
     }
 }

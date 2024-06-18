@@ -8,9 +8,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(HumanEmbryo), "CanImplantReport")]
     public static class HumanEmbryo_CanImplantReport
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            return instructions.AgeToHaveChildrenInt(OpCodes.Ldarg_1);
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AgeToHaveChildrenInt(OpCodes.Ldarg_1);
     }
 }

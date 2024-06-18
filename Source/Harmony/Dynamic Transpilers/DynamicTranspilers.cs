@@ -106,7 +106,7 @@ namespace BetterRomance.HarmonyPatches
         }
 
         /// <summary>
-        /// Replaces a hard coded 20 or 2f to call GetMinAgeForAdulthood
+        /// Replaces a hard coded 20 or 20f to call GetMinAgeForAdulthood
         /// </summary>
         /// <param name="instructions">Instructions from the original transpiler</param>
         /// <param name="loadPawn">List of instructions to load the pawn on the stack</param>
@@ -136,7 +136,7 @@ namespace BetterRomance.HarmonyPatches
         }
 
         /// <summary>
-        /// Replaces a hard coded 20 or 2f to call GetMinAgeForAdulthood
+        /// Replaces a hard coded 20 or 20f to call GetMinAgeForAdulthood
         /// </summary>
         /// <param name="instructions">Instructions from the original transpiler</param>
         /// <param name="loadPawn">OpCode to load the pawn on the stack</param>

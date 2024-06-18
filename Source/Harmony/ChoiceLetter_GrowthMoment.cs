@@ -10,16 +10,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(ChoiceLetter_GrowthMoment), nameof(ChoiceLetter_GrowthMoment.MakeChoices))]
     public static class ChoiceLetter_GrowthMoment_MakeChoices
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            FieldInfo pawn = AccessTools.Field(typeof(ChoiceLetter_GrowthMoment), "pawn");
-            List<CodeInstruction> codesForPawn =
-            [
-                new CodeInstruction(OpCodes.Ldarg_0),
-                new CodeInstruction(OpCodes.Ldfld, pawn)
-            ];
-            return instructions.AdultMinAgeInt(codesForPawn);
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AdultMinAgeInt([new CodeInstruction(OpCodes.Ldarg_0), new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ChoiceLetter_GrowthMoment), "pawn"))]);
     }
 
     //Go before HAR so corrected ages get used

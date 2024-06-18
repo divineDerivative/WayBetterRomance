@@ -8,9 +8,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Recipe_ExtractOvum), nameof(Recipe_ExtractOvum.AvailableReport))]
     public static class Recipe_ExtractOvum_AvailableReport
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            return instructions.AgeToHaveChildrenInt(OpCodes.Ldloc_0, true);
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AgeToHaveChildrenInt(OpCodes.Ldloc_0, true);
     }
 }

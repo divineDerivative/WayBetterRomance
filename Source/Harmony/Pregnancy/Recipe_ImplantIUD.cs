@@ -8,9 +8,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Recipe_ImplantIUD), nameof(Recipe_ImplantIUD.AvailableOnNow))]
     public static class Recipe_ImplantIUD_AvailableOnNow
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            return instructions.AgeToHaveChildrenInt(OpCodes.Ldloc_0);
-        }
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AgeToHaveChildrenInt(OpCodes.Ldloc_0);
     }
 }
