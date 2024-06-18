@@ -74,7 +74,7 @@ namespace BetterRomance
             {
                 return PawnAvailability.InLabor;
             }
-            if ((!pawn.timetable?.CurrentAssignment.allowJoy ?? false) || !pawn.jobs.IsCurrentJobPlayerInterruptible() || CantInterruptJobs.Contains(pawn.CurJobDef))
+            if ((!pawn.timetable?.CurrentAssignment.allowJoy ?? false) || pawn.IsCarryingPawn() || !pawn.jobs.IsCurrentJobPlayerInterruptible() || CantInterruptJobs.Contains(pawn.CurJobDef))
             {
                 return PawnAvailability.CantInterruptJob;
             }
@@ -93,22 +93,17 @@ namespace BetterRomance
             return PawnAvailability.Free;
         }
 
+        //These are things that should not be interrupted when a pawn decides to initiate an activity on their own
         private static readonly List<JobDef> DontInterruptJobs =
         [
             //Ceremonies
             JobDefOf.SpectateCeremony,
             //Emergency work
-            JobDefOf.BeatFire,
-            JobDefOf.Arrest,
-            JobDefOf.Capture,
             JobDefOf.EscortPrisonerToBed,
-            JobDefOf.Rescue,
-            JobDefOf.CarryToBiosculpterPod,
             JobDefOf.BringBabyToSafety,
             //Medical work
             JobDefOf.TakeToBedToOperate,
             JobDefOf.TakeWoundedPrisonerToBed,
-            JobDefOf.TendPatient,
             JobDefOf.FeedPatient,
             //Romance
             RomanceDefOf.JobDateLead,
@@ -116,7 +111,6 @@ namespace BetterRomance
             RomanceDefOf.JobHangoutLead,
             RomanceDefOf.JobHangoutFollow,
             //Ordered jobs
-            JobDefOf.LayDown,
             JobDefOf.ReleasePrisoner,
             JobDefOf.UseCommsConsole,
             JobDefOf.EnterTransporter,
@@ -128,16 +122,17 @@ namespace BetterRomance
             JobDefOf.Breastfeed,
         ];
 
+        //These are things that should never be interrupted even for an ordered hook up
         private static readonly List<JobDef> CantInterruptJobs =
         [
             //Incapacitated
-            JobDefOf.Wait_Downed,
-            JobDefOf.Vomit,
-            JobDefOf.Deathrest,
             JobDefOf.ExtinguishSelf,
             JobDefOf.Flee,
             JobDefOf.FleeAndCower,
-            //Ceremonies
+#if v1_5
+            JobDefOf.FleeAndCowerShort,
+#endif
+            //Don't interrupt ceremonies
             JobDefOf.MarryAdjacentPawn,
             JobDefOf.GiveSpeech,
             JobDefOf.BestowingCeremony,
@@ -152,12 +147,15 @@ namespace BetterRomance
             RomanceDefOf.DoLovinCasual,
             JobDefOf.Lovin,
             JobDefOf.TryRomance,
-            //Involves another pawn
+            //Involves another pawn, we don't want them just dropping a baby or letting go of a prisoner
             JobDefOf.DeliverToCell,
             JobDefOf.DeliverToBed,
             JobDefOf.Steal,
             JobDefOf.Kidnap,
             JobDefOf.CarryDownedPawnToExit,
+#if v1_5
+            JobDefOf.CarryDownedPawnToPortal,
+#endif
             JobDefOf.Rescue,
             JobDefOf.CarryToCryptosleepCasket,
             JobDefOf.Capture,
@@ -169,16 +167,13 @@ namespace BetterRomance
             JobDefOf.RopeRoamerToHitchingPost,
             JobDefOf.Unrope,
             JobDefOf.ReleaseAnimalToWild,
-            JobDefOf.CarryToBiosculpterPod,
 
             JobDefOf.SocialFight,
-            RomanceDefOf.CastAbilityOnThingUninterruptible,
             RomanceDefOf.CastAbilityOnWorldTile,
             JobDefOf.ManTurret,
-            JobDefOf.GotoMindControlled,
             JobDefOf.ActivateArchonexusCore,
             JobDefOf.PruneGauranlenTree,
-    ];
+        ];
 
         //Turn a PawnAvailability into a string for reporting to player
         public static readonly Dictionary<PawnAvailability, string> AvailabilityReasons = new()
