@@ -14,6 +14,7 @@ namespace BetterRomance.HarmonyPatches
         {
             foreach (CodeInstruction code in instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_0))
             {
+                //Replaces the message when clicking on the disabled romance button for an aromantic pawn
                 if (code.LoadsConstant("CantRomanceInitiateMessageAsexual"))
                 {
                     code.operand = "WBR.CantRomanceInitiateMessageAromantic";

@@ -98,7 +98,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.LoadsConstant(0.001f))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 0.01f);
+                    yield return new CodeInstruction(OpCodes.Ldc_R4, 0.01f);
                 }
                 else
                 {

@@ -15,7 +15,6 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
-            FieldInfo DefOfSpouse = AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Spouse));
             Label myLabel = ilg.DefineLabel();
             Label? endLabel = new();
 
@@ -84,7 +83,7 @@ namespace BetterRomance.HarmonyPatches
                     // if (father.relations.DirectRelationExists(PawnRelationDefOf.Spouse, mother))
                     yield return new CodeInstruction(OpCodes.Ldloc_S, fatherIndex);
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.relations));
-                    yield return DefOfSpouse.LoadField();
+                    yield return InfoHelper.DefOfSpouse.LoadField();
                     yield return new CodeInstruction(OpCodes.Ldloc, motherIndex);
                     yield return CodeInstruction.Call(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.DirectRelationExists));
                     yield return new CodeInstruction(OpCodes.Brfalse_S, (Label)endLabel);

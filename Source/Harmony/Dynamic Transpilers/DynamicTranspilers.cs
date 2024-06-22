@@ -169,7 +169,7 @@ namespace BetterRomance.HarmonyPatches
         }
 
         private static FieldInfo TraitSetPawn = AccessTools.Field(typeof(TraitSet), "pawn");
-        private static Pawn GetPawn(this TraitSet set) => (Pawn)TraitSetPawn.GetValue(set);
+        private static Pawn GetPawn(this TraitSet set) => TraitSetPawn.GetValue(set) as Pawn;
         /// <summary>
         /// Checks if a pawn has an orientation matching the original trait
         /// </summary>

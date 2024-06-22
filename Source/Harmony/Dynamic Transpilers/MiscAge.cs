@@ -46,13 +46,15 @@ namespace BetterRomance.HarmonyPatches
         {
             foreach (CodeInstruction code in instructions)
             {
+                //25 years is 90000000 ticks
                 if (code.LoadsConstant(25) || code.LoadsConstant(90000000L))
                 {
-                    foreach (var instruction in toGetPawn)
+                    foreach (CodeInstruction instruction in toGetPawn)
                     {
                         yield return instruction;
                     }
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.AgeReversalDemandAge));
+                    //Turn it into ticks
                     if (code.LoadsConstant(90000000L))
                     {
                         yield return new CodeInstruction(OpCodes.Conv_I8);

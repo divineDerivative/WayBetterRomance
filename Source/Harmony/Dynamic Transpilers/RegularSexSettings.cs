@@ -56,7 +56,7 @@ namespace BetterRomance.HarmonyPatches
                 local_p2MinAgeForSex = ilg.DeclareLocal(typeof(float));
 
                 //Calculate and store p2MinAgeForSex first so we can call it easier later
-                yield return new CodeInstruction(OpCodes.Ldarg_1);
+                yield return new CodeInstruction(secondCode);
                 yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                 yield return new CodeInstruction(OpCodes.Stloc, local_p2MinAgeForSex.LocalIndex);
             }
@@ -215,12 +215,7 @@ namespace BetterRomance.HarmonyPatches
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> MaxAgeGapTranspiler(this IEnumerable<CodeInstruction> instructions, ILGenerator ilg, OpCode firstPawn, OpCode? secondPawn)
         {
-            List<CodeInstruction> secondList = null;
-            if (secondPawn != null)
-            {
-                secondList = [new CodeInstruction((OpCode)secondPawn)];
-            }
-            return instructions.MaxAgeGapTranspiler(ilg, [new CodeInstruction(firstPawn)], secondList);
+            return instructions.MaxAgeGapTranspiler(ilg, [new CodeInstruction(firstPawn)], secondPawn is null ? null : [new CodeInstruction((OpCode)secondPawn)]);
         }
     }
 }
