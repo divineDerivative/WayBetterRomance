@@ -16,6 +16,7 @@ namespace BetterRomance.HarmonyPatches
         {
             //Use age settings
             IEnumerable<CodeInstruction> codes = instructions.MinAgeForSexForTwo(OpCodes.Ldarg_0, OpCodes.Ldarg_1, 14f);
+
             MethodInfo BiotechActive = AccessTools.PropertyGetter(typeof(ModsConfig), nameof(ModsConfig.BiotechActive));
             Label firstLabel = ilg.DefineLabel();
             Label secondLabel = ilg.DefineLabel();
@@ -31,8 +32,8 @@ namespace BetterRomance.HarmonyPatches
                 {
                     //Removing wrong orientation matches for randomly generated relationships, since this is used for both spouses and lovers
                     //if (!generated.CouldWeBeLovers(other)) { return 0f; }
-                    code.labels.Add(secondLabel);
                     yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code).WithLabels(firstLabel);
+                    code.labels.Add(secondLabel);
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.CouldWeBeLovers));
                     yield return new CodeInstruction(OpCodes.Brtrue, secondLabel);
