@@ -38,14 +38,22 @@ namespace BetterRomance
         /// <returns></returns>
         public static bool CouldWeBeMarried(this Pawn first, Pawn second)
         {
-            if (!first.SpouseAllowed() || !RelationsUtility.AttractedToGender(first, second.gender))
+            //Check for romantic attraction
+            if (!AttractionBetween(first, second, true))
             {
                 return false;
             }
-            if (!second.SpouseAllowed() || !RelationsUtility.AttractedToGender(second, first.gender))
+            //Check if spouses are allowed
+            if (!first.SpouseAllowed() || !second.SpouseAllowed())
             {
                 return false;
             }
+            //Check asexuality
+            if (first.IsAsexual() && second.IsAsexual())
+            {
+                return true;
+            }
+            //Respect sex repulsion rules
             if (first.SexRepulsed(second) || second.SexRepulsed(first))
             {
                 return false;
@@ -67,7 +75,7 @@ namespace BetterRomance
             }
             return true;
         }
-        
+
         public static bool IsAromantic(this Pawn pawn)
         {
             return pawn.TryGetComp<Comp_Orientation>()?.Aromantic ?? false;
@@ -90,14 +98,6 @@ namespace BetterRomance
             Comp_Orientation comp = pawn.GetComp<Comp_Orientation>();
             return (romance ? comp.romantic : comp.sexual).Bi;
         }
-
-        /// <summary>
-        /// Checks if a love relation between <paramref name="first"/> and <paramref name="second"/> is allowed by both orientations
-        /// </summary>
-        /// <param name="first"></param>
-        /// <param name="second"></param>
-        /// <returns></returns>
-        public static bool CouldWeBeLovers(this Pawn first, Pawn second) => RelationsUtility.AttractedToGender(first, second.gender) && RelationsUtility.AttractedToGender(second, first.gender);
 
         /// <summary>
         /// If <paramref name="pawn"/>'s asexual rating is low enough to refuse all sex. If <paramref name="other"/> is provided, they must also be asexual for result to be false.
