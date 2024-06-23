@@ -31,11 +31,12 @@ namespace BetterRomance.HarmonyPatches
                 if (code.Calls(BiotechActive))
                 {
                     //Removing wrong orientation matches for randomly generated relationships, since this is used for both spouses and lovers
-                    //if (!generated.CouldWeBeLovers(other)) { return 0f; }
+                    //if (!OrientationUtility.AttractionBetween(generated, other, true)) { return 0f; }
                     yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code).WithLabels(firstLabel);
                     code.labels.Add(secondLabel);
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return CodeInstruction.Call(typeof(OrientationUtility), nameof(OrientationUtility.CouldWeBeLovers));
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_1);
+                    yield return CodeInstruction.Call(typeof(OrientationUtility), nameof(OrientationUtility.AttractionBetween));
                     yield return new CodeInstruction(OpCodes.Brtrue, secondLabel);
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 0f);
                     yield return new CodeInstruction(OpCodes.Ret);
