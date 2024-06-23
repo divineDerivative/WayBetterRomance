@@ -1,9 +1,7 @@
-using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -134,93 +132,65 @@ namespace BetterRomance
             Settings.ApplyJoySettings();
         }
 
-        Vector2 scrollPosLeft;
-        Vector2 scrollPosRight;
-        static FieldInfo curX = AccessTools.Field(typeof(Listing_Standard), "curX");
+        Vector2 scrollPos;
         const float scrollListPadding = 20f;
-        const float secondBoxOffset = -12.01f;
         public override void DoSettingsWindowContents(Rect canvas)
         {
-
-            Listing_Standard list = new()
-            {
-                ColumnWidth = (canvas.width / 2f) - 17f + secondBoxOffset
-            };
+            Listing_Standard list = new();
             list.Begin(canvas);
+
+            Rect outRect = new(0f, 0f, canvas.width - 4f, canvas.height);
+            float height = (scrollViewHeight == 0f) ? canvas.height * 2 : scrollViewHeight;
+            Rect viewRect = new(0f, 0f, canvas.width - scrollListPadding, height);
+
+            Widgets.BeginScrollView(outRect, ref scrollPos, viewRect, true);
+            Listing_Standard scrollList = new(outRect, () => scrollPos)
+            {
+                ColumnWidth = (outRect.width / 2f) - 17f
+            };
+            scrollList.Begin(viewRect);
+
             if (settings.complex)
             {
-                Rect leftRect = new(0f, 0f, list.ColumnWidth, canvas.height);
-                Rect viewRectLeft = new(leftRect)
-                {
-                    height = scrollViewLeftHeight
-                };
-
-                Widgets.BeginScrollView(leftRect, ref scrollPosLeft, viewRectLeft, false);
-                Listing_Standard scrollListLeft = new(leftRect, () => scrollPosLeft)
-                {
-                    maxOneColumn = true
-                };
-                scrollListLeft.Begin(viewRectLeft);
-
-                DrawSexualOrientationChance(scrollListLeft);
-                scrollListLeft.Gap();
-                TwoButtonText(scrollListLeft, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+                DrawSexualOrientationChance(scrollList);
+                scrollList.Gap();
+                TwoButtonText(scrollList, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
                 { settings.sexualOrientations.Reset(); });
-                scrollListLeft.Gap();
+                scrollList.Gap();
 
-                DrawRomanticOrientationChance(scrollListLeft);
-                scrollListLeft.Gap();
-                TwoButtonText(scrollListLeft, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+                DrawRomanticOrientationChance(scrollList);
+                scrollList.Gap();
+                TwoButtonText(scrollList, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
                 { settings.asexualOrientations.Reset(); });
-                scrollListLeft.Gap();
+                scrollList.Gap();
 
-                DrawExtraStuff(scrollListLeft);
-                scrollListLeft.Gap();
-                if (scrollListLeft.ButtonText(settings.complex ? "Simplify it" : "Let's make it complicated"))
-                {
-                    settings.complex = !settings.complex;
-                    scrollPosLeft = Vector2.zero;
-                }
-                scrollViewLeftHeight = scrollListLeft.MaxColumnHeightSeen;
-                scrollListLeft.End();
-                Widgets.EndScrollView();
+                DrawExtraStuff(scrollList);
             }
             else
             {
-                DrawBaseSexualityChance(list);
-                list.Gap();
-                TwoButtonText(list, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+                DrawBaseSexualityChance(scrollList);
+                scrollList.Gap();
+                TwoButtonText(scrollList, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
                 { settings.sexualOrientations.Reset(); });
+                scrollList.Gap();
 
-                DrawAceOrientationChance(list);
-                list.Gap();
-                TwoButtonText(list, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
+                DrawAceOrientationChance(scrollList);
+                scrollList.Gap();
+                TwoButtonText(scrollList, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
                 { settings.asexualOrientations.Reset(); });
-
-                list.Gap();
-                if (list.ButtonText(settings.complex ? "Simplify it" : "Let's make it complicated"))
-                {
-                    settings.complex = !settings.complex;
-                }
             }
-            list.NewColumn();
-
-            Rect rightRect = new(0f, 0f, canvas.width, canvas.height)
+            scrollList.Gap();
+            if (scrollList.ButtonText(settings.complex ? "Simplify it" : "Let's make it complicated"))
             {
-                xMin = (float)curX.GetValue(list)
-            };
-            Rect viewRectRight = new(0f, 0f, rightRect.width - scrollListPadding, scrollViewRightHeight);
+                settings.complex = !settings.complex;
+                scrollPos = Vector2.zero;
+                scrollViewHeight = -1f;
+            }
+            scrollList.NewColumn();
 
-            Widgets.BeginScrollView(rightRect, ref scrollPosRight, viewRectRight, true);
-            Listing_Standard scrollListRight = new(rightRect, () => scrollPosRight)
-            {
-                maxOneColumn = true
-            };
-            scrollListRight.Begin(viewRectRight);
-
-            DrawCustomRight(scrollListRight);
-            scrollListRight.Gap();
-            if (scrollListRight.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
+            DrawCustomRight(scrollList);
+            scrollList.Gap();
+            if (scrollList.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
             {
                 settings.dateRate = 100f;
                 settings.hookupRate = 100f;
@@ -231,11 +201,22 @@ namespace BetterRomance
                 settings.cheatingOpinion = new(-75, 75);
             }
 
-            scrollListRight.Gap();
-            DrawRightMisc(scrollListRight);
+            scrollList.Gap();
+            DrawRightMisc(scrollList);
 
-            scrollViewRightHeight = scrollListRight.MaxColumnHeightSeen;
-            scrollListRight.End();
+            if (scrollViewHeight == 0f)
+            {
+                scrollViewHeight = height;
+            }
+            else if (scrollViewHeight == -1f)
+            {
+                scrollViewHeight = 0f;
+            }
+            else
+            {
+                scrollViewHeight = scrollList.MaxColumnHeightSeen;
+            }
+            scrollList.End();
             Widgets.EndScrollView();
             list.End();
         }
@@ -268,8 +249,7 @@ namespace BetterRomance
         private static float sectionHeightOrientation = 0f;
         private static float sectionHeightOther = 0f;
         private static float sectionHeightComplex = 0f;
-        private static float scrollViewLeftHeight = 0f;
-        private static float scrollViewRightHeight = 0f;
+        private static float scrollViewHeight = 0f;
 
         private static Listing_Standard DrawCustomSectionStart(Listing_Standard listing, float height, string label, string tooltip = null)
         {
