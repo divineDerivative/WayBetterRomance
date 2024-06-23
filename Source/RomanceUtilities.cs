@@ -420,7 +420,8 @@ namespace BetterRomance
             {
                 return PawnRelationDefOf.Spouse;
             }
-            if (mom.CouldWeBeLovers(dad))
+            //Since this is used for parents, we care about sexual attraction
+            if (OrientationUtility.AttractionBetween(mom, dad, false))
             {
                 //Maybe check for possible custom love relations?
                 return PawnRelationDefOf.Lover;
