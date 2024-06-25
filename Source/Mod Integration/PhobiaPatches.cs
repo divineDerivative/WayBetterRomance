@@ -137,7 +137,7 @@ namespace BetterRomance.HarmonyPatches
                 "ThoughtWorker_PositiveViewOnSameSexCouples",
                 "ThoughtWorker_NegativeViewOnSameSexCouples",
             ];
-            HarmonyMethod TraitToOrientationTranspiler = new(typeof(OtherMod_Patches), nameof(DynamicTranspilers.TraitToOrientationTranspiler));
+            HarmonyMethod TraitToOrientationTranspiler = new(typeof(DynamicTranspilers), nameof(DynamicTranspilers.TraitToOrientationTranspiler));
             HarmonyMethod IsInSameSexRelationshipPostfix = new(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipPostfix)));
             HarmonyMethod IsInSameSexRelationshipWithPostfix = new(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipWithPostfix)));
             foreach (string name in typeNames)
