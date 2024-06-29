@@ -73,7 +73,8 @@ namespace BetterRomance.HarmonyPatches
             //If opinion is too low, do not allow
             int minOpinion = initiator.MinOpinionForRomance();
             int opinionOfTarget = initiator.relations.OpinionOf(recipient);
-            if (opinionOfTarget < minOpinion || recipient.relations.OpinionOf(initiator) < minOpinion)
+            //Only check the initiator's opinion
+            if (opinionOfTarget < minOpinion)
             {
                 __result = 0f;
                 return false;
