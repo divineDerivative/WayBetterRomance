@@ -31,7 +31,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        //Add dev gizmo to reset ordered hookup cooldown
+        //Add dev gizmos
         public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> values, Pawn __instance)
         {
             foreach (Gizmo gizmo in values)

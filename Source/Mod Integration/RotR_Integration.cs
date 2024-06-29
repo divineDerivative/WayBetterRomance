@@ -183,7 +183,7 @@ namespace BetterRomance
             //Spawn a new one if the age range is incorrect
             public static void SpawnSuitorAwayPostfix(ref Pawn ___suitor, Settlement ___settlement)
             {
-                FloatRange range = new(___suitor.MinAgeForSex(), ___suitor.DeclineAtAge() + (___suitor.DeclineAtAge() / 6));
+                FloatRange range = AgeRange(___suitor);
                 if (!range.Includes(___suitor.ageTracker.AgeBiologicalYearsFloat))
                 {
                     Find.WorldPawns.RemoveAndDiscardPawnViaGC(___suitor);
@@ -198,7 +198,7 @@ namespace BetterRomance
             }
             public static void SpawnSuitorPostfix(ref Pawn ___suitor)
             {
-                FloatRange range = new(___suitor.MinAgeForSex(), ___suitor.DeclineAtAge() + (___suitor.DeclineAtAge() / 6));
+                FloatRange range = AgeRange(___suitor);
                 if (!range.Includes(___suitor.ageTracker.AgeBiologicalYearsFloat))
                 {
                     Find.WorldPawns.RemoveAndDiscardPawnViaGC(___suitor);
@@ -210,6 +210,11 @@ namespace BetterRomance
                         Find.WorldPawns.PassToWorld(___suitor);
                     }
                 }
+            }
+            
+            private static FloatRange AgeRange(Pawn pawn)
+            {
+                return new(pawn.MinAgeForSex(), pawn.DeclineAtAge() + (pawn.DeclineAtAge() / 6));
             }
 
             //Save the request to use in the postfix
@@ -260,8 +265,7 @@ namespace BetterRomance
 
             private static bool MarriageDialogHelper(bool result, Pawn suitor, Pawn betrothed)
             {
-                //Should probably add an asexual/sex repulsion check
-                return result && RelationsUtility.AttractedToGender(suitor, betrothed.gender) && RelationsUtility.AttractedToGender(betrothed, suitor.gender);
+                return result && suitor.CouldWeBeMarried(betrothed);
             }
 
             //Check custom love relations

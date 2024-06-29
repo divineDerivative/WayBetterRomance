@@ -7,6 +7,13 @@ namespace BetterRomance.HarmonyPatches
 {
     public static partial class DynamicTranspilers
     {
+        /// <summary>
+        /// Changes a hard coded 3 or LifeStageDefOf.HumanlikeChild to a call to ChildAge
+        /// </summary>
+        /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <param name="toGetPawn"><see cref="CodeInstruction"/> needed to load the pawn on the stack</param>
+        /// <param name="repeat">Whether to continue after the first replacement</param>
+        /// <returns></returns>
         public static IEnumerable<CodeInstruction> ChildAgeTranspiler(this IEnumerable<CodeInstruction> instructions, CodeInstruction toGetPawn, bool repeat = true)
         {
             bool done = false;

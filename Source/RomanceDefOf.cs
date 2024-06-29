@@ -90,6 +90,8 @@ namespace BetterRomance
         public static PreceptDef SpouseCount_Male_Unlimited;
         [MayRequireIdeology]
         public static PreceptDef SpouseCount_Female_Unlimited;
+        [MayRequireBiotech]
+        public static GeneDef DiseaseFree;
 
         //Vanilla stuff I need a reference to
         public static JobDef CastAbilityOnThingUninterruptible;

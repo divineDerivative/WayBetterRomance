@@ -8,7 +8,8 @@ namespace BetterRomance.HarmonyPatches
     {
         public static void Postfix(TraitDef trait, ref bool __result)
         {
-            if (!__result) // If it's already true, then it's a Backstory trait and can't be removed anyway
+            //If it's already true, then it's a Backstory trait and can't be removed anyway
+            if (!__result)
             {
                 __result = SexualityUtility.OrientationTraits.Contains(trait);
             }

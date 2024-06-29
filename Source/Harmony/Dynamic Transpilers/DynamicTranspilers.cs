@@ -147,7 +147,6 @@ namespace BetterRomance.HarmonyPatches
             return instructions.MinAgeForAdulthoodTranspiler([new CodeInstruction(loadPawn)], integer);
         }
 
-        private static List<TraitDef> traits = [TraitDefOf.Gay, TraitDefOf.Bisexual, TraitDefOf.Asexual, RomanceDefOf.Straight];
         /// <summary>
         /// Replaces trait checks with appropriate orientation check without removing a bunch of other instructions
         /// </summary>
@@ -168,8 +167,10 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        private static List<TraitDef> traits = [TraitDefOf.Gay, TraitDefOf.Bisexual, TraitDefOf.Asexual, RomanceDefOf.Straight];
         private static FieldInfo TraitSetPawn = AccessTools.Field(typeof(TraitSet), "pawn");
         private static Pawn GetPawn(this TraitSet set) => TraitSetPawn.GetValue(set) as Pawn;
+
         /// <summary>
         /// Checks if a pawn has an orientation matching the original trait
         /// </summary>
@@ -239,7 +240,6 @@ namespace BetterRomance.HarmonyPatches
         /// <returns></returns>
         public static IEnumerable<CodeInstruction> SkipGayCheckTranspiler(this IEnumerable<CodeInstruction> instructions, Label? label = null)
         {
-
             bool gayFound = false;
             foreach (CodeInstruction code in instructions)
             {
@@ -262,6 +262,13 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        /// <summary>
+        /// Replaces hard coded Spouse relationship with a call to <see cref="RomanceUtilities.GetAppropriateParentRelationship"/>
+        /// </summary>
+        /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <param name="loadFirst"><see cref="CodeInstruction"/> to load the first pawn on the stack</param>
+        /// <param name="loadSecond"><see cref="CodeInstruction"/> to load the second pawn on the stack</param>
+        /// <returns></returns>
         public static IEnumerable<CodeInstruction> GetAppropriateParentRelationshipTranspiler(this IEnumerable<CodeInstruction> instructions, CodeInstruction loadFirst, CodeInstruction loadSecond)
         {
             foreach (CodeInstruction code in instructions)

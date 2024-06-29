@@ -9,12 +9,13 @@ using Verse;
 
 namespace BetterRomance.HarmonyPatches
 {
-    //Use min age setting instead of static 16
     [HarmonyPatch(typeof(SocialCardUtility), "CanDrawTryRomance")]
     public static class SocialCardUtility_CanDrawTryRomance
     {
+        //Use min age setting instead of static 16
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_0);
 
+        //Don't allow for those incapable of romance
         public static void Postfix(Pawn pawn, ref bool __result)
         {
             __result = __result && !pawn.DroneCheck();

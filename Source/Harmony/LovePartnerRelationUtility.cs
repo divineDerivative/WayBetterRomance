@@ -174,13 +174,13 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
-    //Removes possibility of ex spouse relation if settings do not allow spouses for either pawn
+    //Removes possibility of ex spouse relation if pawns aren't allowed to be married in the first place
     [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.GiveRandomExLoverOrExSpouseRelation))]
     public static class LovePartnerRelationUtility_GiveRandomExLoverOrExSpouseRelation
     {
         public static bool Prefix(Pawn first, Pawn second)
         {
-            if (!first.SpouseAllowed() || !second.SpouseAllowed() || !first.CouldWeBeMarried(second))
+            if (!first.CouldWeBeMarried(second))
             {
                 first.relations.AddDirectRelation(PawnRelationDefOf.ExLover, second);
                 return false;

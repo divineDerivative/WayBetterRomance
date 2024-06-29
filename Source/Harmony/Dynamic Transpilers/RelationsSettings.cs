@@ -65,7 +65,7 @@ namespace BetterRomance.HarmonyPatches
         }
 
         /// <summary>
-        /// Transpiler to convert hard coded 16 to MinAgeToHaveChildren. So far this is only used for fema
+        /// Transpiler to convert hard coded 16 to MinAgeToHaveChildren. So far this is only used for females
         /// </summary>
         /// <param name="instructions">Instructions from the original transpiler</param>
         /// <param name="loadPawn">OpCode needed to get the pawn on the stack</param>

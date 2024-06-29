@@ -79,7 +79,7 @@ namespace BetterRomance
             {
                 return relation.GetModExtension<LoveRelations>().exLoveRelation ?? PawnRelationDefOf.ExLover;
             }
-            LogUtil.Warning($"Tried to get the ex relation for {relation.defName} but it has no LoveRelations extension ");
+            LogUtil.Warning($"Tried to get the ex relation for {relation.defName} but it has no LoveRelations extension");
             return PawnRelationDefOf.ExLover;
         }
     }

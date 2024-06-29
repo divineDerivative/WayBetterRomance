@@ -130,7 +130,7 @@ namespace BetterRomance
             //This checks if actor is cheating
             loveToil.initAction = delegate
             {
-                ticksLeftThisToil = (RomanceUtilities.HasLoveEnhancer(Actor) || RomanceUtilities.HasLoveEnhancer(Partner)) ? ticksForEnhancer : ticksOtherwise;
+                ticksLeftThisToil = RomanceUtilities.EitherHasLoveEnhancer(Actor, Partner) ? ticksForEnhancer : ticksOtherwise;
 
                 if (Settings.VREHighmateActive)
                 {
@@ -190,7 +190,7 @@ namespace BetterRomance
                     OtherMod_Methods.DoLovinResult(Actor, Partner);
                 }
                 //Increase mood power if either pawn had a love enhancer
-                if (RomanceUtilities.HasLoveEnhancer(Actor) || RomanceUtilities.HasLoveEnhancer(Partner))
+                if (RomanceUtilities.EitherHasLoveEnhancer(Actor, Partner))
                 {
                     thought_Memory.moodPowerFactor = 1.5f;
                 }

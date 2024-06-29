@@ -184,11 +184,7 @@ namespace BetterRomance
             }
             foreach (DirectPawnRelation rel in pawn.relations.DirectRelations)
             {
-                if (rel.def == PawnRelationDefOf.Lover && (includeDead || !rel.otherPawn.Dead))
-                {
-                    list.Add(rel.otherPawn);
-                }
-                else if (CustomLoveRelationUtility.LoveRelations.Contains(rel.def) && (includeDead || !rel.otherPawn.Dead))
+                if ((rel.def == PawnRelationDefOf.Lover || CustomLoveRelationUtility.LoveRelations.Contains(rel.def)) && (includeDead || !rel.otherPawn.Dead))
                 {
                     list.Add(rel.otherPawn);
                 }
@@ -271,7 +267,7 @@ namespace BetterRomance
         /// <returns></returns>
         public static T CheckForComp<T>(this Pawn p) where T : ThingComp
         {
-            T comp = p.TryGetComp<T>();
+            T comp = p.GetComp<T>();
             if (comp == null)
             {
                 List<ThingComp> compList = (List<ThingComp>)AccessTools.Field(typeof(ThingWithComps), "comps").GetValue(p);
@@ -280,7 +276,7 @@ namespace BetterRomance
                 compList.Add(newComp);
                 newComp.Initialize(new CompProperties());
                 newComp.PostExposeData();
-                comp = p.TryGetComp<T>();
+                comp = p.GetComp<T>();
                 if (comp == null)
                 {
                     LogUtil.Error($"Unable to add {typeof(T).GetType().Name} to {p.Name}");
@@ -317,6 +313,11 @@ namespace BetterRomance
                 }
             }
             return factor;
+        }
+
+        public static bool EitherHasLoveEnhancer(Pawn first, Pawn second)
+        {
+            return HasLoveEnhancer(first) || HasLoveEnhancer(second);
         }
 
         public static bool HasLoveEnhancer(Pawn pawn)

@@ -19,7 +19,7 @@ namespace BetterRomance.HarmonyPatches
                     int moodOffset = (int)GenMath.LerpDouble(0f, 1f, -12f, 8f, ___pawn.AsexualRating());
                     float opinionOffset = GenMath.LerpDouble(0f, 1f, -9f, 6f, ___pawn.AsexualRating());
                     Thought_MemorySocial replacementThought = ThoughtMaker.MakeThought((moodOffset < 0) ? RomanceDefOf.LovinAsexualNegative : RomanceDefOf.LovinAsexualPositive) as Thought_MemorySocial;
-                    if (RomanceUtilities.HasLoveEnhancer(___pawn) || RomanceUtilities.HasLoveEnhancer(otherPawn))
+                    if (RomanceUtilities.EitherHasLoveEnhancer(___pawn, otherPawn))
                     {
                         replacementThought.moodPowerFactor = 1.5f;
                     }
@@ -39,7 +39,7 @@ namespace BetterRomance.HarmonyPatches
                     float opinionOffset = GenMath.LerpDouble(0f, 1f, -12f, 8f, ___pawn.AsexualRating());
                     Thought_MemorySocial replacementThought = ThoughtMaker.MakeThought((moodOffset < 0) ? RomanceDefOf.PassionateLovinAsexualNegative : RomanceDefOf.PassionateLovinAsexualPositive) as Thought_MemorySocial;
 
-                    if (RomanceUtilities.HasLoveEnhancer(___pawn) || RomanceUtilities.HasLoveEnhancer(otherPawn))
+                    if (RomanceUtilities.EitherHasLoveEnhancer(___pawn, otherPawn))
                     {
                         replacementThought.moodPowerFactor = 1.5f;
                     }

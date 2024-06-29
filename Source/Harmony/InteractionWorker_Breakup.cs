@@ -33,6 +33,10 @@ namespace BetterRomance.HarmonyPatches
     {
         public static bool Prefix(Pawn initiator, Pawn recipient, out string letterText, out string letterLabel, out LetterDef letterDef, out LookTargets lookTargets, InteractionWorker_Breakup __instance)
         {
+            letterLabel = null;
+            letterText = null;
+            letterDef = null;
+            lookTargets = null;
             //Check if there's any custom relations and only run patch if one exists
             if (CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient) is DirectPawnRelation relation)
             {
@@ -63,19 +67,8 @@ namespace BetterRomance.HarmonyPatches
                     letterDef = LetterDefOf.NegativeEvent;
                     lookTargets = new LookTargets(initiator, recipient);
                 }
-                else
-                {
-                    letterLabel = null;
-                    letterText = null;
-                    letterDef = null;
-                    lookTargets = null;
-                }
                 return false;
             }
-            letterLabel = null;
-            letterText = null;
-            letterDef = null;
-            lookTargets = null;
             return true;
         }
     }

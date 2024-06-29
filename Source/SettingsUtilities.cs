@@ -79,7 +79,6 @@ namespace BetterRomance
         /// </summary>
         /// <param name="asker"></param>
         /// <param name="target"></param>
-        /// <param name="ordered"></param>
         /// <returns></returns>
         public static bool MeetsHookupBreedingRequirement(Pawn asker, Pawn target)
         {
@@ -133,9 +132,8 @@ namespace BetterRomance
             List<TraitDef> traitList = DefDatabase<TraitDef>.AllDefsListForReading;
             foreach (TraitDef trait in traitList)
             {
-                if (trait.HasModExtension<HookupTrait>())
+                if (trait.GetModExtension<HookupTrait>() is HookupTrait extension)
                 {
-                    HookupTrait extension = trait.GetModExtension<HookupTrait>();
                     if (!extension.races.NullOrEmpty())
                     {
                         foreach (ThingDef race in extension.races)
@@ -277,16 +275,15 @@ namespace BetterRomance
             {
                 if (!CachedNonSenescentPawns.Contains(pawn) && !CachedSenescentPawns.Contains(pawn))
                 {
-
-                    foreach (Gene gene in pawn.genes.GenesListForReading)
+#if v1_4
+                    if (pawn.genes.HasGene(RomanceDefOf.DiseaseFree))
+#else
+                    if (pawn.genes.HasActiveGene(RomanceDefOf.DiseaseFree))
+#endif
                     {
-                        if (gene.def.defName == "DiseaseFree")
-                        {
-                            CachedNonSenescentPawns.Add(pawn);
-                            break;
-                        }
+                        CachedNonSenescentPawns.Add(pawn);
                     }
-                    if (!CachedNonSenescentPawns.Contains(pawn))
+                    else
                     {
                         CachedSenescentPawns.Add(pawn);
                     }

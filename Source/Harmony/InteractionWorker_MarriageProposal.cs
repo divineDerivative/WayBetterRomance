@@ -73,6 +73,10 @@ namespace BetterRomance.HarmonyPatches
         //If a custom love relation exists, this will remove that relation instead of vanilla lover
         public static bool Prefix(Pawn initiator, Pawn recipient, List<RulePackDef> extraSentencePacks, out string letterText, out string letterLabel, out LetterDef letterDef, out LookTargets lookTargets, InteractionWorker_MarriageProposal __instance)
         {
+            letterLabel = null;
+            letterText = null;
+            letterDef = null;
+            lookTargets = null;
             //First check for a custom relation and only run patch if one exists
             if (CustomLoveRelationUtility.CheckCustomLoveRelations(initiator, recipient) is DirectPawnRelation relation)
             {
@@ -152,21 +156,9 @@ namespace BetterRomance.HarmonyPatches
                     }
                     letterText = stringBuilder.ToString().TrimEndNewlines();
                     lookTargets = new LookTargets(initiator, recipient);
-                    return false;
                 }
-                else
-                {
-                    letterLabel = null;
-                    letterText = null;
-                    letterDef = null;
-                    lookTargets = null;
-                    return false;
-                }
+                return false;
             }
-            letterLabel = null;
-            letterText = null;
-            letterDef = null;
-            lookTargets = null;
             return true;
         }
     }

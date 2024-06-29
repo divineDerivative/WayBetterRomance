@@ -84,12 +84,7 @@ namespace BetterRomance.HarmonyPatches
 
         public static IEnumerable<CodeInstruction> Need_LovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            List<CodeInstruction> codes = new()
-            {
-                new CodeInstruction(OpCodes.Ldarg_0),
-                CodeInstruction.LoadField(typeof(Need_Lovin), "pawn")
-            };
-            return instructions.MinAgeForSexTranspiler(codes);
+            return instructions.MinAgeForSexTranspiler(new List<CodeInstruction>() { new(OpCodes.Ldarg_0), CodeInstruction.LoadField(typeof(Need_Lovin), "pawn") });
         }
 
         public static IEnumerable<CodeInstruction> VREAsexualTranspiler(IEnumerable<CodeInstruction> instructions)
@@ -124,7 +119,7 @@ namespace BetterRomance.HarmonyPatches
 
         //JobDriver_InitiateLovin.ProcessBreakups
         //prefix to remove custom relations first, then return true
-        public static bool VREProcessBreakupsPrefix(Pawn initiator, Pawn recipient, ref bool __state)
+        public static void VREProcessBreakupsPrefix(Pawn initiator, Pawn recipient, ref bool __state)
         {
             if (Settings.LoveRelationsLoaded)
             {
@@ -149,7 +144,6 @@ namespace BetterRomance.HarmonyPatches
                     __state = true;
                 }
             }
-            return true;
         }
 
         public static void VREProcessBreakupsPostfix(Pawn initiator, Pawn recipient, bool __state)
