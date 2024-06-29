@@ -183,38 +183,34 @@ namespace BetterRomance
             //Spawn a new one if the age range is incorrect
             public static void SpawnSuitorAwayPostfix(ref Pawn ___suitor, Settlement ___settlement)
             {
-                FloatRange range = AgeRange(___suitor);
-                if (!range.Includes(___suitor.ageTracker.AgeBiologicalYearsFloat))
+                if (CheckAndRegenerate(ref ___suitor))
                 {
-                    Find.WorldPawns.RemoveAndDiscardPawnViaGC(___suitor);
-                    SuitorRequest.BiologicalAgeRange = range;
-                    ___suitor = PawnGenerator.GeneratePawn(SuitorRequest);
-                    if (!___suitor.IsWorldPawn())
-                    {
-                        Find.WorldPawns.PassToWorld(___suitor);
-                    }
                     ___settlement.previouslyGeneratedInhabitants.Add(___suitor);
                 }
             }
             public static void SpawnSuitorPostfix(ref Pawn ___suitor)
             {
-                FloatRange range = AgeRange(___suitor);
-                if (!range.Includes(___suitor.ageTracker.AgeBiologicalYearsFloat))
+                if (CheckAndRegenerate(ref ___suitor))
                 {
-                    Find.WorldPawns.RemoveAndDiscardPawnViaGC(___suitor);
-                    SuitorRequest.BiologicalAgeRange = range;
-                    ___suitor = PawnGenerator.GeneratePawn(SuitorRequest);
                     PawnComponentsUtility.AddAndRemoveDynamicComponents(___suitor, true);
-                    if (!___suitor.IsWorldPawn())
-                    {
-                        Find.WorldPawns.PassToWorld(___suitor);
-                    }
                 }
             }
-            
-            private static FloatRange AgeRange(Pawn pawn)
+            private static bool CheckAndRegenerate(ref Pawn suitor)
             {
-                return new(pawn.MinAgeForSex(), pawn.DeclineAtAge() + (pawn.DeclineAtAge() / 6));
+                //This really only helps for a race that has supplied their own settings, since otherwise it defaults to human ages, which will give the same result as the original
+                FloatRange range = new(suitor.MinAgeForSex(), suitor.DeclineAtAge() + (suitor.DeclineAtAge() / 6));
+                if (!range.Includes(suitor.ageTracker.AgeBiologicalYearsFloat))
+                {
+                    Find.WorldPawns.RemoveAndDiscardPawnViaGC(suitor);
+                    SuitorRequest.BiologicalAgeRange = range;
+                    suitor = PawnGenerator.GeneratePawn(SuitorRequest);
+                    if (!suitor.IsWorldPawn())
+                    {
+                        Find.WorldPawns.PassToWorld(suitor);
+                    }
+                    return true;
+                }
+                return false;
             }
 
             //Save the request to use in the postfix
