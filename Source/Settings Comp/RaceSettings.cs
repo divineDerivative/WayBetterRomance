@@ -117,6 +117,11 @@ namespace BetterRomance
             }
             int difference = adultAge - childAge;
             int interval = difference / 3;
+            if (difference < 3)
+            {
+                LogUtil.Error($"Unable to calculate three unique growth moments for {race.defName}, keeping weird ages. Race mod author might want to reconsider their life stage ages.");
+                return biotech.growthMoments;
+            }
             if (difference % 3 == 0)
             {
                 return [
