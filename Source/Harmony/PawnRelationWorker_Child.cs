@@ -19,7 +19,6 @@ namespace BetterRomance.HarmonyPatches
             Label endLabel = ilg.DefineLabel();
 
             List<CodeInstruction> codes = instructions.SkipGayCheckTranspiler().GetAppropriateParentRelationshipTranspiler(new CodeInstruction(OpCodes.Ldarg_1), new CodeInstruction(OpCodes.Ldloc, otherParent.LocalIndex)).ToList();
-            codes[codes.Count - 1].labels.Add(endLabel);
             bool retAdded = false;
             foreach (CodeInstruction code in codes)
             {
