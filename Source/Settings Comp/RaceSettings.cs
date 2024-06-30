@@ -89,15 +89,15 @@ namespace BetterRomance
                 if (biotech.growthMoments[2] != adultAge || childAge > biotech.growthMoments[0])
                 {
                     //Something has gone wrong and growth moments need to be calculated
-                    Log.Warning("Growth moment ages for " + race.defName + " do not make sense. Child at " + childAge + ", adult at " + adultAge + ", growth ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
+                    LogUtil.Warning("Growth moment ages for " + race.defName + " do not make sense. Child at " + childAge + ", adult at " + adultAge + ", growth ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
                     biotech.growthMoments = RecalculateGrowthMoments(childAge, adultAge);
                     if (biotech.growthMoments is null)
                     {
-                        Log.Warning($"Growth moments removed");
+                        LogUtil.Warning($"Growth moments removed");
                     }
                     else
                     {
-                        Log.Warning("New ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
+                        LogUtil.Warning("New ages are " + biotech.growthMoments[0] + ", " + biotech.growthMoments[1] + ", " + biotech.growthMoments[2]);
                     }
                     //Do I need to reassign the HAR growth moments?
                     if (Settings.HARActive)
@@ -314,7 +314,7 @@ namespace BetterRomance
 
             }
             //I don't think it should get to here, so double check that all of the above scenarios have correct results
-            Log.Error("Error while calculating fertility curve for " + gender.GetLabel() + " " + race.label);
+            LogUtil.Error("Error while calculating fertility curve for " + gender.GetLabel() + " " + race.label);
             return CalculateCurve(gender);
         }
 
