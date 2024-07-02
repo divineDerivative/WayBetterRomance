@@ -26,42 +26,7 @@ namespace BetterRomance.HarmonyPatches
 
         public static IEnumerable<CodeInstruction> VanillaTraitCheckTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            int startIndex = -1;
-            int endIndex = -1;
-            List<CodeInstruction> codes = instructions.ToList();
-            for (int i = 0; i < codes.Count; i++)
-            {
-                CodeInstruction code = codes[i];
-                if (code.LoadsField(AccessTools.Field(typeof(Pawn), nameof(Pawn.story))))
-                {
-                    startIndex = i;
-                }
-                if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), parameters: [typeof(TraitDef)])))
-                {
-                    endIndex = i;
-                }
-                if (startIndex != -1 && endIndex != -1)
-                {
-                    break;
-                }
-            }
-
-            for (int i = 0; i < codes.Count; i++)
-            {
-                CodeInstruction code = codes[i];
-                if (i < startIndex)
-                {
-                    yield return code;
-                }
-                else if (i == startIndex)
-                {
-                    yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.IsAsexual));
-                }
-                else if (i > endIndex)
-                {
-                    yield return code;
-                }
-            }
+            return instructions.TraitToOrientationTranspiler(false);
         }
 
         public static IEnumerable<CodeInstruction> RimderLoveRelationTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)

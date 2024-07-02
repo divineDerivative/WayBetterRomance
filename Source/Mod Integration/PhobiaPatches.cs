@@ -86,44 +86,35 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
+        //Changes 'not gay' to 'is straight'
         public static IEnumerable<CodeInstruction> SuccessChanceTranspiler(IEnumerable<CodeInstruction> instructions)
         {
-            bool firstFound = false;
-            bool nextBranch = false;
-            foreach (CodeInstruction code in instructions)
+            bool done = false;
+            bool replaced = false;
+            foreach (CodeInstruction code in instructions.TraitToOrientationTranspiler(true))
             {
-                //Need to change !initiator.story.traits.HasTrait(TraitDefOf.Gay) to initiator.IsHetero(), which will be trickier than just replacing the HasTrait call
-                if (!firstFound)
+                //Change Gay to Straight
+                if (!done && code.LoadsField(AccessTools.Field(typeof(TraitDefOf), nameof(TraitDefOf.Gay))))
                 {
-                    if (code.LoadsField(AccessTools.Field(typeof(TraitDefOf), nameof(TraitDefOf.Gay))))
-                    {
-                        yield return CodeInstruction.LoadField(typeof(RomanceDefOf), nameof(RomanceDefOf.Straight));
-                    }
-                    else if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
-                    {
-                        yield return CodeInstruction.Call(typeof(DynamicTranspilers), nameof(DynamicTranspilers.TraitConversion));
-                        nextBranch = true;
-                        firstFound = true;
-                    }
-                    else
-                    {
-                        yield return code;
-                    }
+                    yield return CodeInstruction.LoadField(typeof(RomanceDefOf), nameof(RomanceDefOf.Straight));
+                    replaced = true;
                 }
-                else if (firstFound && nextBranch && code.Branches(out Label? label))
+                //Change from true to false
+                else if (!done && replaced && code.Branches(out Label? label))
                 {
                     yield return new CodeInstruction(OpCodes.Brfalse, label);
-                    nextBranch = false;
-                }
-                else if (firstFound && code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
-                {
-                    yield return CodeInstruction.Call(typeof(DynamicTranspilers), nameof(DynamicTranspilers.TraitConversion));
+                    done = true;
                 }
                 else
                 {
                     yield return code;
                 }
             }
+        }
+
+        public static IEnumerable<CodeInstruction> TraitTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            return instructions.TraitToOrientationTranspiler(true);
         }
 
         public static void PatchForceLoveHate(this Harmony harmony)
@@ -137,7 +128,7 @@ namespace BetterRomance.HarmonyPatches
                 "ThoughtWorker_PositiveViewOnSameSexCouples",
                 "ThoughtWorker_NegativeViewOnSameSexCouples",
             ];
-            HarmonyMethod TraitToOrientationTranspiler = new(typeof(DynamicTranspilers), nameof(DynamicTranspilers.TraitToOrientationTranspiler));
+            HarmonyMethod TraitToOrientationTranspiler = new(typeof(PhobiaPatches), nameof(TraitTranspiler));
             HarmonyMethod IsInSameSexRelationshipPostfix = new(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipPostfix)));
             HarmonyMethod IsInSameSexRelationshipWithPostfix = new(typeof(PhobiaPatches).GetMethod(nameof(PhobiaPatches.IsInSameSexRelationshipWithPostfix)));
             foreach (string name in typeNames)

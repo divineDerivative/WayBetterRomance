@@ -151,13 +151,15 @@ namespace BetterRomance.HarmonyPatches
         /// Replaces trait checks with appropriate orientation check without removing a bunch of other instructions
         /// </summary>
         /// <param name="instructions">Instructions from the original transpiler</param>
+        /// <param name="romance">Whether to check romantic or sexual orientation</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> TraitToOrientationTranspiler(this IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> TraitToOrientationTranspiler(this IEnumerable<CodeInstruction> instructions, bool romance)
         {
             foreach (CodeInstruction code in instructions)
             {
                 if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
                 {
+                    yield return new CodeInstruction(romance ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(DynamicTranspilers), nameof(TraitConversion));
                 }
                 else
@@ -176,8 +178,9 @@ namespace BetterRomance.HarmonyPatches
         /// </summary>
         /// <param name="set"></param>
         /// <param name="trait"></param>
+        /// <param name="romance">Whether to check romantic or sexual orientation</param>
         /// <returns></returns>
-        public static bool TraitConversion(TraitSet set, TraitDef trait)
+        public static bool TraitConversion(TraitSet set, TraitDef trait, bool romance)
         {
             Pawn pawn = set.GetPawn();
             if (traits.Contains(trait))
@@ -192,7 +195,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 if (trait == TraitDefOf.Asexual)
                 {
-                    return pawn.IsAro();
+                    return romance ? pawn.IsAro() : pawn.IsAsexual();
                 }
                 if (trait == RomanceDefOf.Straight)
                 {
