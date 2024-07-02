@@ -125,23 +125,25 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.Is(OpCodes.Ldc_R4, 40f))
                 {
+                    //Mathf.Min(generated.MaxAgeForSex(), other.MaxAgeForSex()) / 2f
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
                     yield return new CodeInstruction(OpCodes.Ldarg_2);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
+                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), [typeof(float), typeof(float)]);
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 2f);
                     yield return new CodeInstruction(OpCodes.Div);
-                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), [typeof(float), typeof(float)]);
                 }
                 else if (code.Is(OpCodes.Ldc_R4, 10f))
                 {
+                    //Mathf.Min(generated.MaxAgeForSex(), other.MaxAgeForSex()) / 8f
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
                     yield return new CodeInstruction(OpCodes.Ldarg_2);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
+                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), [typeof(float), typeof(float)]);
                     yield return new CodeInstruction(OpCodes.Ldc_R4, 8f);
                     yield return new CodeInstruction(OpCodes.Div);
-                    yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), [typeof(float), typeof(float)]);
                 }
                 else
                 {
