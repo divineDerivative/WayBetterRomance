@@ -103,16 +103,14 @@ namespace BetterRomance.HarmonyPatches
         {
             foreach (CodeInstruction code in instructions)
             {
-                if (code.LoadsConstant(5f))
+                if (code.LoadsConstant(5f) || code.LoadsConstant(5))
                 {
                     yield return new CodeInstruction(loadPawn);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
-                    yield return new CodeInstruction(OpCodes.Conv_R4);
-                }
-                else if (code.LoadsConstant(5))
-                {
-                    yield return new CodeInstruction(loadPawn);
-                    yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
+                    if (code.LoadsConstant(5f))
+                    {
+                        yield return new CodeInstruction(OpCodes.Conv_R4);
+                    }
                 }
                 else
                 {
