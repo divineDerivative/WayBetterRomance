@@ -134,62 +134,53 @@ namespace BetterRomance
             {
                 if (trait.GetModExtension<HookupTrait>() is HookupTrait extension)
                 {
-                    if (!extension.races.NullOrEmpty())
+                    ParseTraitExtension(extension.races, RaceHookupTraits, extension.degrees, trait);
+                    ParseTraitExtension(extension.pawnkinds, PawnkindHookupTraits, extension.degrees, trait);
+                }
+            }
+        }
+
+        private static void ParseTraitExtension<T>(List<T> extensionList, Dictionary<T, HashSet<TraitRequirement>> traitDict, List<int> degrees, TraitDef trait) where T : Def
+        {
+            if (!extensionList.NullOrEmpty())
+            {
+                foreach (T thing in extensionList)
+                {
+                    if (!traitDict.ContainsKey(thing))
                     {
-                        foreach (ThingDef race in extension.races)
+                        traitDict.Add(thing, new());
+                    }
+                    if (degrees.NullOrEmpty())
+                    {
+                        if (trait.degreeDatas.Count == 1)
                         {
-                            if (!RaceHookupTraits.ContainsKey(race))
+                            traitDict[thing].Add(new TraitRequirement()
                             {
-                                RaceHookupTraits.Add(race, new());
-                            }
-                            if (extension.degrees.NullOrEmpty())
+                                def = trait,
+                                degree = 0,
+                            });
+                        }
+                        else
+                        {
+                            foreach (TraitDegreeData data in trait.degreeDatas)
                             {
-                                RaceHookupTraits[race].Add(new TraitRequirement()
+                                traitDict[thing].Add(new TraitRequirement()
                                 {
                                     def = trait,
-                                    degree = 0,
+                                    degree = data.degree,
                                 });
-                            }
-                            else
-                            {
-                                foreach (int i in extension.degrees)
-                                {
-                                    RaceHookupTraits[race].Add(new TraitRequirement()
-                                    {
-                                        def = trait,
-                                        degree = i,
-                                    });
-                                }
                             }
                         }
                     }
-                    if (!extension.pawnkinds.NullOrEmpty())
+                    else
                     {
-                        foreach (PawnKindDef pawnkind in extension.pawnkinds)
+                        foreach (int i in degrees)
                         {
-                            if (!PawnkindHookupTraits.ContainsKey(pawnkind))
+                            traitDict[thing].Add(new TraitRequirement()
                             {
-                                PawnkindHookupTraits.Add(pawnkind, new());
-                            }
-                            if (extension.degrees.NullOrEmpty())
-                            {
-                                PawnkindHookupTraits[pawnkind].Add(new TraitRequirement()
-                                {
-                                    def = trait,
-                                    degree = 0,
-                                });
-                            }
-                            else
-                            {
-                                foreach (int i in extension.degrees)
-                                {
-                                    PawnkindHookupTraits[pawnkind].Add(new TraitRequirement()
-                                    {
-                                        def = trait,
-                                        degree = i,
-                                    });
-                                }
-                            }
+                                def = trait,
+                                degree = i,
+                            });
                         }
                     }
                 }
