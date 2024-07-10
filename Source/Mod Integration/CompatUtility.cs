@@ -19,7 +19,7 @@ namespace BetterRomance
             {
                 return true;
             }
-            if (Settings.AsimovActive && pawn.needs.mood == null)
+            if (Settings.AsimovActive && pawn.needs?.mood == null && !pawn.Dead)
             {
                 return true;
             }

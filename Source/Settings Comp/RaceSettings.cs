@@ -148,7 +148,7 @@ namespace BetterRomance
             }
             else
             {
-                LogUtil.Error($"Error in calculating growth moments for {race.defName}, keeping nonsensical ages. Race mod author needs to fix their life stage ages.");
+                LogUtil.Error($"Error in calculating growth moments for {race.defName}, keeping weird ages. Race mod author needs to fix their life stage ages.");
                 return biotech.growthMoments;
             }
         }
