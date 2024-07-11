@@ -276,13 +276,13 @@ namespace BetterRomance
         {
             Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOther, "WBR.OtherHeading".Translate());
             list.Label("WBR.DateRate".Translate() + "  " + (int)settings.dateRate + "%", tooltip: "WBR.DateRateTip".Translate());
-            settings.dateRate = list.Slider(settings.dateRate, 0f, 200.99f);
+            settings.dateRate = Mathf.Round(list.Slider(settings.dateRate, 0f, 200f));
             list.Label("WBR.HookupRate".Translate() + "  " + (int)settings.hookupRate + "%", tooltip: "WBR.HookupRateTip".Translate());
-            settings.hookupRate = list.Slider(settings.hookupRate, 0f, 200.99f);
+            settings.hookupRate = Mathf.Round(list.Slider(settings.hookupRate, 0f, 200f));
             list.Label("WBR.CheatChance".Translate() + "  " + (int)settings.cheatChance + "%", tooltip: "WBR.CheatChanceTip".Translate());
-            settings.cheatChance = list.Slider(settings.cheatChance, 0f, 200.99f);
+            settings.cheatChance = Mathf.Round(list.Slider(settings.cheatChance, 0f, 200f));
             list.Label("WBR.AlienLoveChance".Translate() + "  " + (int)settings.alienLoveChance + "%", tooltip: "WBR.AlienLoveChanceTip".Translate());
-            settings.alienLoveChance = list.Slider(settings.alienLoveChance, 0f, 100f);
+            settings.alienLoveChance = Mathf.Round(list.Slider(settings.alienLoveChance, 0f, 100f));
             list.Label("WBR.MinOpinionRomance".Translate() + " " + settings.minOpinionRomance, tooltip: "WBR.MinOpinionRomanceTip".Translate());
             settings.minOpinionRomance = Mathf.RoundToInt(list.Slider(settings.minOpinionRomance, -100f, 100f));
             list.Label("WBR.MinOpinionHookup".Translate() + " " + settings.minOpinionHookup, tooltip: "WBR.MinOpinionHookupTip".Translate());
