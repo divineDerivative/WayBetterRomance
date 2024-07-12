@@ -209,7 +209,7 @@ namespace BetterRomance
                 return "WBR.CantHookupTargetOpinion".Translate();
             }
             //Don't allow if acceptance chance is 0
-            if (!forOpinionExplanation && HookupSuccessChance(target, initiator, ordered: true) <= 0f)
+            if (!forOpinionExplanation && HookupSuccessChance(target, initiator, true, true) <= 0f)
             {
                 return "WBR.CantHookupTargetZeroChance".Translate();
             }
@@ -335,7 +335,7 @@ namespace BetterRomance
         /// <param name="target"></param>
         /// <param name="asker"></param>
         /// <returns>Chance of success</returns>
-        public static float HookupSuccessChance(Pawn target, Pawn asker, bool ordered = false, bool forTooltip = false)
+        public static float HookupSuccessChance(Pawn target, Pawn asker, bool ordered, bool forTooltip)
         {
             //Check minimum opinion settings
             if (target.relations.OpinionOf(asker) < target.MinOpinionForHookup(ordered))

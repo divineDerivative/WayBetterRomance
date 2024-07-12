@@ -27,7 +27,7 @@ namespace BetterRomance
 
         private bool DoesTargetPawnAcceptAdvance(out string rejectReason)
         {
-            return TargetPawn.IsFree(Ordered ? RomanticActivityType.OrderedHookup : RomanticActivityType.CasualHookup, out rejectReason) && HookupUtility.WillPawnTryHookup(TargetPawn, initiator: false, ordered: Ordered) && Rand.Range(0.05f, 1f) < HookupUtility.HookupSuccessChance(TargetPawn, Actor, Ordered);
+            return TargetPawn.IsFree(Ordered ? RomanticActivityType.OrderedHookup : RomanticActivityType.CasualHookup, out rejectReason) && HookupUtility.WillPawnTryHookup(TargetPawn, initiator: false, ordered: Ordered) && Rand.Range(0.05f, 1f) < HookupUtility.HookupSuccessChance(TargetPawn, Actor, Ordered, false);
         }
 
         private bool IsTargetPawnOkay()

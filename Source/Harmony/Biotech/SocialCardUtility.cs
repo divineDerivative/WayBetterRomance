@@ -188,7 +188,7 @@ namespace BetterRomance.HarmonyPatches
                 return "WBR.HookupChanceCant".Translate() + (" (" + ar.Reason + ")\n");
             }
             StringBuilder text = new();
-            text.AppendLine(("WBR.HookupChance".Translate() + (": " + HookupUtility.HookupSuccessChance(target, initiator, ordered: true, forTooltip: true).ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
+            text.AppendLine(("WBR.HookupChance".Translate() + (": " + HookupUtility.HookupSuccessChance(target, initiator,true , true).ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
             text.Append(HookupUtility.HookupFactors(initiator, target));
             return text.ToString();
         }
