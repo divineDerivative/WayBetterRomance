@@ -36,8 +36,8 @@
 	<WBR.MinOpinionHookupTip>A pawn will never consider a hookup if their opinion of the other person is lower than this setting.</WBR.MinOpinionHookupTip>
 	<WBR.CheatChance>Modifier for Cheating:</WBR.CheatChance>
 	<WBR.CheatChanceTip>Cheating consideration is based on the initiator's ideoligion and their opinion of their most liked partner, so the actual chances will vary per pawn. This setting alters the chance at the very end of considerations. Setting to 0% will result in a pawn never deciding to cheat, but that will still only matter if their ideo considers an interaction cheating. Partners with a different ideo may still feel cheated on.</WBR.CheatChanceTip>
-	<WBR.MaxOpinionCheating>Max Opinion For Cheating:</WBR.MaxOpinionCheating>
-	<WBR.MaxOpinionCheatingTip>A pawn will not cheat if their opinion of any partner is at or above this setting. Note that philanderers do not obey this strictly, but the setting is still part of their calculation.</WBR.MaxOpinionCheatingTip>
+	<WBR.CheatingOpinionRange>Opinion Range for Cheating</WBR.CheatingOpinionRange>
+	<WBR.CheatingOpinionRangeTip>The main factor to determine if a pawn will cheat is their opinion of their partner. If their opinion is below the min they will always be okay with cheating. If their opinion is above the max they will never be okay with cheating. If there are multiple partners the lowest factor is used. Do note that philanderers have a base chance added to the opinion factor, so it will never be zero.</WBR.CheatingOpinionRangeTip>
 
 	<WBR.MatchAboveButton>Match above</WBR.MatchAboveButton>
 	<WBR.MatchBelowButton>Match below</WBR.MatchBelowButton>

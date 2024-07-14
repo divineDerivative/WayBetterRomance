@@ -87,14 +87,7 @@ namespace BetterRomance.HarmonyPatches
                 __result = 0f;
                 return false;
             }
-            else
-            {
-                //Otherwise, adjust chances based on most liked love partner
-                if (cheatOn != null)
-                {
-                    cheatChance = Mathf.InverseLerp(50f, -50f, initiator.relations.OpinionOf(cheatOn));
-                }
-            }
+            //Opinion of partner is already checked in WillPawnContinue
 
             //Adjust romance chance to account for < minRomanceChance being thrown out above
             //0 at minRomanceChance factor, 1 at 1
@@ -219,67 +212,15 @@ namespace BetterRomance.HarmonyPatches
             }
             else
             {
-                //There is a partner they would be cheating on, adjustments to factor are taken from vanilla
-                if (partnerToConsider != null)
+                //There is a partner they would be cheating on
+                //Since PartnerFactor and CheatingChance are already checked in WillPawnContinue, we only care about the actual factors if it's for the tooltip
+                if (partnerToConsider != null && forTooltip)
                 {
-                    relationFactor = PartnerRelationFactor(recipient, partnerToConsider);
+                    relationFactor = RomanceUtilities.PartnerFactor(recipient, partnerToConsider, true) * RomanceUtilities.CheatingChance(recipient, true);
                 }
-                //If there's no partner they're cheating on, then factor remains unchanged
                 __result = relationFactor;
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Factor based on the type of relationship <paramref name="pawn"/> has with <paramref name="partner"/>
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="partner"></param>
-        /// <returns></returns>
-        private static float PartnerRelationFactor(Pawn pawn, Pawn partner)
-        {
-            float relationFactor = 1f;
-            if (pawn.relations.DirectRelationExists(PawnRelationDefOf.Lover, partner))
-            {
-                relationFactor = 0.6f;
-            }
-            else if (pawn.relations.DirectRelationExists(PawnRelationDefOf.Fiance, partner))
-            {
-                relationFactor = 0.1f;
-            }
-            else if (pawn.relations.DirectRelationExists(PawnRelationDefOf.Spouse, partner))
-            {
-                relationFactor = 0.3f;
-            }
-            //Check for custom relations and use same adjustment as lover
-            else if (CustomLoveRelationUtility.CheckCustomLoveRelations(pawn, partner) != null)
-            {
-                relationFactor = 0.6f;
-            }
-            //This checks opinion of existing relation
-            //0 at 100 opinion, 1 at 0 opinion
-            relationFactor *= Mathf.InverseLerp(100f, 0f, pawn.relations.OpinionOf(partner));
-            if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
-            {
-                //Increase for philanderer trait
-                relationFactor *= 1.6f;
-                //Super increase if their current partner is not on the map
-                if (partner.Map != pawn.Map)
-                {
-                    relationFactor *= 2f;
-                }
-            }
-            //Adjust based on romance chance factor of existing relation
-            float rcFactor = pawn.relations.SecondaryLovinChanceFactor(partner);
-            float clamped = Mathf.Clamp01(1f - rcFactor);
-            relationFactor *= clamped;
-            return relationFactor;
-        }
-
-        //Reset when done
-        public static void Postfix()
-        {
-            forTooltip = false;
         }
     }
 

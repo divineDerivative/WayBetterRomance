@@ -79,7 +79,7 @@ namespace BetterRomance
                     cheatedOnList = GetAllLoveRelationPawns(pawn, false, false);
                 }
                 //Generate random value, and compare to opinion of most liked partner and base cheat chance
-                if (Rand.Value > CheatingChance(pawn) * PartnerFactor(pawn, cheatedOnList, out cheatOn))
+                if (Rand.Value > CheatingChance(pawn) * PartnerFactor(pawn, cheatedOnList, out cheatOn, loverCountOnly))
                 {
                     return false;
                 }
@@ -94,30 +94,76 @@ namespace BetterRomance
         /// <param name="partnerList">List of partners that would feel cheated on, provided by <see cref="IsThisCheating(Pawn, Pawn, out List{Pawn}, bool)"/></param>
         /// <param name="partner">The partner <paramref name="pawn"/> would feel the worst about cheating on</param>
         /// <returns></returns>
-        public static float PartnerFactor(Pawn pawn, List<Pawn> partnerList, out Pawn partner)
+        public static float PartnerFactor(Pawn pawn, List<Pawn> partnerList, out Pawn partner, bool forRomance)
         {
+            if (forRomance)
+            {
+                LogUtil.ErrorOnce($"Checking partner factor for {pawn.LabelShort} (romance):", pawn.thingIDNumber, true);
+            }
+            else
+            {
+                LogUtil.ErrorOnce($"Checking partner factor for {pawn.LabelShort} (hook up):", pawn.thingIDNumber * 2, true);
+            }
             partner = null;
             float partnerFactor = 99999f;
-            float maxOpinion = BetterRomanceMod.settings.maxOpinionCheating;
             foreach (Pawn p in partnerList)
             {
-                float opinion = pawn.relations.OpinionOf(p);
-                float tempOpinionFactor;
-                if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
+                float tempPartnerFactor = PartnerFactor(pawn, p, forRomance);
+                if (tempPartnerFactor < partnerFactor)
                 {
-                    //Adjust these with new setting
-                    tempOpinionFactor = pawn.Map == p.Map ? Mathf.InverseLerp(maxOpinion + 40f, maxOpinion - 20f, opinion) : Mathf.InverseLerp(100f, maxOpinion, opinion);
-                }
-                else
-                {
-                    tempOpinionFactor = Mathf.InverseLerp(maxOpinion, -80f, opinion);
-                }
-                if (tempOpinionFactor < partnerFactor)
-                {
-                    partnerFactor = tempOpinionFactor;
+                    partnerFactor = tempPartnerFactor;
                     partner = p;
                 }
+
             }
+            return partnerFactor;
+        }
+
+        /// <summary>
+        /// Factor based on <paramref name="cheater"/>'s feelings towards a specific <paramref name="partner"/>. Uses opinion, philanderer status, and type of relationship
+        /// </summary>
+        /// <param name="cheater"></param>
+        /// <param name="partner"></param>
+        /// <returns></returns>
+        public static float PartnerFactor(Pawn cheater, Pawn partner, bool forRomance)
+        {
+            //Opinion
+            IntRange opinionRange = BetterRomanceMod.settings.cheatingOpinion;
+            float opinion = cheater.relations.OpinionOf(partner);
+            float opinionFactor = Mathf.InverseLerp(opinionRange.max, opinionRange.min, opinion);
+            //Increase for philanderer
+            if (cheater.story.traits.HasTrait(RomanceDefOf.Philanderer))
+            {
+                opinionFactor += cheater.Map == partner.Map ? 0.25f : 0.5f;
+            }
+
+            //Type of relationship
+            //Only consider for romance attempts, since in most situations it would mean ending the existing relationship
+            float relationFactor = 1f;
+            if (forRomance)
+            {
+                if (cheater.relations.DirectRelationExists(PawnRelationDefOf.Lover, partner))
+                {
+                    relationFactor = 0.6f;
+                }
+                else if (cheater.relations.DirectRelationExists(PawnRelationDefOf.Fiance, partner))
+                {
+                    relationFactor = 0.1f;
+                }
+                else if (cheater.relations.DirectRelationExists(PawnRelationDefOf.Spouse, partner))
+                {
+                    relationFactor = 0.3f;
+                }
+                //Check for custom relations and use same adjustment as lover
+                else if (CustomLoveRelationUtility.CheckCustomLoveRelations(cheater, partner) != null)
+                {
+                    relationFactor = 0.6f;
+                }
+            }
+
+            //Adding romance chance factor lowers things way too much, since generally people in a relationship have a high romance chance factor
+            float partnerFactor = opinionFactor * relationFactor;
+            LogUtil.WarningOnce($"Opinion of {partner.LabelShort}: {opinion}, factor: {partnerFactor}", GenText.StableStringHash(cheater.thingIDNumber.ToString() + partner.thingIDNumber.ToString() + (forRomance ? "romance" : "hookup")), true);
             return partnerFactor;
         }
 

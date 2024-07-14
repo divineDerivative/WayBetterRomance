@@ -32,7 +32,7 @@ namespace BetterRomance
         public float alienLoveChance = 33f;
         public int minOpinionRomance = 5;
         public int minOpinionHookup = 0;
-        public int maxOpinionCheating = 30;
+        public IntRange cheatingOpinion = new(-75, 75);
 
         public static string fertilityMod = "None";
         public bool joyOnSlaves = false;
@@ -70,7 +70,7 @@ namespace BetterRomance
             Scribe_Values.Look(ref minOpinionRomance, "minOpinionRomance", 5);
             Scribe_Values.Look(ref cheatChance, "cheatChance", 100.0f);
             Scribe_Values.Look(ref minOpinionHookup, "minOpinionHookup", 0);
-            Scribe_Values.Look(ref maxOpinionCheating, "maxOpinionCheating", 30);
+            Scribe_Values.Look(ref cheatingOpinion, "cheatingOpinion", new(-75, 75));
 
             Scribe_Values.Look(ref fertilityMod, "fertilityMod", "None");
             Scribe_Values.Look(ref joyOnSlaves, "joyOnSlaves", false);
@@ -178,7 +178,7 @@ namespace BetterRomance
                 settings.minOpinionRomance = 5;
                 settings.cheatChance = 100f;
                 settings.minOpinionHookup = 0;
-                settings.maxOpinionCheating = 30;
+                settings.cheatingOpinion = new(-75, 75);
             }
 
             scrollList.Gap();
@@ -292,17 +292,31 @@ namespace BetterRomance
             settings.dateRate = Mathf.Round(list.Slider(settings.dateRate, 0f, 200f));
             list.Label("WBR.HookupRate".Translate() + "  " + (int)settings.hookupRate + "%", tooltip: "WBR.HookupRateTip".Translate());
             settings.hookupRate = Mathf.Round(list.Slider(settings.hookupRate, 0f, 200f));
-            list.Label("WBR.CheatChance".Translate() + "  " + (int)settings.cheatChance + "%", tooltip: "WBR.CheatChanceTip".Translate());
-            settings.cheatChance = Mathf.Round(list.Slider(settings.cheatChance, 0f, 200f));
             list.Label("WBR.AlienLoveChance".Translate() + "  " + (int)settings.alienLoveChance + "%", tooltip: "WBR.AlienLoveChanceTip".Translate());
             settings.alienLoveChance = Mathf.Round(list.Slider(settings.alienLoveChance, 0f, 100f));
             list.Label("WBR.MinOpinionRomance".Translate() + " " + settings.minOpinionRomance, tooltip: "WBR.MinOpinionRomanceTip".Translate());
             settings.minOpinionRomance = Mathf.RoundToInt(list.Slider(settings.minOpinionRomance, -100f, 100f));
             list.Label("WBR.MinOpinionHookup".Translate() + " " + settings.minOpinionHookup, tooltip: "WBR.MinOpinionHookupTip".Translate());
             settings.minOpinionHookup = Mathf.RoundToInt(list.Slider(settings.minOpinionHookup, -100f, 50f));
-            list.Label("WBR.MaxOpinionCheating".Translate() + " " + settings.maxOpinionCheating, tooltip: "WBR.MaxOpinionCheatingTip".Translate());
-            settings.maxOpinionCheating = Mathf.RoundToInt(list.Slider(settings.maxOpinionCheating, 0f, 100f));
+            list.Label("WBR.CheatChance".Translate() + "  " + (int)settings.cheatChance + "%", tooltip: "WBR.CheatChanceTip".Translate());
+            settings.cheatChance = Mathf.Round(list.Slider(settings.cheatChance, 0f, 200f));
+            if (settings.cheatChance != 0f)
+            {
+                list.Label("WBR.CheatingOpinionRange".Translate(), tooltip: "WBR.CheatingOpinionRangeTip".Translate());
+                IntRangeWithGap(list, ref settings.cheatingOpinion, -100, 100, 5);
+            }
             DrawCustomSectionEnd(listing, list, out sectionHeightOther);
+        }
+
+        private static Rect IntRangeWithGap(Listing_Standard listing, ref IntRange range, int min, int max, int gap)
+        {
+            Rect rect = listing.GetRect(32f);
+            if (!listing.BoundingRectCached.HasValue || rect.Overlaps(listing.BoundingRectCached.Value))
+            {
+                Widgets.IntRange(rect, (int)listing.CurHeight, ref range, min, max, minWidth: gap);
+            }
+            listing.Gap(listing.verticalSpacing);
+            return rect;
         }
 
         private static void DrawRightMisc(Listing_Standard list)

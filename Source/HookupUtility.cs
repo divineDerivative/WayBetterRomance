@@ -362,7 +362,7 @@ namespace BetterRomance
                 float opinionFactor = OpinionFactor(target, asker, ordered);
                 if (forTooltip && partner != null)
                 {
-                    return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f) * RomanceUtilities.CheatingChance(target) * RomanceUtilities.PartnerFactor(target, [partner], out _);
+                    return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f) * RomanceUtilities.CheatingChance(target) * RomanceUtilities.PartnerFactor(target, partner, false);
                 }
                 //Adjust based on opinion and increase chance for forced job
                 return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f);
@@ -469,7 +469,7 @@ namespace BetterRomance
             //Adjustment for opinion of existing partner
             if (RomanceUtilities.IsThisCheating(target, initiator, out List<Pawn> partnerList) && !partnerList.NullOrEmpty())
             {
-                float cheating = RomanceUtilities.PartnerFactor(target, partnerList, out _) * RomanceUtilities.CheatingChance(target, true);
+                float cheating = RomanceUtilities.PartnerFactor(target, partnerList, out _, false) * RomanceUtilities.CheatingChance(target, true);
                 if (cheating != 1f)
                 {
                     text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheating));
