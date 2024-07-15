@@ -40,7 +40,7 @@ namespace BetterRomance
             //If accepted, calculate success chance and create option
             if (acceptanceReport.Accepted)
             {
-                chance = HookupSuccessChance(hookupTarget, initiator, true, true);
+                chance = HookupSuccessChance(hookupTarget, initiator, true);
                 string label = string.Format("{0} ({1} {2})", hookupTarget.LabelShort, chance.ToStringPercent(), "chance".Translate());
                 option = new FloatMenuOption(label, delegate
                 {
@@ -209,7 +209,7 @@ namespace BetterRomance
                 return "WBR.CantHookupTargetOpinion".Translate();
             }
             //Don't allow if acceptance chance is 0
-            if (!forOpinionExplanation && HookupSuccessChance(target, initiator, true, true) <= 0f)
+            if (!forOpinionExplanation && HookupSuccessChance(target, initiator, true) <= 0f)
             {
                 return "WBR.CantHookupTargetZeroChance".Translate();
             }
@@ -335,7 +335,7 @@ namespace BetterRomance
         /// <param name="target"></param>
         /// <param name="asker"></param>
         /// <returns>Chance of success</returns>
-        public static float HookupSuccessChance(Pawn target, Pawn asker, bool ordered, bool forTooltip)
+        public static float HookupSuccessChance(Pawn target, Pawn asker, bool ordered)
         {
             //Check minimum opinion settings
             if (target.relations.OpinionOf(asker) < target.MinOpinionForHookup(ordered))
@@ -349,25 +349,16 @@ namespace BetterRomance
                 return 0f;
                 //Otherwise their rating is already factored in via secondary romance chance factor
             }
-
-            if (RomanceUtilities.WillPawnContinue(target, asker, out Pawn partner) || forTooltip)
+            RomanceUtilities.WillPawnContinue(target, asker, out float chance);
+            float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
+            //Lower chances if they're not in a relationship
+            if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
             {
-                //It's either not cheating or they have decided to cheat
-                float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
-                //Lower chances if they're not in a relationship
-                if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
-                {
-                    romanceFactor /= 1.5f;
-                }
-                float opinionFactor = OpinionFactor(target, asker, ordered);
-                if (forTooltip && partner != null)
-                {
-                    return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f) * RomanceUtilities.CheatingChance(target) * RomanceUtilities.PartnerFactor(target, partner, false);
-                }
-                //Adjust based on opinion and increase chance for forced job
-                return romanceFactor * opinionFactor * (ordered ? 1.2f : 1f);
+                romanceFactor /= 1.5f;
             }
-            return 0f;
+            float opinionFactor = OpinionFactor(target, asker, ordered);
+            //Adjust based on opinion and increase chance for forced job
+            return chance * romanceFactor * opinionFactor * (ordered ? 1.2f : 1f);
         }
 
         /// <summary>

@@ -188,7 +188,7 @@ namespace BetterRomance.HarmonyPatches
                 return "WBR.HookupChanceCant".Translate() + (" (" + ar.Reason + ")\n");
             }
             StringBuilder text = new();
-            text.AppendLine(("WBR.HookupChance".Translate() + (": " + HookupUtility.HookupSuccessChance(target, initiator,true , true).ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
+            text.AppendLine(("WBR.HookupChance".Translate() + (": " + HookupUtility.HookupSuccessChance(target, initiator, true).ToStringPercent())).Colorize(ColoredText.TipSectionTitleColor));
             text.Append(HookupUtility.HookupFactors(initiator, target));
             return text.ToString();
         }
@@ -201,16 +201,6 @@ namespace BetterRomance.HarmonyPatches
         public static bool Prefix(Pawn pawn)
         {
             return (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, [pawn]);
-        }
-    }
-
-    //Lets the PartnerFactor patch know I don't care about the result of WillPawnContinue
-    [HarmonyPatch(typeof(SocialCardUtility), "RomanceExplanation")]
-    public static class SocialCardUtility_RomanceExplanation
-    {
-        public static void Prefix()
-        {
-            InteractionWorker_RomanceAttempt_PartnerFactor.forTooltip = true;
         }
     }
 }

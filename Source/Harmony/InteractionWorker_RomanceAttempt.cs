@@ -81,7 +81,7 @@ namespace BetterRomance.HarmonyPatches
             }
 
             float cheatChance = 1f;
-            if (!RomanceUtilities.WillPawnContinue(initiator, recipient, out Pawn cheatOn, true))
+            if (!RomanceUtilities.WillPawnContinue(initiator, recipient, out _, true))
             {
                 //Do not allow if they've decided not to cheat
                 __result = 0f;
@@ -196,31 +196,15 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //Determines factors based on relationships with other pawns, used by SuccessChance
-    //Needs patched to use my smarter methods of looking at existing partners
+    //Needs patched to use my smarter method of looking at existing partners
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), "PartnerFactor")]
     public static class InteractionWorker_RomanceAttempt_PartnerFactor
     {
-        internal static bool forTooltip;
         public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
         {
-            float relationFactor = 1f;
-            //Check if this is cheating and whether they decide to do it anyways, also grabs the partner they would feel worst about cheating on
-            if (!RomanceUtilities.WillPawnContinue(recipient, initiator, out Pawn partnerToConsider, true) && !forTooltip)
-            {
-                __result = 0f;
-                return false;
-            }
-            else
-            {
-                //There is a partner they would be cheating on
-                //Since PartnerFactor and CheatingChance are already checked in WillPawnContinue, we only care about the actual factors if it's for the tooltip
-                if (partnerToConsider != null && forTooltip)
-                {
-                    relationFactor = RomanceUtilities.PartnerFactor(recipient, partnerToConsider, true) * RomanceUtilities.CheatingChance(recipient, true);
-                }
-                __result = relationFactor;
-                return false;
-            }
+            RomanceUtilities.WillPawnContinue(recipient, initiator, out float chance, true);
+            __result = chance;
+            return false;
         }
     }
 
@@ -228,12 +212,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.RomanceFactors))]
     public static class InteractionWorker_RomanceAttempt_RomanceFactors
     {
-        //Lets the PartnerFactor patch know I don't care about the result of WillPawnContinue
-        public static void Prefix()
-        {
-            InteractionWorker_RomanceAttempt_PartnerFactor.forTooltip = true;
-        }
-
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             MethodInfo PrettinessFactor = AccessTools.Method(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.PrettinessFactor));

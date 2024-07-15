@@ -61,17 +61,17 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Whether <paramref name="pawn"/> decides to continue with an interaction with <paramref name="otherPawn"/>. Always returns true if interaction is not cheating and is allowed by ideo. Otherwise, finds the partner they would feel the worst about cheating on and decides based on opinion and <paramref name="pawn"/>'s traits.
+        /// Whether <paramref name="pawn"/> decides to continue with an interaction with <paramref name="otherPawn"/>. Always returns true if interaction is not cheating and is allowed by ideo. Otherwise, uses the partner they would feel the worst about cheating on to decide.
         /// </summary>
         /// <param name="pawn"></param>
         /// <param name="otherPawn"></param>
-        /// <param name="cheatOn">The pawn they feel worst about cheating on</param>
-        /// <param name="loverCountOnly">Whether the cheating check should only check the lover count</param>
+        /// <param name="chance">The chance used to determine result, passed out for use in tool tips</param>
+        /// <param name="forRomance">Whether deciding to cheat would result in a new relationship</param>
         /// <returns></returns>
-        public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out Pawn cheatOn, bool loverCountOnly = false)
+        public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out float chance, bool forRomance = false)
         {
-            cheatOn = null;
-            if (IsThisCheating(pawn, otherPawn, out List<Pawn> cheatedOnList, loverCountOnly))
+            chance = 1f;
+            if (IsThisCheating(pawn, otherPawn, out List<Pawn> cheatedOnList, forRomance))
             {
                 //If pawn thinks they're cheating but no one would be upset about it, just use their love relations to decide
                 if (cheatedOnList.NullOrEmpty())
@@ -79,7 +79,7 @@ namespace BetterRomance
                     cheatedOnList = GetAllLoveRelationPawns(pawn, false, false);
                 }
                 //Generate random value, and compare to opinion of most liked partner and base cheat chance
-                if (Rand.Value > CheatingChance(pawn) * PartnerFactor(pawn, cheatedOnList, out cheatOn, loverCountOnly))
+                if (Rand.Value > (chance = CheatingChance(pawn) * PartnerFactor(pawn, cheatedOnList, out _, forRomance)))
                 {
                     return false;
                 }
@@ -96,14 +96,6 @@ namespace BetterRomance
         /// <returns></returns>
         public static float PartnerFactor(Pawn pawn, List<Pawn> partnerList, out Pawn partner, bool forRomance)
         {
-            if (forRomance)
-            {
-                LogUtil.ErrorOnce($"Checking partner factor for {pawn.LabelShort} (romance):", pawn.thingIDNumber, true);
-            }
-            else
-            {
-                LogUtil.ErrorOnce($"Checking partner factor for {pawn.LabelShort} (hook up):", pawn.thingIDNumber * 2, true);
-            }
             partner = null;
             float partnerFactor = 99999f;
             foreach (Pawn p in partnerList)
@@ -114,7 +106,6 @@ namespace BetterRomance
                     partnerFactor = tempPartnerFactor;
                     partner = p;
                 }
-
             }
             return partnerFactor;
         }
@@ -163,7 +154,6 @@ namespace BetterRomance
 
             //Adding romance chance factor lowers things way too much, since generally people in a relationship have a high romance chance factor
             float partnerFactor = opinionFactor * relationFactor;
-            LogUtil.WarningOnce($"Opinion of {partner.LabelShort}: {opinion}, factor: {partnerFactor}", GenText.StableStringHash(cheater.thingIDNumber.ToString() + partner.thingIDNumber.ToString() + (forRomance ? "romance" : "hookup")), true);
             return partnerFactor;
         }
 
