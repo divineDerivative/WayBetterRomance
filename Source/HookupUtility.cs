@@ -461,10 +461,7 @@ namespace BetterRomance
             if (RomanceUtilities.IsThisCheating(target, initiator, out List<Pawn> partnerList) && !partnerList.NullOrEmpty())
             {
                 float cheating = RomanceUtilities.PartnerFactor(target, partnerList, out _, false) * RomanceUtilities.CheatingChance(target, true);
-                if (cheating != 1f)
-                {
-                    text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheating));
-                }
+                text.AppendLine(HookupFactorLine("WBR.HookupChanceCheatingChance".Translate(), cheating));
                 if (Settings.RotRActive && target.Ideo != null)
                 {
                     string precept = RotR_Integration.RotRCheatingPreceptExplanation(target);
