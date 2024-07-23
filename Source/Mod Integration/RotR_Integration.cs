@@ -57,6 +57,18 @@ namespace BetterRomance
         {
             return (string)HelperClasses.RotRPreceptExplanation.Invoke(null, [preceptDef, value]);
         }
+
+        internal static void DiscardPawn(Pawn pawn)
+        {
+            if (pawn.IsWorldPawn())
+            {
+                Find.WorldPawns.RemoveAndDiscardPawnViaGC(pawn);
+            }
+            else
+            {
+                Find.WorldPawns.PassToWorld(pawn, PawnDiscardDecideMode.Discard);
+            }
+        }
     }
 
     namespace HarmonyPatches
@@ -78,11 +90,15 @@ namespace BetterRomance
                     harmony.Patch(typeof(HarmonyPatch_SocialCardUtility_RomanceExplanation).GetMethod("AddPreceptExplanation"), transpiler: new(typeof(RotRPatches).GetMethod(nameof(AddPreceptExplanationTranspiler))));
                     harmony.Patch(AccessTools.Method(typeof(QuestPart_BondOfFreedom_Reject), "DoAction"), prefix: new(typeof(RotRPatches).GetMethod(nameof(BondOfFreedom_RejectPrefix))), postfix: new(typeof(RotRPatches).GetMethod(nameof(BondOfFreedom_RejectPostfix))));
                 }
+#if v1_4
                 harmony.Patch(AccessTools.Method(typeof(QuestNode_Root_Crush), "TestRunInt"), transpiler: new(typeof(RotRPatches).GetMethod(nameof(QuestNode_Root_CrushTranspiler))));
+#else
+                harmony.Patch(AccessTools.Method(typeof(QuestNode_Root_Crush), "GetSinglePawns"), transpiler: new(typeof(RotRPatches).GetMethod(nameof(QuestNode_Root_Crush_GetSinglePawnsTranspiler))));
+#endif
                 harmony.Patch(AccessTools.Method(typeof(QuestNode_Root_DiplomaticMarriageAway), "SpawnSuitor"), postfix: new(typeof(RotRPatches).GetMethod(nameof(SpawnSuitorAwayPostfix))), transpiler: new(typeof(RotRPatches).GetMethod(nameof(SpawnSuitorTranspiler))));
                 harmony.Patch(AccessTools.Method(typeof(QuestNode_Root_DiplomaticMarriage), "SpawnSuitor"), postfix: new(typeof(RotRPatches).GetMethod(nameof(SpawnSuitorPostfix))), transpiler: new(typeof(RotRPatches).GetMethod(nameof(SpawnSuitorTranspiler))));
-                harmony.Patch(AccessTools.Method(typeof(HarmonyPatch_Pawn_AgeTracker_BirthdayBiological), nameof(HarmonyPatch_Pawn_AgeTracker_BirthdayBiological.CheckAdoptionChance)), transpiler: new(typeof(RotRPatches).GetMethod(nameof(CheckAdoptionChanceTranspiler))));
 
+#if v1_4
                 Type[] innerTypes = typeof(Dialog_DiplomaticMarriage).GetNestedTypes(AccessTools.all);
                 foreach (Type innerType in innerTypes)
                 {
@@ -94,6 +110,9 @@ namespace BetterRomance
                         break;
                     }
                 }
+#else
+                harmony.Patch(AccessTools.Method(typeof(Dialog_DiplomaticMarriage), "AcceptButtonActive"), postfix: new(typeof(RotRPatches).GetMethod(nameof(AcceptButtonActivePostfix))));
+#endif
             }
 
             //This is the same as the original patch with the cheating section removed
@@ -177,6 +196,24 @@ namespace BetterRomance
             {
                 return instructions.MinAgeForSexTranspiler(OpCodes.Ldloc_2);
             }
+            public static IEnumerable<CodeInstruction> QuestNode_Root_Crush_GetSinglePawnsTranspiler(IEnumerable<CodeInstruction> instructions)
+            {
+                foreach (CodeInstruction code in instructions)
+                {
+                    if (code.Calls(AccessTools.Method(typeof(QuestNode_Root_Crush), "GetMinAge")))
+                    {
+                        yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
+                    }
+                    else if (code.opcode == OpCodes.Ldarg_0)
+                    {
+                        yield return new CodeInstruction(OpCodes.Ldloc_2);
+                    }
+                    else
+                    {
+                        yield return code;
+                    }
+                }
+            }
 
             public static PawnGenerationRequest SuitorRequest;
 
@@ -201,7 +238,7 @@ namespace BetterRomance
                 FloatRange range = new(suitor.MinAgeForSex(), suitor.DeclineAtAge() + (suitor.DeclineAtAge() / 6));
                 if (!range.Includes(suitor.ageTracker.AgeBiologicalYearsFloat))
                 {
-                    Find.WorldPawns.RemoveAndDiscardPawnViaGC(suitor);
+                    RotR_Integration.DiscardPawn(suitor);
                     SuitorRequest.BiologicalAgeRange = range;
                     suitor = PawnGenerator.GeneratePawn(SuitorRequest);
                     if (!suitor.IsWorldPawn())
@@ -264,6 +301,11 @@ namespace BetterRomance
                 return result && suitor.CouldWeBeMarried(betrothed);
             }
 
+            public static void AcceptButtonActivePostfix(Pawn ___suitor, Pawn ___betrothed, ref bool __result)
+            {
+                __result = __result && ___suitor.CouldWeBeMarried(___betrothed);
+            }
+
             //Check custom love relations
             //Hasn't really been tested
             public static void BondOfFreedom_RejectPrefix(Pawn ___lover, Pawn ___slave, ref bool __state)
@@ -303,29 +345,32 @@ namespace BetterRomance
                 }
             }
 
-            //Use age settings
-            public static IEnumerable<CodeInstruction> CheckAdoptionChanceTranspiler(IEnumerable<CodeInstruction> instructions)
-            {
-                IEnumerable<CodeInstruction> codes = instructions.AdultMinAgeInt(OpCodes.Ldarg_0);
-                foreach (CodeInstruction code in codes)
-                {
-                    if (code.LoadsConstant(8))
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return CodeInstruction.Call(typeof(RotRPatches), nameof(AdoptionAge));
-                    }
-                    else
-                    {
-                        yield return code;
-                    }
-                }
-            }
+            //The age range was changed to a mod setting, which is still static for all races so without knowing the context of the player's game I can't reasonably convert the ages
+            //Maybe when I get around to making race age settings visible, I can hook into RotR's settings page to display settings per race
+            //Would likely need to add adoption age range to the race settings object
+            ////Use age settings
+            //public static IEnumerable<CodeInstruction> CheckAdoptionChanceTranspiler(IEnumerable<CodeInstruction> instructions)
+            //{
+            //    IEnumerable<CodeInstruction> codes = instructions.AdultMinAgeInt(OpCodes.Ldarg_0);
+            //    foreach (CodeInstruction code in codes)
+            //    {
+            //        if (code.LoadsConstant(8))
+            //        {
+            //            yield return new CodeInstruction(OpCodes.Ldarg_0);
+            //            yield return CodeInstruction.Call(typeof(RotRPatches), nameof(AdoptionAge));
+            //        }
+            //        else
+            //        {
+            //            yield return code;
+            //        }
+            //    }
+            //}
 
-            private static int AdoptionAge(Pawn pawn)
-            {
-                int firstGrowth = SettingsUtilities.GetGrowthMoment(pawn, 0);
-                return firstGrowth + ((SettingsUtilities.GetGrowthMoment(pawn, 1) - firstGrowth) / 3);
-            }
+            //private static int AdoptionAge(Pawn pawn)
+            //{
+            //    int firstGrowth = SettingsUtilities.GetGrowthMoment(pawn, 0);
+            //    return firstGrowth + ((SettingsUtilities.GetGrowthMoment(pawn, 1) - firstGrowth) / 3);
+            //}
         }
     }
 }

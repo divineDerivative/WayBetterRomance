@@ -40,11 +40,13 @@
           <Version>2.2.2.0</Version>
           <ExcludeAssets>runtime</ExcludeAssets>
         </PackageReference>
-      </ItemGroup>
-      <ItemGroup>
         <PackageReference Include="Krafs.Rimworld.Ref" Version="1.4.*">
           <ExcludeAssets>runtime</ExcludeAssets>
         </PackageReference>
+        <Reference Include="RomanceOnTheRim">
+          <HintPath>..\..\..\..\..\workshop\content\294100\2654432921\1.4\Assemblies\RomanceOnTheRim.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </When>
     <When Condition="'$(Configuration)|$(Platform)' == '1.5|AnyCPU'">
@@ -52,11 +54,13 @@
         <PackageReference Include="Lib.Harmony" Version="2.3.*">
           <ExcludeAssets>runtime</ExcludeAssets>
         </PackageReference>
-      </ItemGroup>
-      <ItemGroup>
         <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*-*">
           <ExcludeAssets>runtime</ExcludeAssets>
         </PackageReference>
+        <Reference Include="RomanceOnTheRim">
+          <HintPath>..\..\..\..\..\workshop\content\294100\2654432921\1.5\Assemblies\RomanceOnTheRim.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </When>
   </Choose>
@@ -71,10 +75,6 @@
     </Reference>
     <Reference Include="Pawnmorph">
       <HintPath>..\..\..\..\..\workshop\content\294100\1786466855\1.5\Assemblies\Pawnmorph.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RomanceOnTheRim">
-      <HintPath>..\..\..\..\..\workshop\content\294100\2654432921\1.4\Assemblies\RomanceOnTheRim.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <None Include="..\.editorconfig">
