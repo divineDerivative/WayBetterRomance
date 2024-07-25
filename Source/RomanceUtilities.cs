@@ -68,7 +68,7 @@ namespace BetterRomance
         /// <param name="chance">The chance used to determine result, passed out for use in tool tips</param>
         /// <param name="forRomance">Whether deciding to cheat would result in a new relationship</param>
         /// <returns></returns>
-        public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out float chance, bool forRomance = false)
+        public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out float chance, bool forRomance)
         {
             chance = 1f;
             if (IsThisCheating(pawn, otherPawn, out List<Pawn> cheatedOnList, forRomance))

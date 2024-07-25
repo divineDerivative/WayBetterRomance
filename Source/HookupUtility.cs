@@ -349,7 +349,7 @@ namespace BetterRomance
                 return 0f;
                 //Otherwise their rating is already factored in via secondary romance chance factor
             }
-            RomanceUtilities.WillPawnContinue(target, asker, out float chance);
+            RomanceUtilities.WillPawnContinue(target, asker, out float chance, false);
             float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
             //Lower chances if they're not in a relationship
             if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
@@ -389,7 +389,7 @@ namespace BetterRomance
         /// <param name="initiator">If <paramref name="pawn"/> is initiating the hookup</param>
         /// <param name="ordered">If this is an ordered hookup</param>
         /// <returns>An <see cref="AcceptanceReport"/> with rejection reason if applicable</returns>
-        public static AcceptanceReport WillPawnTryHookup(Pawn pawn, bool initiator = false, bool ordered = false)
+        public static AcceptanceReport WillPawnTryHookup(Pawn pawn, bool initiator, bool ordered)
         {
             //We return false if no reason needs to be given, otherwise return the string for the rejection reason
             //Check for drones

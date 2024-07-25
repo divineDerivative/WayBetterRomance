@@ -19,7 +19,7 @@ namespace BetterRomance
                 return null;
             }
             //Checks on whether pawn should try hookup now
-            if (!InteractionUtility.CanInitiateInteraction(pawn) || !HookupUtility.WillPawnTryHookup(pawn, initiator: true) || PawnUtility.WillSoonHaveBasicNeed(pawn))
+            if (!InteractionUtility.CanInitiateInteraction(pawn) || !HookupUtility.WillPawnTryHookup(pawn, true, false) || PawnUtility.WillSoonHaveBasicNeed(pawn))
             {
                 return null;
             }
@@ -34,7 +34,7 @@ namespace BetterRomance
                 return null;
             }
             //If this hookup is cheating, will pawn do it anyways?
-            if (!RomanceUtilities.WillPawnContinue(pawn, partner, out _))
+            if (!RomanceUtilities.WillPawnContinue(pawn, partner, out _, false))
             {
                 return null;
             }
