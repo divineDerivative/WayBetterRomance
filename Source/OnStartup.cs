@@ -222,15 +222,7 @@ namespace BetterRomance
             {
                 Settings.FertilityMods.Add("safe.job.world", "SJW");
             }
-            //Try to auto set if there's only one choice
-            if (Settings.FertilityMods.Count == 1 && (Settings.fertilityMod == "None" || !Settings.FertilityMods.ContainsKey(Settings.fertilityMod)))
-            {
-                Settings.fertilityMod = Settings.FertilityMods.First().Key;
-            }
-            else if (!Settings.FertilityMods.ContainsKey(Settings.fertilityMod))
-            {
-                Settings.fertilityMod = "None";
-            }
+            Settings.AutoDetectFertilityMod();
         }
     }
 

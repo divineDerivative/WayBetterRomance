@@ -95,6 +95,19 @@ namespace BetterRomance
                 def.colonistsOnly = true;
             }
         }
+
+        //Try to auto set if there's only one choice
+        public static void AutoDetectFertilityMod()
+        {
+            if (FertilityMods.Count == 1 && (fertilityMod == "None" || !FertilityMods.ContainsKey(fertilityMod)))
+            {
+                fertilityMod = FertilityMods.First().Key;
+            }
+            else if (!FertilityMods.ContainsKey(fertilityMod))
+            {
+                fertilityMod = "None";
+            }
+        }
     }
 
     internal class BetterRomanceMod : Mod
@@ -294,14 +307,7 @@ namespace BetterRomance
 
         private static void DrawRightMisc(Listing_Standard list)
         {
-            if (Settings.FertilityMods.Count == 1 && (Settings.fertilityMod == "None" || !Settings.FertilityMods.ContainsKey(Settings.fertilityMod)))
-            {
-                Settings.fertilityMod = Settings.FertilityMods.First().Key;
-            }
-            else if (!Settings.FertilityMods.ContainsKey(Settings.fertilityMod))
-            {
-                Settings.fertilityMod = "None";
-            }
+            Settings.AutoDetectFertilityMod();
             if (list.ButtonTextLabeled("Fertility Mod", Settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(Settings.fertilityMod) : "None"))
             {
                 List<FloatMenuOption> options = new();
