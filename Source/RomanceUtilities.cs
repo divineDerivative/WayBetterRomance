@@ -161,6 +161,7 @@ namespace BetterRomance
         /// Base chance that a given <paramref name="pawn"/> will cheat. Based on settings and traits.
         /// </summary>
         /// <param name="pawn"></param>
+        /// <param name="excludePrecept">If this is being used for a tooltip, don't include RotR precepts since they have their own tooltips</param>
         /// <returns></returns>
         public static float CheatingChance(Pawn pawn, bool excludePrecept = false)
         {
@@ -268,7 +269,7 @@ namespace BetterRomance
             int maxOpinion = 0;
             foreach (DirectPawnRelation rel in pawn.relations.DirectRelations)
             {
-                if (rel.def == relation && (rel.otherPawn.Dead || allowDead))
+                if (rel.def == relation && (!rel.otherPawn.Dead || allowDead))
                 {
                     if (pawn.relations.OpinionOf(rel.otherPawn) > maxOpinion)
                     {
