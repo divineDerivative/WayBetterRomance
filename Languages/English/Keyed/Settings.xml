@@ -41,4 +41,9 @@
 
 	<WBR.MatchAboveButton>Match above</WBR.MatchAboveButton>
 	<WBR.MatchBelowButton>Match below</WBR.MatchBelowButton>
+	
+	<!--Misc-->
+	<WBR.FertilityMod>Fertility Mod</WBR.FertilityMod>
+	<WBR.NoFertilityMod>No fertility mod detected. If you are using one, please let me know which one so I can add support for it.</WBR.NoFertilityMod>
+	<WBR.AddJoyNeed>Add joy need (reload save after changing)</WBR.AddJoyNeed>
 </LanguageData>

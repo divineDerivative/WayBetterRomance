@@ -308,7 +308,7 @@ namespace BetterRomance
         private static void DrawRightMisc(Listing_Standard list)
         {
             Settings.AutoDetectFertilityMod();
-            if (list.ButtonTextLabeled("Fertility Mod", Settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(Settings.fertilityMod) : "None"))
+            if (list.ButtonTextLabeled("WBR.FertilityMod".Translate(), Settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(Settings.fertilityMod) : "None"))
             {
                 List<FloatMenuOption> options = new();
                 foreach (KeyValuePair<string, string> item in Settings.FertilityMods)
@@ -325,14 +325,14 @@ namespace BetterRomance
             }
             if (Settings.FertilityMods.Count == 0)
             {
-                list.Label("No fertility mod detected. If you are using one, please let me know which one so I can add support for it.");
+                list.Label("WBR.NoFertilityMod".Translate());
             }
-            list.Label("Add joy need (reload save after changing)");
+            list.Label("WBR.AddJoyNeed".Translate());
             if (ModsConfig.IdeologyActive)
             {
-                list.CheckboxLabeled("Slaves", ref settings.joyOnSlaves);
+                list.CheckboxLabeled("SlavesSection".Translate(), ref settings.joyOnSlaves);
             }
-            list.CheckboxLabeled("Prisoners", ref settings.joyOnPrisoners);
+            list.CheckboxLabeled("PrisonersSection".Translate(), ref settings.joyOnPrisoners);
             if (Prefs.DevMode)
             {
                 list.CheckboxLabeled("Enable dev logging", ref Settings.debugLogging);

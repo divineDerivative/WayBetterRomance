@@ -208,19 +208,19 @@ namespace BetterRomance
         {
             if (ModsConfig.BiotechActive)
             {
-                Settings.FertilityMods.Add("ludeon.rimworld.biotech", "Biotech");
+                Settings.FertilityMods.Add("ludeon.rimworld.biotech", ModLister.GetExpansionWithIdentifier("ludeon.rimworld.biotech").label);
             }
             if (ModsConfig.IsActive("dylan.csl"))
             {
-                Settings.FertilityMods.Add("dylan.csl", "Children, school and learning");
+                Settings.FertilityMods.Add("dylan.csl", ModLister.GetActiveModWithIdentifier("dylan.csl").Name);
             }
             if (ModsConfig.IsActive("rim.job.world"))
             {
-                Settings.FertilityMods.Add("rim.job.world", "RJW");
+                Settings.FertilityMods.Add("rim.job.world", ModLister.GetActiveModWithIdentifier("rim.job.world").Name);
             }
             if (ModsConfig.IsActive("safe.job.world"))
             {
-                Settings.FertilityMods.Add("safe.job.world", "SJW");
+                Settings.FertilityMods.Add("safe.job.world", ModLister.GetActiveModWithIdentifier("safe.job.world").Name);
             }
             Settings.AutoDetectFertilityMod();
         }
