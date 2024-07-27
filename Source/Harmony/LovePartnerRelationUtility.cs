@@ -18,8 +18,7 @@ namespace BetterRomance.HarmonyPatches
             IEnumerable<CodeInstruction> codes = instructions.MinAgeForSexForTwo(OpCodes.Ldarg_0, OpCodes.Ldarg_1, 14f);
 
             MethodInfo BiotechActive = AccessTools.PropertyGetter(typeof(ModsConfig), nameof(ModsConfig.BiotechActive));
-            Label firstLabel = ilg.DefineLabel();
-            Label secondLabel = ilg.DefineLabel();
+            Label myLabel = ilg.DefineLabel();
             int step = 0;
             foreach (CodeInstruction code in codes)
             {
@@ -27,19 +26,10 @@ namespace BetterRomance.HarmonyPatches
                 {
                     step++;
                 }
-                //Add our stuff right before the Biotech section
+                //Add a label to the Biotech section
                 if (code.Calls(BiotechActive))
                 {
-                    //Removing wrong orientation matches for randomly generated relationships, since this is used for both spouses and lovers
-                    //if (!OrientationUtility.AttractionBetween(generated, other, true)) { return 0f; }
-                    yield return new(OpCodes.Ldarg_0).MoveLabelsFrom(code).WithLabels(firstLabel);
-                    code.labels.Add(secondLabel);
-                    yield return new(OpCodes.Ldarg_1);
-                    yield return new(OpCodes.Ldc_I4_1);
-                    yield return CodeInstruction.Call(typeof(OrientationUtility), nameof(OrientationUtility.AttractionBetween));
-                    yield return new(OpCodes.Brtrue, secondLabel);
-                    yield return new(OpCodes.Ldc_R4, 0f);
-                    yield return new(OpCodes.Ret);
+                    code.labels.Add(myLabel);
                 }
                 //Remove the gay reduction by storing 1f no matter what
                 if (code.opcode == OpCodes.Stloc_1)
@@ -53,7 +43,7 @@ namespace BetterRomance.HarmonyPatches
                 //Make this jump to my section, skipping the gay checks entirely
                 if (step == 2 && code.Branches(out _))
                 {
-                    code.operand = firstLabel;
+                    code.operand = myLabel;
                     step++;
                 }
             }
@@ -61,12 +51,8 @@ namespace BetterRomance.HarmonyPatches
 
         public static void Postfix(Pawn generated, Pawn other, ref float __result)
         {
-            //Adjust with asexual rating
-            float sexualityFactor = 1f;
-            if (generated.IsAsexual())
-            {
-                sexualityFactor = generated.SexRepulsed(other) ? 0f : generated.AsexualRating();
-            }
+            //Do orientation match
+            float sexualityFactor = RomanceUtilities.OrientationFactor(generated, other);
             __result *= sexualityFactor;
         }
     }
