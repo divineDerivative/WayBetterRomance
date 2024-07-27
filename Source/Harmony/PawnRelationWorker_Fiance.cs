@@ -17,7 +17,7 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
-    //Respect sex repulsion rules
+    //Respect marriage rules
     [HarmonyPatch(typeof(PawnRelationWorker_Fiance), nameof(PawnRelationWorker_Fiance.GenerationChance))]
     public static class PawnRelationWorker_Fiance_GenerationChance
     {
@@ -27,7 +27,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 return;
             }
-            if (generated.SexRepulsed(other) || other.SexRepulsed(generated))
+            if (!OrientationUtility.CouldWeBeMarried(generated, other))
             {
                 __result = 0f;
                 return;
