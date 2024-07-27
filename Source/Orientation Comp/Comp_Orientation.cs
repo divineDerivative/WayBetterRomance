@@ -137,7 +137,9 @@ namespace BetterRomance
         {
             base.Initialize(props);
             sexual = new AttractionVars();
+            sexual.gender = Pawn.gender;
             romantic = new AttractionVars();
+            romantic.gender = Pawn.gender;
         }
 
         public override void PostExposeData()
