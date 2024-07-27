@@ -4,8 +4,8 @@ using Verse;
 
 namespace BetterRomance.HarmonyPatches
 {
-    //This is the patch to apply the partner comp only to pawns with the joy need, since it's only used for joy activities
-    //Also adds the asexual comp to asexual pawns
+    //Add various comps as needed
+    //This needs to be done here or else PostExposeData doesn't correctly load the saved information
     [HarmonyPatch(typeof(Pawn_NeedsTracker), nameof(Pawn_NeedsTracker.AddOrRemoveNeedsAsAppropriate))]
     public static class Pawn_NeedsTracker_AddOrRemoveNeedsAsAppropriate
     {
@@ -18,6 +18,10 @@ namespace BetterRomance.HarmonyPatches
             if (___pawn.IsAsexual())
             {
                 ___pawn.CheckForComp<Comp_SexRepulsion>();
+            }
+            if (___pawn.story?.traits?.HasTrait(RomanceDefOf.DynamicOrientation) ?? false)
+            {
+                ___pawn.CheckForComp<Comp_Orientation>();
             }
         }
     }
