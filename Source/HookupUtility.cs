@@ -349,7 +349,7 @@ namespace BetterRomance
                 return 0f;
                 //Otherwise their rating is already factored in via secondary romance chance factor
             }
-            RomanceUtilities.WillPawnContinue(target, asker, out float chance, false);
+            RomanceUtilities.WillPawnContinue(target, asker, out float chance, false, false);
             float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
             //Lower chances if they're not in a relationship
             if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
@@ -358,7 +358,7 @@ namespace BetterRomance
             }
             float opinionFactor = OpinionFactor(target, asker, ordered);
             //Adjust based on opinion and increase chance for forced job
-            return chance * romanceFactor * opinionFactor * (ordered ? 1.2f : 1f);
+            return chance * romanceFactor * opinionFactor * (ordered ? 1f : 0.8f);
         }
 
         /// <summary>

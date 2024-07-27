@@ -82,7 +82,7 @@ namespace BetterRomance
                     //Remove the original patch
                     harmony.Unpatch(typeof(InteractionWorker_RomanceAttempt).GetMethod("RandomSelectionWeight"), typeof(HarmonyPatch_InteractionWorker_RomanceAttempt).GetMethod("RandomSelectionWeightPostfix"));
                     //Add my version of the patch
-                    harmony.Patch(typeof(InteractionWorker_RomanceAttempt).GetMethod("RandomSelectionWeight"), postfix: new(typeof(RotRPatches).GetMethod("RomanceAttempt_RandomSelectionWeight_Patch")));
+                    harmony.Patch(typeof(InteractionWorker_RomanceAttempt).GetMethod("RandomSelectionWeight"), postfix: new(typeof(RotRPatches).GetMethod(nameof(RomanceAttempt_RandomSelectionWeight_Patch))));
 
                     harmony.Unpatch(typeof(InteractionWorker_RomanceAttempt).GetMethod("SuccessChance"), typeof(HarmonyPatch_InteractionWorker_RomanceAttempt).GetMethod(nameof(HarmonyPatch_InteractionWorker_RomanceAttempt.SuccessChancePostfix)));
                     harmony.Patch(typeof(InteractionWorker_RomanceAttempt).GetMethod("SuccessChance"), postfix: new(typeof(RotRPatches).GetMethod(nameof(SuccessChancePostfix))));
@@ -138,6 +138,7 @@ namespace BetterRomance
                 {
                     __result = Mathf.Clamp01(__result * 1.5f);
                 }
+                __result *= RotR_Integration.RotRCheatChanceModifier(initiator);
             }
 
             //This is the same as the original patch with the cheating section removed
@@ -166,6 +167,7 @@ namespace BetterRomance
                 {
                     __result = Mathf.Clamp01(__result * 1.5f);
                 }
+                __result *= RotR_Integration.RotRCheatChanceModifier(recipient);
             }
 
             //Removes the check against the romancer's romance need

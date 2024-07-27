@@ -68,7 +68,7 @@ namespace BetterRomance
         /// <param name="chance">The chance used to determine result, passed out for use in tool tips</param>
         /// <param name="forRomance">Whether deciding to cheat would result in a new relationship</param>
         /// <returns></returns>
-        public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out float chance, bool forRomance)
+        public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out float chance, bool forRomance, bool excludeCheatingPrecept)
         {
             chance = 1f;
             if (IsThisCheating(pawn, otherPawn, out List<Pawn> cheatedOnList, forRomance))
@@ -79,7 +79,7 @@ namespace BetterRomance
                     cheatedOnList = GetAllLoveRelationPawns(pawn, false, false);
                 }
                 //Generate random value, and compare to opinion of most liked partner and base cheat chance
-                if (Rand.Value > (chance = CheatingChance(pawn) * PartnerFactor(pawn, cheatedOnList, out _, forRomance)))
+                if (Rand.Value > (chance = CheatingChance(pawn, excludeCheatingPrecept) * PartnerFactor(pawn, cheatedOnList, out _, forRomance)))
                 {
                     return false;
                 }

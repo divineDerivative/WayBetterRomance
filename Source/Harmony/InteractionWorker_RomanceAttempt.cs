@@ -81,7 +81,7 @@ namespace BetterRomance.HarmonyPatches
             }
 
             float cheatChance = 1f;
-            if (!RomanceUtilities.WillPawnContinue(initiator, recipient, out _, true))
+            if (!RomanceUtilities.WillPawnContinue(initiator, recipient, out _, true, true))
             {
                 //Do not allow if they've decided not to cheat
                 __result = 0f;
@@ -202,7 +202,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
         {
-            RomanceUtilities.WillPawnContinue(recipient, initiator, out float chance, true);
+            RomanceUtilities.WillPawnContinue(recipient, initiator, out float chance, true, true);
             __result = chance;
             return false;
         }
