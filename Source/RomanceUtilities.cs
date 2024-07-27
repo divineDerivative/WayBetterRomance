@@ -324,7 +324,7 @@ namespace BetterRomance
             //If this is a sexual encounter for an asexual person, use their rating and adjust further for romantic attraction
             if (!romantic && pawn.IsAsexual() && !target.IsAsexual())
             {
-                factor *= pawn.AsexualRating() / 2;
+                factor = pawn.SexRepulsed(target) ? 0f : pawn.AsexualRating();
                 if (!pawn.AttractedTo(target, true))
                 {
                     factor *= 0.125f;
