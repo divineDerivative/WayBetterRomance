@@ -195,7 +195,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 if (trait == TraitDefOf.Asexual)
                 {
-                    return romance ? pawn.IsAro() : pawn.IsAsexual();
+                    return romance ? pawn.IsAromantic() : pawn.IsAsexual();
                 }
                 if (trait == RomanceDefOf.Straight)
                 {
