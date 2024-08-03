@@ -205,7 +205,7 @@ namespace BetterRomance
             }
 
             //LogUtil.Message($"Removing {trait.Label} from {pawn.LabelShort}");
-            pawn.story.traits.RemoveTrait(trait);
+            pawn.story.traits.RemoveTrait(trait, true);
             if (!pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
             {
                 pawn.story.traits.GainTrait(new Trait(RomanceDefOf.DynamicOrientation));
