@@ -93,8 +93,5 @@
 				<description>REPLACE THIS</description>
 			</li>
 		</degreeDatas>
-		<exclusionTags>
-			<li>SexualOrientation</li>
-		</exclusionTags>
 	</TraitDef>
 </Defs>
