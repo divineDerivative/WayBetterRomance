@@ -14,14 +14,14 @@
 
 	<WBR.AceOrientationHeading>Asexual Romantic Orientation Chances</WBR.AceOrientationHeading>
 	<WBR.AceOrientationHeadingTip>Asexual pawns will be assigned a romantic orientation using the settings below.</WBR.AceOrientationHeadingTip>
-	<WBR.AceHeteroChance>Chance of a Pawn Being Heteroromantic:</WBR.AceHeteroChance>
-	<WBR.AceHeteroChanceTip>Romantically interested only in opposite-gender partners</WBR.AceHeteroChanceTip>
-	<WBR.AceBiChance>Chance of a Pawn Being Biromantic: {0}%</WBR.AceBiChance>
-	<WBR.AceBiChanceTip>Romantically interested in both men and women</WBR.AceBiChanceTip>
-	<WBR.AceHomoChance>Chance of a Pawn Being Homoromantic: {0}%</WBR.AceHomoChance>
-	<WBR.AceHomoChanceTip>Romantically interested only in same-gender partners</WBR.AceHomoChanceTip>
-	<WBR.AceAroChance>Chance of a Pawn Being Aromantic: {0}%</WBR.AceAroChance>
-	<WBR.AceAroChanceTip>Uninterested in all romantic engagements. These pawns will behave similar to vanilla asexual pawns.</WBR.AceAroChanceTip>
+	<WBR.HeteroromanticChance>Chance of a Pawn Being Heteroromantic: {0}%</WBR.HeteroromanticChance>
+	<WBR.HeteroromanticChanceTip>Romantically interested only in opposite-gender partners</WBR.HeteroromanticChanceTip>
+	<WBR.BiromanticChance>Chance of a Pawn Being Biromantic: {0}%</WBR.BiromanticChance>
+	<WBR.BiromanticChanceTip>Romantically interested in both men and women</WBR.BiromanticChanceTip>
+	<WBR.HomoromanticChance>Chance of a Pawn Being Homoromantic: {0}%</WBR.HomoromanticChanceTip>
+	<WBR.HomoromanticChanceTip>Romantically interested only in same-gender partners</WBR.HomoromanticChanceTip>
+	<WBR.AromanticChance>Chance of a Pawn Being Aromantic: {0}%</WBR.AromanticChance>
+	<WBR.AromanticChanceTip>Uninterested in all romantic engagements. These pawns will behave similar to vanilla asexual pawns.</WBR.AromanticChanceTip>
 
 	<WBR.OtherHeading>Other Settings</WBR.OtherHeading>
 	<WBR.AlienLoveChance>Modifier for Cross-Species Romance: {0}%</WBR.AlienLoveChance>

@@ -15,10 +15,10 @@ namespace BetterRomance
         public float gayChance = -999f;
         public float straightChance = -999f;
 
-        public float aceAroChance = -999f;
-        public float aceBiChance = -999f;
-        public float aceHomoChance = -999f;
-        public float aceHeteroChance = -999f;
+        public float aromanticChance = -999f;
+        public float biromanticChance = -999f;
+        public float homoromanticChance = -999f;
+        public float heteroromanticChance = -999f;
 
         public override IEnumerable<string> ConfigErrors()
         {
@@ -33,14 +33,14 @@ namespace BetterRomance
                     hetero = straightChance,
                 };
             }
-            if (asexual == null && (!aceAroChance.IsUnset() || !aceBiChance.IsUnset() || !aceHomoChance.IsUnset() || !aceHeteroChance.IsUnset()))
+            if (asexual == null && (!aromanticChance.IsUnset() || !biromanticChance.IsUnset() || !homoromanticChance.IsUnset() || !heteroromanticChance.IsUnset()))
             {
                 asexual = new()
                 {
-                    none = aceAroChance,
-                    bi = aceBiChance,
-                    homo = aceHomoChance,
-                    hetero = aceHeteroChance,
+                    none = aromanticChance,
+                    bi = biromanticChance,
+                    homo = homoromanticChance,
+                    hetero = heteroromanticChance,
                 };
             }
             if (sexual != null)
