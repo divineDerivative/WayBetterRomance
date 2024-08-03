@@ -51,6 +51,10 @@ namespace BetterRomance.HarmonyPatches
 
         public static void Postfix(Pawn generated, Pawn other, ref float __result)
         {
+            if (__result == 0)
+            {
+                return;
+            }
             //Do orientation match
             float sexualityFactor = RomanceUtilities.OrientationFactor(generated, other);
             __result *= sexualityFactor;
