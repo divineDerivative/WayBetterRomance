@@ -179,7 +179,7 @@ namespace BetterRomance.HarmonyPatches
         public static bool TraitConversion(TraitSet set, TraitDef trait, bool romance)
         {
             Pawn pawn = set.GetPawn();
-            if (traits.Contains(trait))
+            if (traits.Contains(trait) && pawn.TryGetComp<Comp_Orientation>() is not null)
             {
                 if (trait == TraitDefOf.Gay)
                 {
