@@ -47,7 +47,7 @@ namespace BetterRomance.HarmonyPatches
                 //Remove the old trait
                 if (traitCount > 1)
                 {
-                    ___pawn.story.traits.RemoveTrait(__state, suppressConflicts);
+                    ___pawn.story.traits.RemoveTrait(__state, true);
                 }
             }
             //Convert the new trait
@@ -56,19 +56,5 @@ namespace BetterRomance.HarmonyPatches
                 Comp_Orientation.ConvertOrientation(___pawn, trait);
             }
         }
-        //Need to figure out how to prevent Biotech from just suppressing the trait and then the above doesn't remove it
-        //private static bool HasTraitIncludeSuppressed(Pawn pawn, TraitDef traitDef)
-        //{
-        //    List<Trait> allTraits = pawn.story.traits.allTraits;
-        //    for (int i = 0; i < allTraits.Count; i++)
-        //    {
-        //        if (allTraits[i].def == traitDef)
-        //        {
-        //            Log.Message("Trait found: " + traitDef.label);
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
     }
 }
