@@ -17,7 +17,7 @@ namespace BetterRomance
                 {
                     return false;
                 }
-                return SelPawn.IsHumanlike();
+                return CanShowSexualityTab();
             }
         }
 
@@ -92,6 +92,6 @@ namespace BetterRomance
             size = new(400f, 300f);
         }
 
-        public bool CanShowSexualityTab() => SelPawn.IsHumanlike();
+        public bool CanShowSexualityTab() => SelPawn.HasComp<Comp_Orientation>();
     }
 }

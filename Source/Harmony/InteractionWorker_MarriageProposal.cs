@@ -17,6 +17,7 @@ namespace BetterRomance.HarmonyPatches
         //Do not allow if recipient's gender does not match initiator's orientation
         public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
         {
+            initiator.EnsureTraits();
             if (!initiator.WouldConsiderMarriage(recipient))
             {
                 __result = 0f;

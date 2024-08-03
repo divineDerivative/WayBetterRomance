@@ -48,7 +48,7 @@ namespace BetterRomance
             {
                 return false;
             }
-            //Check asexuality
+            //Shortcut if they're both asexual
             if (first.IsAsexual() && second.IsAsexual())
             {
                 return true;
@@ -75,10 +75,11 @@ namespace BetterRomance
             }
             return true;
         }
-
+        
+        //Someone without the comp should be considered aromantic, such as a child or robot
         public static bool IsAromantic(this Pawn pawn)
         {
-            return pawn.TryGetComp<Comp_Orientation>()?.Aromantic ?? false;
+            return pawn.TryGetComp<Comp_Orientation>()?.Aromantic ?? true;
         }
 
         public static bool IsGay(this Pawn pawn, bool romance)
