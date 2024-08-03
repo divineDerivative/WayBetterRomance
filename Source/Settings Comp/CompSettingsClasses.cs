@@ -47,22 +47,22 @@ namespace BetterRomance
             bool result = false;
             if (hetero.IsUnset())
             {
-                list += asexual ? " aceHeteroChance" : " straightChance";
+                list += asexual ? " heteroromanticChance" : " straightChance";
                 result = true;
             }
             if (homo.IsUnset())
             {
-                list += asexual ? " aceHomoChance" : " gayChance";
+                list += asexual ? " homoromanticChance" : " gayChance";
                 result = true;
             }
             if (bi.IsUnset())
             {
-                list += asexual ? " aceBiChance" : " bisexualChance";
+                list += asexual ? " biromanticChance" : " bisexualChance"; ;
                 result = true;
             }
             if (none.IsUnset())
             {
-                list += asexual ? " aceAroChance" : " asexualChance";
+                list += asexual ? " aromanticChance" : " asexualChance"; ;
                 result = true;
             }
             return result;
