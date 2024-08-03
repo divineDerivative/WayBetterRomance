@@ -11,12 +11,11 @@ namespace BetterRomance
             //Don't give them to drones either
             if (pawn.DevelopmentalStage.Adult() && !pawn.DroneCheck())
             {
-                foreach (Trait trait in pawn.story.traits.allTraits)
+                foreach (TraitDef def in OrientationUtility.OrientationTraits)
                 {
-                    if (OrientationUtility.OrientationTraits.Contains(trait.def))
+                    if (pawn.story.traits.HasTrait(def))
                     {
-                        Comp_Orientation.ConvertOrientation(pawn, trait);
-                        return;
+                        Comp_Orientation.ConvertOrientation(pawn, pawn.story.traits.GetTrait(def));
                     }
                 }
                 if (pawn.TryGetComp<Comp_Orientation>() == null)
