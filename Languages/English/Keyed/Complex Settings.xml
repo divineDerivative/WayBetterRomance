@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-	<WBR.SexualOrientationHeadingTip>Each person in the game will have sexual orientation. This is for determining sexual attraction only.</WBR.SexualOrientationHeadingTip>
-	<WBR.HeterosexualChance>Chance of a Pawn Being Heterosexual:</WBR.HeterosexualChance>
+	<WBR.SexualOrientationHeadingTip>Each person in the game will have a sexual orientation. This is for determining sexual attraction only.</WBR.SexualOrientationHeadingTip>
+	<WBR.HeterosexualChance>Heterosexual: {0}%</WBR.HeterosexualChance>
 	<WBR.HeterosexualChanceTip>Sexually interested only in opposite-gender partners</WBR.HeterosexualChanceTip>
 	<WBR.BisexualComplexChanceTip>Sexually interested in both men and women</WBR.BisexualComplexChanceTip>
-	<WBR.HomosexualChance>Chance of a Pawn Being Homosexual:</WBR.HomosexualChance>
+	<WBR.HomosexualChance>Homosexual: {0}%</WBR.HomosexualChance>
 	<WBR.HomosexualChanceTip>Sexually interested only in same-gender partners</WBR.HomosexualChanceTip>
 
 	<WBR.RomanticOrientationHeading>Romantic Orientation Chances</WBR.RomanticOrientationHeading>
 	<WBR.RomanticOrientationHeadingTip>Each person in the game will have a romantic orientation, which may not be the same as their sexual orientation.</WBR.RomanticOrientationHeadingTip>
-	<WBR.AromanticTip>Uninterested in all romantic engagements. Will not initiate or accept romance attempts</WBR.AromanticTip>
+	<WBR.AromanticComplexTip>Uninterested in all romantic engagements. Will not initiate or accept romance attempts. Will participate in sex based on their sexual orientation.</WBR.AromanticComplexTip>
 </LanguageData>
