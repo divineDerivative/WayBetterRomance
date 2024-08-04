@@ -1,5 +1,6 @@
 using RimWorld;
 using Verse;
+using static BetterRomance.WBRLogger;
 
 namespace BetterRomance
 {
@@ -20,7 +21,14 @@ namespace BetterRomance
                 }
                 if (pawn.TryGetComp<Comp_Orientation>() == null)
                 {
-                    AssignOrientation(pawn);
+                    if (BetterRomanceMod.settings.complex)
+                    {
+                        AssignComplexOrientation(pawn);
+                    }
+                    else
+                    {
+                        AssignOrientation(pawn);
+                    }
                 }
             }
         }
@@ -169,6 +177,87 @@ namespace BetterRomance
                         pawn.story.traits.GainTrait(new(RomanceDefOf.Straight));
                     }
                 }
+            }
+        }
+
+        public static void AssignComplexOrientation(Pawn pawn)
+        {
+            if (!pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
+            {
+                pawn.story.traits.GainTrait(new Trait(RomanceDefOf.DynamicOrientation));
+            }
+            Comp_Orientation comp = pawn.CheckForComp<Comp_Orientation>();
+
+            OrientationChances sexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.sexual ?? BetterRomanceMod.settings.sexualOrientations;
+            float asexualChance = sexualChances.none / 100f;
+            float bisexualChance = sexualChances.bi / 100f;
+            float homosexualChance = sexualChances.homo / 100f;
+            float heterosexualChance = sexualChances.hetero / 100f;
+
+            float sexualOrientation = Rand.Value;
+
+            //Asexual
+            if (sexualOrientation < asexualChance)
+            {
+                comp.SetSexualAttraction(Gender.Male, false);
+                comp.SetSexualAttraction(Gender.Female, false);
+                comp.SetSexualAttraction((Gender)3, false);
+            }
+            //Bisexual
+            if (sexualOrientation < asexualChance + bisexualChance)
+            {
+                comp.SetSexualAttraction(Gender.Male, true);
+                comp.SetSexualAttraction(Gender.Female, true);
+            }
+            //Homosexual
+            else if (sexualOrientation < asexualChance + bisexualChance + homosexualChance)
+            {
+                comp.SetSexualAttraction(pawn.gender, true);
+                comp.SetSexualAttraction(pawn.gender.Opposite(), false);
+            }
+            //Heterosexual
+            else
+            {
+                comp.SetSexualAttraction(pawn.gender, false);
+                comp.SetSexualAttraction(pawn.gender.Opposite(), true);
+            }
+
+            OrientationChances romanticChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.sexual ?? BetterRomanceMod.settings.romanticOrientations;
+            float aromanticChance = romanticChances.none / 100f;
+            float biromanticChance = romanticChances.bi / 100f;
+            float homoromanticChance = romanticChances.homo / 100f;
+            float heteroromanticChance = romanticChances.hetero / 100f;
+
+            float romanticOrientation = Rand.Value;
+
+            //Aromantic
+            if (romanticOrientation < aromanticChance)
+            {
+                comp.SetRomanticAttraction(Gender.Male, false);
+                comp.SetRomanticAttraction(Gender.Female, false);
+            }
+            //Biromantic
+            else if (romanticOrientation < aromanticChance + biromanticChance)
+            {
+                comp.SetRomanticAttraction(Gender.Male, true);
+                comp.SetRomanticAttraction(Gender.Female, true);
+            }
+            //Homoromantic
+            else if (romanticOrientation < aromanticChance + biromanticChance + homoromanticChance)
+            {
+                comp.SetRomanticAttraction(pawn.gender, true);
+                comp.SetRomanticAttraction(pawn.gender.Opposite(), false);
+            }
+            //Heteroromantic
+            else
+            {
+                comp.SetRomanticAttraction(pawn.gender, false);
+                comp.SetRomanticAttraction(pawn.gender.Opposite(), true);
+            }
+
+            if (!comp.ResolveConflicts(sexualChances, romanticChances))
+            {
+                LogUtil.Error($"Unable to resolve orientation conflicts for {pawn.Name.ToStringFull}");
             }
         }
     }
