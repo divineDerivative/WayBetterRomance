@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using DivineFramework;
+using RimWorld;
 using Verse;
 
 namespace BetterRomance
