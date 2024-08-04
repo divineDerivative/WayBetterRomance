@@ -1,6 +1,4 @@
 ﻿using RimWorld;
-using System;
-using System.Security.Policy;
 using Verse;
 #if !v1_4
 using LudeonTK;
@@ -16,6 +14,7 @@ namespace BetterRomance
             public bool men;
             public bool women;
             public bool enby;
+            internal bool unset = true;
             internal Gender gender;
             public bool Pan => men && women && enby;
             public bool Bi => men && women;
@@ -215,7 +214,7 @@ namespace BetterRomance
             comp.cachedDesc = null;
         }
 
-        private void SetAttraction(Gender gender, bool sexual, bool romantic)
+        public void SetAttraction(Gender gender, bool sexual, bool romantic)
         {
             this.sexual.gender = Pawn.gender;
             this.romantic.gender = Pawn.gender;
@@ -234,6 +233,48 @@ namespace BetterRomance
                     this.romantic.enby = romantic;
                     break;
             }
+            cachedLabel = null;
+            cachedDesc = null;
+            this.sexual.unset = false;
+            this.romantic.unset = false;
+        }
+
+        public void SetRomanticAttraction(Gender gender, bool value)
+        {
+            switch (gender)
+            {
+                case Gender.Male:
+                    this.romantic.men = value;
+                    break;
+                case Gender.Female:
+                    this.romantic.women = value;
+                    break;
+                default:
+                    this.romantic.enby = value;
+                    break;
+            }
+            cachedLabel = null;
+            cachedDesc = null;
+            this.romantic.unset = false;
+        }
+
+        public void SetSexualAttraction(Gender gender, bool value)
+        {
+            switch (gender)
+            {
+                case Gender.Male:
+                    this.sexual.men = value;
+                    break;
+                case Gender.Female:
+                    this.sexual.women = value;
+                    break;
+                default:
+                    this.sexual.enby = value;
+                    break;
+            }
+            cachedLabel = null;
+            cachedDesc = null;
+            this.sexual.unset = false;
         }
 
         private string GetLabel()
@@ -279,6 +320,93 @@ namespace BetterRomance
                 return "Hetero";
             }
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Makes sure that orientations follow overlap rules
+        /// </summary>
+        /// <param name="sexualChances"></param>
+        /// <param name="romanticChances"></param>
+        /// <returns></returns>
+        public bool ResolveConflicts(OrientationChances sexualChances, OrientationChances romanticChances)
+        {
+            if (sexual.unset)
+            {
+                LogUtil.Error($"Sexual orientation was not explicitly set for {Pawn.Name.ToStringShort}");
+            }
+            if (romantic.unset)
+            {
+                LogUtil.Error($"Romantic orientation was not explicitly set for {Pawn.Name.ToStringShort}");
+            }
+            if (sexual.unset || romantic.unset)
+            {
+                return false;
+            }
+            //These two are allowed to have no overlap
+            if (!Asexual && !Aromantic)
+            {
+                //At least one gender is true
+                //Will need to add enby
+                if (sexual.men != romantic.men && sexual.women != romantic.women)
+                {
+                    //We've excluded asexual and aromantic, and either orientation being bi would have passed already
+                    //So we would only be here if one was gay and the other was straight
+                    //Then we would essentially be deciding between making them biromantic or bisexual
+                    //So I guess just roll between those?
+                    float total = sexualChances.bi + romanticChances.bi;
+                    if (total == 0f)
+                    {
+                        //If bi is not allowed for either, we would need to roll for which one to use to match
+                        if (romantic.Gay && sexual.Straight)
+                        {
+                            float subtotal = sexualChances.homo + romanticChances.hetero;
+                            if (Rand.Range(0f, subtotal) < sexualChances.homo)
+                            {
+                                sexual.women = romantic.women;
+                                sexual.men = romantic.men;
+                            }
+                            else
+                            {
+                                romantic.women = sexual.women;
+                                romantic.men = sexual.men;
+                            }
+                        }
+                        if (sexual.Gay && romantic.Straight)
+                        {
+                            float subtotal = romanticChances.homo + sexualChances.hetero;
+                            if (Rand.Range(0f, subtotal) < romanticChances.homo)
+                            {
+                                romantic.women = sexual.women;
+                                romantic.men = sexual.men;
+                            }
+                            else
+                            {
+                                sexual.women = romantic.women;
+                                sexual.men = romantic.men;
+                            }
+                        }
+                    }
+                    //Make them bisexual
+                    else if (Rand.Range(0f, total) < sexualChances.bi)
+                    {
+                        SetSexualAttraction(Gender.Male, true);
+                        SetSexualAttraction(Gender.Female, true);
+                    }
+                    //Make them biromantic
+                    else
+                    {
+                        SetRomanticAttraction(Gender.Male, true);
+                        SetRomanticAttraction(Gender.Female, true);
+                    }
+
+                }
+                //Check that it worked
+                if (sexual.men != romantic.men && sexual.women != romantic.women)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
