@@ -117,20 +117,10 @@ namespace BetterRomance
         {
             handler.width = listing.ColumnWidth;
             //Sexual orientation
-            handler.RegisterNewRow()
-                .AddLabel("WBR.OrentationHeading".Translate)
-                .WithTooltip(() => (complex ? "WBR.SexualOrentationHeadingTip" : "WBR.OrentationHeadingTip").Translate());
-            SetUpChanceSection(handler.RegisterNewSection(name: "RegularSexualOrientationSection", sectionBorder: 6f), false);
-            SetUpComplexChanceSection(handler.RegisterNewSection(name: "ComplexSexualOrientationSection", sectionBorder: 6f), false);
-            handler.RegisterNewRow().AddElement(MatchResetButtons(false));
+            SetUpChanceSection(handler.RegisterNewSection(name: "SexualOrientationSection", sectionBorder: 6f), false);
             handler.AddGap(10f);
             //Romantic orientation
-            handler.RegisterNewRow()
-                .AddLabel(() => (complex ? "WBR.RomanticOrentationHeading" : "WBR.AceOrentationHeading").Translate())
-                .WithTooltip(() => (complex ? "WBR.RomanticOrentationHeadingTip" : "WBR.AceOrentationHeadingTip").Translate());
-            SetUpChanceSection(handler.RegisterNewSection(name: "RegularRomanceOrientationSection", sectionBorder: 6f), true);
-            SetUpComplexChanceSection(handler.RegisterNewSection(name: "ComplexrRomanceOrientationSection", sectionBorder: 6f), true);
-            handler.RegisterNewRow().AddElement(MatchResetButtons(true));
+            SetUpChanceSection(handler.RegisterNewSection(name: "RomanceOrientationSection", sectionBorder: 6f), true);
             //Extra stuff
             handler.RegisterNewRow()
                 .HideWhen(() => !complex)
@@ -143,7 +133,8 @@ namespace BetterRomance
             section.AddLabel(() => "Extra stuff for length");
             //Complex button
             handler.RegisterNewRow()
-                .AddElement(NewElement.Button(delegate {
+                .AddElement(NewElement.Button(delegate
+                {
                     complex = !complex;
                     //scrollPosLeft = Vector2.zero;
                 })
@@ -172,7 +163,7 @@ namespace BetterRomance
                 .AddElement(NewElement.Checkbox()
                 .WithReference(this, nameof(joyOnPrisoners), joyOnPrisoners)
                 .WithLabel("PrisonersSection".Translate));
-
+            //Dev logging
             handler.RegisterNewRow()
                 .AddElement(NewElement.Checkbox()
                 .WithReference(this, nameof(debugLogging), debugLogging)
@@ -184,6 +175,9 @@ namespace BetterRomance
         internal void SetUpChanceSection(UISection section, bool romance)
         {
             OrientationChances chances = romance ? romanticOrientations : sexualOrientations;
+            handler.RegisterNewRow()
+        .AddLabel(() => OrientationHeading().Translate())
+        .WithTooltip(() => OrientationHeadingTooltip().Translate());
             //Hetero
             section.AddLabel(HeteroChance)
                 .WithTooltip(HeteroChanceTooltip);
@@ -208,69 +202,26 @@ namespace BetterRomance
             //None
             section.AddLabel(NoneChance)
                 .WithTooltip(NoneChanceTooltip);
-
-            section.HideWhen(() => complex);
-
-            TaggedString HeteroChance() => (romance ? "WBR.HeteroromanticChance" : "WBR.StraightChance").Translate(chances.hetero);
-            TaggedString HeteroChanceTooltip() => (romance ? "WBR.HeteroromanticChanceTip" : "WBR.StraightChanceTip").Translate();
-            TaggedString BiChance() => (romance ? "WBR.BiromanticChance" : "WBR.BisexualChance").Translate(chances.bi);
-            TaggedString BiChanceTooltip() => (romance ? "WBR.BiromanticChanceTip" : "WBR.BisexualChanceTip").Translate();
-            TaggedString HomoChance() => (romance ? "WBR.HomoromanticChance" : "WBR.GayChance").Translate(chances.homo);
-            TaggedString HomoChanceTooltip() => (romance ? "WBR.HomoromanticChanceTip" : "WBR.GayChanceTip").Translate();
-            TaggedString NoneChance() => (romance ? "WBR.AromanticChance" : "WBR.AsexualChance").Translate(chances.none);
-            TaggedString NoneChanceTooltip() => (romance ? "WBR.AromanticChanceTip" : "WBR.AsexualChanceTip").Translate();
-        }
-
-        internal void SetUpComplexChanceSection(UISection section, bool romance)
-        {
-            OrientationChances chances = romance ? romanticOrientations : sexualOrientations;
-            //Hetero
-            section.AddLabel(HeteroChance)
-                .WithTooltip(HeteroChanceTooltip);
-            section.AddElement(NewElement.Slider<float>()
-                .WithReference(chances, nameof(chances.hetero), chances.hetero)
-                .MinMax(0f, 100f)
-                .RoundTo(1f), "HeteroSlider");
-            //Bi
-            section.AddLabel(BiChance)
-                .WithTooltip(BiChanceTooltip);
-            section.AddElement(NewElement.Slider<float>()
-                .WithReference(chances, nameof(chances.bi), chances.bi)
-                .MinMax(0f, 100f)
-                .RoundTo(1f), "BiSlider");
-            //Homo
-            section.AddLabel(HomoChance)
-                .WithTooltip(HomoChanceTooltip);
-            section.AddElement(NewElement.Slider<float>()
-                .WithReference(chances, nameof(chances.homo), chances.homo)
-                .MinMax(0f, 100f)
-                .RoundTo(1f), "HomoSlider");
-            //None
-            section.AddLabel(NoneChance)
-                .WithTooltip(NoneChanceTooltip);
-
-            section.HideWhen(() => !complex);
-
-            TaggedString HeteroChance() => (romance ? "WBR.HeteroromanticChance" : "WBR.HeterosexualChance").Translate(chances.hetero);
-            TaggedString HeteroChanceTooltip() => (romance ? "WBR.HeteroromanticChanceTip" : "WBR.HeterosexualChanceTip").Translate();
-            TaggedString BiChance() => (romance ? "WBR.BiromanticChance" : "WBR.BisexualChance").Translate(chances.bi);
-            TaggedString BiChanceTooltip() => (romance ? "WBR.BiromanticChanceTip" : "WBR.BisexualComplexChanceTip").Translate();
-            TaggedString HomoChance() => (romance ? "WBR.HomoromanticChance" : "WBR.HomosexualChance").Translate(chances.homo);
-            TaggedString HomoChanceTooltip() => (romance ? "WBR.HomoromanticChanceTip" : "WBR.HomosexualChanceTip").Translate();
-            TaggedString NoneChance() => (romance ? "WBR.AromanticChance" : "WBR.AsexualChance").Translate(chances.none);
-            TaggedString NoneChanceTooltip() => (romance ? "WBR.AromanticTip" : "WBR.AsexualChanceTip").Translate();
-        }
-
-        UIContainer MatchResetButtons(bool romance)
-        {
+            //Buttons
             handler.AddGap(8f);
-            OrientationChances chances = romance ? romanticOrientations : sexualOrientations;
             UIContainer buttonRow = handler.RegisterNewRow(gap: 0f);
             buttonRow.AddElement(NewElement.Button(() => chances.CopyFrom(romance ? sexualOrientations : romanticOrientations))
                 .WithLabel((romance ? "WBR.MatchAboveButton" : "WBR.MatchBelowButton").Translate));
             buttonRow.AddElement(NewElement.Button(chances.Reset)
                 .WithLabel("RestoreToDefaultSettings".Translate));
-            return buttonRow;
+
+            string OrientationHeading() => !romance ? "WBR.OrentationHeading" : complex ? "WBR.RomanticOrentationHeading" : "WBR.AceOrentationHeading";
+            string OrientationHeadingTooltip() => complex
+                ? romance ? "WBR.RomanticOrentationHeadingTip" : "WBR.SexualOrentationHeadingTip"
+                : romance ? "WBR.AceOrentationHeadingTip" : "WBR.OrentationHeadingTip";
+            TaggedString HeteroChance() => (romance ? "WBR.HeteroromanticChance" : complex ? "WBR.HeterosexualChance" : "WBR.StraightChance").Translate(chances.hetero);
+            TaggedString HeteroChanceTooltip() => (romance ? "WBR.HeteroromanticChanceTip" : complex ? "WBR.HeterosexualChanceTip" : "WBR.StraightChanceTip").Translate();
+            TaggedString BiChance() => (romance ? "WBR.BiromanticChance" : "WBR.BisexualChance").Translate(chances.bi);
+            TaggedString BiChanceTooltip() => (romance ? "WBR.BiromanticChanceTip" : complex ? "WBR.BisexualComplexChanceTip" : "WBR.BisexualChanceTip").Translate();
+            TaggedString HomoChance() => (romance ? "WBR.HomoromanticChance" : complex ? "WBR.HomosexualChance" : "WBR.GayChance").Translate(chances.homo);
+            TaggedString HomoChanceTooltip() => (romance ? "WBR.HomoromanticChanceTip" : complex ? "WBR.HomosexualChanceTip" : "WBR.GayChanceTip").Translate();
+            TaggedString NoneChance() => (romance ? "WBR.AromanticChance" : "WBR.AsexualChance").Translate(chances.none);
+            TaggedString NoneChanceTooltip() => (romance ? complex ? "WBR.AromanticComplexTip" : "WBR.AromanticChanceTip" : "WBR.AsexualChanceTip").Translate();
         }
 
         internal void SetUpMiscSection(UISection section)
