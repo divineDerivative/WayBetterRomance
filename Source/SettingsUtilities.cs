@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
-//using static BetterRomance.WBR_SettingsComp;
 
 namespace BetterRomance
 {
@@ -53,7 +52,7 @@ namespace BetterRomance
                 return 0f;
             }
             CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
-            return settings.alienLoveChance ?? BetterRomanceMod.settings.alienLoveChance;
+            return (settings.alienLoveChance ?? BetterRomanceMod.settings.alienLoveChance) / 100f;
         }
 
         public static int MinOpinionForHookup(this Pawn pawn, bool ordered = false)

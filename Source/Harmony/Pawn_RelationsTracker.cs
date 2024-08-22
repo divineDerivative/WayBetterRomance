@@ -45,12 +45,12 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (HAR_Integration.AreRacesConsideredXeno(___pawn, otherPawn))
                 {
-                    crossSpecies = ___pawn.AlienLoveChance() / 100;
+                    crossSpecies = ___pawn.AlienLoveChance();
                 }
             }
             else if (___pawn.def != otherPawn.def)
             {
-                crossSpecies = ___pawn.AlienLoveChance() / 100;
+                crossSpecies = ___pawn.AlienLoveChance();
             }
 
             ___pawn.EnsureTraits();
