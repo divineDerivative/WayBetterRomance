@@ -208,7 +208,7 @@ namespace BetterRomance
         {
             if (ModsConfig.BiotechActive)
             {
-                Settings.FertilityMods.Add("ludeon.rimworld.biotech", ModLister.GetExpansionWithIdentifier("ludeon.rimworld.biotech").label);
+                Settings.FertilityMods.Add("ludeon.rimworld.biotech", ModLister.GetActiveModWithIdentifier("ludeon.rimworld.biotech").Name);
             }
             if (ModsConfig.IsActive("dylan.csl"))
             {
