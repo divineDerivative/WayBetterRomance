@@ -8,6 +8,42 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D5B5234-C2A8-4749-A683-3390C44E0B6C}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		About\About.xml = About\About.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{E5CD5134-750C-45C3-AF79-4DD53C51B036}"
+	ProjectSection(SolutionItems) = preProject
+		Defs\Flecks.xml = Defs\Flecks.xml
+		Defs\InteractionDefs.xml = Defs\InteractionDefs.xml
+		Defs\JobDefs.xml = Defs\JobDefs.xml
+		Defs\JoyDefs.xml = Defs\JoyDefs.xml
+		Defs\Precepts_ForClassic.xml = Defs\Precepts_ForClassic.xml
+		Defs\Precepts_LoverCount.xml = Defs\Precepts_LoverCount.xml
+		Defs\Precepts_SpouseCount.xml = Defs\Precepts_SpouseCount.xml
+		Defs\Stats.xml = Defs\Stats.xml
+		Defs\ThoughtDefs.xml = Defs\ThoughtDefs.xml
+		Defs\Traits.xml = Defs\Traits.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{09ECAF82-0A9E-412E-A22E-42A5B538E0B1}"
+	ProjectSection(SolutionItems) = preProject
+		Patches\Biotech Patches.xml = Patches\Biotech Patches.xml
+		Patches\ITab.xml = Patches\ITab.xml
+		Patches\OtherModPatches.xml = Patches\OtherModPatches.xml
+		Patches\Patches - Thoughts_Memory_Social.xml = Patches\Patches - Thoughts_Memory_Social.xml
+		Patches\Patches - Thoughts_Situation_Social.xml = Patches\Patches - Thoughts_Situation_Social.xml
+		Patches\Patches - TraitsSingular.xml = Patches\Patches - TraitsSingular.xml
+		Patches\Precepts.xml = Patches\Precepts.xml
+		Patches\Robot Settings.xml = Patches\Robot Settings.xml
+		Patches\Traits_Patch.xml = Patches\Traits_Patch.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed Strings", "Keyed Strings", "{B2BFE2CC-52DC-42B5-A16D-7E621FF51143}"
+	ProjectSection(SolutionItems) = preProject
+		Languages\English\Keyed\OrderedHookup.xml = Languages\English\Keyed\OrderedHookup.xml
+		Languages\English\Keyed\Other.xml = Languages\English\Keyed\Other.xml
+		Languages\English\Keyed\Settings.xml = Languages\English\Keyed\Settings.xml
+		Languages\English\Keyed\SexualityComp.xml = Languages\English\Keyed\SexualityComp.xml
 	EndProjectSection
 EndProject
 Global
@@ -23,6 +59,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E5CD5134-750C-45C3-AF79-4DD53C51B036} = {4D5B5234-C2A8-4749-A683-3390C44E0B6C}
+		{09ECAF82-0A9E-412E-A22E-42A5B538E0B1} = {4D5B5234-C2A8-4749-A683-3390C44E0B6C}
+		{B2BFE2CC-52DC-42B5-A16D-7E621FF51143} = {4D5B5234-C2A8-4749-A683-3390C44E0B6C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28CF9A73-5333-4EB3-BFCC-3FBEDDA19200}

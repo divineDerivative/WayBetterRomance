@@ -77,14 +77,6 @@
       <HintPath>..\..\..\..\..\workshop\content\294100\1786466855\1.5\Assemblies\Pawnmorph.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
-    <None Include="..\About\About.xml" />
-    <None Include="..\About\Preview.png" />
-    <None Include="..\Common\Defs\**" />
-    <None Include="..\Common\Languages\**" />
-    <None Include="..\Common\Patches\**" />
     <Reference Include="VanillaRacesExpandedHighmate">
       <HintPath>..\..\..\..\..\workshop\content\294100\2995385834\1.4\Assemblies\VanillaRacesExpandedHighmate.dll</HintPath>
       <Private>False</Private>
