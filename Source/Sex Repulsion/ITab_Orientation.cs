@@ -94,7 +94,11 @@ namespace BetterRomance
 
         public bool CanShowSexualityTab()
         {
+#if v1_4
+            return SelPawn.TryGetComp<Comp_Orientation>() is not null;
+#else
             return SelPawn.HasComp<Comp_Orientation>();
+#endif
         }
     }
 }
