@@ -25,6 +25,7 @@ namespace BetterRomance
         /// <returns>float between 0 and 1</returns>
         public static float AsexualRating(this Pawn pawn) => pawn.CheckForComp<Comp_SexRepulsion>().rating;
 
+        //Someone without the comp should not be considered asexual. Probably.
         public static bool IsAsexual(this Pawn pawn)
         {
             return pawn.TryGetComp<Comp_Orientation>()?.Asexual ?? false;
@@ -126,9 +127,9 @@ namespace BetterRomance
             Comp_Orientation.AttractionVars type = romance ? comp.romantic : comp.sexual;
             return gender switch
             {
-                Gender.Male => type.men,
-                Gender.Female => type.women,
-                (Gender)3 => type.enby,
+                Gender.Male => type.Men,
+                Gender.Female => type.Women,
+                (Gender)3 => type.Enby,
                 _ => false,
             };
         }
