@@ -142,6 +142,7 @@ namespace BetterRomance
                         continue;
                     }
                     //For hookup check romance factor, for date check opinion
+                    //Don't need any attraction checks because those occur later; we want this to be able to return unlikely pawns
                     else if ((hookup && pawn.relations.SecondaryRomanceChanceFactor(p) > num) || (!hookup && pawn.relations.OpinionOf(p) > num))
                     {
                         //This will skip people who recently turned them down

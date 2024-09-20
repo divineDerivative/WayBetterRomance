@@ -9,24 +9,32 @@ namespace BetterRomance
 {
     public class Comp_Orientation : ThingComp
     {
-        public class AttractionVars
+        public class AttractionVars(Comp_Orientation parent)
         {
-            public bool men;
-            public bool women;
-            public bool enby;
-            internal bool unset = true;
-            internal Gender gender;
+            private Comp_Orientation parent = parent;
+
+            private bool men;
+            private bool women;
+            private bool enby;
+            public bool Men => men;
+            public bool Women => women;
+            public bool Enby => enby;
+
+            private bool unset = true;
+            public bool Unset => unset;
+
+            private Gender Gender => parent.Pawn.gender;
             public bool Pan => men && women && enby;
             public bool Bi => men && women;
             internal bool None => !men && !women && !enby;
-            public bool Gay => gender switch
+            public bool Gay => Gender switch
             {
                 Gender.Male => men && !women,
                 Gender.Female => women && !men,
                 (Gender)3 => enby && !men && !women,
                 _ => false
             };
-            public bool Straight => gender switch
+            public bool Straight => Gender switch
             {
                 Gender.Male => women && !men,
                 Gender.Female => men && !women,
@@ -78,6 +86,32 @@ namespace BetterRomance
                     result += "WBR.TraitDescAnd".Translate() + secondGender;
                 }
                 return result;
+            }
+
+            public void ExposeData(bool romance)
+            {
+                Scribe_Values.Look(ref men, $"{(romance ? "romantically" : "sexually")}AttractedToMen", false);
+                Scribe_Values.Look(ref women, $"{(romance ? "romantically" : "sexually")}AttractedToWomen", false);
+                Scribe_Values.Look(ref enby, $"{(romance ? "romantically" : "sexually")}AttractedToEnby", false);
+            }
+
+            public void SetAttraction(Gender gender, bool value)
+            {
+                switch (gender)
+                {
+                    case Gender.Male:
+                        men = value;
+                        break;
+                    case Gender.Female:
+                        women = value;
+                        break;
+                    default:
+                        enby = value;
+                        break;
+                }
+                unset = false;
+                parent.cachedLabel = null;
+                parent.cachedDesc = null;
             }
         }
 
@@ -139,21 +173,15 @@ namespace BetterRomance
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
-            sexual = new AttractionVars();
-            sexual.gender = Pawn.gender;
-            romantic = new AttractionVars();
-            romantic.gender = Pawn.gender;
+            sexual = new AttractionVars(this);
+            romantic = new AttractionVars(this);
         }
 
         public override void PostExposeData()
         {
             base.PostExposeData();
-            Scribe_Values.Look(ref sexual.men, "sexuallyAttractedToMen", false);
-            Scribe_Values.Look(ref sexual.women, "sexuallyAttractedToWomen", false);
-            Scribe_Values.Look(ref sexual.enby, "sexuallyAttractedToEnby", false);
-            Scribe_Values.Look(ref romantic.men, "romanticallyAttractedToMen", false);
-            Scribe_Values.Look(ref romantic.women, "romanticallyAttractedToWomen", false);
-            Scribe_Values.Look(ref romantic.enby, "romanticallyAttractedToEnby", false);
+            sexual.ExposeData(false);
+            romantic.ExposeData(true);
             Scribe_Values.Look(ref converted, "orientationConverted", false);
         }
 
@@ -203,7 +231,6 @@ namespace BetterRomance
                 }
             }
 
-            //LogUtil.Message($"Removing {trait.Label} from {pawn.LabelShort}");
             pawn.story.traits.RemoveTrait(trait, true);
             if (!pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
             {
@@ -216,66 +243,13 @@ namespace BetterRomance
 
         public void SetAttraction(Gender gender, bool sexual, bool romantic)
         {
-            this.sexual.gender = Pawn.gender;
-            this.romantic.gender = Pawn.gender;
-            switch (gender)
-            {
-                case Gender.Male:
-                    this.sexual.men = sexual;
-                    this.romantic.men = romantic;
-                    break;
-                case Gender.Female:
-                    this.sexual.women = sexual;
-                    this.romantic.women = romantic;
-                    break;
-                default:
-                    this.sexual.enby = sexual;
-                    this.romantic.enby = romantic;
-                    break;
-            }
-            cachedLabel = null;
-            cachedDesc = null;
-            this.sexual.unset = false;
-            this.romantic.unset = false;
+            this.sexual.SetAttraction(gender, sexual);
+            this.romantic.SetAttraction(gender, romantic);
         }
 
-        public void SetRomanticAttraction(Gender gender, bool value)
-        {
-            switch (gender)
-            {
-                case Gender.Male:
-                    this.romantic.men = value;
-                    break;
-                case Gender.Female:
-                    this.romantic.women = value;
-                    break;
-                default:
-                    this.romantic.enby = value;
-                    break;
-            }
-            cachedLabel = null;
-            cachedDesc = null;
-            this.romantic.unset = false;
-        }
+        public void SetRomanticAttraction(Gender gender, bool value) => romantic.SetAttraction(gender, value);
 
-        public void SetSexualAttraction(Gender gender, bool value)
-        {
-            switch (gender)
-            {
-                case Gender.Male:
-                    this.sexual.men = value;
-                    break;
-                case Gender.Female:
-                    this.sexual.women = value;
-                    break;
-                default:
-                    this.sexual.enby = value;
-                    break;
-            }
-            cachedLabel = null;
-            cachedDesc = null;
-            this.sexual.unset = false;
-        }
+        public void SetSexualAttraction(Gender gender, bool value) => sexual.SetAttraction(gender, value);
 
         private string GetLabel()
         {
@@ -290,14 +264,10 @@ namespace BetterRomance
                     _ => Aromantic ? romanticPrefix + "romantic" : sexualPrefix + "sexual",
                 };
             }
-            if (Asexual)
-            {
-                return $"{sexualPrefix}sexual ({romanticPrefix})";
-            }
             return $"{sexualPrefix}sexual\\{romanticPrefix}romantic";
         }
 
-        internal string Prefix(AttractionVars type)
+        private string Prefix(AttractionVars type)
         {
             if (type.Pan)
             {
@@ -330,15 +300,15 @@ namespace BetterRomance
         /// <returns></returns>
         public bool ResolveConflicts(OrientationChances sexualChances, OrientationChances romanticChances)
         {
-            if (sexual.unset)
+            if (sexual.Unset)
             {
                 LogUtil.Error($"Sexual orientation was not explicitly set for {Pawn.Name.ToStringShort}");
             }
-            if (romantic.unset)
+            if (romantic.Unset)
             {
                 LogUtil.Error($"Romantic orientation was not explicitly set for {Pawn.Name.ToStringShort}");
             }
-            if (sexual.unset || romantic.unset)
+            if (sexual.Unset || romantic.Unset)
             {
                 return false;
             }
@@ -347,7 +317,7 @@ namespace BetterRomance
             {
                 //At least one gender is true
                 //Will need to add enby
-                if (sexual.men != romantic.men && sexual.women != romantic.women)
+                if (sexual.Men != romantic.Men && sexual.Women != romantic.Women)
                 {
                     //We've excluded asexual and aromantic, and either orientation being bi would have passed already
                     //So we would only be here if one was gay and the other was straight
@@ -362,13 +332,13 @@ namespace BetterRomance
                             float subtotal = sexualChances.homo + romanticChances.hetero;
                             if (Rand.Range(0f, subtotal) < sexualChances.homo)
                             {
-                                sexual.women = romantic.women;
-                                sexual.men = romantic.men;
+                                sexual.SetAttraction(Gender.Male, romantic.Men);
+                                sexual.SetAttraction(Gender.Female, romantic.Women);
                             }
                             else
                             {
-                                romantic.women = sexual.women;
-                                romantic.men = sexual.men;
+                                romantic.SetAttraction(Gender.Male, sexual.Men);
+                                romantic.SetAttraction(Gender.Female, sexual.Women);
                             }
                         }
                         if (sexual.Gay && romantic.Straight)
@@ -376,13 +346,13 @@ namespace BetterRomance
                             float subtotal = romanticChances.homo + sexualChances.hetero;
                             if (Rand.Range(0f, subtotal) < romanticChances.homo)
                             {
-                                romantic.women = sexual.women;
-                                romantic.men = sexual.men;
+                                romantic.SetAttraction(Gender.Male, sexual.Men);
+                                romantic.SetAttraction(Gender.Female, sexual.Women);
                             }
                             else
                             {
-                                sexual.women = romantic.women;
-                                sexual.men = romantic.men;
+                                sexual.SetAttraction(Gender.Male, romantic.Men);
+                                sexual.SetAttraction(Gender.Female, romantic.Women);
                             }
                         }
                     }
@@ -401,7 +371,7 @@ namespace BetterRomance
 
                 }
                 //Check that it worked
-                if (sexual.men != romantic.men && sexual.women != romantic.women)
+                if (sexual.Men != romantic.Men && sexual.Women != romantic.Women)
                 {
                     return false;
                 }

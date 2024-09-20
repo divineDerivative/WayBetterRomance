@@ -9,12 +9,13 @@ using HarmonyLib;
 
 namespace BetterRomance.HarmonyPatches
 {
+    //Will need to figure out how to make this translatable, since I'm replacing the label entirely
     [HarmonyPatch(typeof(TraitDegreeData), nameof(TraitDegreeData.GetLabelFor), [typeof(Pawn)])]
     public static class TraitDegreeData_GetLabelFor
     {
         public static bool Prefix(Pawn pawn, ref string __result, TraitDegreeData __instance)
         {
-            if (__instance.label == "dynamic orientation")
+            if (__instance.untranslatedLabel == "dynamic orientation")
             {
                 __result = pawn.CheckForComp<Comp_Orientation>().Label.ToLower();
                 return false;
@@ -28,7 +29,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static bool Prefix(Pawn pawn, ref string __result, TraitDegreeData __instance)
         {
-            if (__instance.label == "dynamic orientation")
+            if (__instance.untranslatedLabel == "dynamic orientation")
             {
                 __result = pawn.CheckForComp<Comp_Orientation>().Label;
                 return false;
