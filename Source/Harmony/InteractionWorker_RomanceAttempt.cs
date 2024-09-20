@@ -209,9 +209,27 @@ namespace BetterRomance.HarmonyPatches
     }
 
     //Adds a sexuality factor to the romance success chance tooltip
+    //Adjust tooltip for psychic bonding
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.RomanceFactors))]
     public static class InteractionWorker_RomanceAttempt_RomanceFactors
     {
+        //If psychic bonding will result, only show that on the tooltip
+        public static bool Prefix(Pawn romancer, Pawn romanceTarget, ref string __result)
+        {
+            Gene_PsychicBonding initiatorGene = romancer.genes?.GetFirstGeneOfType<Gene_PsychicBonding>();
+#if v1_4
+            if (initiatorGene is not null && InteractionWorker_RomanceAttempt.CanCreatePsychicBondBetween_NewTemp(romancer, romanceTarget))
+#else
+            if (initiatorGene is not null && InteractionWorker_RomanceAttempt.CanCreatePsychicBondBetween(romancer, romanceTarget))
+#endif
+            {
+                StringBuilder stringBuilder = new();
+                stringBuilder.AppendLine((string)InfoHelper.RomanceFactorLine.Invoke(null, [initiatorGene.LabelCap, 1f]));
+                __result = stringBuilder.ToString();
+                return false;
+            }
+            return true;
+        }
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             MethodInfo PrettinessFactor = AccessTools.Method(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.PrettinessFactor));
@@ -257,6 +275,27 @@ namespace BetterRomance.HarmonyPatches
                 if (code.Calls(PrettinessFactor))
                 {
                     startFound = true;
+                }
+            }
+        }
+    }
+
+#if v1_4
+    [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.CanCreatePsychicBondBetween_NewTemp))]
+#else
+    [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.CanCreatePsychicBondBetween))]
+#endif
+    public static class InteractionWorker_RomanceAttempt_CanCreatePsychicBondBetween
+    {
+        public static void Postfix(Pawn initiator, Pawn recipient, ref bool __result)
+        {
+            if (__result)
+            {
+                Gene_PsychicBonding initiatorGene = initiator.genes?.GetFirstGeneOfType<Gene_PsychicBonding>();
+                Gene_PsychicBonding recipientGene = recipient.genes?.GetFirstGeneOfType<Gene_PsychicBonding>();
+                if (recipientGene is not null && initiatorGene is null)
+                {
+                    __result = false;
                 }
             }
         }

@@ -579,5 +579,6 @@ namespace BetterRomance
         public static FieldInfo AgeTrackerPawn = AccessTools.Field(typeof(Pawn_AgeTracker), "pawn");
         public static FieldInfo GayTraitDefOf = AccessTools.Field(typeof(TraitDefOf), nameof(TraitDefOf.Gay));
         public static FieldInfo DefOfSpouse = AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Spouse));
+        public static MethodInfo RomanceFactorLine = AccessTools.Method(typeof(InteractionWorker_RomanceAttempt), "RomanceFactorLine");
     }
 }
