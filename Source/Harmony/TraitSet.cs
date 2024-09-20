@@ -31,7 +31,7 @@ namespace BetterRomance.HarmonyPatches
             return true;
         }
 
-        public static void Postfix(Trait trait, ref Trait __state, Pawn ___pawn, bool suppressConflicts = false)
+        public static void Postfix(Trait trait, ref Trait __state, Pawn ___pawn)
         {
             if (__state != null && __state.def != RomanceDefOf.DynamicOrientation)
             {
