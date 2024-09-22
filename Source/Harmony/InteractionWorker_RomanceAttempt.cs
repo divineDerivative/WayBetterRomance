@@ -31,7 +31,7 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //Don't allow for drones
-            if (initiator.DroneCheck() || recipient.DroneCheck())
+            if (!initiator.CanInitiateRomance() || recipient.DroneCheck())
             {
                 __result = 0f;
                 return false;
@@ -193,6 +193,16 @@ namespace BetterRomance.HarmonyPatches
     public static class InteractionWorker_RomanceAttempt_OpinionFactor
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.MinOpinionRomanceTranspiler(OpCodes.Ldarg_1);
+
+        public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
+        {
+            if (recipient.needs.mood is null)
+            {
+                __result = 0f;
+                return false;
+            }
+            return true;
+        }
     }
 
     //Determines factors based on relationships with other pawns, used by SuccessChance

@@ -4,6 +4,7 @@ namespace BetterRomance
 {
     internal static class CompatUtility
     {
+        internal static GeneDef unfeeling = DefDatabase<GeneDef>.GetNamedSilentFail("AG_Mood_Unfeeling");
         public static bool AndroidCheck(this Pawn pawn)
         {
             if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanicalAndroid?.Invoke(null, [pawn]))
@@ -13,6 +14,12 @@ namespace BetterRomance
             return false;
         }
 
+        /// <summary>
+        /// Check if <paramref name="pawn"/> is a drone that cannot participate in romance
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <param name="includeFH">Whether former humans count as humans</param>
+        /// <returns>True if <paramref name="pawn"/> should be considered a drone.</returns>
         public static bool DroneCheck(this Pawn pawn, bool includeFH = false)
         {
             if (Settings.ATRActive && (bool)HelperClasses.IsConsideredMechanicalDrone?.Invoke(null, [pawn]))
@@ -33,6 +40,11 @@ namespace BetterRomance
 #else
             return pawn.IsMutant || !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
 #endif
+        }
+
+        public static bool CanInitiateRomance(this Pawn pawn)
+        {
+            return !pawn.DroneCheck(true) && pawn.needs.mood != null;
         }
 
         public static bool HasNoGrowth(this Pawn pawn)

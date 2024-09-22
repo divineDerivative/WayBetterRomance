@@ -18,7 +18,7 @@ namespace BetterRomance.HarmonyPatches
         //Don't allow for those incapable of romance
         public static void Postfix(Pawn pawn, ref bool __result)
         {
-            __result = __result && !pawn.DroneCheck();
+            __result = __result && pawn.CanInitiateRomance();
         }
     }
 
