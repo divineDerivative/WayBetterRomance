@@ -175,7 +175,9 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>robocopy "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\WayBetterRomance" "C:\RimWorld_Debug\Mods\WayBetterRomance" /r:1 /s /xo /xd Source .vs .git /xf *.sln .gitattributes .gitignore .editorconfig *.md || set errorlist=0
-robocopy "C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\WayBetterRomance" "C:\RimWorld_Debug_v1_4\Mods\WayBetterRomance" /r:1 /s /xo /xd Source .vs .git /xf *.sln .gitattributes .gitignore .editorconfig *.md || set errorlist=0</PostBuildEvent>
+    <PostBuildEvent>call "$(SolutionDir)..\DivineFramework\PostBuild.bat" "$(TargetName)"</PostBuildEvent>
   </PropertyGroup>
+  <Target Name="ForcePostBuild" AfterTargets="Build">
+    <Touch Files="$(IntermediateOutputPath)TouchMe.txt" />
+  </Target>
 </Project>
