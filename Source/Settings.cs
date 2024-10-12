@@ -47,6 +47,7 @@ namespace BetterRomance
         public static bool debugLogging = false;
         public static bool AsimovActive;
         public static bool PawnmorpherActive;
+        public static bool TransActive;
 
         public static bool LoveRelationsLoaded => !CustomLoveRelationUtility.LoveRelations.EnumerableNullOrEmpty();
         public static List<RaceSettings> RaceSettingsList = new();

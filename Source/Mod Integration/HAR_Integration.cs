@@ -4,10 +4,11 @@ using RimWorld;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Verse;
+using static UnityEngine.ParticleSystem;
 
 namespace BetterRomance
 {
-    public class HAR_Integration
+    public static class HAR_Integration
     {
         /// <summary>
         /// Checks HAR settings to see if pawns consider each other aliens.
@@ -154,6 +155,16 @@ namespace BetterRomance
             }
             age = 20f;
             return false;
+        }
+
+        public static bool CanFertilize(this Pawn pawn)
+        {
+            return ReproductionSettings.ApplicableGender(pawn, false);
+        }
+
+        public static bool CanGestate(this Pawn pawn)
+        {
+            return ReproductionSettings.ApplicableGender(pawn, true);
         }
     }
 

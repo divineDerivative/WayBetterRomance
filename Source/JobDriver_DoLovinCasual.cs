@@ -207,10 +207,8 @@ namespace BetterRomance
                 Actor.mindState.canLovinTick = Find.TickManager.TicksGame + GenerateRandomMinTicksToNextLovin(Actor);
                 HelperClasses.CSLLoved?.Invoke(this, [Actor, Partner, false]);
                 //Biotech addition
-                if (ModsConfig.BiotechActive)
+                if (ModsConfig.BiotechActive && RomanceUtilities.DetermineSexesForPregnancy(Actor, Partner, out Pawn male, out Pawn female))
                 {
-                    Pawn male = (Actor.gender == Gender.Male) ? Actor : ((Partner.gender == Gender.Male) ? Partner : null);
-                    Pawn female = (Actor.gender == Gender.Female) ? Actor : ((Partner.gender == Gender.Female) ? Partner : null);
                     if (male != null && female != null && Rand.Chance(PregnancyChance * PregnancyUtility.PregnancyChanceForPartners(female, male)))
                     {
                         GeneSet inheritedGeneSet = PregnancyUtility.GetInheritedGeneSet(male, female, out bool success);

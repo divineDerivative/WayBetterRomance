@@ -94,5 +94,31 @@ namespace BetterRomance
             }
             return false;
         }
+
+        public static bool CanBeMale(this Pawn pawn)
+        {
+            if (Settings.TransActive)
+            {
+                return (bool)HelperClasses.CanSire.Invoke(null, [pawn]);
+            }
+            if (Settings.HARActive)
+            {
+                return pawn.CanFertilize();
+            }
+            return pawn.gender == Gender.Male;
+        }
+
+        public static bool CanBeFemale(this Pawn pawn)
+        {
+            if (Settings.TransActive)
+            {
+                return (bool)HelperClasses.CanCarry.Invoke(null, [pawn]);
+            }
+            if (Settings.HARActive)
+            {
+                return pawn.CanGestate();
+            }
+            return pawn.gender == Gender.Female;
+        }
     }
 }

@@ -189,6 +189,12 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Pawnmorpher: {ex}");
                 }
             }
+            if (ModsConfig.IsActive("runaway.simpletrans"))
+            {
+                Settings.TransActive = true;
+                HelperClasses.CanSire = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanSire");
+                HelperClasses.CanCarry = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanCarry");
+            }
 
             MakeFertilityModList();
             Settings.ApplyJoySettings();
@@ -239,6 +245,8 @@ namespace BetterRomance
         public static FieldInfo pawnSettings;
         public static Type PawnDef;
         public static MethodInfo IsHumanlikePM;
+        public static MethodInfo CanSire;
+        public static MethodInfo CanCarry;
     }
 
     public class MayRequireHARAttribute : MayRequireAttribute

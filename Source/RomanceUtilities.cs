@@ -449,6 +449,25 @@ namespace BetterRomance
             }
             return PawnRelationDefOf.ExLover;
         }
+
+        public static bool DetermineSexesForPregnancy(Pawn firstPawn, Pawn secondPawn, out Pawn male, out Pawn female)
+        {
+            male = null;
+            female = null;
+            if (firstPawn.CanBeMale() && secondPawn.CanBeFemale())
+            {
+                male = firstPawn;
+                female = secondPawn;
+                return true;
+            }
+            if (firstPawn.CanBeFemale() && secondPawn.CanBeMale())
+            {
+                male = secondPawn;
+                female = firstPawn;
+                return true;
+            }
+            return false;
+        }
     }
 
     internal static class LogUtil
