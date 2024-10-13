@@ -4,7 +4,6 @@ using RimWorld;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Verse;
-using static UnityEngine.ParticleSystem;
 
 namespace BetterRomance
 {
