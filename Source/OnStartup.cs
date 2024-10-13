@@ -1,4 +1,5 @@
 using BetterRomance.HarmonyPatches;
+using DivineFramework;
 using HarmonyLib;
 using RimWorld;
 using System;
