@@ -4,6 +4,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using DivineFramework;
 #if v1_5
 using LudeonTK;
 #endif

@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using DivineFramework;
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
