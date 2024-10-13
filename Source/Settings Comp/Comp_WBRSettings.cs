@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using DivineFramework;
+using Verse;
 
 namespace BetterRomance
 {
