@@ -205,6 +205,7 @@ namespace BetterRomance
             }
 
             MakeFertilityModList();
+            Settings.JoyNeed = DefDatabase<NeedDef>.GetNamed("Joy");
             Settings.ApplyJoySettings();
             MakeRaceSettingsList();
         }
