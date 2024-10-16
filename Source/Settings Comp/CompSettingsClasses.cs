@@ -32,6 +32,14 @@ namespace BetterRomance
 
         public OrientationChances Copy => (OrientationChances)MemberwiseClone();
 
+        public void CopyFrom(OrientationChances other)
+        {
+            hetero = other.hetero;
+            homo = other.homo;
+            bi = other.bi;
+            none = other.none;
+        }
+
         public bool AreAnyUnset(out string list, bool asexual)
         {
             //Need to make these strings match the old variable names I think

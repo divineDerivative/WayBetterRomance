@@ -5,36 +5,36 @@
 	<WBR.OrientationHeadingTip>Each pawn in the game will be either straight, bisexual, gay, or asexual. The sliders below allow you to determine the relative commonality of each of those orientations. Obviously, the total must, and will always, be 100%. (If a pawn has a 60% chance of being bisexual, after all, he or she can't also have a 70% chance of being straight!)</WBR.OrientationHeadingTip>
 	<WBR.StraightChance>Chance of a Pawn Being Straight:</WBR.StraightChance>
 	<WBR.StraightChanceTip>Romantically and/or sexually interested only in opposite-gender partners</WBR.StraightChanceTip>
-	<WBR.BisexualChance>Chance of a Pawn Being Bisexual:</WBR.BisexualChance>
+	<WBR.BisexualChance>Chance of a Pawn Being Bisexual: {0}%</WBR.BisexualChance>
 	<WBR.BisexualChanceTip>Romantically and/or sexually interested in partners of either gender</WBR.BisexualChanceTip>
-	<WBR.GayChance>Chance of a Pawn Being Gay:</WBR.GayChance>
+	<WBR.GayChance>Chance of a Pawn Being Gay: {0}%</WBR.GayChance>
 	<WBR.GayChanceTip>Romantically and/or sexually interested only in same-gender partners</WBR.GayChanceTip>
-	<WBR.AsexualChance>Chance of a Pawn Being Asexual:</WBR.AsexualChance>
+	<WBR.AsexualChance>Chance of a Pawn Being Asexual: {0}%</WBR.AsexualChance>
 	<WBR.AsexualChanceTip>Uninterested in initiating sexual engagements. Asexual pawns have a rating for how sex repulsed they are and will agree to sex based on their rating. Their feelings about these encounters can be negative if the rating is low enough.</WBR.AsexualChanceTip>
 
 	<WBR.AceOrientationHeading>Asexual Romantic Orientation Chances</WBR.AceOrientationHeading>
 	<WBR.AceOrientationHeadingTip>Asexual pawns will be assigned a romantic orientation using the settings below.</WBR.AceOrientationHeadingTip>
 	<WBR.AceHeteroChance>Chance of a Pawn Being Heteroromantic:</WBR.AceHeteroChance>
 	<WBR.AceHeteroChanceTip>Romantically interested only in opposite-gender partners</WBR.AceHeteroChanceTip>
-	<WBR.AceBiChance>Chance of a Pawn Being Biromantic:</WBR.AceBiChance>
+	<WBR.AceBiChance>Chance of a Pawn Being Biromantic: {0}%</WBR.AceBiChance>
 	<WBR.AceBiChanceTip>Romantically interested in partners of either gender</WBR.AceBiChanceTip>
-	<WBR.AceHomoChance>Chance of a Pawn Being Homoromantic:</WBR.AceHomoChance>
+	<WBR.AceHomoChance>Chance of a Pawn Being Homoromantic: {0}%</WBR.AceHomoChance>
 		<WBR.AceHomoChanceTip>Romantically interested only in same-gender partners</WBR.AceHomoChanceTip>
-	<WBR.AceAroChance>Chance of a Pawn Being Aromantic:</WBR.AceAroChance>
+	<WBR.AceAroChance>Chance of a Pawn Being Aromantic: {0}%</WBR.AceAroChance>
 	<WBR.AceAroChanceTip>Uninterested in all romantic engagements. These pawns will behave similar to vanilla asexual pawns.</WBR.AceAroChanceTip>
 	
 	<WBR.OtherHeading>Other Settings</WBR.OtherHeading>
-	<WBR.AlienLoveChance>Modifier for Cross-Species Romance:</WBR.AlienLoveChance>
+	<WBR.AlienLoveChance>Modifier for Cross-Species Romance: {0}%</WBR.AlienLoveChance>
 	<WBR.AlienLoveChanceTip>This slider determines how likely pawns are to be romantically interested in pawns of other species. (Obviously, the setting only matters if you're actually playing with alien races in your game.) If set to 100%, pawns will be just as likely to attempt to romance members of alien species as to romance members of their own species. If set to 0%, cross-species romances will never occur.</WBR.AlienLoveChanceTip>
-	<WBR.DateRate>Base Rate at Which Pawns Will Propose Dates and Hangouts:</WBR.DateRate>
+	<WBR.DateRate>Base Rate to Propose Dates and Hangouts: {0}%</WBR.DateRate>
 	<WBR.DateRateTip>Relative frequency for dates. Please note that since this is a recreation activity, the actual frequency will depend on the availability of other recreation activities. Bored pawns will propose dates/hangouts more often. Set to 0% to disable dates and hangouts entirely.</WBR.DateRateTip>
-	<WBR.HookupRate>Base Rate at Which Pawns Will Propose Hookups:</WBR.HookupRate>
+	<WBR.HookupRate>Base Rate to Propose Hookups: {0}%</WBR.HookupRate>
 	<WBR.HookupRateTip>Relative frequency for hookups. Please note that since this is a recreation activity, the actual frequency will depend on the availability of other recreation activities. Bored pawns will propose hookups more often. Set to 0% to disable hookups entirely.</WBR.HookupRateTip>
-	<WBR.MinOpinionRomance>Minimum Opinion for Romance Attempts:</WBR.MinOpinionRomance>
+	<WBR.MinOpinionRomance>Minimum Opinion for Romance Attempts: {0}</WBR.MinOpinionRomance>
 	<WBR.MinOpinionRomanceTip>A pawn will never consider a romance attempt if their opinion of the other person is lower than this setting.</WBR.MinOpinionRomanceTip>
-	<WBR.MinOpinionHookup>Minimum Opinion for Hookups:</WBR.MinOpinionHookup>
+	<WBR.MinOpinionHookup>Minimum Opinion for Hookups: {0}</WBR.MinOpinionHookup>
 	<WBR.MinOpinionHookupTip>A pawn will never consider a hookup if their opinion of the other person is lower than this setting.</WBR.MinOpinionHookupTip>
-	<WBR.CheatChance>Modifier for Cheating:</WBR.CheatChance>
+	<WBR.CheatChance>Modifier for Cheating: {0}%</WBR.CheatChance>
 	<WBR.CheatChanceTip>Cheating consideration is based on the initiator's ideoligion and their opinion of their most liked partner, so the actual chances will vary per pawn. This setting alters the chance at the very end of considerations. Setting to 0% will result in a pawn never deciding to cheat, but that will still only matter if their ideo considers an interaction cheating. Partners with a different ideo may still feel cheated on.</WBR.CheatChanceTip>
 	<WBR.CheatingOpinionRange>Opinion Range for Cheating</WBR.CheatingOpinionRange>
 	<WBR.CheatingOpinionRangeTip>The main factor to determine if a pawn will cheat is their opinion of their partner. If their opinion is below the min they will always be okay with cheating. If their opinion is above the max they will never be okay with cheating. If there are multiple partners the lowest factor is used. Do note that philanderers have a base chance added to the opinion factor, so it will never be zero.</WBR.CheatingOpinionRangeTip>

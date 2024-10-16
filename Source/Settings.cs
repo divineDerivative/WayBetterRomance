@@ -1,10 +1,8 @@
 using DivineFramework;
-using HarmonyLib;
+using DivineFramework.UI;
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -51,6 +49,7 @@ namespace BetterRomance
         public static bool AsimovActive;
         public static bool PawnmorpherActive;
         public static bool TransActive;
+        public static NeedDef JoyNeed;
 
         public static bool LoveRelationsLoaded => !CustomLoveRelationUtility.LoveRelations.EnumerableNullOrEmpty();
         public static List<RaceSettings> RaceSettingsList = new();
@@ -85,19 +84,18 @@ namespace BetterRomance
 
         public static void ApplyJoySettings()
         {
-            NeedDef def = DefDatabase<NeedDef>.GetNamed("Joy");
-            def.neverOnSlave = !BetterRomanceMod.settings.joyOnSlaves;
+            JoyNeed.neverOnSlave = !BetterRomanceMod.settings.joyOnSlaves;
             if (BetterRomanceMod.settings.joyOnPrisoners)
             {
-                def.neverOnPrisoner = false;
-                def.colonistAndPrisonersOnly = true;
-                def.colonistsOnly = false;
+                JoyNeed.neverOnPrisoner = false;
+                JoyNeed.colonistAndPrisonersOnly = true;
+                JoyNeed.colonistsOnly = false;
             }
             else
             {
-                def.neverOnPrisoner = true;
-                def.colonistAndPrisonersOnly = false;
-                def.colonistsOnly = true;
+                JoyNeed.neverOnPrisoner = true;
+                JoyNeed.colonistAndPrisonersOnly = false;
+                JoyNeed.colonistsOnly = true;
                 BetterRomanceMod.settings.joyOnGuests = false;
             }
         }
@@ -114,6 +112,175 @@ namespace BetterRomance
                 fertilityMod = "None";
             }
         }
+
+        internal SettingsHandler<Settings> handler = new(true);
+
+        internal void SetUpHandler(Listing_Standard listing)
+        {
+            handler.width = listing.ColumnWidth;
+            handler.RegisterNewRow()
+                .AddLabel("WBR.OrientationHeading".Translate)
+                .WithTooltip("WBR.OrientationHeadingTip".Translate);
+            SetUpChanceSection(handler.RegisterNewSection(name: "SexualOrientationSection", sectionBorder: 6f), false);
+            handler.AddGap(10f);
+
+            handler.RegisterNewRow()
+                .AddLabel("WBR.AceOrientationHeading".Translate)
+                .WithTooltip("WBR.AceOrientationHeadingTip".Translate);
+            SetUpChanceSection(handler.RegisterNewSection(name: "RomanceOrientationSection", sectionBorder: 6f), true);
+
+            handler.RegisterNewRow(newColumn: true).AddLabel("WBR.OtherHeading".Translate);
+            SetUpMiscSection(handler.RegisterNewSection(name: "MiscSection", sectionBorder: 6f));
+            handler.AddGap();
+            //Fertility mod
+            UIContainer fertilityRow = handler.RegisterNewRow();
+            fertilityRow.AddLabel("WBR.FertilityMod".Translate);
+            fertilityRow.AddElement(NewElement.Button(FertilityModOnClick, relative: 1f / 3f)
+                .WithLabel(() => fertilityMod != "None" ? FertilityMods.TryGetValue(fertilityMod) : "None"));
+            handler.RegisterNewRow()
+                .HideWhen(() => FertilityMods.Count > 0)
+                .AddLabel("WBR.NoFertilityMod".Translate);
+            //Joy need
+            handler.RegisterNewRow()
+                .AddLabel("WBR.AddJoyNeed".Translate);
+            handler.RegisterNewRow()
+                .HideWhen(() => !ModsConfig.IdeologyActive)
+                .AddElement(NewElement.Checkbox()
+                .WithReference(this, nameof(joyOnSlaves), joyOnSlaves)
+                .WithLabel("SlavesSection".Translate));
+            handler.RegisterNewRow()
+                .AddElement(NewElement.Checkbox()
+                .WithReference(this, nameof(joyOnPrisoners), joyOnPrisoners)
+                .WithLabel("PrisonersSection".Translate));
+            handler.RegisterNewRow()
+                .HideWhen(() => !joyOnPrisoners)
+                .AddElement(NewElement.Checkbox()
+                .WithReference(this, nameof(joyOnGuests), joyOnGuests)
+                .WithLabel("WBR.Guests".Translate)
+                .WithTooltip("WBR.GuestsTip".Translate));
+
+            handler.RegisterNewRow()
+                .AddElement(NewElement.Checkbox()
+                .WithReference(this, nameof(debugLogging), debugLogging)
+                .WithLabel(() => "Enable dev logging"));
+
+            handler.Initialize();
+        }
+
+        internal void SetUpChanceSection(UISection section, bool romance)
+        {
+            OrientationChances chances = romance ? asexualOrientations : sexualOrientations;
+            //Hetero
+            section.AddLabel(HeteroChance)
+                .WithTooltip(HeteroChanceTooltip);
+            section.AddElement(NewElement.Slider<float>()
+                .WithReference(chances, nameof(chances.hetero), chances.hetero)
+                .MinMax(0f, 100f), "HeteroSlider");
+            //Bi
+            section.AddLabel(BiChance)
+                .WithTooltip(BiChanceTooltip);
+            section.AddElement(NewElement.Slider<float>()
+                .WithReference(chances, nameof(chances.bi), chances.bi)
+                .MinMax(0f, 100f), "BiSlider");
+            //Homo
+            section.AddLabel(HomoChance)
+                .WithTooltip(HomoChanceTooltip);
+            section.AddElement(NewElement.Slider<float>()
+                .WithReference(chances, nameof(chances.homo), chances.homo)
+                .MinMax(0f, 100f), "HomoSlider");
+            //None
+            section.AddLabel(NoneChance)
+                .WithTooltip(NoneChanceTooltip);
+            //Buttons
+            handler.AddGap(8f);
+            UIContainer buttonRow = handler.RegisterNewRow(gap: 0f);
+            buttonRow.AddElement(NewElement.Button(() => chances.CopyFrom(romance ? sexualOrientations : asexualOrientations))
+                .WithLabel((romance ? "WBR.MatchAboveButton" : "WBR.MatchBelowButton").Translate));
+            buttonRow.AddElement(NewElement.Button(chances.Reset)
+                .WithLabel("RestoreToDefaultSettings".Translate));
+
+            TaggedString HeteroChance() => (romance ? "WBR.AceHeteroChance" : "WBR.StraightChance").Translate(chances.hetero);
+            TaggedString HeteroChanceTooltip() => (romance ? "WBR.AceHeteroChanceTip" : "WBR.StraightChanceTip").Translate();
+            TaggedString HomoChance() => (romance ? "WBR.AceHomoChance" : "WBR.GayChance").Translate(chances.homo);
+            TaggedString HomoChanceTooltip() => (romance ? "WBR.AceHomoChanceTip" : "WBR.GayChanceTip").Translate();
+            TaggedString BiChance() => (romance ? "WBR.AceBiChance" : "WBR.BisexualChance").Translate(chances.bi);
+            TaggedString BiChanceTooltip() => (romance ? "WBR.AceBiChanceTip" : "WBR.BisexualChanceTip").Translate();
+            TaggedString NoneChance() => (romance ? "WBR.AceAroChance" : "WBR.AsexualChance").Translate(chances.none);
+            TaggedString NoneChanceTooltip() => (romance ? "WBR.AceAroChanceTip" : "WBR.AsexualChanceTip").Translate();
+        }
+
+        internal void SetUpMiscSection(UISection section)
+        {
+            //Date rate
+            section.AddLabel(() => "WBR.DateRate".Translate(dateRate))
+                .WithTooltip("WBR.DateRateTip".Translate);
+            section.AddElement(NewElement.Slider<float>()
+                .WithReference(this, nameof(dateRate), dateRate)
+                .MinMax(0f, 200f)
+                .RegisterResetable(handler, 100f), "DateRateSlider");
+            //Hook up rate
+            section.AddLabel(() => "WBR.HookupRate".Translate(hookupRate))
+                .WithTooltip("WBR.HookupRateTip".Translate);
+            section.AddElement(NewElement.Slider<float>()
+                .WithReference(this, nameof(hookupRate), hookupRate)
+                .MinMax(0f, 200f)
+                .RegisterResetable(handler, 100f), "HookupRateSlider");
+            //Alien love chance
+            section.AddLabel(() => "WBR.AlienLoveChance".Translate(alienLoveChance))
+                .WithTooltip("WBR.AlienLoveChanceTip".Translate);
+            section.AddElement(NewElement.Slider<float>()
+                .WithReference(this, nameof(alienLoveChance), alienLoveChance)
+                .MinMax(-100f, 100f)
+                .RegisterResetable(handler, 33f), "AlienChanceSlider");
+            //Min opinion for romance
+            section.AddLabel(() => "WBR.MinOpinionRomance".Translate(minOpinionRomance))
+                .WithTooltip("WBR.MinOpinionRomanceTip".Translate);
+            section.AddElement(NewElement.Slider<int>()
+                .WithReference(this, nameof(minOpinionRomance), minOpinionRomance)
+                .MinMax(-100, 100)
+                .RegisterResetable(handler, 5), "MinOpinionRomanceSlider");
+            //Min opinion for hook up
+            section.AddLabel(() => "WBR.MinOpinionHookup".Translate(minOpinionHookup))
+                .WithTooltip("WBR.MinOpinionHookupTip".Translate);
+            section.AddElement(NewElement.Slider<int>()
+                .WithReference(this, nameof(minOpinionHookup), minOpinionHookup)
+                .MinMax(-100, 50)
+                .RegisterResetable(handler, 0), "MinOpinionHookupSlider");
+            //Cheat chance
+            section.AddLabel(() => "WBR.CheatChance".Translate(cheatChance))
+                .WithTooltip("WBR.CheatChanceTip".Translate);
+            section.AddElement(NewElement.Slider<float>()
+                .WithReference(this, nameof(cheatChance), cheatChance)
+                .MinMax(0f, 200f)
+                .RegisterResetable(handler, 100f), "CheatChanceSlider");
+            //Cheat opinion range
+            section.AddLabel("WBR.CheatingOpinionRange".Translate)
+                .WithTooltip("WBR.CheatingOpinionRangeTip".Translate)
+                .HideWhen(() => cheatChance == 0f);
+            section.AddElement(NewElement.Range<IntRange, int>(5)
+                .WithReference(this, nameof(cheatingOpinion), cheatingOpinion)
+                .MinMax(-100, 100)
+                .RegisterResetable(handler, new IntRange(-75, 75)), "CheatOpinionRange");
+
+            handler.AddGap();
+            handler.RegisterNewRow().AddResetButton(handler);
+        }
+
+        private void FertilityModOnClick()
+        {
+            List<FloatMenuOption> options = new();
+            foreach (KeyValuePair<string, string> item in FertilityMods)
+            {
+                options.Add(new FloatMenuOption(item.Value, delegate
+                {
+                    fertilityMod = item.Key;
+                }));
+            }
+            if (!options.NullOrEmpty())
+            {
+                Find.WindowStack.Add(new FloatMenu(options));
+            }
+        }
     }
 
     internal class BetterRomanceMod : Mod
@@ -123,7 +290,7 @@ namespace BetterRomance
         public BetterRomanceMod(ModContentPack content) : base(content)
         {
             settings = GetSettings<Settings>();
-            ModManagement.RegisterMod("WBR.WayBetterRomance", typeof(BetterRomanceMod).Assembly.GetName().Name, new("0.1"), "<color=#1116e4>[WayBetterRomance]</color>", () => Settings.debugLogging);
+            ModManagement.RegisterMod("WBR.WayBetterRomance", typeof(BetterRomanceMod).Assembly.GetName().Name, new("0.2"), "<color=#1116e4>[WayBetterRomance]</color>", () => Settings.debugLogging);
         }
 
         public override string SettingsCategory()
@@ -137,231 +304,46 @@ namespace BetterRomance
             Settings.ApplyJoySettings();
         }
 
-        Vector2 scrollPos;
-        static FieldInfo curX = AccessTools.Field(typeof(Listing_Standard), "curX");
-        const float scrollListPadding = 20f;
-        const float secondBoxOffset = -12.01f;
-        public override void DoSettingsWindowContents(Rect canvas)
-        {
-
-            Listing_Standard list = new()
-            {
-                ColumnWidth = (canvas.width / 2f) - 17f + secondBoxOffset
-            };
-            list.Begin(canvas);
-
-            DrawBaseSexualityChance(list);
-            list.Gap();
-            TwoButtonText(list, "WBR.MatchBelowButton".Translate(), delegate { settings.sexualOrientations = settings.asexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
-            { settings.sexualOrientations.Reset(); });
-            list.Gap();
-
-            DrawAceOrientationChance(list);
-            list.Gap();
-            TwoButtonText(list, "WBR.MatchAboveButton".Translate(), delegate { settings.asexualOrientations = settings.sexualOrientations.Copy; }, "RestoreToDefaultSettings".Translate(), delegate
-            { settings.asexualOrientations.Reset(); });
-
-            list.NewColumn();
-            Rect rightRect = new(0f, 0f, canvas.width, canvas.height)
-            {
-                xMin = (float)curX.GetValue(list)
-            };
-            Rect viewRect = new(0f, 0f, rightRect.width - scrollListPadding, scrollViewHeight);
-
-            Widgets.BeginScrollView(rightRect, ref scrollPos, viewRect, true);
-            Listing_Standard scrollList = new(rightRect, () => scrollPos)
-            {
-                maxOneColumn = true
-            };
-            scrollList.Begin(viewRect);
-
-            DrawCustomRight(scrollList);
-            scrollList.Gap();
-            if (scrollList.ButtonText(Translator.Translate("RestoreToDefaultSettings")))
-            {
-                settings.dateRate = 100f;
-                settings.hookupRate = 100f;
-                settings.alienLoveChance = 33f;
-                settings.minOpinionRomance = 5;
-                settings.cheatChance = 100f;
-                settings.minOpinionHookup = 0;
-                settings.cheatingOpinion = new(-75, 75);
-            }
-
-            scrollList.Gap();
-            DrawRightMisc(scrollList);
-
-            scrollViewHeight = scrollList.MaxColumnHeightSeen;
-            scrollList.End();
-            Widgets.EndScrollView();
-            list.End();
-        }
-
-        public void TwoButtonText(Listing_Standard listing, string firstLabel, Action firstAction, string secondLabel, Action secondAction)
-        {
-            Rect firstRect = listing.GetRect(30f, 0.5f);
-            Rect secondRect = new(firstRect);
-            secondRect.x += secondRect.width;
-            bool firstResult = false;
-            if (!listing.BoundingRectCached.HasValue || firstRect.Overlaps(listing.BoundingRectCached.Value))
-            {
-                firstResult = Widgets.ButtonText(firstRect, firstLabel);
-            }
-            if (firstResult)
-            {
-                firstAction.Invoke();
-            }
-            bool secondResult = false;
-            if (!listing.BoundingRectCached.HasValue || secondRect.Overlaps(listing.BoundingRectCached.Value))
-            {
-                secondResult = Widgets.ButtonText(secondRect, secondLabel);
-            }
-            if (secondResult)
-            {
-                secondAction.Invoke();
-            }
-            listing.Gap(listing.verticalSpacing);
-        }
-        private static float sectionHeightOrientation = 0f;
-        private static float sectionHeightOther = 0f;
+        private Vector2 scrollPos;
         private static float scrollViewHeight = 0f;
 
-        private static Listing_Standard DrawCustomSectionStart(Listing_Standard listing, float height, string label, string tooltip = null)
+        public override void DoSettingsWindowContents(Rect canvas)
         {
-            listing.Label(label, -1f, tooltip);
-            Listing_Standard listing_Standard = listing.BeginSection(height, 8f, 6f);
-            listing_Standard.maxOneColumn = true;
-            return listing_Standard;
-        }
-
-        private static void DrawCustomSectionEnd(Listing_Standard listing, Listing_Standard section, out float height)
-        {
-            listing.EndSection(section);
-            height = section.CurHeight;
-        }
-        //I wonder if I can combine these into one method that can act on the different orientation objects?
-        private static void DrawBaseSexualityChance(Listing_Standard listing)
-        {
-            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.OrientationHeading".Translate(), tooltip: "WBR.OrientationHeadingTip".Translate());
-            list.Label("WBR.StraightChance".Translate() + "  " + settings.sexualOrientations.hetero + "%", tooltip: "WBR.StraightChanceTip".Translate());
-            settings.sexualOrientations.hetero = Mathf.Round(list.Slider(settings.sexualOrientations.hetero, 0f, 100f));
-            if (settings.sexualOrientations.hetero > 100f - settings.sexualOrientations.bi - settings.sexualOrientations.homo)
+            Listing_ScrollView outerList = new()
             {
-                settings.sexualOrientations.hetero = 100f - settings.sexualOrientations.bi - settings.sexualOrientations.homo;
-            }
-            list.Label("WBR.BisexualChance".Translate() + "  " + settings.sexualOrientations.bi + "%", tooltip: "WBR.BisexualChanceTip".Translate());
-            settings.sexualOrientations.bi = Mathf.Round(list.Slider(settings.sexualOrientations.bi, 0f, 100f));
-            if (settings.sexualOrientations.bi > 100f - settings.sexualOrientations.hetero - settings.sexualOrientations.homo)
-            {
-                settings.sexualOrientations.bi = 100f - settings.sexualOrientations.hetero - settings.sexualOrientations.homo;
-            }
-            list.Label("WBR.GayChance".Translate() + "  " + settings.sexualOrientations.homo + "%", tooltip: "WBR.GayChanceTip".Translate());
-            settings.sexualOrientations.homo = Mathf.Round(list.Slider(settings.sexualOrientations.homo, 0f, 100f));
-            if (settings.sexualOrientations.homo > 100f - settings.sexualOrientations.hetero - settings.sexualOrientations.bi)
-            {
-                settings.sexualOrientations.homo = 100f - settings.sexualOrientations.hetero - settings.sexualOrientations.bi;
-            }
-            settings.sexualOrientations.none = 100f - settings.sexualOrientations.hetero - settings.sexualOrientations.bi - settings.sexualOrientations.homo;
-            list.Label("WBR.AsexualChance".Translate() + "  " + settings.sexualOrientations.none + "%", tooltip: "WBR.AsexualChanceTip".Translate());
-            DrawCustomSectionEnd(listing, list, out sectionHeightOrientation);
-        }
-
-        private static void DrawAceOrientationChance(Listing_Standard listing)
-        {
-            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.AceOrientationHeading".Translate(), tooltip: "WBR.AceOrientationHeadingTip".Translate());
-            list.Label("WBR.AceHeteroChance".Translate() + "  " + settings.asexualOrientations.hetero + "%", tooltip: "WBR.AceHeteroChanceTip".Translate());
-            settings.asexualOrientations.hetero = Mathf.Round(list.Slider(settings.asexualOrientations.hetero, 0f, 100f));
-            if (settings.asexualOrientations.hetero > 100f - settings.asexualOrientations.bi - settings.asexualOrientations.homo)
-            {
-                settings.asexualOrientations.hetero = 100f - settings.asexualOrientations.bi - settings.asexualOrientations.homo;
-            }
-            list.Label("WBR.AceBiChance".Translate() + "  " + settings.asexualOrientations.bi + "%", tooltip: "WBR.AceBiChanceTip".Translate());
-            settings.asexualOrientations.bi = Mathf.Round(list.Slider(settings.asexualOrientations.bi, 0f, 100f));
-            if (settings.asexualOrientations.bi > 100f - settings.asexualOrientations.hetero - settings.asexualOrientations.homo)
-            {
-                settings.asexualOrientations.bi = 100f - settings.asexualOrientations.hetero - settings.asexualOrientations.homo;
-            }
-            list.Label("WBR.AceHomoChance".Translate() + "  " + settings.asexualOrientations.homo + "%", tooltip: "WBR.AceHomoChanceTip".Translate());
-            settings.asexualOrientations.homo = Mathf.Round(list.Slider(settings.asexualOrientations.homo, 0f, 100f));
-            if (settings.asexualOrientations.homo > 100f - settings.asexualOrientations.hetero - settings.asexualOrientations.bi)
-            {
-                settings.asexualOrientations.homo = 100f - settings.asexualOrientations.hetero - settings.asexualOrientations.bi;
-            }
-            settings.asexualOrientations.none = 100 - settings.asexualOrientations.hetero - settings.asexualOrientations.bi - settings.asexualOrientations.homo;
-            list.Label("WBR.AceAroChance".Translate() + "  " + settings.asexualOrientations.none + "%", tooltip: "WBR.AceAroChanceTip".Translate());
-            DrawCustomSectionEnd(listing, list, out sectionHeightOrientation);
-        }
-
-        private static void DrawCustomRight(Listing_Standard listing)
-        {
-            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOther, "WBR.OtherHeading".Translate());
-            list.Label("WBR.DateRate".Translate() + "  " + (int)settings.dateRate + "%", tooltip: "WBR.DateRateTip".Translate());
-            settings.dateRate = Mathf.Round(list.Slider(settings.dateRate, 0f, 200f));
-            list.Label("WBR.HookupRate".Translate() + "  " + (int)settings.hookupRate + "%", tooltip: "WBR.HookupRateTip".Translate());
-            settings.hookupRate = Mathf.Round(list.Slider(settings.hookupRate, 0f, 200f));
-            list.Label("WBR.AlienLoveChance".Translate() + "  " + (int)settings.alienLoveChance + "%", tooltip: "WBR.AlienLoveChanceTip".Translate());
-            settings.alienLoveChance = Mathf.Round(list.Slider(settings.alienLoveChance, 0f, 100f));
-            list.Label("WBR.MinOpinionRomance".Translate() + " " + settings.minOpinionRomance, tooltip: "WBR.MinOpinionRomanceTip".Translate());
-            settings.minOpinionRomance = Mathf.RoundToInt(list.Slider(settings.minOpinionRomance, -100f, 100f));
-            list.Label("WBR.MinOpinionHookup".Translate() + " " + settings.minOpinionHookup, tooltip: "WBR.MinOpinionHookupTip".Translate());
-            settings.minOpinionHookup = Mathf.RoundToInt(list.Slider(settings.minOpinionHookup, -100f, 50f));
-            list.Label("WBR.CheatChance".Translate() + "  " + (int)settings.cheatChance + "%", tooltip: "WBR.CheatChanceTip".Translate());
-            settings.cheatChance = Mathf.Round(list.Slider(settings.cheatChance, 0f, 200f));
-            if (settings.cheatChance != 0f)
-            {
-                list.Label("WBR.CheatingOpinionRange".Translate(), tooltip: "WBR.CheatingOpinionRangeTip".Translate());
-                IntRangeWithGap(list, ref settings.cheatingOpinion, -100, 100, 5);
-            }
-            DrawCustomSectionEnd(listing, list, out sectionHeightOther);
-        }
-
-        private static Rect IntRangeWithGap(Listing_Standard listing, ref IntRange range, int min, int max, int gap)
-        {
-            Rect rect = listing.GetRect(32f);
-            if (!listing.BoundingRectCached.HasValue || rect.Overlaps(listing.BoundingRectCached.Value))
-            {
-                Widgets.IntRange(rect, (int)listing.CurHeight, ref range, min, max, minWidth: gap);
-            }
-            listing.Gap(listing.verticalSpacing);
-            return rect;
-        }
-
-        private static void DrawRightMisc(Listing_Standard list)
-        {
+                ColumnWidth = (canvas.width / 2f) - 24f
+            };
+            Listing_Standard list = outerList.BeginScrollView(canvas, scrollViewHeight, ref scrollPos);
             Settings.AutoDetectFertilityMod();
-            if (list.ButtonTextLabeled("WBR.FertilityMod".Translate(), Settings.fertilityMod != "None" ? Settings.FertilityMods.TryGetValue(Settings.fertilityMod) : "None"))
+
+            if (!settings.handler.Initialized)
             {
-                List<FloatMenuOption> options = new();
-                foreach (KeyValuePair<string, string> item in Settings.FertilityMods)
-                {
-                    options.Add(new FloatMenuOption(item.Value, delegate
-                    {
-                        Settings.fertilityMod = item.Key;
-                    }));
-                }
-                if (!options.NullOrEmpty())
-                {
-                    Find.WindowStack.Add(new FloatMenu(options));
-                }
+                settings.SetUpHandler(list);
             }
-            if (Settings.FertilityMods.Count == 0)
+
+            settings.handler.Draw(list);
+            NormalizeChances(settings.sexualOrientations);
+            NormalizeChances(settings.asexualOrientations);
+
+            scrollViewHeight = list.MaxColumnHeightSeen;
+            outerList.End();
+        }
+
+        private void NormalizeChances(OrientationChances chances)
+        {
+            if (chances.hetero > 100f - chances.bi - chances.homo)
             {
-                list.Label("WBR.NoFertilityMod".Translate());
+                chances.hetero = 100f - chances.bi - chances.homo;
             }
-            list.Label("WBR.AddJoyNeed".Translate());
-            if (ModsConfig.IdeologyActive)
+            if (chances.bi > 100f - chances.hetero - chances.homo)
             {
-                list.CheckboxLabeled("SlavesSection".Translate(), ref settings.joyOnSlaves);
+                chances.bi = 100f - chances.hetero - chances.homo;
             }
-            list.CheckboxLabeled("PrisonersSection".Translate(), ref settings.joyOnPrisoners);
-            if (settings.joyOnPrisoners)
+            if (chances.homo > 100f - chances.hetero - chances.bi)
             {
-                list.CheckboxLabeled("WBR.Guests".Translate(), ref settings.joyOnGuests, "WBR.GuestsTip".Translate());
+                chances.homo = 100f - chances.hetero - chances.bi;
             }
-            if (Prefs.DevMode)
-            {
-                list.CheckboxLabeled("Enable dev logging", ref Settings.debugLogging);
-            }
+            chances.none = 100f - chances.hetero - chances.bi - chances.homo;
         }
     }
 }
