@@ -1,0 +1,954 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>0DivineFramework</name>
+    </assembly>
+    <members>
+        <member name="T:DivineFramework.UICheckbox">
+            <summary>A simple check box to toggle a setting.</summary>
+        </member>
+        <member name="M:DivineFramework.UICheckbox.Initialize">
+            <Initialize>
+			<summary><inheritdoc /> Sets the <see cref="F:DivineFramework.UIElement.height">height</see> to match the size of the check box.</summary>
+		</Initialize>
+        </member>
+        <member name="T:DivineFramework.UICheckboxLabelled">
+            <summary>A checkbox with a label.</summary>
+        </member>
+        <member name="F:DivineFramework.UICheckboxLabelled.labelKey">
+            <ILabelled>
+			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
+		</ILabelled>
+        </member>
+        <member name="T:DivineFramework.UIInput`1">
+            <summary>Base class for elements with an input field.</summary>
+        </member>
+        <member name="M:DivineFramework.UIInput`1.Reset">
+            <summary><inheritdoc/> Also resets the buffer for input fields.</summary>
+        </member>
+        <member name="T:DivineFramework.UIInputSingleLine`1">
+            <summary>Base class for elements with a single line input field.</summary>
+        </member>
+        <member name="M:DivineFramework.UIInputSingleLine`1.Initialize">
+            <Initialize>
+			<summary><inheritdoc /> Sets the <see cref="F:DivineFramework.UIElement.height">height</see> to be the same as one line of text.</summary>
+		</Initialize>
+        </member>
+        <member name="T:DivineFramework.UIInputInt">
+            <summary>An element that allows the user to input an <see cref="T:System.Int32"/>. Optional min and max values.</summary>
+        </member>
+        <member name="T:DivineFramework.UIInputFloat">
+            <summary>An element that allows the user to input an <see cref="T:System.Single"/>. Optional min and max values.</summary>
+        </member>
+        <member name="T:DivineFramework.UIRange`2">
+            <UIRange>
+		<summary>Base class for a range slider.</summary>
+		<ForRange>
+			<typeparam name="T">The <see langword="type" /> of the setting being referenced. Must be <see cref="T:Verse.IntRange" /> or <see cref="T:Verse.FloatRange" />.</typeparam>
+			<typeparam name="U">The corresponding numeric type of <typeparamref name="T" />: <see cref="T:System.Int32" /> or <see cref="T:System.Single" />.</typeparam>
+		</ForRange>
+	</UIRange>
+        </member>
+        <member name="M:DivineFramework.UIRange`2.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="T:DivineFramework.UIIntRange">
+            <summary>A slider for an <see cref="T:Verse.IntRange"/></summary>
+        </member>
+        <member name="T:DivineFramework.UIFloatRange">
+            <summary>
+            A slider for an <see cref="T:Verse.FloatRange"/>
+            </summary>
+        </member>
+        <member name="M:DivineFramework.UIFloatRange.Draw(UnityEngine.Rect)">
+            <inheritdoc/>
+        </member>
+        <member name="T:DivineFramework.UISlider`1">
+            <summary>Base class for a horizontal slider.</summary>
+            <typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+        </member>
+        <member name="T:DivineFramework.UISliderInt">
+            <summary>A horizontal slider for an <see langword="int"/> value.</summary>
+        </member>
+        <member name="T:DivineFramework.UISliderFloat">
+            <summary>A horizontal slider for a <see langword="float"/> value.</summary>
+        </member>
+        <member name="T:DivineFramework.UIButton">
+            <summary>A base class for simple buttons</summary>
+        </member>
+        <member name="F:DivineFramework.UIButton.onClick">
+            <onClick>
+			<summary>Delegate to be called when the button is clicked.</summary>
+		</onClick>
+        </member>
+        <member name="F:DivineFramework.UIButton.buttonHeight">
+            <buttonHeight>
+			<summary>The height of the button.</summary>
+		</buttonHeight>
+        </member>
+        <member name="M:DivineFramework.UIButton.Initialize">
+            <Initialize>
+			<summary><inheritdoc /> Sets the <see cref="F:DivineFramework.UIElement.height">height</see> of the button.</summary>
+		</Initialize>
+        </member>
+        <member name="T:DivineFramework.UIButtonResetable`1">
+            <summary>A base class for buttons that implement <see cref="T:DivineFramework.IResetable"/></summary>
+        </member>
+        <member name="F:DivineFramework.UIButtonResetable`1.onClick">
+            <onClick>
+			<summary>Delegate to be called when the button is clicked.</summary>
+		</onClick>
+        </member>
+        <member name="F:DivineFramework.UIButtonResetable`1.buttonHeight">
+            <buttonHeight>
+			<summary>The height of the button.</summary>
+		</buttonHeight>
+        </member>
+        <member name="M:DivineFramework.UIButtonResetable`1.Initialize">
+            <Initialize>
+			<summary><inheritdoc /> Sets the <see cref="F:DivineFramework.UIElement.height">height</see> of the button.</summary>
+		</Initialize>
+        </member>
+        <member name="T:DivineFramework.UIButtonText">
+            <summary>A button with a text label.</summary>
+        </member>
+        <member name="F:DivineFramework.UIButtonText.labelKey">
+            <ILabelled>
+			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
+		</ILabelled>
+        </member>
+        <member name="M:DivineFramework.UIButtonText.Draw(UnityEngine.Rect)">
+            <Draw>
+			<summary><inheritdoc /> Checks if the height of the element is still valid.</summary>
+			<inheritdoc />
+		</Draw>
+        </member>
+        <member name="T:DivineFramework.UIButtonTextResetable`1">
+            <summary>A button with a text label that implements <see cref="T:DivineFramework.IResetable"/>.</summary>
+        </member>
+        <member name="F:DivineFramework.UIButtonTextResetable`1.labelKey">
+            <ILabelled>
+			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
+		</ILabelled>
+        </member>
+        <member name="M:DivineFramework.UIButtonTextResetable`1.Draw(UnityEngine.Rect)">
+            <Draw>
+			<summary><inheritdoc /> Checks if the height of the element is still valid.</summary>
+			<inheritdoc />
+		</Draw>
+        </member>
+        <member name="T:DivineFramework.Elements.UILine">
+            <summary>An element that draws a horizontal line.</summary>
+        </member>
+        <member name="F:DivineFramework.Elements.UILine.gapHeight">
+            <summary>How tall the element should be. The line will be drawn in the middle.</summary>
+        </member>
+        <member name="T:DivineFramework.UISection">
+            <summary>A <see cref="T:DivineFramework.UIElement"/> for a section box that can contain other elements. Elements are drawn vertically in the order they were added to the section.</summary>
+        </member>
+        <member name="M:DivineFramework.UISection.Draw(UnityEngine.Rect)">
+            <Draw>
+			<summary>Draws all inner <see cref="F:DivineFramework.UIContainer.elements">elements</see> in the order they were added to the section.</summary>
+			<remarks>Hidden elements are not drawn. If the size of any element is not valid, or the sizing of section has changed, the section is marked as invalid.</remarks>
+			<inheritdoc />
+		</Draw>
+        </member>
+        <member name="T:DivineFramework.UISpace">
+            <summary>A blank space.</summary>
+        </member>
+        <member name="T:DivineFramework.UIWithReference`1">
+            <UIWithReference>
+		<summary>The base <see langword="class" /> for implementing <see cref="T:DivineFramework.IResetable" /> and interacting with members of a <see cref="T:Verse.ModSettings" /> object.</summary>
+		<typeparam name="U">The <see langword="type" /> of the setting being <see cref="F:DivineFramework.UIWithReference`1.reference">referenced</see>.</typeparam>
+	</UIWithReference>
+        </member>
+        <member name="F:DivineFramework.UIWithReference`1.reference">
+            <reference>
+				<summary>A reference to the setting that this element uses.</summary>
+			</reference>
+        </member>
+        <member name="F:DivineFramework.UIWithReference`1.defaultValue">
+            <defaultValue>
+				<summary>Default value for the setting, used when resetting.</summary>
+			</defaultValue>
+        </member>
+        <member name="M:DivineFramework.UIWithReference`1.Reset">
+            <summary>Set the <see cref="F:DivineFramework.UIWithReference`1.reference">referenced</see> setting to its <see cref="F:DivineFramework.UIWithReference`1.defaultValue">default value</see>.</summary>
+        </member>
+        <member name="T:DivineFramework.ReferenceHolder`3">
+            <inheritdoc cref="M:DivineFramework.ElementExtensions.WithReference``4(``0,``1,System.String,``2,``3)"/>
+        </member>
+        <member name="M:DivineFramework.ReferenceHolder`3.#ctor(`0)">
+            <inheritdoc cref="M:DivineFramework.ElementExtensions.WithReference``4(``0,``1,System.String,``2,``3)"/>
+        </member>
+        <member name="F:DivineFramework.ReferenceHolder`3.settingsObject">
+            <settingsObject>
+				<summary>The <see cref="T:Verse.ModSettings" /> object that contains the referenced object.</summary>
+			</settingsObject>
+        </member>
+        <member name="F:DivineFramework.ReferenceHolder`3.collectionReference">
+            <summary>A reference to a collection.</summary>
+        </member>
+        <member name="F:DivineFramework.ReferenceHolder`3.dictionaryReference">
+            <summary>A reference to a <see cref="T:System.Collections.Generic.KeyValuePair"/> collection, like a dictionary.</summary>
+        </member>
+        <member name="F:DivineFramework.ReferenceHolder`3.collectionKey">
+            <summary>The object for getting the value we actually want from the collection. Key for a dictionary, index for a list.</summary>
+        </member>
+        <member name="T:DivineFramework.ReferenceHolder`2">
+            <inheritdoc cref="M:DivineFramework.ElementExtensions.WithReference``3(``0,``1,System.String,``2)"/>
+        </member>
+        <member name="M:DivineFramework.ReferenceHolder`2.#ctor(`0)">
+            <inheritdoc cref="M:DivineFramework.ElementExtensions.WithReference``3(``0,``1,System.String,``2)"/>
+        </member>
+        <member name="F:DivineFramework.ReferenceHolder`2.settingsObject">
+            <settingsObject>
+				<summary>The <see cref="T:Verse.ModSettings" /> object that contains the referenced object.</summary>
+			</settingsObject>
+        </member>
+        <member name="F:DivineFramework.ReferenceHolder`2.instanceReference">
+            <summary>A reference to an instance field</summary>
+        </member>
+        <member name="F:DivineFramework.ReferenceHolder`2.staticReference">
+            <summary>A reference to a static field</summary>
+        </member>
+        <member name="T:DivineFramework.ElementExtensions">
+            <summary>
+            Extension methods for manipulating UI elements.
+            </summary>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithLabel``1(``0,DivineFramework.UIElement.LabelDelegate)">
+            <WithLabel>
+			<summary>Add a label to an element.</summary>
+			<WithLabel>
+			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
+		</WithLabel>
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</WithLabel>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithTooltip``1(``0,DivineFramework.UIElement.LabelDelegate)">
+            <WithTooltip>
+			<summary>Add a tooltip to an element.</summary>
+			<param name="tooltip"> <see langword="delegate" /> to the function used to determine the plain text of the tooltip.</param>
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</WithTooltip>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithReference``3(``0,``1,System.String,``2)">
+            <WithReference name="GenericStatic">
+			<summary>Add a reference to a <see langword="static" /> or instance field to an element. This overload will not change the <see langword="type" /> of the <paramref name="element" />.</summary>
+			<WithReference>
+			<param name="settings">The <see langword="object" /> that contains the reference.</param>
+			<param name="name">The <see langword="string" /> identifier of the setting.</param>
+			<param name="value">The current value of the referenced setting.</param>
+		</WithReference>
+			<WithoutReference>
+			<typeparam name="T">The <see langword="type" /> of the <see langword="object" /> that contains the reference.</typeparam>
+			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+		</WithoutReference>
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</WithReference>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithReference``4(``0,``1,System.String,``2,``3)">
+            <WithReference name="GenericCollection">
+			<summary>Add a reference to an element for a value that is inside a collection.This overload will not change the<see langword="type" /> of the <paramref name="element" />.</summary>
+			<typeparam name="V"> The <see langword="type" /> of the <paramref name="key" />.</typeparam>
+			<param name="key"> The index or key used to access the correct entry in the collection.</param>
+			<WithReference>
+			<param name="settings">The <see langword="object" /> that contains the reference.</param>
+			<param name="name">The <see langword="string" /> identifier of the setting.</param>
+			<param name="value">The current value of the referenced setting.</param>
+		</WithReference>
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+			<WithoutReference>
+			<typeparam name="T">The <see langword="type" /> of the <see langword="object" /> that contains the reference.</typeparam>
+			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+		</WithoutReference>
+		</WithReference>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.RegisterResetable``3(``0,DivineFramework.SettingsHandler{``1},``2)">
+            <RegisterResetable>
+			<summary>Register this <paramref name="element" /> to be reset when the <paramref name="handler" /> is reset.</summary>
+			<typeparam name="T">The subclass of <see cref="T:Verse.ModSettings" /> associated with the <paramref name="handler" />.</typeparam>
+			<param name="handler">The <see cref="T:DivineFramework.SettingsHandler`1" /> to register this element to.</param>
+			<param name="defaultValue">The value to be used when the element is reset.</param>
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+		</RegisterResetable>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.ButtonAction``1(``0,DivineFramework.UIElement.OnClickDelegate)">
+            <ButtonAction>
+			<summary>Add a <see cref="T:DivineFramework.UIElement.OnClickDelegate" /> to be called when the button is clicked.</summary>
+			<param name="onClick"> The <see langword="delegate" /> to be called when the button is clicked.</param>
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</ButtonAction>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.Alignment(DivineFramework.UICheckbox,UnityEngine.TextAlignment)">
+            <Alignment>
+			<summary>Set the alignment of a checkbox within its element</summary>
+			<param name="alignment" />
+			<returns>The original <paramref name="element" />.</returns>
+			<param name="element">The original <paramref name="element" />.</param>
+		</Alignment>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.MinMax``2(``0,``1,``1)">
+            <MinMax>
+			<summary>Add minimum and maximum values to an element.</summary>
+			<typeparam name="U">The underlying numeric type of the referenced setting.</typeparam>
+			<param name="min"> The minimum value.</param>
+			<param name="max"> The maximum value.</param>
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</MinMax>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.HideWhen``1(``0,DivineFramework.UIElement.HideDelegate)">
+            <HideWhen>
+			<summary>Set a delegate to be used to determine if the element should be hidden.</summary>
+			<param name="hideDelegate" />
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</HideWhen>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.RoundTo``1(DivineFramework.UISlider{``0},System.Single)">
+            <RoundTo>
+			<summary>Add a precision value for the slider to round to.</summary>
+			<remarks>Default is 0.01f, which will constrain a <see langword="float" /> value to two decimal points.</remarks>
+			<param name="round">Precision value to use for rounding.</param>
+			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</RoundTo>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithLabel(DivineFramework.UICheckbox,DivineFramework.UIElement.LabelDelegate)">
+            <WithLabel name="UICheckbox">
+			<summary>Add a label to a checkbox.</summary>
+			<returns>A new <see cref="T:DivineFramework.UICheckboxLabelled" /> element.</returns>
+			<WithLabel>
+			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
+		</WithLabel>
+			<param name="element">The original <paramref name="element" />.</param>
+		</WithLabel>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithLabel(DivineFramework.UIButton,DivineFramework.UIElement.LabelDelegate)">
+            <WithLabel name="UIButton">
+			<summary>Add a label to a button.</summary>
+			<returns>A new <see cref="T:DivineFramework.UIButtonText" /> element.</returns>
+			<WithLabel>
+			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
+		</WithLabel>
+			<param name="element">The original <paramref name="element" />.</param>
+		</WithLabel>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithLabel``1(DivineFramework.UIButtonResetable{``0},DivineFramework.UIElement.LabelDelegate)">
+            <WithLabel name="UIButtonResetable">
+			<summary>Add a label to a button that already has a reference.</summary>
+			<returns>A new <see cref="T:DivineFramework.UIButtonTextResetable`1" /> element.</returns>
+			<WithLabel>
+			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
+		</WithLabel>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+		</WithLabel>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithReference``1(DivineFramework.UIInputSingleLine{System.Int32},``0,System.String,System.Int32)">
+            <WithReference name="UIInputSingleLineInt">
+			<summary>Add a reference to an input field.</summary>
+			<returns>A new <see cref="T:DivineFramework.UIInputInt" /> element.</returns>
+			<WithReference>
+			<param name="settings">The <see langword="object" /> that contains the reference.</param>
+			<param name="name">The <see langword="string" /> identifier of the setting.</param>
+			<param name="value">The current value of the referenced setting.</param>
+		</WithReference>
+			<typeparam name="T">The <see langword="type" /> of the <see langword="object" /> that contains the reference.</typeparam>
+			<param name="element">The original <paramref name="element" />.</param>
+		</WithReference>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithReference``1(DivineFramework.UIInputSingleLine{System.Single},``0,System.String,System.Single)">
+            <WithReference name="UIInputSingleLineFloat">
+			<returns>A new <see cref="T:DivineFramework.UIInputFloat" /> element.</returns>
+			<inheritdoc cref="M:DivineFramework.ElementExtensions.WithReference``1(DivineFramework.UIInputSingleLine{System.Int32},``0,System.String,System.Int32)" />
+		</WithReference>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithReference``2(DivineFramework.UIButton,``0,System.String,``1)">
+            <WithReference name="UIButton">
+			<summary>Add a reference to a button.</summary>
+			<returns>A new <see cref="T:DivineFramework.UIButtonResetable`1" /> element.</returns>
+			<WithReference>
+			<param name="settings">The <see langword="object" /> that contains the reference.</param>
+			<param name="name">The <see langword="string" /> identifier of the setting.</param>
+			<param name="value">The current value of the referenced setting.</param>
+		</WithReference>
+			<param name="element">The original <paramref name="element" />.</param>
+			<WithoutReference>
+			<typeparam name="T">The <see langword="type" /> of the <see langword="object" /> that contains the reference.</typeparam>
+			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+		</WithoutReference>
+		</WithReference>
+        </member>
+        <member name="M:DivineFramework.ElementExtensions.WithIncrementButtons(DivineFramework.UIInputInt,System.Int32)">
+            <WithIncrementButtons>
+			<summary>Add +/- buttons to a numeric input field.</summary>
+			<param name="multiplier">The base amount to be added/subtracted with each button press.</param>
+			<returns>A new <see cref="T:DivineFramework.UIIntEntry" /> element.</returns>
+			<param name="element">The original <paramref name="element" />.</param>
+		</WithIncrementButtons>
+        </member>
+        <member name="T:DivineFramework.Listing_ScrollView">
+            <Listing_ScrollView>
+		<summary>A <see cref="T:Verse.Listing" /> to make using scrollbars less confusing.</summary>
+		<remarks>All you need to do is make a new <see cref="T:DivineFramework.Listing_ScrollView" />, call <see cref="M:DivineFramework.Listing_ScrollView.BeginScrollView(UnityEngine.Rect,System.Single,UnityEngine.Vector2@,System.Single)" />, use the resulting <see cref="T:Verse.Listing_Standard" /> for all your lising needs, then call <see cref="M:DivineFramework.Listing_ScrollView.End" />.</remarks>
+	</Listing_ScrollView>
+        </member>
+        <member name="F:DivineFramework.Listing_ScrollView.endingX">
+            <endingX>
+		<summary>The final x value of the inner listing after <see cref="M:DivineFramework.Listing_ScrollView.End" /> was called.</summary>
+	</endingX>
+        </member>
+        <member name="M:DivineFramework.Listing_ScrollView.BeginScrollView(UnityEngine.Rect,System.Single,UnityEngine.Vector2@,System.Single)">
+            <BeginScrollView>
+		<summary>Use this instead of <see cref="M:Verse.Listing_Standard.Begin(UnityEngine.Rect)" />. If the <paramref name="height" /> is larger than the <paramref name="canvasRect" />, a scrollbar will be used.</summary>
+		<param name="canvasRect">The <see cref="T:UnityEngine.Rect" /> for the visible space on the screen.</param>
+		<param name="height">
+			<para>The height of the inner <see cref="T:UnityEngine.Rect" /> needed to display all contents. There are a few ways to calculate the correct height, depending on your setup.</para>
+			<para>If you have set columns, you can start with 0f and then save <see cref="P:Verse.Listing.MaxColumnHeightSeen" /> after everything is drawn. That will cause the height to automatically adjust if the needed height changes.</para>
+			<para>If you are letting the <see cref="T:Verse.Listing" /> decide when to start a new column, you can use <see cref="F:DivineFramework.SettingsHandler`1.height" /> to determine the needed height based on how many columns you expect.</para>
+		</param>
+		<param name="scrollPosition">Used to keep track of how far the window is scrolled in either direction. Should be a <see langword="static" /> variable that is initialized to <see cref="P:UnityEngine.Vector2.zero" />.</param>
+		<param name="width">
+			<para>Optional width for the inner <see cref="T:UnityEngine.Rect" />. If this is larger than the width of the <paramref name="canvasRect" />, a horizontal scrollbar will be used.</para>
+			<para>You can save <see cref="F:DivineFramework.Listing_ScrollView.endingX" /> after everything is drawn and then use that for the width. That will cause the width to automatically adjust if the needed width changes.</para>
+		</param>
+		<returns>The inner <see cref="T:Verse.Listing_Standard" />. This is what you will actually use.</returns>
+	</BeginScrollView>
+        </member>
+        <member name="M:DivineFramework.Listing_ScrollView.End">
+            <End>
+		<summary>Close everything when you're done.</summary>
+	</End>
+        </member>
+        <member name="M:DivineFramework.IWidgetElement.Register(System.Single,System.Single)">
+            <Register>
+				<summary>Register the element within its container.</summary>
+				<param name="parentWidth">The actual width of the parent container.</param>
+				<param name="parentGap">The gap setting for the parent container.</param>
+			</Register>
+        </member>
+        <member name="M:DivineFramework.IWidgetElement.Initialize">
+            <Initialize>
+				<summary>Initialize any values that need to be set after all other elements are registered.</summary>
+			</Initialize>
+        </member>
+        <member name="M:DivineFramework.IWidgetElement.Draw(UnityEngine.Rect)">
+            <Draw>
+				<summary>Draw the element.</summary>
+				<param name="rect">The <see cref="T:UnityEngine.Rect" /> used to draw the element, calculated by the parent container.</param>
+			</Draw>
+        </member>
+        <member name="M:DivineFramework.IWidgetElement.Validate(System.String@)">
+            <Validate>
+				<summary>Make sure that all required data is present.</summary>
+				<param name="reasons">List of reasons that validation failed, to be used in error messages.</param>
+				<returns><see langword="false" /> if any critical data is null.</returns>
+			</Validate>
+        </member>
+        <member name="T:DivineFramework.IReference`1">
+            <Main>
+				<summary>An interface for reference holders.</summary>
+				<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+			</Main>
+        </member>
+        <member name="P:DivineFramework.IReference`1.Value">
+            <summary>The value of the referenced object.</summary>
+        </member>
+        <member name="M:DivineFramework.IReference`1.Validate(System.String@)">
+            <inheritdoc cref="M:DivineFramework.UIElement.Validate(System.String@)"/>
+        </member>
+        <member name="T:DivineFramework.ILabelled">
+            <summary>Interface for elements with labels.</summary>
+        </member>
+        <member name="P:DivineFramework.ILabelled.Label">
+            <summary>Property to get the text of the label.</summary>
+        </member>
+        <member name="P:DivineFramework.ILabelled.SetLabel">
+            <summary>Set the <see langword="delegate"/> that will be used to determine the text of the label.</summary>
+        </member>
+        <member name="M:DivineFramework.IContainer.GetNamed(System.String)">
+            <GetNamed>
+				<summary>Retrieve a specific named element that has been registered to the <see cref="T:DivineFramework.IContainer" /> or a nested <see cref="T:DivineFramework.IContainer" />.</summary>
+				<param name="name">The name of the element to retrieve.</param>
+				<returns>The named element, or <see langword="null" /> if none was found.</returns>
+			</GetNamed>
+        </member>
+        <member name="T:DivineFramework.IMinMax`1">
+            <Main>
+				<summary>Interface for elements with numeric min and max values.</summary>
+				<typeparam name="U">The numeric type of the associated setting.</typeparam>
+			</Main>
+        </member>
+        <member name="P:DivineFramework.IMinMax`1.Min">
+            <summary>The minimum value for this setting.</summary>
+        </member>
+        <member name="P:DivineFramework.IMinMax`1.Max">
+            <summary>The maximum value for this setting.</summary>
+        </member>
+        <member name="T:DivineFramework.LogUtil">
+            <summary>
+            Methods for logging to the console.
+            </summary>
+        </member>
+        <member name="M:DivineFramework.LogUtil.Message(System.String,System.Boolean)">
+            <LogUtil>
+		<summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary>
+        <param name="message">The text of the log message.</param>
+        <param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
+	</LogUtil>
+        </member>
+        <member name="M:DivineFramework.LogUtil.Warning(System.String,System.Boolean)">
+            <LogUtil>
+		<summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary>
+        <param name="message">The text of the log message.</param>
+        <param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
+	</LogUtil>
+        </member>
+        <member name="M:DivineFramework.LogUtil.WarningOnce(System.String,System.Int32,System.Boolean)">
+            <LogUtilWithKey>
+		<LogUtil>
+		<summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary>
+        <param name="message">The text of the log message.</param>
+        <param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
+	</LogUtil>
+		<param name="key">A number used to determine if this message has already been logged. Should be unique for each usage.</param>
+	</LogUtilWithKey>
+        </member>
+        <member name="M:DivineFramework.LogUtil.Error(System.String,System.Boolean)">
+            <LogUtil>
+		<summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary>
+        <param name="message">The text of the log message.</param>
+        <param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
+	</LogUtil>
+        </member>
+        <member name="M:DivineFramework.LogUtil.ErrorOnce(System.String,System.Int32,System.Boolean)">
+            <LogUtilWithKey>
+		<LogUtil>
+		<summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary>
+        <param name="message">The text of the log message.</param>
+        <param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
+	</LogUtil>
+		<param name="key">A number used to determine if this message has already been logged. Should be unique for each usage.</param>
+	</LogUtilWithKey>
+        </member>
+        <member name="T:DivineFramework.ModManagement">
+            <summary/>
+        </member>
+        <member name="M:DivineFramework.ModManagement.RegisterMod(System.String,System.String,System.Version,System.String,System.Func{System.Boolean})">
+            <RegisterMod>
+			<summary>Register your mod with the framework; this enables certain logging features and checks that the correct version of the framework is loaded.</summary>
+			<remarks>The recommended place to call this is in the constructor of your <see cref="T:Verse.Mod" /> class, or in the constructor of a class with the <see cref="T:Verse.StaticConstructorOnStartup" /> attribute.</remarks>
+			<param name="translationKey">A translation key for the name of the mod. Used for player facing messages.</param>
+			<param name="assemblyName">The name of the assembly in the mod that references DivineFramework.<br />Recommended usage:<code>typeof(ClassFromYourAssembly).Assembly.GetName().Name</code>
+			</param>
+			<param name="versionNeeded">The version of DivineFramework required by the mod.</param>
+			<param name="wrapMessage">Text to prefix logging messages; optional, will default to <paramref name="assemblyName" />.</param>
+			<param name="debugDelegate">A delegate to determine if debug logging is active for this mod; optional, will default to always <see langword="true" />, meaning everything will be logged.</param>
+		</RegisterMod>
+        </member>
+        <member name="T:DivineFramework.NewElement">
+            <summary>Methods for creating new UI elements.</summary>
+        </member>
+        <member name="M:DivineFramework.NewElement.InputLine``1(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <InputLine>
+			<summary>Add an input field for entering numbers or text.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UIInputSingleLine`1" />.</returns>
+			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+		</InputLine>
+        </member>
+        <member name="M:DivineFramework.NewElement.Button(DivineFramework.UIElement.OnClickDelegate,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Button>
+			<summary>Add a basic button.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UIButton" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="onClick">The <see langword="delegate" /> to be called when the button is clicked.</param>
+			<param name="buttonHeight">A fixed height for the button; optional.</param>
+		</Button>
+        </member>
+        <member name="M:DivineFramework.NewElement.Checkbox(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Checkbox>
+			<summary>Add a toggle for a <see langword="bool" /> value that will show a green check mark or a red X.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UICheckbox" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+		</Checkbox>
+        </member>
+        <member name="M:DivineFramework.NewElement.Slider``1(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Slider>
+			<summary>Add a horizontal slider for a numeric value.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UISlider`1" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+		</Slider>
+        </member>
+        <member name="M:DivineFramework.NewElement.Range``2(System.Nullable{``1},System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Range>
+			<summary>Add a slider for an <see cref="T:Verse.IntRange" /> or <see cref="T:Verse.FloatRange" />.</summary>
+			<param name="minRange">Minimum difference between the min and max of the range; optional</param>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<ForRange>
+			<typeparam name="T">The <see langword="type" /> of the setting being referenced. Must be <see cref="T:Verse.IntRange" /> or <see cref="T:Verse.FloatRange" />.</typeparam>
+			<typeparam name="U">The corresponding numeric type of <typeparamref name="T" />: <see cref="T:System.Int32" /> or <see cref="T:System.Single" />.</typeparam>
+		</ForRange>
+		</Range>
+        </member>
+        <member name="T:DivineFramework.SettingsHandler`1">
+            <Main>
+			<summary>A class for holding and managing multiple <see cref="T:DivineFramework.UIElement" />s.</summary>
+			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.SettingsHandler`1" />.</typeparam>
+			<param name="maxOneColumn">Setting this to <see langword="true" /> means that a new column will only be made when a row specifically requests it. Hidden rows will still cause a new column in this case.<br />Setting this to <see langword="false" /> means that a new column will be made if a row will not fit in the <see cref="T:UnityEngine.Rect" /> of the <see cref="T:Verse.Listing" />.</param>
+		</Main>
+        </member>
+        <member name="M:DivineFramework.SettingsHandler`1.#ctor(System.Boolean)">
+            <Main>
+			<summary>A class for holding and managing multiple <see cref="T:DivineFramework.UIElement" />s.</summary>
+			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.SettingsHandler`1" />.</typeparam>
+			<param name="maxOneColumn">Setting this to <see langword="true" /> means that a new column will only be made when a row specifically requests it. Hidden rows will still cause a new column in this case.<br />Setting this to <see langword="false" /> means that a new column will be made if a row will not fit in the <see cref="T:UnityEngine.Rect" /> of the <see cref="T:Verse.Listing" />.</param>
+		</Main>
+        </member>
+        <member name="P:DivineFramework.SettingsHandler`1.Initialized">
+            <summary>Whether all containing elements have been initialized.</summary>
+        </member>
+        <member name="F:DivineFramework.SettingsHandler`1.verticalSpacing">
+            <summary>Space of the gap between rows.</summary>
+        </member>
+        <member name="F:DivineFramework.SettingsHandler`1.width">
+            <summary>The width for the settings handler that is passed to all rows.</summary>
+        </member>
+        <member name="F:DivineFramework.SettingsHandler`1.height">
+            <summary>The height of this <see cref="T:DivineFramework.SettingsHandler`1"/> the last time it was drawn.</summary>
+        </member>
+        <member name="F:DivineFramework.SettingsHandler`1.maxOneColumn">
+            <summary><param name="maxOneColumn">Setting this to <see langword="true" /> means that a new column will only be made when a row specifically requests it. Hidden rows will still cause a new column in this case.<br />Setting this to <see langword="false" /> means that a new column will be made if a row will not fit in the <see cref="T:UnityEngine.Rect" /> of the <see cref="T:Verse.Listing" />.</param></summary>
+        </member>
+        <member name="M:DivineFramework.SettingsHandler`1.RegisterNewRow(System.String,System.Single,System.Boolean)">
+            <RegisterNewRow>
+			<summary>Add a new row to the <see cref="T:DivineFramework.SettingsHandler`1" />. This row is a <see cref="T:DivineFramework.UIContainer" /> to hold elements that will be drawn horizontally.</summary>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows/elements within this <see cref="T:DivineFramework.SettingsHandler`1" />.</param>
+			<param name="gap">The spacing between elements in the container.</param>
+			<param name="newColumn">Whether to start a new column before drawing this row. Has no affect on nested containers.</param>
+			<returns>The <see cref="T:DivineFramework.UIContainer" /> for the new row.</returns>
+		</RegisterNewRow>
+        </member>
+        <member name="M:DivineFramework.SettingsHandler`1.RegisterNewSection(System.String,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Boolean)">
+            <RegisterNewSection>
+			<summary>Add a new row to the <see cref="T:DivineFramework.SettingsHandler`1" />. This row is a <see cref="T:DivineFramework.UISection" /> to hold elements that will be drawn vertically inside a section box.</summary>
+			<param name="spacing">The spacing between elements in the section.</param>
+			<param name="sectionBorder">The space between the border of the section and the <see cref="T:UnityEngine.Rect" /> where the elements are drawn, for the top and sides only.</param>
+			<param name="bottomBorder">Same as <paramref name="sectionBorder" /> but for the bottom of the section.</param>
+			<returns>The <see cref="T:DivineFramework.UISection" /> for the new row.</returns>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows/elements within this <see cref="T:DivineFramework.SettingsHandler`1" />.</param>
+			<param name="newColumn">Whether to start a new column before drawing this row. Has no affect on nested containers.</param>
+		</RegisterNewSection>
+        </member>
+        <member name="M:DivineFramework.SettingsHandler`1.Initialize">
+            <Initialize>
+			<summary>Initializes all registered rows and marks the <see cref="T:DivineFramework.SettingsHandler`1" /> as initialized. Not strictly necessary, as each row will be initialized during drawing if it is not valid, but setting <see cref="P:DivineFramework.SettingsHandler`1.Initialized" /> is useful if there are things you only want to do once.</summary>
+		</Initialize>
+        </member>
+        <member name="M:DivineFramework.SettingsHandler`1.RegisterResetable(DivineFramework.UIElement)">
+            <RegisterResetable>
+			<summary>Register an element that implements <see cref="T:DivineFramework.IResetable" /> so it will be reset when <see cref="M:DivineFramework.SettingsHandler`1.Reset" /> is called.</summary>
+			<param name="element">The element to reset.</param>
+		</RegisterResetable>
+        </member>
+        <member name="M:DivineFramework.SettingsHandler`1.AddGap(System.Single,System.String)">
+            <AddGap>
+			<summary>Add a row that's just an empty gap.</summary>
+			<param name="height">How tall the gap should be.</param>
+			<returns>The <see cref="T:DivineFramework.UIContainer" /> for the new row.</returns>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows/elements within this <see cref="T:DivineFramework.SettingsHandler`1" />.</param>
+		</AddGap>
+        </member>
+        <member name="M:DivineFramework.SettingsHandler`1.AddLine(System.Single,System.String)">
+            <AddLine>
+			<summary>Add a row with a horizontal line</summary>
+			<param name="gapHeight">The height of the element. The line will be drawn in the middle.</param>
+			<returns>The <see cref="T:DivineFramework.UIContainer" /> for the new row.</returns>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows/elements within this <see cref="T:DivineFramework.SettingsHandler`1" />.</param>
+		</AddLine>
+        </member>
+        <member name="M:DivineFramework.SettingsHandler`1.Reset">
+            <summary>Reset all registered elements to their <see cref="F:DivineFramework.UIWithReference`1.defaultValue">default values.</see></summary>
+        </member>
+        <member name="M:DivineFramework.SettingsHandler`1.Draw(Verse.Listing)">
+            <Draw>
+			<summary>Draw all registered rows in the order they were added.</summary>
+			<param name="list">The <see cref="T:Verse.Listing" /> where the rows should be drawn.</param>
+		</Draw>
+        </member>
+        <member name="M:DivineFramework.SettingsHandler`1.GetNamed(System.String)">
+            <GetNamed>
+			<summary>Retrieve a specific named element that has been registered to this <see cref="T:DivineFramework.SettingsHandler`1" /> or one of its rows.</summary>
+			<param name="name">The unique name of the element.</param>
+			<returns>The named element, or <see langword="null" /> if none was found.</returns>
+		</GetNamed>
+        </member>
+        <member name="T:DivineFramework.UIElement">
+            <summary>The base <see langword="class"/> for implementing <see cref="T:DivineFramework.IWidgetElement"/>.</summary>
+        </member>
+        <member name="T:DivineFramework.UIElement.LabelDelegate">
+            <LabelDelegate>
+			<summary>A <see langword="delegate" /> for creating a text label.</summary>
+			<returns>A <see cref="T:Verse.TaggedString" /> with the text of the label.</returns>
+		</LabelDelegate>
+        </member>
+        <member name="T:DivineFramework.UIElement.OnClickDelegate">
+            <summary>A <see langword="delegate"/> that will be called when a button is pressed.</summary>
+        </member>
+        <member name="T:DivineFramework.UIElement.HideDelegate">
+            <summary>A delegate used to determine if an element should be hidden.</summary>
+        </member>
+        <member name="F:DivineFramework.UIElement.relativeWidth">
+            <summary>Width of the element relative to its container, used to determine <see cref="F:DivineFramework.UIElement.actualWidth">actual width</see>.</summary>
+        </member>
+        <member name="F:DivineFramework.UIElement.fixedWidth">
+            <summary>A set width to use for the <see cref="F:DivineFramework.UIElement.actualWidth">actual width</see>.</summary>
+        </member>
+        <member name="F:DivineFramework.UIElement.actualWidth">
+            <summary>The actual width of the element to be used for drawing.</summary>
+        </member>
+        <member name="F:DivineFramework.UIElement.height">
+            <summary>The height required to display the element properly.</summary>
+        </member>
+        <member name="F:DivineFramework.UIElement.name">
+            <summary>A unique string used to retrieve the element from its container.</summary>
+        </member>
+        <member name="F:DivineFramework.UIElement.sizeValid">
+            <summary/>
+        </member>
+        <member name="P:DivineFramework.UIElement.IsHidden">
+            <summary>Whether the element should be drawn or not.</summary>
+        </member>
+        <member name="P:DivineFramework.UIElement.Name">
+            <summary>Property to access the <see cref="F:DivineFramework.UIElement.name">name</see> field.</summary>
+        </member>
+        <member name="P:DivineFramework.UIElement.SizeValid">
+            <summary>Used to determine if the element needs to be re-initialized because the desired sizing has changed.</summary>
+        </member>
+        <member name="P:DivineFramework.UIElement.Width">
+            <summary>Property used to access the <see cref="F:DivineFramework.UIElement.actualWidth">actual width</see>.</summary>
+        </member>
+        <member name="M:DivineFramework.UIElement.Register(System.Single,System.Single)">
+            <Register>
+			<summary><inheritdoc /> The <see cref="P:DivineFramework.UIElement.Width">actual width</see> is calculated if <see cref="F:DivineFramework.UIElement.relativeWidth">relative width</see> or <see cref="F:DivineFramework.UIElement.fixedWidth">fixed width</see> is set.</summary>
+			<param name="parentWidth">Width of the parent container, used to calculate <see cref="P:DivineFramework.UIElement.Width">actual width</see>.</param>
+			<param name="parentGap">Gap setting of the parent container.</param>
+		</Register>
+        </member>
+        <member name="M:DivineFramework.UIElement.Hide(System.Boolean)">
+            <Hide>
+			<summary>Set the element to be hidden.</summary>
+			<param name="value" />
+		</Hide>
+        </member>
+        <member name="M:DivineFramework.UIElement.AddName(System.String)">
+            <AddName>
+			<summary>Add a name to the element.</summary>
+			<remarks>Only call this after checking that the name is unique.</remarks>
+			<param name="name">The name to add to the element</param>
+		</AddName>
+        </member>
+        <member name="M:DivineFramework.UIElement.DrawTooltip(UnityEngine.Rect)">
+            <DrawTooltipWithHighlight>
+			<summary><summary>Draws a tooltip if the mouse is hovered over the <paramref name="rect" />.</summary> Also draws a highlight over the whole <paramref name="rect" />.</summary>
+			<DrawTooltip>
+			<summary>Draws a tooltip if the mouse is hovered over the <paramref name="rect" />.</summary>
+			<param name="rect">The <see cref="T:UnityEngine.Rect" /> for the tooltip area.</param>
+		</DrawTooltip>
+		</DrawTooltipWithHighlight>
+        </member>
+        <member name="M:DivineFramework.UIElement.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:DivineFramework.UIContainer">
+            <summary>A <see cref="T:DivineFramework.UIElement"/> that can contain other elements. Elements are drawn horizontally in the order they were added to the container.</summary>
+        </member>
+        <member name="F:DivineFramework.UIContainer.elements">
+            <summary>The elements that will be drawn when this container is drawn.</summary>
+        </member>
+        <member name="M:DivineFramework.UIContainer.Initialize">
+            <Initialize>
+			<summary><inheritdoc /> Determines width for any inner <see cref="F:DivineFramework.UIContainer.elements">elements</see> that have no <see cref="P:DivineFramework.UIElement.Width">actual width</see> assigned yet.</summary>
+		</Initialize>
+        </member>
+        <member name="M:DivineFramework.UIContainer.Draw(UnityEngine.Rect)">
+            <Draw>
+			<summary>Draws all inner <see cref="F:DivineFramework.UIContainer.elements">elements</see> in the order they were added to the container.</summary>
+			<remarks>Hidden elements are not drawn, but the space they would have taken up is still used. If the size of any element is not valid, the container is marked as invalid.</remarks>
+			<inheritdoc />
+		</Draw>
+        </member>
+        <member name="M:DivineFramework.UIContainer.AddElement(DivineFramework.UIElement,System.String)">
+            <AddElement>
+			<summary>Add an element to this container.</summary>
+			<remarks>Only add an element after you have finished modifying it. Some of these operations change the <see langword="type" />, resulting in a new <see langword="object" /> being created. Only add the element at the end to be sure the completed object is what is added to the container.</remarks>
+			<param name="element">The element to add.</param>
+			<param name="name">Optional name for the new element. Must be unique.</param>
+			<returns><see langword="true" /> if the element was added.</returns>
+		</AddElement>
+        </member>
+        <member name="M:DivineFramework.UIContainer.AddLabel(DivineFramework.UIElement.LabelDelegate,System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddLabel>
+			<summary>Add an element for a text label.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UILabel" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the new element. Must be unique.</param>
+			<WithLabel>
+			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
+		</WithLabel>
+		</AddLabel>
+        </member>
+        <member name="M:DivineFramework.UIContainer.AddResetButton``1(DivineFramework.SettingsHandler{``0},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddResetButton>
+			<summary>Add an element for a button that will reset all values registered to the <paramref name="handler" />.</summary>
+			<param name="handler">The <see cref="T:DivineFramework.SettingsHandler`1" /> to reset.</param>
+			<returns>The newly created <see cref="T:DivineFramework.UIButtonText" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the new element. Must be unique.</param>
+			<param name="buttonHeight">A fixed height for the button; optional.</param>
+			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.SettingsHandler`1" />.</typeparam>
+		</AddResetButton>
+        </member>
+        <member name="M:DivineFramework.UIContainer.AddSpace(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddSpace>
+			<summary>Add an element for a blank space.</summary>
+			<param name="height">A fixed height for the space; optional.</param>
+			<returns>The newly created <see cref="T:DivineFramework.UISpace" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the new element. Must be unique.</param>
+		</AddSpace>
+        </member>
+        <member name="M:DivineFramework.UIContainer.AddContainer(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddContainer>
+			<summary>Add an inner container to hold other elements.</summary>
+			<param name="gap">The spacing between elements in the container; optional, will default to the <see cref="F:DivineFramework.UIContainer.gap">gap</see> of the parent container.</param>
+			<returns>The newly created <see cref="T:DivineFramework.UIContainer" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the new element. Must be unique.</param>
+		</AddContainer>
+        </member>
+        <member name="M:DivineFramework.UIContainer.AddLine(System.Single,System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddLine>
+			<summary>Add a horizontal line</summary>
+			<param name="gapHeight">The height of the element. The line will be drawn in the middle.</param>
+			<returns>The newly created <see cref="T:DivineFramework.Elements.UILine" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the new element. Must be unique.</param>
+		</AddLine>
+        </member>
+        <member name="M:DivineFramework.UIContainer.AddSection(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddSection>
+			<summary>Add an inner section to hold other elements.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UISection" />.</returns>
+			<param name="spacing">The spacing between elements in the section.</param>
+			<param name="sectionBorder">The space between the border of the section and the <see cref="T:UnityEngine.Rect" /> where the elements are drawn, for the top and sides only.</param>
+			<param name="bottomBorder">Same as <paramref name="sectionBorder" /> but for the bottom of the section.</param>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the new element. Must be unique.</param>
+		</AddSection>
+        </member>
+        <member name="T:DivineFramework.UIIntEntry">
+            <summary>An element that allows the user to input an <see cref="T:System.Int32"/> and has buttons to increase/decrease the value by a base <see cref="F:DivineFramework.UIIntEntry.multiplier">amount</see> and that amount x10. Optional min and max values. Can use shift click and ctrl click to increase the amount.</summary>
+        </member>
+        <member name="F:DivineFramework.UIIntEntry.multiplier">
+            <summary>The base amount for the buttons.</summary>
+        </member>
+        <member name="T:DivineFramework.UILabel">
+            <summary>A simple text element.</summary>
+        </member>
+        <member name="F:DivineFramework.UILabel.labelKey">
+            <ILabelled>
+			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
+		</ILabelled>
+        </member>
+        <member name="M:DivineFramework.UILabel.Initialize">
+            <Initialize>
+			<summary><inheritdoc /> <see cref="F:DivineFramework.UIElement.height">Height</see> is calculated so that the entire label will be visible.</summary>
+		</Initialize>
+        </member>
+        <member name="M:DivineFramework.UILabel.Draw(UnityEngine.Rect)">
+            <Draw>
+			<summary><inheritdoc /> Checks if the height of the element is still valid.</summary>
+			<inheritdoc />
+		</Draw>
+        </member>
+        <member name="M:DivineFramework.UILabel.DrawTooltip(UnityEngine.Rect)">
+            <DrawTooltip>
+			<summary>Draws a tooltip if the mouse is hovered over the <paramref name="rect" />.</summary>
+			<param name="rect">The <see cref="T:UnityEngine.Rect" /> for the tooltip area.</param>
+		</DrawTooltip>
+        </member>
+    </members>
+</doc>
