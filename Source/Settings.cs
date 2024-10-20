@@ -164,19 +164,22 @@ namespace BetterRomance
                 .WithTooltip(HeteroChanceTooltip);
             section.AddElement(NewElement.Slider<float>()
                 .WithReference(chances, nameof(chances.hetero), chances.hetero)
-                .MinMax(0f, 100f), "HeteroSlider");
+                .MinMax(0f, 100f)
+                .RoundTo(1f), "HeteroSlider");
             //Bi
             section.AddLabel(BiChance)
                 .WithTooltip(BiChanceTooltip);
             section.AddElement(NewElement.Slider<float>()
                 .WithReference(chances, nameof(chances.bi), chances.bi)
-                .MinMax(0f, 100f), "BiSlider");
+                .MinMax(0f, 100f)
+                .RoundTo(1f), "BiSlider");
             //Homo
             section.AddLabel(HomoChance)
                 .WithTooltip(HomoChanceTooltip);
             section.AddElement(NewElement.Slider<float>()
                 .WithReference(chances, nameof(chances.homo), chances.homo)
-                .MinMax(0f, 100f), "HomoSlider");
+                .MinMax(0f, 100f)
+                .RoundTo(1f), "HomoSlider");
             //None
             section.AddLabel(NoneChance)
                 .WithTooltip(NoneChanceTooltip);
@@ -206,6 +209,7 @@ namespace BetterRomance
             section.AddElement(NewElement.Slider<float>()
                 .WithReference(this, nameof(dateRate), dateRate)
                 .MinMax(0f, 200f)
+                .RoundTo(1f)
                 .RegisterResetable(handler, 100f), "DateRateSlider");
             //Hook up rate
             section.AddLabel(() => "WBR.HookupRate".Translate(hookupRate))
@@ -213,6 +217,7 @@ namespace BetterRomance
             section.AddElement(NewElement.Slider<float>()
                 .WithReference(this, nameof(hookupRate), hookupRate)
                 .MinMax(0f, 200f)
+                .RoundTo(1f)
                 .RegisterResetable(handler, 100f), "HookupRateSlider");
             //Alien love chance
             section.AddLabel(() => "WBR.AlienLoveChance".Translate(alienLoveChance))
@@ -220,6 +225,7 @@ namespace BetterRomance
             section.AddElement(NewElement.Slider<float>()
                 .WithReference(this, nameof(alienLoveChance), alienLoveChance)
                 .MinMax(-100f, 100f)
+                .RoundTo(1f)
                 .RegisterResetable(handler, 33f), "AlienChanceSlider");
             //Min opinion for romance
             section.AddLabel(() => "WBR.MinOpinionRomance".Translate(minOpinionRomance))
@@ -241,6 +247,7 @@ namespace BetterRomance
             section.AddElement(NewElement.Slider<float>()
                 .WithReference(this, nameof(cheatChance), cheatChance)
                 .MinMax(0f, 200f)
+                .RoundTo(1f)
                 .RegisterResetable(handler, 100f), "CheatChanceSlider");
             //Cheat opinion range
             section.AddLabel("WBR.CheatingOpinionRange".Translate)
@@ -279,7 +286,7 @@ namespace BetterRomance
         public BetterRomanceMod(ModContentPack content) : base(content)
         {
             settings = GetSettings<Settings>();
-            ModManagement.RegisterMod("WBR.WayBetterRomance", typeof(BetterRomanceMod).Assembly.GetName().Name, new("0.2"), "<color=#1116e4>[WayBetterRomance]</color>", () => Settings.debugLogging);
+            ModManagement.RegisterMod("WBR.WayBetterRomance", typeof(BetterRomanceMod).Assembly.GetName().Name, new("0.2.0.3"), "<color=#1116e4>[WayBetterRomance]</color>", () => Settings.debugLogging);
         }
 
         public override string SettingsCategory()
