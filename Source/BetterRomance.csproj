@@ -65,7 +65,7 @@
   <ItemGroup>
     <Reference Include="0DivineFramework">
       <HintPath>..\..\DivineFramework\Assemblies\0DivineFramework.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="AlienRace" Condition="'$(Configuration)|$(Platform)' == '1.4|AnyCPU'">
       <HintPath>..\..\..\..\..\workshop\content\294100\839005762\1.4\Assemblies\AlienRace.dll</HintPath>
