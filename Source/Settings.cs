@@ -117,9 +117,15 @@ namespace BetterRomance
         {
             handler.width = listing.ColumnWidth;
             //Sexual orientation
+            handler.RegisterNewRow()
+                .AddLabel("WBR.OrentationHeading".Translate)
+                .WithTooltip(() => (complex ? "WBR.SexualOrentationHeadingTip" : "WBR.OrentationHeadingTip").Translate());
             SetUpChanceSection(handler.RegisterNewSection(name: "SexualOrientationSection", sectionBorder: 6f), false);
             handler.AddGap(10f);
             //Romantic orientation
+            handler.RegisterNewRow()
+                .AddLabel(() => (complex ? "WBR.RomanticOrentationHeading" : "WBR.AceOrentationHeading").Translate())
+                .WithTooltip(() => (complex ? "WBR.RomanticOrentationHeadingTip" : "WBR.AceOrentationHeadingTip").Translate());
             SetUpChanceSection(handler.RegisterNewSection(name: "RomanceOrientationSection", sectionBorder: 6f), true);
             //Extra stuff
             handler.RegisterNewRow()
@@ -131,13 +137,10 @@ namespace BetterRomance
             section.AddLabel(() => "Extra stuff for length");
             section.AddLabel(() => "Extra stuff for length");
             section.AddLabel(() => "Extra stuff for length");
+            section.HideWhen(() => !complex);
             //Complex button
             handler.RegisterNewRow()
-                .AddElement(NewElement.Button(delegate
-                {
-                    complex = !complex;
-                    //scrollPosLeft = Vector2.zero;
-                })
+                .AddElement(NewElement.Button(() => complex = !complex)
                 .WithLabel(() => complex ? "Simplify it" : "Let's make it complicated"));
             //Misc section
             handler.RegisterNewRow(newColumn: true).AddLabel("WBR.OtherHeading".Translate);
@@ -175,9 +178,6 @@ namespace BetterRomance
         internal void SetUpChanceSection(UISection section, bool romance)
         {
             OrientationChances chances = romance ? romanticOrientations : sexualOrientations;
-            handler.RegisterNewRow()
-        .AddLabel(() => OrientationHeading().Translate())
-        .WithTooltip(() => OrientationHeadingTooltip().Translate());
             //Hetero
             section.AddLabel(HeteroChance)
                 .WithTooltip(HeteroChanceTooltip);
@@ -210,10 +210,6 @@ namespace BetterRomance
             buttonRow.AddElement(NewElement.Button(chances.Reset)
                 .WithLabel("RestoreToDefaultSettings".Translate));
 
-            string OrientationHeading() => !romance ? "WBR.OrentationHeading" : complex ? "WBR.RomanticOrentationHeading" : "WBR.AceOrentationHeading";
-            string OrientationHeadingTooltip() => complex
-                ? romance ? "WBR.RomanticOrentationHeadingTip" : "WBR.SexualOrentationHeadingTip"
-                : romance ? "WBR.AceOrentationHeadingTip" : "WBR.OrentationHeadingTip";
             TaggedString HeteroChance() => (romance ? "WBR.HeteroromanticChance" : complex ? "WBR.HeterosexualChance" : "WBR.StraightChance").Translate(chances.hetero);
             TaggedString HeteroChanceTooltip() => (romance ? "WBR.HeteroromanticChanceTip" : complex ? "WBR.HeterosexualChanceTip" : "WBR.StraightChanceTip").Translate();
             TaggedString BiChance() => (romance ? "WBR.BiromanticChance" : "WBR.BisexualChance").Translate(chances.bi);
