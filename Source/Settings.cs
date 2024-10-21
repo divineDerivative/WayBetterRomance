@@ -24,6 +24,7 @@ namespace BetterRomance
             bi = 50f,
             none = 10f,
         };
+        //Do I need separate objects for the complex chances?
 
         public float dateRate = 100f;
         public float hookupRate = 100f;
@@ -38,6 +39,9 @@ namespace BetterRomance
         public bool joyOnPrisoners = false;
         public bool joyOnGuests = false;
         public bool complex = false;
+        public float complexChance = 25f;
+        //Placeholder for now until I figure out how I actually want to implement non-binary
+        public float enbyChance = 5f;
 
         //These are not set by the user
         public static bool HARActive = false;
@@ -84,6 +88,7 @@ namespace BetterRomance
             Scribe_Values.Look(ref joyOnGuests, "joyOnGuests", false);
             Scribe_Values.Look(ref debugLogging, "debugLogging", false);
             Scribe_Values.Look(ref complex, "compexOrientations", false);
+            Scribe_Values.Look(ref complexChance, "complexChance", 25f);
         }
 
         public static void ApplyJoySettings()
@@ -123,6 +128,26 @@ namespace BetterRomance
         internal void SetUpHandler(Listing_Standard listing)
         {
             handler.width = listing.ColumnWidth;
+            //Complex stuff
+            handler.RegisterNewRow("ComplexChanceLabel")
+                .HideWhen(() => !complex)
+                .AddLabel(() => $"Chance for a person to have different romantic and sexual orientations: {complexChance}%")
+                .WithTooltip(() => "There must be at least one gender that a person is both sexually and romantically attracted to. This does not include asexual and aromantic, which are not affected by this setting. Even at 100% some people will have matching orientations simply by chance or by applying the overlap rule.");
+            handler.RegisterNewRow("ComplexChanceSlider")
+                .HideWhen(() => !complex)
+                .Add(NewElement.Slider<float>()
+                .WithReference(this, nameof(complexChance), complexChance)
+                .MinMax(0f, 100f)
+                .RoundTo(0));
+            //Don't really like how this looks here.
+            //Adjusting the value on one of the sliders makes the location of the slider change, so it only goes down one tick and then you have to grab it again to keep adjusting
+            //Maybe make it a pop up when they try to close settings?
+            handler.RegisterNewRow("ComplexChanceWarning")
+                .HideWhen(() => !complex || !NeedWarning())
+                .AddLabel(() => "WBR.ComplexWarning".Translate(sexualOrientations.hetero == 100f ? RomanceDefOf.Straight.DataAtDegree(0).label : TraitDefOf.Gay.DataAtDegree(0).label));
+
+            bool NeedWarning() => (sexualOrientations.hetero == 100f && romanticOrientations.homo == 100f) || (sexualOrientations.homo == 100f && romanticOrientations.hetero == 100f);
+
             //Sexual orientation
             handler.RegisterNewRow("Sexual Orientation Heading row")
                 .AddLabel("WBR.OrientationHeading".Translate)
@@ -134,18 +159,8 @@ namespace BetterRomance
                 .AddLabel(() => (complex ? "WBR.RomanticOrientationHeading" : "WBR.AceOrientationHeading").Translate())
                 .WithTooltip(() => (complex ? "WBR.RomanticOrientationHeadingTip" : "WBR.AceOrientationHeadingTip").Translate());
             SetUpChanceSection(handler.RegisterNewSection(name: "RomanceOrientationSection", sectionBorder: 6f), true);
-            //Extra stuff
-            handler.RegisterNewRow()
-                .HideWhen(() => !complex)
-                .AddLabel(() => "Extra Settings")
-                .WithTooltip("WBR.RomanticOrientationHeadingTip".Translate);
-            var section = handler.RegisterNewSection("ExtraStuff", sectionBorder: 6f);
-            section.AddLabel(() => "Extra stuff for length");
-            section.AddLabel(() => "Extra stuff for length");
-            section.AddLabel(() => "Extra stuff for length");
-            section.AddLabel(() => "Extra stuff for length");
-            section.HideWhen(() => !complex);
             //Complex button
+            //The complex view is only a little bit longer than the normal view, so switching looks weird. Only the top half of the simplify button shows.
             handler.RegisterNewRow()
                 .Add(NewElement.Button(() => complex = !complex)
                 .WithLabel(() => complex ? "Simplify it" : "Let's make it complicated"));
