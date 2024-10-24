@@ -855,6 +855,20 @@
 		</WithLabel>
 		</AddLabel>
         </member>
+        <member name="M:DivineFramework.UIContainer.AddHeader(DivineFramework.UIElement.LabelDelegate,System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddLabel>
+			<summary>Add an element for a text label.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UILabel" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the new element. Must be unique.</param>
+			<WithLabel>
+			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
+		</WithLabel>
+		</AddLabel>
+        </member>
         <member name="M:DivineFramework.UIContainer.AddResetButton``1(DivineFramework.SettingsHandler{``0},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
             <AddResetButton>
 			<summary>Add an element for a button that will reset all values registered to the <paramref name="handler" />.</summary>
@@ -949,6 +963,9 @@
 			<summary>Draws a tooltip if the mouse is hovered over the <paramref name="rect" />.</summary>
 			<param name="rect">The <see cref="T:UnityEngine.Rect" /> for the tooltip area.</param>
 		</DrawTooltip>
+        </member>
+        <member name="T:DivineFramework.UIHeader">
+            <summary>A <see cref="T:DivineFramework.UILabel"/> but bigger.</summary>
         </member>
     </members>
 </doc>
