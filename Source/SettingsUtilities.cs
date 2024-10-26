@@ -502,7 +502,7 @@ namespace BetterRomance
             ];
         }
 
-        public static int GetGrowthMoment(Pawn pawn, int index)
+        public static int GetGrowthMoment(this Pawn pawn, int index)
         {
             if (pawn.HasNoGrowth())
             {
@@ -512,7 +512,7 @@ namespace BetterRomance
             return ages[index];
         }
 
-        public static float GetGrowthMomentAsFloat(Pawn pawn, int index)
+        public static float GetGrowthMomentAsFloat(this Pawn pawn, int index)
         {
             if (pawn.HasNoGrowth())
             {
