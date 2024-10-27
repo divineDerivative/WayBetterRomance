@@ -94,6 +94,10 @@ namespace BetterRomance
                     {
                         return 1;
                     }
+                    else if (ideo.HasPrecept(RomanceDefOf.SpouseCount_Male_None))
+                    {
+                        return 0;
+                    }
                     else if (ideo.HasPrecept(RomanceDefOf.SpouseCount_Male_MaxTwo))
                     {
                         return 2;
@@ -106,15 +110,15 @@ namespace BetterRomance
                     {
                         return 4;
                     }
-                    else if (ideo.HasPrecept(RomanceDefOf.SpouseCount_Male_Unlimited))
-                    {
-                        return 5;
-                    }
-                    return 0;
+                    return 5;
                 case Gender.Female:
                     if (ideo == null || ideo.HasPrecept(RomanceDefOf.SpouseCount_Female_MaxOne))
                     {
                         return 1;
+                    }
+                    else if (ideo.HasPrecept(RomanceDefOf.SpouseCount_Female_None))
+                    {
+                        return 0;
                     }
                     else if (ideo.HasPrecept(RomanceDefOf.SpouseCount_Female_MaxTwo))
                     {
@@ -128,11 +132,8 @@ namespace BetterRomance
                     {
                         return 4;
                     }
-                    else if (ideo.HasPrecept(RomanceDefOf.SpouseCount_Female_Unlimited))
-                    {
-                        return 5;
-                    }
-                    return 0;
+
+                    return 5;
                 default:
                     return -1;
             }
