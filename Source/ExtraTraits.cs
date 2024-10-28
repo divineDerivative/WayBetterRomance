@@ -8,7 +8,7 @@ namespace BetterRomance
     {
         public static void EnsureTraits(this Pawn pawn)
         {
-            //Don't give orientation to kids, hopefully
+            //Don't give orientation to kids
             //Don't give them to drones either
             if (pawn.DevelopmentalStage.Adult() && !pawn.DroneCheck())
             {
@@ -21,14 +21,7 @@ namespace BetterRomance
                 }
                 if (pawn.TryGetComp<Comp_Orientation>() == null)
                 {
-                    if (BetterRomanceMod.settings.complex)
-                    {
-                        AssignComplexOrientation(pawn);
-                    }
-                    else
-                    {
-                        AssignOrientation(pawn);
-                    }
+                    AssignOrientation(pawn);
                 }
             }
         }
@@ -41,13 +34,16 @@ namespace BetterRomance
             }
             if (pawn.story != null)
             {
-                //Grab the relevant orientation object
+                //Give them the dynamic trait if they don't already have one
+                if (!pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
+                {
+                    pawn.story.traits.GainTrait(new Trait(RomanceDefOf.DynamicOrientation));
+                }
+                //Grab or create the comp
+                Comp_Orientation comp = pawn.CheckForComp<Comp_Orientation>();
+                //Grab the relevant orientation objects
                 OrientationChances sexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.sexual ?? BetterRomanceMod.settings.sexualOrientations;
-                //Assign chances
-                float asexualChance = sexualChances.None;
-                float bisexualChance = sexualChances.Bi;
-                float gayChance = sexualChances.Homo;
-                float straightChance = sexualChances.Hetero;
+                OrientationChances romanticChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.asexual ?? BetterRomanceMod.settings.romanticOrientations;
 
                 //Check for existing partners first
                 bool mightBeStraight = false;
@@ -60,204 +56,140 @@ namespace BetterRomance
                 {
                     mightBeGay = true;
                 }
-                if (mightBeGay && mightBeStraight)
-                {
-                    pawn.story.traits.GainTrait(new(TraitDefOf.Bisexual));
-                    return;
-                }
 
-                //Roll for orientation
-                float orientation = Rand.Value;
+                RollSexualOrientation();
 
-                //Asexual chance
-                if (orientation < asexualChance)
+                //If not complex, copy from sexual
+                if (!BetterRomanceMod.settings.complex)
                 {
-                    if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
-                    {
-                        pawn.story.traits.GainTrait(new(TraitDefOf.Bisexual));
-                    }
-                    //Need to roll again to determine romantic orientation
-                    else
-                    {
-                        //Set up romantic orientation chances
-                        OrientationChances asexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.asexual ?? BetterRomanceMod.settings.romanticOrientations;
-                        float aceAroChance = asexualChances.None;
-                        float aceBiChance = asexualChances.Bi;
-                        float aceHomoChance = asexualChances.Homo;
-                        float aceHeteroChance = asexualChances.Hetero;
-
-                        if (mightBeGay)
-                        {
-                            pawn.story.traits.GainTrait(new(RomanceDefOf.HomoAce));
-                        }
-                        else if (mightBeStraight)
-                        {
-                            pawn.story.traits.GainTrait(new(RomanceDefOf.HeteroAce));
-                        }
-                        else
-                        {
-                            float romantic = Rand.Value;
-                            //Asexual chance
-                            if (romantic < aceAroChance)
-                            {
-                                pawn.story.traits.GainTrait(new(TraitDefOf.Asexual));
-                            }
-                            //Bisexual chance
-                            else if (romantic < aceAroChance + aceBiChance)
-                            {
-                                pawn.story.traits.GainTrait(new(RomanceDefOf.BiAce));
-                            }
-                            //Gay chance
-                            else if (romantic < aceAroChance + aceBiChance + aceHomoChance)
-                            {
-                                pawn.story.traits.GainTrait(new(RomanceDefOf.HomoAce));
-                            }
-                            //Straight chance
-                            else
-                            {
-                                pawn.story.traits.GainTrait(new(RomanceDefOf.HeteroAce));
-                            }
-                        }
-                    }
+                    comp.romantic.CopyFrom(comp.sexual);
                 }
-                //Bisexual chance
-                else if (orientation < asexualChance + bisexualChance)
-                {
-                    pawn.story.traits.GainTrait(new(TraitDefOf.Bisexual));
-                }
-                //Gay chance
-                else if (orientation < asexualChance + bisexualChance + gayChance)
-                {
-                    if (mightBeStraight)
-                    {
-                        //Roll again against the relevant sexualities
-                        float total = gayChance + bisexualChance + straightChance;
-                        float num = Rand.Range(0f, total);
-                        if (num < gayChance)
-                        {
-                            pawn.story.traits.GainTrait(new(TraitDefOf.Gay));
-                        }
-                        else if (num < gayChance + bisexualChance)
-                        {
-                            pawn.story.traits.GainTrait(new(TraitDefOf.Bisexual));
-                        }
-                        else if (num < total)
-                        {
-                            pawn.story.traits.GainTrait(new(RomanceDefOf.Straight));
-                        }
-                    }
-                    else
-                    {
-                        pawn.story.traits.GainTrait(new(TraitDefOf.Gay));
-                    }
-                }
-                //Straight chance
+                //If complex, roll for romantic
                 else
                 {
-                    if (mightBeGay)
+                    RollRomanticOrientation();
+                    //If they're not aromantic and the complex roll fails, copy from sexual
+                    if (!comp.Aromantic && Rand.Value >= BetterRomanceMod.settings.complexChance / 100f)
                     {
-                        //Roll again against the relevant sexualities
-                        float total = gayChance + bisexualChance + straightChance;
-                        float num = Rand.Range(0f, total);
-                        if (num < gayChance)
-                        {
-                            pawn.story.traits.GainTrait(new(TraitDefOf.Gay));
-                        }
-                        else if (num < gayChance + bisexualChance)
+                        comp.romantic.CopyFrom(comp.sexual);
+                    }
+                }
+
+                if (!comp.ResolveConflicts())
+                {
+                    LogUtil.Error($"Unable to resolve orientation conflicts for {pawn.LabelShort}");
+                }
+
+                void RollSexualOrientation()
+                {
+                    //Assign chances
+                    float asexualChance = sexualChances.None;
+                    float bisexualChance = sexualChances.Bi;
+                    float homosexualChance = sexualChances.Homo;
+                    float heterosexualChance = sexualChances.Hetero;
+
+                    //Roll for sexual orientation
+                    float sexualOrientation = Rand.Value;
+
+                    //Asexual
+                    if (sexualOrientation < asexualChance)
+                    {
+                        //Decide what to do here
+                        if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
                         {
                             pawn.story.traits.GainTrait(new(TraitDefOf.Bisexual));
                         }
-                        else if (num < total)
-                        {
-                            pawn.story.traits.GainTrait(new(RomanceDefOf.Straight));
-                        }
+                        comp.SetSexualAttraction(Gender.Male, false);
+                        comp.SetSexualAttraction(Gender.Female, false);
+                        comp.SetSexualAttraction((Gender)3, false);
                     }
+                    //Bisexual
+                    else if (sexualOrientation < (asexualChance + bisexualChance))
+                    {
+                        comp.SetSexualAttraction(Gender.Male, true);
+                        comp.SetSexualAttraction(Gender.Female, true);
+                        //What do with enby?
+                    }
+                    //Homosexual
+                    else if (sexualOrientation < (asexualChance + bisexualChance + homosexualChance))
+                    {
+                        comp.SetSexualAttraction(pawn.gender, true);
+                        comp.SetSexualAttraction(pawn.gender.Opposite(), false);
+                        //What do with enby?
+                    }
+                    //Heterosexual
                     else
                     {
-                        pawn.story.traits.GainTrait(new(RomanceDefOf.Straight));
+                        comp.SetSexualAttraction(pawn.gender, false);
+                        comp.SetSexualAttraction(pawn.gender.Opposite(), true);
+                        //What do with enby?
+                    }
+
+                    //Remove these if they've been fulfilled
+                    if (mightBeGay && pawn.AttractedTo(pawn.gender, false))
+                    {
+                        mightBeGay = false;
+                    }
+                    if (mightBeStraight && pawn.AttractedTo(pawn.gender.Opposite(), false))
+                    {
+                        mightBeStraight = false;
                     }
                 }
-            }
-        }
 
-        public static void AssignComplexOrientation(Pawn pawn)
-        {
-            if (!pawn.story.traits.HasTrait(RomanceDefOf.DynamicOrientation))
-            {
-                pawn.story.traits.GainTrait(new Trait(RomanceDefOf.DynamicOrientation));
-            }
-            Comp_Orientation comp = pawn.CheckForComp<Comp_Orientation>();
+                void RollRomanticOrientation()
+                {
+                    //Set up romantic orientation chances
+                    //Can't be aromantic if there's still a partner they have no attraction to
+                    float aromanticChance = (mightBeGay || mightBeStraight) ? 0f : romanticChances.None;
+                    float biromanticChance = romanticChances.Bi;
+                    float homoromanticChance = romanticChances.Homo;
+                    float heteroromanticChance = romanticChances.Hetero;
+                    //If they're asexual, we don't want to modify chances at all (except for aromantic)
+                    //I think bi should always be allowed?
+                    if (!comp.Asexual)
+                    {
+                        //In order to be homoromantic and follow the rules, they'd have to be sexually attracted to their own gender
+                        if (!pawn.AttractedTo(pawn.gender, false))
+                        {
+                            homoromanticChance = 0f;
+                        }
+                        //In order to be heteroromantic and follow the rules, they'd have to be sexually attracted to the opposite gender
+                        if (!pawn.AttractedTo(pawn.gender.Opposite(), false))
+                        {
+                            heteroromanticChance = 0f;
+                        }
+                        //This of course only works for binary genders :(
+                    }
+                    float total = aromanticChance + biromanticChance + homoromanticChance + heteroromanticChance;
+                    //Roll for romantic orientation
+                    float romanticOrientation = Rand.Range(0f, total);
 
-            OrientationChances sexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.sexual ?? BetterRomanceMod.settings.sexualOrientations;
-            float asexualChance = sexualChances.none / 100f;
-            float bisexualChance = sexualChances.bi / 100f;
-            float homosexualChance = sexualChances.homo / 100f;
-            float heterosexualChance = sexualChances.hetero / 100f;
-
-            float sexualOrientation = Rand.Value;
-
-            //Asexual
-            if (sexualOrientation < asexualChance)
-            {
-                comp.SetSexualAttraction(Gender.Male, false);
-                comp.SetSexualAttraction(Gender.Female, false);
-                comp.SetSexualAttraction((Gender)3, false);
-            }
-            //Bisexual
-            if (sexualOrientation < asexualChance + bisexualChance)
-            {
-                comp.SetSexualAttraction(Gender.Male, true);
-                comp.SetSexualAttraction(Gender.Female, true);
-            }
-            //Homosexual
-            else if (sexualOrientation < asexualChance + bisexualChance + homosexualChance)
-            {
-                comp.SetSexualAttraction(pawn.gender, true);
-                comp.SetSexualAttraction(pawn.gender.Opposite(), false);
-            }
-            //Heterosexual
-            else
-            {
-                comp.SetSexualAttraction(pawn.gender, false);
-                comp.SetSexualAttraction(pawn.gender.Opposite(), true);
-            }
-
-            OrientationChances romanticChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.sexual ?? BetterRomanceMod.settings.romanticOrientations;
-            float aromanticChance = romanticChances.none / 100f;
-            float biromanticChance = romanticChances.bi / 100f;
-            float homoromanticChance = romanticChances.homo / 100f;
-            float heteroromanticChance = romanticChances.hetero / 100f;
-
-            float romanticOrientation = Rand.Value;
-
-            //Aromantic
-            if (romanticOrientation < aromanticChance)
-            {
-                comp.SetRomanticAttraction(Gender.Male, false);
-                comp.SetRomanticAttraction(Gender.Female, false);
-            }
-            //Biromantic
-            else if (romanticOrientation < aromanticChance + biromanticChance)
-            {
-                comp.SetRomanticAttraction(Gender.Male, true);
-                comp.SetRomanticAttraction(Gender.Female, true);
-            }
-            //Homoromantic
-            else if (romanticOrientation < aromanticChance + biromanticChance + homoromanticChance)
-            {
-                comp.SetRomanticAttraction(pawn.gender, true);
-                comp.SetRomanticAttraction(pawn.gender.Opposite(), false);
-            }
-            //Heteroromantic
-            else
-            {
-                comp.SetRomanticAttraction(pawn.gender, false);
-                comp.SetRomanticAttraction(pawn.gender.Opposite(), true);
-            }
-
-            if (!comp.ResolveConflicts(sexualChances, romanticChances))
-            {
-                LogUtil.Error($"Unable to resolve orientation conflicts for {pawn.Name.ToStringFull}");
+                    //Aromantic
+                    if (romanticOrientation < aromanticChance)
+                    {
+                        comp.SetRomanticAttraction(Gender.Male, false);
+                        comp.SetRomanticAttraction(Gender.Female, false);
+                        comp.SetRomanticAttraction((Gender)3, false);
+                    }
+                    //Biromantic
+                    else if ((romanticOrientation -= aromanticChance) < biromanticChance)
+                    {
+                        comp.SetRomanticAttraction(Gender.Male, true);
+                        comp.SetRomanticAttraction(Gender.Female, true);
+                    }
+                    //Homoromantic
+                    else if ((romanticOrientation -= biromanticChance) < homoromanticChance)
+                    {
+                        comp.SetRomanticAttraction(pawn.gender, true);
+                        comp.SetRomanticAttraction(pawn.gender.Opposite(), false);
+                    }
+                    //Heteroromantic
+                    else if ((romanticOrientation -= homoromanticChance) < heteroromanticChance)
+                    {
+                        comp.SetRomanticAttraction(pawn.gender, false);
+                        comp.SetRomanticAttraction(pawn.gender.Opposite(), true);
+                    }
+                }
             }
         }
     }
