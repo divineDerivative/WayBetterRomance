@@ -11,8 +11,6 @@ namespace BetterRomance
     {
         public class AttractionVars(Comp_Orientation parent)
         {
-            private Comp_Orientation parent = parent;
-
             private bool men;
             private bool women;
             private bool enby;
@@ -38,7 +36,7 @@ namespace BetterRomance
             {
                 Gender.Male => women && !men,
                 Gender.Female => men && !women,
-                (Gender)3 => (men && !women) || (women && !men),
+                (Gender)3 => !enby && (men ^ women),
                 _ => false
             };
 
@@ -112,6 +110,31 @@ namespace BetterRomance
                 unset = false;
                 parent.cachedLabel = null;
                 parent.cachedDesc = null;
+            }
+
+            public void CopyFrom(AttractionVars other)
+            {
+                men = other.men;
+                women = other.women;
+                enby = other.enby;
+                unset = false;
+            }
+
+            public bool Overlap(AttractionVars other)
+            {
+                if (men && other.men)
+                {
+                    return true;
+                }
+                if (women && other.women)
+                {
+                    return true;
+                }
+                if (enby && other.enby)
+                {
+                    return true;
+                }
+                return false;
             }
         }
 
@@ -293,12 +316,10 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Makes sure that orientations follow overlap rules
+        /// Makes sure that orientations follow all rules.
         /// </summary>
-        /// <param name="sexualChances"></param>
-        /// <param name="romanticChances"></param>
-        /// <returns></returns>
-        public bool ResolveConflicts(OrientationChances sexualChances, OrientationChances romanticChances)
+        /// <returns>Whether the rules are applied correctly.</returns>
+        public bool ResolveConflicts()
         {
             if (sexual.Unset)
             {
@@ -312,71 +333,50 @@ namespace BetterRomance
             {
                 return false;
             }
+            CheckExistingPartners();
             //These two are allowed to have no overlap
-            if (!Asexual && !Aromantic)
+            if (Asexual || Aromantic)
             {
-                //At least one gender is true
-                //Will need to add enby
-                if (sexual.Men != romantic.Men && sexual.Women != romantic.Women)
+                return true;
+            }
+            return sexual.Overlap(romantic);
+        }
+
+        //I think this is really only useful when adding WBR to an existing game, so it will be hard to test
+        /// <summary>
+        /// If there are any existing love relationships, adds an attraction to the relevant gender(s) if one does not already exist. Picks randomly between romantic and sexual.
+        /// </summary>
+        private void CheckExistingPartners()
+        {
+            //Maybe I just loop through their lovers and make them attracted to them?
+            foreach (var relation in LovePartnerRelationUtility.ExistingLovePartners(Pawn, false))
+            {
+                Gender gender = relation.otherPawn.gender;
+                if (!AttractedTo(gender, true) && !AttractedTo(gender, false))
                 {
-                    //We've excluded asexual and aromantic, and either orientation being bi would have passed already
-                    //So we would only be here if one was gay and the other was straight
-                    //Then we would essentially be deciding between making them biromantic or bisexual
-                    //So I guess just roll between those?
-                    float total = sexualChances.bi + romanticChances.bi;
-                    if (total == 0f)
+                    LogUtil.Message($"Non-attraction found for {Pawn.Name.ToStringShort}", true);
+                    if (Rand.Bool)
                     {
-                        //If bi is not allowed for either, we would need to roll for which one to use to match
-                        if (romantic.Gay && sexual.Straight)
-                        {
-                            float subtotal = sexualChances.homo + romanticChances.hetero;
-                            if (Rand.Range(0f, subtotal) < sexualChances.homo)
-                            {
-                                sexual.SetAttraction(Gender.Male, romantic.Men);
-                                sexual.SetAttraction(Gender.Female, romantic.Women);
-                            }
-                            else
-                            {
-                                romantic.SetAttraction(Gender.Male, sexual.Men);
-                                romantic.SetAttraction(Gender.Female, sexual.Women);
-                            }
-                        }
-                        if (sexual.Gay && romantic.Straight)
-                        {
-                            float subtotal = romanticChances.homo + sexualChances.hetero;
-                            if (Rand.Range(0f, subtotal) < romanticChances.homo)
-                            {
-                                romantic.SetAttraction(Gender.Male, sexual.Men);
-                                romantic.SetAttraction(Gender.Female, sexual.Women);
-                            }
-                            else
-                            {
-                                sexual.SetAttraction(Gender.Male, romantic.Men);
-                                sexual.SetAttraction(Gender.Female, romantic.Women);
-                            }
-                        }
+                        SetRomanticAttraction(gender, true);
                     }
-                    //Make them bisexual
-                    else if (Rand.Range(0f, total) < sexualChances.bi)
-                    {
-                        SetSexualAttraction(Gender.Male, true);
-                        SetSexualAttraction(Gender.Female, true);
-                    }
-                    //Make them biromantic
                     else
                     {
-                        SetRomanticAttraction(Gender.Male, true);
-                        SetRomanticAttraction(Gender.Female, true);
+                        SetSexualAttraction(gender, true);
                     }
-
-                }
-                //Check that it worked
-                if (sexual.Men != romantic.Men && sexual.Women != romantic.Women)
-                {
-                    return false;
                 }
             }
-            return true;
+        }
+
+        public bool AttractedTo(Gender gender, bool romance)
+        {
+            AttractionVars type = romance ? romantic : sexual;
+            return gender switch
+            {
+                Gender.Male => type.Men,
+                Gender.Female => type.Women,
+                (Gender)3 => type.Enby,
+                _ => false,
+            };
         }
     }
 }
