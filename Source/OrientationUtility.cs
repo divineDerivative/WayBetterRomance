@@ -120,18 +120,7 @@ namespace BetterRomance
         public static bool AttractedTo(this Pawn pawn, Gender gender, bool romance)
         {
             Comp_Orientation comp = pawn.TryGetComp<Comp_Orientation>();
-            if (comp is null)
-            {
-                return false;
-            }    
-            Comp_Orientation.AttractionVars type = romance ? comp.romantic : comp.sexual;
-            return gender switch
-            {
-                Gender.Male => type.Men,
-                Gender.Female => type.Women,
-                (Gender)3 => type.Enby,
-                _ => false,
-            };
+            return comp?.AttractedTo(gender, romance) ?? false;
         }
 
         public static bool AttractedTo(this Pawn pawn, Pawn other, bool romance)
