@@ -1,43 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Patch>
-  <Operation Class="PatchOperationFindMod">
-    <mods>
-      <li>[SYR] Trait Value</li>
-    </mods>
-    <match Class="PatchOperationSequence">
-      <operations>
-        <li Class="PatchOperationAddModExtension">
-          <xpath>Defs/TraitDef[defName = "Straight"]</xpath>
-          <value>
-            <li Class="SyrTraitValue.TraitValueExtension">
-              <traitValues>
-                <li>0</li>
-              </traitValues>
-            </li>
-          </value>
-        </li>
-        <li Class="PatchOperationAddModExtension">
-          <xpath>Defs/TraitDef[defName = "Faithful"]</xpath>
-          <value>
-            <li Class="SyrTraitValue.TraitValueExtension">
-              <traitValues>
-                <li>10</li>
-              </traitValues>
-            </li>
-          </value>
-        </li>
-        <li Class="PatchOperationAddModExtension">
-          <xpath>Defs/TraitDef[defName = "Philanderer"]</xpath>
-          <value>
-            <li Class="SyrTraitValue.TraitValueExtension">
-              <traitValues>
-                <li>-10</li>
-              </traitValues>
-            </li>
-          </value>
-        </li>
-      </operations>
-    </match>
-  </Operation>
-  
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>[SYR] Trait Value</li>
+			<li>[SYR] Trait Value (Continued)</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class="PatchOperationAddModExtension">
+					<xpath>Defs/TraitDef[defName = "Straight"]</xpath>
+					<value>
+						<li Class="SyrTraitValue.TraitValueExtension">
+							<traitValues>
+								<li>0</li>
+							</traitValues>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAddModExtension">
+					<xpath>Defs/TraitDef[defName = "Faithful"]</xpath>
+					<value>
+						<li Class="SyrTraitValue.TraitValueExtension">
+							<traitValues>
+								<li>10</li>
+							</traitValues>
+						</li>
+					</value>
+				</li>
+				<li Class="PatchOperationAddModExtension">
+					<xpath>Defs/TraitDef[defName = "Philanderer"]</xpath>
+					<value>
+						<li Class="SyrTraitValue.TraitValueExtension">
+							<traitValues>
+								<li>-10</li>
+							</traitValues>
+						</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+
 </Patch>
