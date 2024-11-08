@@ -298,7 +298,7 @@ namespace BetterRomance
         public BetterRomanceMod(ModContentPack content) : base(content)
         {
             settings = GetSettings<Settings>();
-            ModManagement.RegisterMod("WBR.WayBetterRomance", typeof(BetterRomanceMod).Assembly.GetName().Name, new("0.3.0.0"), "<color=#1116e4>[WayBetterRomance]</color>", () => Settings.debugLogging);
+            ModManagement.RegisterMod("WBR.WayBetterRomance", typeof(BetterRomanceMod).Assembly.GetName().Name, new("0.3.1.1"), "<color=#1116e4>[WayBetterRomance]</color>", () => Settings.debugLogging);
         }
 
         public override string SettingsCategory()
