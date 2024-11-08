@@ -37,6 +37,7 @@ namespace BetterRomance
         public static string fertilityMod = "None";
         public bool joyOnSlaves = false;
         public bool joyOnPrisoners = false;
+        public bool joyOnGuests = false;
 
         //These are not set by the user
         public static bool HARActive = false;
@@ -76,6 +77,7 @@ namespace BetterRomance
             Scribe_Values.Look(ref fertilityMod, "fertilityMod", "None");
             Scribe_Values.Look(ref joyOnSlaves, "joyOnSlaves", false);
             Scribe_Values.Look(ref joyOnPrisoners, "joyOnPrisoners", false);
+            Scribe_Values.Look(ref joyOnGuests, "joyOnGuests", false);
             Scribe_Values.Look(ref debugLogging, "debugLogging", false);
         }
 
@@ -94,6 +96,7 @@ namespace BetterRomance
                 def.neverOnPrisoner = true;
                 def.colonistAndPrisonersOnly = false;
                 def.colonistsOnly = true;
+                BetterRomanceMod.settings.joyOnGuests = false;
             }
         }
 
@@ -348,6 +351,10 @@ namespace BetterRomance
                 list.CheckboxLabeled("SlavesSection".Translate(), ref settings.joyOnSlaves);
             }
             list.CheckboxLabeled("PrisonersSection".Translate(), ref settings.joyOnPrisoners);
+            if (settings.joyOnPrisoners)
+            {
+                list.CheckboxLabeled("WBR.Guests".Translate(), ref settings.joyOnGuests, "WBR.GuestsTip".Translate());
+            }
             if (Prefs.DevMode)
             {
                 list.CheckboxLabeled("Enable dev logging", ref Settings.debugLogging);
