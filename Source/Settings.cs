@@ -152,9 +152,10 @@ namespace BetterRomance
                 .AddElement(NewElement.Checkbox()
                 .WithReference(this, nameof(joyOnPrisoners), joyOnPrisoners)
                 .WithLabel("PrisonersSection".Translate));
-            handler.RegisterNewRow()
-                .HideWhen(() => !joyOnPrisoners)
-                .AddElement(NewElement.Checkbox()
+            var guestRow = handler.RegisterNewRow()
+                .HideWhen(() => !joyOnPrisoners);
+            guestRow.AddSpace(relative: 0.02f);
+            guestRow.AddElement(NewElement.Checkbox()
                 .WithReference(this, nameof(joyOnGuests), joyOnGuests)
                 .WithLabel("WBR.Guests".Translate)
                 .WithTooltip("WBR.GuestsTip".Translate));
