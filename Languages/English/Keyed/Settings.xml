@@ -47,5 +47,5 @@
 	<WBR.NoFertilityMod>No fertility mod detected. If you are using one, please let me know which one so I can add support for it.</WBR.NoFertilityMod>
 	<WBR.AddJoyNeed>Add joy need (reload save after changing)</WBR.AddJoyNeed>
 	<WBR.Guests>Include Guests?</WBR.Guests>
-	<WBR.GuestsTip>Guests are pawns not under your control that you're temporarily taking care of. Namely non-hostile pawns that you rescued. &lt;b&gt;Not&lt;b/&gt; temporary colonists from hospitality/refugee quests.</WBR.GuestsTip>
+	<WBR.GuestsTip>Guests are pawns not under your control that you're temporarily taking care of. Namely non-hostile pawns that you rescued. &lt;b&gt;Not&lt;/b&gt; temporary colonists from hospitality/refugee quests.</WBR.GuestsTip>
 </LanguageData>
