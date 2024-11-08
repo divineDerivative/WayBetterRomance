@@ -4,6 +4,11 @@
         <name>0DivineFramework</name>
     </assembly>
     <members>
+        <member name="T:DivineFramework.UI.Heights">
+            <summary>
+            Constant heights for various elements, to help with calculations on the implementation side.
+            </summary>
+        </member>
         <member name="T:DivineFramework.UI.UICheckbox">
             <summary>A simple check box to toggle a setting.</summary>
         </member>
@@ -500,7 +505,7 @@
         </member>
         <member name="M:DivineFramework.UI.IContainer.GetNamed(System.String)">
             <GetNamed>
-				<summary>Retrieve a specific named element that has been registered to the <see cref="T:DivineFramework.UI.IContainer" /> or a nested <see cref="T:DivineFramework.UI.IContainer" />.</summary>
+				<summary>Retrieve a specific named element that has been registered to this <see cref="T:DivineFramework.UI.IContainer" />.</summary>
 				<param name="name">The name of the element to retrieve.</param>
 				<returns>The named element, or <see langword="null" /> if none was found.</returns>
 			</GetNamed>
@@ -610,7 +615,7 @@
         <member name="M:DivineFramework.UI.SettingsHandler`1.RegisterNewRow(System.String,System.Single,System.Boolean)">
             <RegisterNewRow>
 			<summary>Add a new row to the <see cref="T:DivineFramework.UI.SettingsHandler`1" />. This row is a <see cref="T:DivineFramework.UI.UIContainer" /> to hold elements that will be drawn horizontally.</summary>
-			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows/elements within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
 			<param name="gap">The spacing between elements in the container.</param>
 			<param name="newColumn">Whether to start a new column before drawing this row. Has no affect on nested containers.</param>
 			<returns>The <see cref="T:DivineFramework.UI.UIContainer" /> for the new row.</returns>
@@ -623,7 +628,7 @@
 			<param name="sectionBorder">The space between the border of the section and the <see cref="T:UnityEngine.Rect" /> where the elements are drawn, for the top and sides only.</param>
 			<param name="bottomBorder">Same as <paramref name="sectionBorder" /> but for the bottom of the section.</param>
 			<returns>The <see cref="T:DivineFramework.UI.UISection" /> for the new row.</returns>
-			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows/elements within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
 			<param name="newColumn">Whether to start a new column before drawing this row. Has no affect on nested containers.</param>
 		</RegisterNewSection>
         </member>
@@ -643,7 +648,7 @@
 			<summary>Add a row that's just an empty gap.</summary>
 			<param name="height">How tall the gap should be.</param>
 			<returns>The <see cref="T:DivineFramework.UI.UIContainer" /> for the new row.</returns>
-			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows/elements within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
 		</AddGap>
         </member>
         <member name="M:DivineFramework.UI.SettingsHandler`1.AddLine(System.Single,System.String)">
@@ -651,7 +656,7 @@
 			<summary>Add a row with a horizontal line</summary>
 			<param name="gapHeight">The height of the element. The line will be drawn in the middle.</param>
 			<returns>The <see cref="T:DivineFramework.UI.UIContainer" /> for the new row.</returns>
-			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows/elements within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
 		</AddLine>
         </member>
         <member name="M:DivineFramework.UI.SettingsHandler`1.Reset">
@@ -665,9 +670,12 @@
         </member>
         <member name="M:DivineFramework.UI.SettingsHandler`1.GetNamed(System.String)">
             <GetNamed>
-			<summary>Retrieve a specific named element that has been registered to this <see cref="T:DivineFramework.UI.SettingsHandler`1" /> or one of its rows.</summary>
-			<param name="name">The unique name of the element.</param>
-			<returns>The named element, or <see langword="null" /> if none was found.</returns>
+			<summary>Retrieve a specific named element that has been registered to this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</summary>
+			<GetNamed>
+				<summary>Retrieve a specific named element that has been registered to this <see cref="T:DivineFramework.UI.IContainer" />.</summary>
+				<param name="name">The name of the element to retrieve.</param>
+				<returns>The named element, or <see langword="null" /> if none was found.</returns>
+			</GetNamed>
 		</GetNamed>
         </member>
         <member name="T:DivineFramework.UI.UIElement">
@@ -713,7 +721,10 @@
             <summary>Used to determine if the element needs to be re-initialized because the desired sizing has changed.</summary>
         </member>
         <member name="P:DivineFramework.UI.UIElement.Width">
-            <summary>Property used to access the <see cref="F:DivineFramework.UI.UIElement.actualWidth">actual width</see>.</summary>
+            <summary>Property to access the <see cref="F:DivineFramework.UI.UIElement.actualWidth">actual width</see> of the element.</summary>
+        </member>
+        <member name="P:DivineFramework.UI.UIElement.Height">
+            <summary>Property to access the current height of an element.</summary>
         </member>
         <member name="M:DivineFramework.UI.UIElement.Register(System.Single,System.Single)">
             <Register>
@@ -732,7 +743,7 @@
             <AddName>
 			<summary>Add a name to the element.</summary>
 			<remarks>Only call this after checking that the name is unique.</remarks>
-			<param name="name">The name to add to the element</param>
+			<param name="name">The name to add to the element.</param>
 		</AddName>
         </member>
         <member name="M:DivineFramework.UI.UIElement.DrawTooltip(UnityEngine.Rect)">
@@ -770,7 +781,7 @@
 			<summary>Add an element to this container.</summary>
 			<remarks>Only add an element after you have finished modifying it. Some of these operations change the <see langword="type" />, resulting in a new <see langword="object" /> being created. Only add the element at the end to be sure the completed object is what is added to the container.</remarks>
 			<param name="element">The element to add.</param>
-			<param name="name">Optional name for the new element. Must be unique.</param>
+			<param name="name">Optional name for the new element. Must be unique within this container.</param>
 			<returns><see langword="true" /> if the element was added.</returns>
 		</AddElement>
         </member>
@@ -782,7 +793,7 @@
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 		</Common>
-			<param name="name">Optional name for the new element. Must be unique.</param>
+			<param name="name">Optional name for the new element. Must be unique within this container.</param>
 			<WithLabel>
 			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
 		</WithLabel>
@@ -796,7 +807,7 @@
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 		</Common>
-			<param name="name">Optional name for the new element. Must be unique.</param>
+			<param name="name">Optional name for the new element. Must be unique within this container.</param>
 			<WithLabel>
 			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
 		</WithLabel>
@@ -811,7 +822,7 @@
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 		</Common>
-			<param name="name">Optional name for the new element. Must be unique.</param>
+			<param name="name">Optional name for the new element. Must be unique within this container.</param>
 			<param name="buttonHeight">A fixed height for the button; optional.</param>
 			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</typeparam>
 		</AddResetButton>
@@ -825,7 +836,7 @@
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 		</Common>
-			<param name="name">Optional name for the new element. Must be unique.</param>
+			<param name="name">Optional name for the new element. Must be unique within this container.</param>
 		</AddSpace>
         </member>
         <member name="M:DivineFramework.UI.UIContainer.AddContainer(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
@@ -837,7 +848,7 @@
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 		</Common>
-			<param name="name">Optional name for the new element. Must be unique.</param>
+			<param name="name">Optional name for the new element. Must be unique within this container.</param>
 		</AddContainer>
         </member>
         <member name="M:DivineFramework.UI.UIContainer.AddLine(System.Single,System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
@@ -849,7 +860,7 @@
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 		</Common>
-			<param name="name">Optional name for the new element. Must be unique.</param>
+			<param name="name">Optional name for the new element. Must be unique within this container.</param>
 		</AddLine>
         </member>
         <member name="M:DivineFramework.UI.UIContainer.AddSection(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
@@ -863,7 +874,7 @@
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 		</Common>
-			<param name="name">Optional name for the new element. Must be unique.</param>
+			<param name="name">Optional name for the new element. Must be unique within this container.</param>
 		</AddSection>
         </member>
         <member name="T:DivineFramework.UI.UIIntEntry">
