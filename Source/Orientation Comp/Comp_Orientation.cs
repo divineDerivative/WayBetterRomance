@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using System;
+using RimWorld;
 using Verse;
 #if !v1_4
 using LudeonTK;
@@ -7,6 +8,18 @@ using static BetterRomance.WBRLogger;
 
 namespace BetterRomance
 {
+    [Flags]
+    public enum AttractionGenders
+    {
+        None = 0,
+        Men = 1,
+        Women = 2,
+        Enby = 4,
+        MenAndWomen = Men | Women,
+        MenAndEnby = Men | Enby,
+        WomenAndEnby = Women | Enby,
+        All = Men | Women | Enby,
+    }
     public class Comp_Orientation : ThingComp
     {
         public class AttractionVars(Comp_Orientation parent)
@@ -42,48 +55,19 @@ namespace BetterRomance
 
             internal string GenderString()
             {
-                if (Pan)
+                //Test this
+                return Genders switch
                 {
-                    return "WBR.TraitDescPan".Translate();
-                }
-                if (None)
-                {
-                    return null;
-                }
-                string firstGender = null;
-                string secondGender = null;
-                if (men)
-                {
-                    firstGender = "WBR.TraitDescMen".Translate();
-                }
-                if (women)
-                {
-                    if (firstGender == null)
-                    {
-                        firstGender = "WBR.TraitDescWomen".Translate();
-                    }
-                    else
-                    {
-                        secondGender = "WBR.TraitDescWomen".Translate();
-                    }
-                }
-                if (enby)
-                {
-                    if (firstGender == null)
-                    {
-                        firstGender = "WBR.TraitDescEnby".Translate();
-                    }
-                    else
-                    {
-                        secondGender = "WBR.TraitDescEnby".Translate();
-                    }
-                }
-                string result = firstGender;
-                if (secondGender != null)
-                {
-                    result += "WBR.TraitDescAnd".Translate() + secondGender;
-                }
-                return result;
+                    AttractionGenders.None => null,
+                    AttractionGenders.Men => (string)"WBR.TraitDescMen".Translate(),
+                    AttractionGenders.Women => (string)"WBR.TraitDescWomen".Translate(),
+                    AttractionGenders.Enby => (string)"WBR.TraitDescEnby".Translate(),
+                    AttractionGenders.MenAndWomen => (string)"WBR.TraitDescMenAndWomen".Translate(),
+                    AttractionGenders.MenAndEnby => (string)"WBR.TraitDescMenAndEnby".Translate(),
+                    AttractionGenders.WomenAndEnby => (string)"WBR.TraitDescWomenAndEnby".Translate(),
+                    AttractionGenders.All => (string)"WBR.TraitDescAll".Translate(),
+                    _ => null,
+                };
             }
 
             public void ExposeData(bool romance)
@@ -135,6 +119,28 @@ namespace BetterRomance
                     return true;
                 }
                 return false;
+                //return (men && other.men) || (women && other.women) || (enby && other.enby)
+            }
+
+            public AttractionGenders Genders
+            {
+                get
+                {
+                    AttractionGenders result = 0;
+                    if (men)
+                    {
+                        result |= AttractionGenders.Men;
+                    }
+                    if (women)
+                    {
+                        result |= AttractionGenders.Women;
+                    }
+                    if (enby)
+                    {
+                        result |= AttractionGenders.Enby;
+                    }
+                    return result;
+                }
             }
         }
 
