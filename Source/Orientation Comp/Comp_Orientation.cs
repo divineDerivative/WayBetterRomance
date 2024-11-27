@@ -52,7 +52,6 @@ namespace BetterRomance
 
             internal string GenderString()
             {
-                //Test this
                 return Genders switch
                 {
                     AttractionGenders.None => null,
