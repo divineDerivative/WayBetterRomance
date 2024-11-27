@@ -26,6 +26,6 @@
 	<WBR.TraitDescAll> anyone regardless of gender</WBR.TraitDescAll>
 	<WBR.TraitDescBoth>{0_pronoun} is romantically and sexually attracted to {1}.</WBR.TraitDescBoth>
 	<WBR.TraitDescAsexual>{0_pronoun} is uninterested in sexual engagements. {0_pronoun} is romantically attracted to {1}.</WBR.TraitDescAsexual>
-	<WBR.TraitDescAromantic>{0_pronoun} is sexually attracted to {1}. They are uninterested in romantic engagements.</WBR.TraitDescAromantic>
+	<WBR.TraitDescAromantic>{0_pronoun} is sexually attracted to {1}. {0_pronoun} is uninterested in romantic engagements.</WBR.TraitDescAromantic>
 	<WBR.TraitDescDifferent>{0_pronoun} is sexually attracted to {1} and romantically attracted to {2}.</WBR.TraitDescDifferent>
 </LanguageData>
