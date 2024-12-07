@@ -24,6 +24,12 @@ namespace BetterRomance
         public float bi = -999f;
         public float none = -999f;
 
+        //Use these to roll against Rand.Value
+        public float Hetero => hetero / 100f;
+        public float Homo => homo / 100f;
+        public float Bi => bi / 100f;
+        public float None => none / 100f;
+
         public OrientationChances Copy => (OrientationChances)MemberwiseClone();
 
         public bool AreAnyUnset(out string list, bool asexual)
