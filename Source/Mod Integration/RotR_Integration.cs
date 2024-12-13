@@ -142,12 +142,18 @@ namespace BetterRomance
             }
 
             //This is the same as the original patch with the cheating section removed
-            public static void SuccessChancePostfix(ref float __result, Pawn initiator, Pawn recipient)
+            public static void SuccessChancePostfix(ref float __result, Pawn initiator, Pawn recipient, float baseChance)
             {
                 if (recipient.Ideo == null)
                 {
                     return;
                 }
+#if v1_5
+                if (InteractionWorker_RomanceAttempt.CanCreatePsychicBondBetween(initiator, recipient))
+                {
+                    return;
+                }
+#endif
                 if (recipient.HasLoverFastFromRomanceNeed())
                 {
                     if (initiator.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Arranged) && recipient.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Arranged))
@@ -166,6 +172,10 @@ namespace BetterRomance
                 else if (recipient.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Encouraged))
                 {
                     __result = Mathf.Clamp01(__result * 1.5f);
+                }
+                else if ((double)Math.Abs(baseChance - 1f) > 1E-06 && recipient.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Arranged) && initiator.CurJobDef != JobDefOf.TryRomance && initiator.CurJobDef != CustomJobDefOf.RomanceOnTheRim_RomanceAttempt)
+                {
+                    __result = 0f;
                 }
                 __result *= RotR_Integration.RotRCheatChanceModifier(recipient);
             }
