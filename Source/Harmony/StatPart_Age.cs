@@ -14,28 +14,11 @@ namespace BetterRomance.HarmonyPatches
         {
             if (___humanlikeOnly && ___useBiologicalYears)
             {
-                SimpleCurve curve = NewCurve(pawn, ___curve);
+                SimpleCurve curve = SettingsUtilities.ConvertCurve(___curve, pawn);
                 __result = curve.Evaluate(pawn.ageTracker.AgeBiologicalYears);
                 return false;
             }
             return true;
-        }
-
-        private static SimpleCurve NewCurve(Pawn pawn, SimpleCurve oldCurve)
-        {
-            if (pawn.HasNoGrowth())
-            {
-                return
-                [
-                    new CurvePoint(1f, 1f)
-                ];
-            }
-            SimpleCurve newCurve = new();
-            foreach (CurvePoint point in oldCurve.Points)
-            {
-                newCurve.Points.Add(new CurvePoint(SettingsUtilities.ConvertAge(point.x, pawn), point.y));
-            }
-            return newCurve;
         }
 
         public static IEnumerable<MethodBase> TargetMethods()
