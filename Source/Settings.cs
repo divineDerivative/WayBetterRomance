@@ -205,11 +205,35 @@ namespace BetterRomance
 
             TaggedString HeteroChance() => (romance ? "WBR.AceHeteroChance" : "WBR.StraightChance").Translate(chances.hetero);
             TaggedString HeteroChanceTooltip() => (romance ? "WBR.AceHeteroChanceTip" : "WBR.StraightChanceTip").Translate();
-            TaggedString HomoChance() => (romance ? "WBR.AceHomoChance" : "WBR.GayChance").Translate(chances.homo);
-            TaggedString HomoChanceTooltip() => (romance ? "WBR.AceHomoChanceTip" : "WBR.GayChanceTip").Translate();
-            TaggedString BiChance() => (romance ? "WBR.AceBiChance" : "WBR.BisexualChance").Translate(chances.bi);
+            TaggedString BiChance()
+            {
+                if (chances.hetero > 100f - chances.bi - chances.homo)
+                {
+                    chances.hetero = 100f - chances.bi - chances.homo;
+                }
+                return (romance ? "WBR.AceBiChance" : "WBR.BisexualChance").Translate(chances.bi);
+            }
             TaggedString BiChanceTooltip() => (romance ? "WBR.AceBiChanceTip" : "WBR.BisexualChanceTip").Translate();
-            TaggedString NoneChance() => (romance ? "WBR.AceAroChance" : "WBR.AsexualChance").Translate(chances.none);
+            TaggedString HomoChance()
+            {
+                if (chances.bi > 100f - chances.hetero - chances.homo)
+                {
+                    chances.bi = 100f - chances.hetero - chances.homo;
+                }
+                return (romance ? "WBR.AceHomoChance" : "WBR.GayChance").Translate(chances.homo);
+            }
+
+            TaggedString HomoChanceTooltip() => (romance ? "WBR.AceHomoChanceTip" : "WBR.GayChanceTip").Translate();
+            TaggedString NoneChance()
+            {
+                if (chances.homo > 100f - chances.hetero - chances.bi)
+                {
+                    chances.homo = 100f - chances.hetero - chances.bi;
+                }
+                chances.none = 100f - chances.hetero - chances.bi - chances.homo;
+                return (romance ? "WBR.AceAroChance" : "WBR.AsexualChance").Translate(chances.none);
+            }
+
             TaggedString NoneChanceTooltip() => (romance ? "WBR.AceAroChanceTip" : "WBR.AsexualChanceTip").Translate();
         }
 
@@ -330,28 +354,9 @@ namespace BetterRomance
             }
 
             settings.handler.Draw(list);
-            NormalizeChances(settings.sexualOrientations);
-            NormalizeChances(settings.asexualOrientations);
 
             scrollViewHeight = list.MaxColumnHeightSeen;
             outerList.End();
-        }
-
-        private void NormalizeChances(OrientationChances chances)
-        {
-            if (chances.hetero > 100f - chances.bi - chances.homo)
-            {
-                chances.hetero = 100f - chances.bi - chances.homo;
-            }
-            if (chances.bi > 100f - chances.hetero - chances.homo)
-            {
-                chances.bi = 100f - chances.hetero - chances.homo;
-            }
-            if (chances.homo > 100f - chances.hetero - chances.bi)
-            {
-                chances.homo = 100f - chances.hetero - chances.bi;
-            }
-            chances.none = 100f - chances.hetero - chances.bi - chances.homo;
         }
     }
 }
