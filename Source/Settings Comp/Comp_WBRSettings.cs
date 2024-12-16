@@ -195,6 +195,11 @@ namespace BetterRomance
             float? minMaleAgeToHaveChildrenTemp = raceSettings.relations.minMaleAgeToHaveChildren;
             float? usualMaleAgeToHaveChildrenTemp = raceSettings.relations.usualMaleAgeToHaveChildren;
             float? maxMaleAgeToHaveChildrenTemp = raceSettings.relations.maxMaleAgeToHaveChildren;
+
+            float? minEnbyAgeToHaveChildrenTemp = raceSettings.relations.minEnbyAgeToHaveChildren;
+            float? usualEnbyAgeToHaveChildrenTemp = raceSettings.relations.usualEnbyAgeToHaveChildren;
+            float? maxEnbyAgeToHaveChildrenTemp = raceSettings.relations.maxEnbyAgeToHaveChildren;
+
             int? maxChildrenDesiredTemp = raceSettings.relations.maxChildrenDesired;
 
             if (Pawn.kindDef.HasModExtension<RelationSettings>())
@@ -206,12 +211,19 @@ namespace BetterRomance
                 SetIfNotNull(ref relations.pawnKindForParentGlobal, settings.pawnKindForParentGlobal);
                 SetIfNotNull(ref relations.pawnKindForParentFemale, settings.pawnKindForParentFemale);
                 SetIfNotNull(ref relations.pawnKindForParentMale, settings.pawnKindForParentMale);
+
                 SetIfNotNull(ref minFemaleAgeToHaveChildrenTemp, settings.minFemaleAgeToHaveChildren);
                 SetIfNotNull(ref usualFemaleAgeToHaveChildrenTemp, settings.usualFemaleAgeToHaveChildren);
                 SetIfNotNull(ref maxFemaleAgeToHaveChildrenTemp, settings.maxFemaleAgeToHaveChildren);
+
                 SetIfNotNull(ref minMaleAgeToHaveChildrenTemp, settings.minMaleAgeToHaveChildren);
                 SetIfNotNull(ref usualMaleAgeToHaveChildrenTemp, settings.usualMaleAgeToHaveChildren);
                 SetIfNotNull(ref maxMaleAgeToHaveChildrenTemp, settings.maxMaleAgeToHaveChildren);
+
+                SetIfNotNull(ref minEnbyAgeToHaveChildrenTemp, settings.minEnbyAgeToHaveChildren);
+                SetIfNotNull(ref usualEnbyAgeToHaveChildrenTemp, settings.usualEnbyAgeToHaveChildren);
+                SetIfNotNull(ref maxEnbyAgeToHaveChildrenTemp, settings.maxEnbyAgeToHaveChildren);
+                
                 SetIfNotNull(ref maxChildrenDesiredTemp, settings.maxChildrenDesired);
                 SetIfNotNull(ref relations.minOpinionRomance, settings.minOpinionRomance);
             }
@@ -227,6 +239,11 @@ namespace BetterRomance
             relations.minMaleAgeToHaveChildren = minMaleAgeToHaveChildrenTemp ?? 14f;
             relations.usualMaleAgeToHaveChildren = usualMaleAgeToHaveChildrenTemp ?? 30f;
             relations.maxMaleAgeToHaveChildren = maxMaleAgeToHaveChildrenTemp ?? 50f;
+
+            //Use an average of the binary ages
+            relations.minEnbyAgeToHaveChildren = minEnbyAgeToHaveChildrenTemp ?? (relations.minFemaleAgeToHaveChildren + relations.minMaleAgeToHaveChildren) / 2f;
+            relations.usualEnbyAgeToHaveChildren = usualEnbyAgeToHaveChildrenTemp ?? (relations.usualFemaleAgeToHaveChildren + relations.usualMaleAgeToHaveChildren) / 2f;
+            relations.maxEnbyAgeToHaveChildren = maxEnbyAgeToHaveChildrenTemp ?? (relations.maxFemaleAgeToHaveChildren + relations.maxMaleAgeToHaveChildren) / 2f;
 
             relations.maxChildrenDesired = maxChildrenDesiredTemp ?? 3;
         }
@@ -362,6 +379,12 @@ namespace BetterRomance
                 LogUtil.Message($"Min male age to have children: {relations.minMaleAgeToHaveChildren}");
                 LogUtil.Message($"Usual male age to have children: {relations.usualMaleAgeToHaveChildren}");
                 LogUtil.Message($"Max male age to have children: {relations.maxMaleAgeToHaveChildren}");
+                if (Settings.NonBinaryActive)
+                {
+                    LogUtil.Message($"Min non-binary age to have children: {relations.minEnbyAgeToHaveChildren}");
+                    LogUtil.Message($"Usual non-binary age to have children: {relations.usualEnbyAgeToHaveChildren}");
+                    LogUtil.Message($"Max non-binary age to have children: {relations.maxEnbyAgeToHaveChildren}");
+                }
                 LogUtil.Message($"Max children desired: {relations.maxChildrenDesired}");
                 LogUtil.Message($"Min opinion for romance: {relations.minOpinionRomance?.ToString() ?? "null"}");
             }
