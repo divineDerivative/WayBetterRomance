@@ -61,6 +61,12 @@ namespace BetterRomance
             comp.relations.minMaleAgeToHaveChildren = TransformerUtility.ConvertAge(comp.relations.minMaleAgeToHaveChildren, oldLE, newLE);
             comp.relations.usualMaleAgeToHaveChildren = TransformerUtility.ConvertAge(comp.relations.usualMaleAgeToHaveChildren, oldLE, newLE);
             comp.relations.maxMaleAgeToHaveChildren = TransformerUtility.ConvertAge(comp.relations.maxMaleAgeToHaveChildren, oldLE, newLE);
+            if (Settings.NonBinaryActive)
+            {
+                comp.relations.minEnbyAgeToHaveChildren = TransformerUtility.ConvertAge(comp.relations.minEnbyAgeToHaveChildren, oldLE, newLE);
+                comp.relations.usualEnbyAgeToHaveChildren = TransformerUtility.ConvertAge(comp.relations.usualEnbyAgeToHaveChildren, oldLE, newLE);
+                comp.relations.maxEnbyAgeToHaveChildren = TransformerUtility.ConvertAge(comp.relations.maxEnbyAgeToHaveChildren, oldLE, newLE);
+            }
             //Biotech settings
             comp.biotech.maleFertilityAgeFactor = comp.biotech.maleFertilityAgeFactor.ConvertCurve(oldLE, newLE);
             comp.biotech.femaleFertilityAgeFactor = comp.biotech.femaleFertilityAgeFactor.ConvertCurve(oldLE, newLE);
