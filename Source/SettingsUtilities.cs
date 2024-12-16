@@ -339,15 +339,12 @@ namespace BetterRomance
                 gender = pawn.gender;
             }
             CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
-            if (gender == Gender.Female)
+            return gender switch
             {
-                return settings.minFemaleAgeToHaveChildren;
-            }
-            else if (gender == Gender.Male)
-            {
-                return settings.minMaleAgeToHaveChildren;
-            }
-            throw new ArgumentException("No gender provided");
+                Gender.Female => settings.minFemaleAgeToHaveChildren,
+                Gender.Male => settings.minMaleAgeToHaveChildren,
+                _ => settings.minEnbyAgeToHaveChildren,
+            };
         }
 
         public static float MaxAgeToHaveChildren(this Pawn pawn, Gender gender = Gender.None)
@@ -357,15 +354,12 @@ namespace BetterRomance
                 gender = pawn.gender;
             }
             CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
-            if (gender == Gender.Female)
+            return gender switch
             {
-                return settings.maxFemaleAgeToHaveChildren;
-            }
-            else if (gender == Gender.Male)
-            {
-                return settings.maxMaleAgeToHaveChildren;
-            }
-            throw new ArgumentException("This pawn has no gender");
+                Gender.Female => settings.maxFemaleAgeToHaveChildren,
+                Gender.Male => settings.maxMaleAgeToHaveChildren,
+                _ => settings.maxEnbyAgeToHaveChildren,
+            };
         }
 
         public static float UsualAgeToHaveChildren(this Pawn pawn, Gender gender = Gender.None)
@@ -375,15 +369,12 @@ namespace BetterRomance
                 gender = pawn.gender;
             }
             CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
-            if (gender == Gender.Female)
+            return gender switch
             {
-                return settings.usualFemaleAgeToHaveChildren;
-            }
-            else if (gender == Gender.Male)
-            {
-                return settings.usualMaleAgeToHaveChildren;
-            }
-            throw new ArgumentException("No gender provided");
+                Gender.Female => settings.usualFemaleAgeToHaveChildren,
+                Gender.Male => settings.usualMaleAgeToHaveChildren,
+                _ => settings.usualEnbyAgeToHaveChildren,
+            };
         }
 
         public static int MaxChildren(this Pawn pawn)

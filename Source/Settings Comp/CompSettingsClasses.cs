@@ -196,6 +196,10 @@ namespace BetterRomance
         public float? usualMaleAgeToHaveChildren;
         public float? maxMaleAgeToHaveChildren;
 
+        public float? minEnbyAgeToHaveChildren;
+        public float? usualEnbyAgeToHaveChildren;
+        public float? maxEnbyAgeToHaveChildren;
+
         public int? maxChildrenDesired;
         public int? minOpinionRomance;
 
@@ -227,6 +231,10 @@ namespace BetterRomance
         public float minMaleAgeToHaveChildren;
         public float usualMaleAgeToHaveChildren;
         public float maxMaleAgeToHaveChildren;
+
+        public float minEnbyAgeToHaveChildren;
+        public float usualEnbyAgeToHaveChildren;
+        public float maxEnbyAgeToHaveChildren;
 
         public int maxChildrenDesired;
         public int? minOpinionRomance;
