@@ -653,6 +653,22 @@ namespace BetterRomance
                     return age;
             }
         }
+        public static SimpleCurve ConvertCurve(SimpleCurve oldCurve, Pawn pawn)
+        {
+            if (pawn.HasNoGrowth())
+            {
+                return
+                [
+                    new CurvePoint(1f, 1f)
+                ];
+            }
+            SimpleCurve newCurve = new();
+            foreach (CurvePoint point in oldCurve.Points)
+            {
+                newCurve.Points.Add(new CurvePoint(ConvertAge(point.x, pawn), point.y));
+            }
+            return newCurve;
+        }
         public static bool IsUnset(this float value) => value == -999f;
         public static bool IsUnset(this int value) => value == -999;
 
