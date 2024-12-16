@@ -225,15 +225,17 @@ namespace BetterRomance
                 {
                     yield return "Please provide valid pawnkind for parents";
                 }
-                else if (pawnKindForParentGlobal != null)
-                {
-                    if (pawnKindForParentFemale != null || pawnKindForParentMale != null)
-                    {
-                        pawnKindForParentMale = null;
-                        pawnKindForParentFemale = null;
-                        yield return "Please provide only global or male and female pawnkinds; defaulting to global";
-                    }
-                }
+                //Remove this, so global can be provided as a fall back for non-binary
+                //Shouldn't ever be used, but just in case
+                //else if (pawnKindForParentGlobal != null)
+                //{
+                //    if (pawnKindForParentFemale != null || pawnKindForParentMale != null)
+                //    {
+                //        pawnKindForParentMale = null;
+                //        pawnKindForParentFemale = null;
+                //        yield return "Please provide only global or male and female pawnkinds; defaulting to global";
+                //    }
+                //}
                 else if (pawnKindForParentFemale == null || pawnKindForParentMale == null)
                 {
                     yield return "Please provide both a male and female pawnkind";

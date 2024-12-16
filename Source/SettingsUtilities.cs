@@ -316,40 +316,28 @@ namespace BetterRomance
         }
 
         /// <summary>
-        /// Provides an appropriate pawnkind for a newly generated parent. If children are not allowed, uses a pawnkind from settings, otherwise uses the same pawnkind as the child.
+        /// Provides an appropriate pawnkind for generating a new parent. If children are not allowed, uses a pawnkind from settings, otherwise uses the same pawnkind as the child.
         /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="gender"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="Exception"></exception>
-        public static PawnKindDef ParentPawnkind(this Pawn pawn, Gender gender)
+        /// <param name="gender">The <see cref="Gender"/> of the parent being generated.</param>
+        public static PawnKindDef ParentPawnkind(this Pawn child, Gender gender)
         {
-            if (pawn.ChildAllowed())
+            //This should never be called with enby as the gender, but just in case
+            if (child.ChildAllowed())
             {
-                return pawn.kindDef;
+                return child.kindDef;
             }
-            CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
-            if (settings.pawnKindForParentGlobal != null)
+            CompSettingsRelationsPawn settings = GetRelationSettings(child);
+            PawnKindDef result = gender switch
             {
-                return settings.pawnKindForParentGlobal;
-            }
-            if (settings.pawnKindForParentFemale != null && settings.pawnKindForParentMale != null)
+                Gender.Female => settings.pawnKindForParentFemale ?? settings.pawnKindForParentGlobal,
+                Gender.Male => settings.pawnKindForParentMale ?? settings.pawnKindForParentGlobal,
+                _ => settings.pawnKindForParentGlobal,
+            };
+            if (result is null)
             {
-                if (gender == Gender.Female)
-                {
-                    return settings.pawnKindForParentFemale;
-                }
-                else if (gender == Gender.Male)
-                {
-                    return settings.pawnKindForParentMale;
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid gender provided for finding parent pawnkind");
-                }
+                throw new Exception($"No parent pawnkind found for {child.kindDef.defName} or {child.def.defName} of gender {gender}");
             }
-            throw new("No parent pawnkind set for " + pawn.kindDef.defName + " or " + pawn.def.defName);
+            return result;
         }
 
         public static float MinAgeToHaveChildren(this Pawn pawn, Gender gender = Gender.None)
