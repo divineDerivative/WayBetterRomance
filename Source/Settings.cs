@@ -239,7 +239,7 @@ namespace BetterRomance
         //I wonder if I can combine these into one method that can act on the different orientation objects?
         private static void DrawBaseSexualityChance(Listing_Standard listing)
         {
-            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.OrentationHeading".Translate(), tooltip: "WBR.OrentationHeadingTip".Translate());
+            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.OrientationHeading".Translate(), tooltip: "WBR.OrientationHeadingTip".Translate());
             list.Label("WBR.StraightChance".Translate() + "  " + settings.sexualOrientations.hetero + "%", tooltip: "WBR.StraightChanceTip".Translate());
             settings.sexualOrientations.hetero = Mathf.Round(list.Slider(settings.sexualOrientations.hetero, 0f, 100f));
             if (settings.sexualOrientations.hetero > 100f - settings.sexualOrientations.bi - settings.sexualOrientations.homo)
@@ -265,7 +265,7 @@ namespace BetterRomance
 
         private static void DrawAceOrientationChance(Listing_Standard listing)
         {
-            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.AceOrentationHeading".Translate(), tooltip: "WBR.AceOrentationHeadingTip".Translate());
+            Listing_Standard list = DrawCustomSectionStart(listing, sectionHeightOrientation, "WBR.AceOrientationHeading".Translate(), tooltip: "WBR.AceOrientationHeadingTip".Translate());
             list.Label("WBR.AceHeteroChance".Translate() + "  " + settings.asexualOrientations.hetero + "%", tooltip: "WBR.AceHeteroChanceTip".Translate());
             settings.asexualOrientations.hetero = Mathf.Round(list.Slider(settings.asexualOrientations.hetero, 0f, 100f));
             if (settings.asexualOrientations.hetero > 100f - settings.asexualOrientations.bi - settings.asexualOrientations.homo)
