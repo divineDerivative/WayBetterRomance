@@ -279,43 +279,50 @@ namespace BetterRomance
 
         public void SetSexualAttraction(Gender gender, bool value) => sexual.SetAttraction(gender, value);
 
+        //Might need to use different logic for some languages, but I'll deal with that on a case by case basis
         private string GetLabel()
         {
+            if (sexual.Gay && romantic.Gay)
+            {
+                return "WBR.Gay".Translate();
+            }
+            if (sexual.Straight && romantic.Straight)
+            {
+                return "WBR.Straight".Translate();
+            }
             string sexualPrefix = Prefix(sexual);
             string romanticPrefix = Prefix(romantic);
+            string sexualString = sexualPrefix + "WBR.Sexual".Translate();
+            string romanticString = romanticPrefix + "WBR.Romantic".Translate();
             if (sexualPrefix == romanticPrefix)
             {
-                return sexualPrefix switch
-                {
-                    "Homo" => "Gay",
-                    "Hetero" => "Straight",
-                    _ => Aromantic ? romanticPrefix + "romantic" : sexualPrefix + "sexual",
-                };
+                return sexualString;
             }
-            return $"{sexualPrefix}sexual\\{romanticPrefix}romantic";
+
+            return $"{sexualString}\\{romanticString}";
         }
 
         private string Prefix(AttractionVars type)
         {
             if (type.Pan)
             {
-                return "Pan";
+                return "WBR.PanPrefix".Translate();
             }
             if (type.None)
             {
-                return "A";
+                return "WBR.NonePrefix".Translate();
             }
             if (type.Bi)
             {
-                return "Bi";
+                return "WBR.BiPrefix".Translate();
             }
             if (type.Gay)
             {
-                return "Homo";
+                return "WBR.HomoPrefix".Translate();
             }
             if (type.Straight)
             {
-                return "Hetero";
+                return "WBR.HeteroPrefix".Translate();
             }
             return string.Empty;
         }
