@@ -56,6 +56,21 @@ namespace BetterRomance
                 text = "Error determining orientation";
             }
             list.Label(text.Translate(SelPawn));
+
+            //Orientation comp
+            var comp = SelPawn.CheckForComp<Comp_Orientation>();
+            //I think I want these to use checkmark/X instead of True/False
+            //Using Listing_Standard.CheckboxLabeled would require exposing the private variables, which I don't want to do. I don't want those being set directly, you have to use SetAttraction
+            //So I'll probably need to use a settings handler to attach a function to the button
+            list.Label("Sexual attraction:");
+            list.Label($"     Men: {comp.sexual.Men}");
+            list.Label($"     Women: {comp.sexual.Women}");
+            list.Label($"     Enby: {comp.sexual.Enby}");
+            list.Label("Romantic attraction:");
+            list.Label($"     Men: {comp.romantic.Men}");
+            list.Label($"     Women: {comp.romantic.Women}");
+            list.Label($"     Enby: {comp.romantic.Enby}");
+
             //Display sex repulsion, describe the effects of their specific rating.
             if (SelPawn.IsAsexual())
             {
