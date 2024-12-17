@@ -65,9 +65,6 @@ namespace BetterRomance
         /// <summary>
         /// Checks if ordered hookups are only allowed for breeding purposes.
         /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="ordered"></param>
-        /// <returns></returns>
         public static bool HookupForBreedingOnly(this Pawn pawn)
         {
             CompSettingsCasualSexPawn settings = GetCasualSexSettings(pawn);
@@ -77,9 +74,6 @@ namespace BetterRomance
         /// <summary>
         /// First checks if ordered hookups are only allowed for breeding purposes. If so, checks if pregnancy is possible between <paramref name="asker"/> and <paramref name="target"/>.
         /// </summary>
-        /// <param name="asker"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
         public static bool MeetsHookupBreedingRequirement(Pawn asker, Pawn target)
         {
             if (asker.HookupForBreedingOnly() || target.HookupForBreedingOnly())
@@ -428,18 +422,12 @@ namespace BetterRomance
             {
                 return GetDefaultFertilityAgeCurve(pawn.gender);
             }
-            if (pawn.gender == Gender.Male)
+            return pawn.gender switch
             {
-                return settings.maleFertilityAgeFactor;
-            }
-            else if (pawn.gender == Gender.Female)
-            {
-                return settings.femaleFertilityAgeFactor;
-            }
-            else
-            {
-                return settings.noneFertilityAgeFactor;
-            }
+                Gender.Male => settings.maleFertilityAgeFactor,
+                Gender.Female => settings.femaleFertilityAgeFactor,
+                _ => settings.noneFertilityAgeFactor
+            };
         }
 
         public static SimpleCurve GetDefaultFertilityAgeCurve(Gender gender)
@@ -519,8 +507,6 @@ namespace BetterRomance
         /// <summary>
         /// Age at which a pawn is given an adult backstory. Human default is 20
         /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
         public static float GetMinAgeForAdulthood(Pawn pawn)
         {
             CompSettingsMisc settings = GetMiscSettings(pawn);
@@ -533,7 +519,6 @@ namespace BetterRomance
         /// <summary>
         /// Finds the first life stage with a developmental stage of child and returns the minimum age of that stage. Human default is 3
         /// </summary>
-        /// <param name="pawn"></param>
         /// <returns>The age at which <paramref name="pawn"/> becomes a child.</returns>
         public static int ChildAge(Pawn pawn)
         {
@@ -544,8 +529,6 @@ namespace BetterRomance
         /// <summary>
         /// The age at which a pawn is considered an adult for the purposes of adjusting learning speed. Human default is 18
         /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
         public static int AdultAgeForLearning(Pawn pawn)
         {
             CompSettingsMisc settings = GetMiscSettings(pawn);
@@ -555,17 +538,11 @@ namespace BetterRomance
         /// <summary>
         /// The age at which a pawn starts wanting an age reversal. Human default is 25
         /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
         public static int AgeReversalDemandAge(Pawn pawn)
         {
             CompSettingsMisc settings = GetMiscSettings(pawn);
-            //This is for animals, which won't have the comp, since this gets called during generation for ALL pawns
-            if (settings == null)
-            {
-                return 25;
-            }
-            return settings.ageReversalDemandAge;
+            //Null check is for animals, which won't have the comp, since this gets called during generation for ALL pawns
+            return settings?.ageReversalDemandAge ?? 25;
         }
 
         public static SimpleCurve AgeSkillFactor(Pawn pawn)
@@ -604,9 +581,6 @@ namespace BetterRomance
         /// <summary>
         /// Converts a static age into the calculated equivalent
         /// </summary>
-        /// <param name="age"></param>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
         public static float ConvertAge(float age, Pawn pawn)
         {
             switch (age)
@@ -641,6 +615,7 @@ namespace BetterRomance
                     return age;
             }
         }
+
         public static SimpleCurve ConvertCurve(SimpleCurve oldCurve, Pawn pawn)
         {
             if (pawn.HasNoGrowth())
@@ -657,6 +632,7 @@ namespace BetterRomance
             }
             return newCurve;
         }
+
         public static bool IsUnset(this float value) => value == -999f;
         public static bool IsUnset(this int value) => value == -999;
 
