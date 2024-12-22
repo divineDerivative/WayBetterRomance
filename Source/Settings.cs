@@ -422,7 +422,45 @@ namespace BetterRomance
 
         internal void SetUpRomanticHandler()
         {
+            romanticHandler.Clear();
+            //Gender attraction sections
+            romanticHandler.RegisterNewRow()
+                .AddLabel(() => $"Romantic attraction for men:");
+            SetUpGenderChanceSection(romanticHandler.RegisterNewSection(sectionBorder: 6f), Gender.Male, true);
 
+            romanticHandler.RegisterNewRow()
+                .AddLabel(() => $"Romantic attraction for women:");
+            SetUpGenderChanceSection(romanticHandler.RegisterNewSection(sectionBorder: 6f), Gender.Female, true);
+
+            if (NonBinaryActive)
+            {
+                romanticHandler.RegisterNewRow()
+                    .AddLabel(() => $"Romantic attraction for non-binary:");
+                SetUpGenderChanceSection(romanticHandler.RegisterNewSection(sectionBorder: 6f), (Gender)3, true);
+            }
+
+            romanticHandler.RegisterNewRow()
+                .AddElement(NewElement.Button(() => complex = !complex)
+                .WithLabel(() => complex ? "Simplify it" : "Let's make it complicated"));
+
+            //Orientation equivalence
+            romanticHandler.RegisterNewRow(newColumn: true)
+                .AddLabel(() => "Romantic orientation equivalent")
+                .WithTooltip("WBR.RomanticOrentationHeadingTip".Translate);
+            SetUpEquivalenceSection(romanticHandler.RegisterNewSection(name: "RomanticOrientationMenSection", sectionBorder: 6f), Gender.Male, true);
+
+            romanticHandler.RegisterNewRow()
+                .AddLabel(() => "Romantic orientation equivalent")
+                .WithTooltip("WBR.RomanticOrentationHeadingTip".Translate);
+            SetUpEquivalenceSection(romanticHandler.RegisterNewSection(name: "RomanticOrientationWomenSection", sectionBorder: 6f), Gender.Female, true);
+
+            if (NonBinaryActive)
+            {
+                romanticHandler.RegisterNewRow()
+                    .AddLabel(() => "Romantic orientation equivalent")
+                    .WithTooltip("WBR.RomanticOrentationHeadingTip".Translate);
+                SetUpEquivalenceSection(romanticHandler.RegisterNewSection(name: "RomanticOrientationEnbySection", sectionBorder: 6f), (Gender)3, true);
+            }
         }
 
         internal void SetUpMiscHandler()
