@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -447,6 +448,11 @@ namespace BetterRomance
                 return true;
             }
             return false;
+        }
+
+        public static bool HasAnyLovePartnerOfGender(this Pawn pawn, Gender gender)
+        {
+            return pawn.relations.DirectRelations.Any(x => LovePartnerRelationUtility.IsLovePartnerRelation(x.def) && x.otherPawn.gender == gender);
         }
     }
 

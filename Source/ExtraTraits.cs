@@ -46,16 +46,9 @@ namespace BetterRomance
                 OrientationChances romanticChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.asexual ?? BetterRomanceMod.settings.romanticOrientations;
 
                 //Check for existing partners first
-                bool mightBeStraight = false;
-                if (LovePartnerRelationUtility.HasAnyLovePartnerOfTheOppositeGender(pawn) || LovePartnerRelationUtility.HasAnyExLovePartnerOfTheOppositeGender(pawn))
-                {
-                    mightBeStraight = true;
-                }
-                bool mightBeGay = false;
-                if (LovePartnerRelationUtility.HasAnyLovePartnerOfTheSameGender(pawn) || LovePartnerRelationUtility.HasAnyExLovePartnerOfTheSameGender(pawn))
-                {
-                    mightBeGay = true;
-                }
+                bool mustLikeMen = pawn.HasAnyLovePartnerOfGender(Gender.Male);
+                bool mustLikeWomen = pawn.HasAnyLovePartnerOfGender(Gender.Female);
+                bool mustLikeEnby = pawn.HasAnyLovePartnerOfGender((Gender)3);
 
                 RollSexualOrientation();
 
@@ -126,13 +119,17 @@ namespace BetterRomance
                     }
 
                     //Remove these if they've been fulfilled
-                    if (mightBeGay && pawn.AttractedTo(pawn.gender, false))
+                    if (mustLikeMen && pawn.AttractedTo(Gender.Male, false))
                     {
-                        mightBeGay = false;
+                        mustLikeMen = false;
                     }
-                    if (mightBeStraight && pawn.AttractedTo(pawn.gender.Opposite(), false))
+                    if (mustLikeWomen && pawn.AttractedTo(Gender.Female, false))
                     {
-                        mightBeStraight = false;
+                        mustLikeWomen = false;
+                    }
+                    if (mustLikeEnby && pawn.AttractedTo((Gender)3, false))
+                    {
+                        mustLikeEnby = false;
                     }
                 }
 
@@ -140,7 +137,7 @@ namespace BetterRomance
                 {
                     //Set up romantic orientation chances
                     //Can't be aromantic if there's still a partner they have no attraction to
-                    float aromanticChance = (mightBeGay || mightBeStraight) ? 0f : romanticChances.None;
+                    float aromanticChance = (mustLikeMen || mustLikeWomen || mustLikeEnby) ? 0f : romanticChances.None;
                     float biromanticChance = romanticChances.Bi;
                     float homoromanticChance = romanticChances.Homo;
                     float heteroromanticChance = romanticChances.Hetero;
