@@ -317,6 +317,8 @@ namespace BetterRomance
             }
             string sexualPrefix = sexual.Prefix();
             string romanticPrefix = romantic.Prefix();
+            string sexualString = sexualPrefix == "Queer" ? sexualPrefix : sexualPrefix + "WBR.Sexual".Translate();
+            string romanticString = romanticPrefix == "Queer" ? romanticPrefix : romanticPrefix + "WBR.Romantic".Translate();
             if (sexualPrefix == romanticPrefix)
             {
                 return sexualString;
@@ -349,6 +351,17 @@ namespace BetterRomance
             if (Asexual || Aromantic)
             {
                 return true;
+            }
+            if (!sexual.Overlap(romantic))
+            {
+                if (sexual.Genders == AttractionGenders.Enby)
+                {
+                    romantic.SetAttraction((Gender)3, true);
+                }
+                else if (romantic.Genders == AttractionGenders.Enby)
+                {
+                    sexual.SetAttraction((Gender)3, true);
+                }
             }
             return sexual.Overlap(romantic);
         }
