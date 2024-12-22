@@ -126,6 +126,9 @@ namespace BetterRomance
 
         internal SettingsHandler<Settings> regularHandler = new(true);
         internal TabbedHandler<Settings> complexHandler;
+        internal SettingsHandler<Settings> miscHandler;
+        internal SettingsHandler<Settings> sexualHandler;
+        internal SettingsHandler<Settings> romanticHandler;
 
         internal void SetUpRegularHandler(Listing_Standard listing)
         {
@@ -189,27 +192,147 @@ namespace BetterRomance
 
         internal void SetUpComplexHandler()
         {
-            //Complex stuff
-            regularHandler.RegisterNewRow("ComplexChanceLabel")
-                .HideWhen(() => !complex)
-                .AddLabel(() => $"WBR.ComplexChanceLabel".Translate(complexChance))
-                .WithTooltip("WBR.ComplexChanceTooltip".Translate);
-            regularHandler.RegisterNewRow("ComplexChanceSlider")
-                .HideWhen(() => !complex)
-                .Add(NewElement.Slider<float>()
-                .WithReference(this, nameof(complexChance), complexChance)
-                .MinMax(0f, 100f)
-                .RoundTo(0));
-            //Don't really like how this looks here.
-            //Adjusting the value on one of the sliders makes the location of the slider change, so it only goes down one tick and then you have to grab it again to keep adjusting
-            //Maybe make it a pop up when they try to close settings?
-            regularHandler.RegisterNewRow("ComplexChanceWarning")
-                .HideWhen(() => !complex || !NeedWarning())
-                .AddLabel(() => "WBR.ComplexWarning".Translate(sexualOrientations.hetero == 100f ? RomanceDefOf.Straight.DataAtDegree(0).label : TraitDefOf.Gay.DataAtDegree(0).label));
+            complexHandler.Clear();
+            sexualHandler ??= new(true, SetUpSexualHandler);
+            romanticHandler ??= new(true, SetUpRomanticHandler);
+            miscHandler ??= new(true, SetUpMiscHandler);
+            complexHandler.AddTab(sexualHandler, "Sexual");
+            complexHandler.AddTab(romanticHandler, "Romantic");
+            complexHandler.AddTab(miscHandler, "Misc");
+            ////Complex stuff
+            //regularHandler.RegisterNewRow("ComplexChanceLabel")
+            //    .HideWhen(() => !complex)
+            //    .AddLabel(() => $"WBR.ComplexChanceLabel".Translate(complexChance))
+            //    .WithTooltip("WBR.ComplexChanceTooltip".Translate);
+            //regularHandler.RegisterNewRow("ComplexChanceSlider")
+            //    .HideWhen(() => !complex)
+            //    .Add(NewElement.Slider<float>()
+            //    .WithReference(this, nameof(complexChance), complexChance)
+            //    .MinMax(0f, 100f)
+            //    .RoundTo(0));
+            ////Don't really like how this looks here.
+            ////Adjusting the value on one of the sliders makes the location of the slider change, so it only goes down one tick and then you have to grab it again to keep adjusting
+            ////Maybe make it a pop up when they try to close settings?
+            //regularHandler.RegisterNewRow("ComplexChanceWarning")
+            //    .HideWhen(() => !complex || !NeedWarning())
+            //    .AddLabel(() => "WBR.ComplexWarning".Translate(sexualOrientations.hetero == 100f ? RomanceDefOf.Straight.DataAtDegree(0).label : TraitDefOf.Gay.DataAtDegree(0).label));
 
-            bool NeedWarning() => (sexualOrientations.hetero == 100f && romanticOrientations.homo == 100f) || (sexualOrientations.homo == 100f && romanticOrientations.hetero == 100f);
-            //Having one orientation be 100% hetero means that anyone who rolls homo on the other orientation will have to be made hetero, and presumably the other way around too
-            //I'm wondering if having hetero/homo set to 100 should lock homo/hetero in the other to 0?
+            //bool NeedWarning() => (sexualOrientations.hetero == 100f && romanticOrientations.homo == 100f) || (sexualOrientations.homo == 100f && romanticOrientations.hetero == 100f);
+            ////Having one orientation be 100% hetero means that anyone who rolls homo on the other orientation will have to be made hetero, and presumably the other way around too
+            ////I'm wondering if having hetero/homo set to 100 should lock homo/hetero in the other to 0?
+        }
+
+        internal void SetUpSexualHandler()
+        {
+
+        }
+
+        internal void SetUpRomanticHandler()
+        {
+
+        }
+
+        internal void SetUpMiscHandler()
+        {
+            miscHandler.Clear();
+            //Date rate
+            miscHandler.RegisterNewRow()
+                .AddLabel(() => "WBR.DateRate".Translate(dateRate))
+                .WithTooltip("WBR.DateRateTip".Translate);
+            miscHandler.RegisterNewRow()
+                .Add(NewElement.Slider<float>()
+                .WithReference(this, nameof(dateRate), dateRate)
+                .MinMax(0f, 200f)
+                .RoundTo(0));
+            //Hook up rate
+            miscHandler.RegisterNewRow()
+                .AddLabel(() => "WBR.HookupRate".Translate(hookupRate))
+                .WithTooltip("WBR.HookupRateTip".Translate);
+            miscHandler.RegisterNewRow()
+                .Add(NewElement.Slider<float>()
+                .WithReference(this, nameof(hookupRate), hookupRate)
+                .MinMax(0f, 200f)
+                .RoundTo(0));
+            //Alien love chance
+            miscHandler.RegisterNewRow()
+                .AddLabel(() => "WBR.AlienLoveChance".Translate(alienLoveChance))
+                .WithTooltip("WBR.AlienLoveChanceTip".Translate);
+            miscHandler.RegisterNewRow()
+                .Add(NewElement.Slider<float>()
+                .WithReference(this, nameof(alienLoveChance), alienLoveChance)
+                .MinMax(-100f, 100f)
+                .RoundTo(0));
+            //Min opinion for romance
+            miscHandler.RegisterNewRow()
+                .AddLabel(() => "WBR.MinOpinionRomance".Translate(minOpinionRomance))
+                .WithTooltip("WBR.MinOpinionRomanceTip".Translate);
+            miscHandler.RegisterNewRow()
+                .Add(NewElement.Slider<int>()
+                .WithReference(this, nameof(minOpinionRomance), minOpinionRomance)
+                .MinMax(-100, 100));
+            //Min opinion for hook up
+            miscHandler.RegisterNewRow()
+                .AddLabel(() => "WBR.MinOpinionHookup".Translate(minOpinionHookup))
+                .WithTooltip("WBR.MinOpinionHookupTip".Translate);
+            miscHandler.RegisterNewRow()
+                .Add(NewElement.Slider<int>()
+                .WithReference(this, nameof(minOpinionHookup), minOpinionHookup)
+                .MinMax(-100, 50));
+            //Cheat chance
+            miscHandler.RegisterNewRow()
+                .AddLabel(() => "WBR.CheatChance".Translate(cheatChance))
+                .WithTooltip("WBR.CheatChanceTip".Translate);
+            miscHandler.RegisterNewRow()
+                .Add(NewElement.Slider<float>()
+                .WithReference(this, nameof(cheatChance), cheatChance)
+                .MinMax(0f, 200f)
+                .RoundTo(0));
+            //Cheat opinion range
+            miscHandler.RegisterNewRow()
+                .AddLabel("WBR.CheatingOpinionRange".Translate)
+                .WithTooltip("WBR.CheatingOpinionRangeTip".Translate)
+                .HideWhen(() => cheatChance == 0f);
+            miscHandler.RegisterNewRow()
+                .Add(NewElement.Range<IntRange, int>(5)
+                .WithReference(this, nameof(cheatingOpinion), cheatingOpinion)
+                .MinMax(-100, 100)
+                .HideWhen(() => cheatChance == 0f), "CheatOpinionRange");
+
+            miscHandler.AddGap();
+            miscHandler.RegisterNewRow().AddResetButton(regularHandler);
+            //Fertility mod
+            UIContainer fertilityRow = miscHandler.RegisterNewRow(newColumn: true);
+            fertilityRow.AddLabel("WBR.FertilityMod".Translate);
+            fertilityRow.Add(NewElement.Button(FertilityModOnClick, relative: 1f / 3f)
+                .WithLabel(() => fertilityMod != "None" ? FertilityMods.TryGetValue(fertilityMod) : "None"));
+            miscHandler.RegisterNewRow()
+                .HideWhen(() => FertilityMods.Count > 0)
+                .AddLabel("WBR.NoFertilityMod".Translate);
+            //Joy need
+            miscHandler.RegisterNewRow()
+                .AddLabel("WBR.AddJoyNeed".Translate);
+            miscHandler.RegisterNewRow()
+                .HideWhen(() => !ModsConfig.IdeologyActive)
+                .Add(NewElement.Checkbox()
+                .WithReference(this, nameof(joyOnSlaves), joyOnSlaves)
+                .WithLabel("SlavesSection".Translate));
+            miscHandler.RegisterNewRow()
+                .Add(NewElement.Checkbox()
+                .WithReference(this, nameof(joyOnPrisoners), joyOnPrisoners)
+                .WithLabel("PrisonersSection".Translate));
+            var guestRow = miscHandler.RegisterNewRow()
+                .HideWhen(() => !joyOnPrisoners);
+            guestRow.AddSpace(relative: 0.02f);
+            guestRow.Add(NewElement.Checkbox()
+                .WithReference(this, nameof(joyOnGuests), joyOnGuests)
+                .WithLabel("WBR.Guests".Translate)
+                .WithTooltip("WBR.GuestsTip".Translate));
+
+            //Dev logging
+            miscHandler.RegisterNewRow()
+                .Add(NewElement.Checkbox()
+                .WithReference(this, nameof(debugLogging), debugLogging)
+                .WithLabel(() => "Enable dev logging"));
         }
 
         internal void SetUpChanceSection(UISection section, bool romance)
