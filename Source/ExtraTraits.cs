@@ -50,6 +50,7 @@ namespace BetterRomance
                 bool mustLikeWomen = pawn.HasAnyLovePartnerOfGender(Gender.Female);
                 bool mustLikeEnby = pawn.HasAnyLovePartnerOfGender((Gender)3);
 
+                string debugString = $"{pawn.LabelShort}, {pawn.gender}, rolled: ";
                 RollSexualOrientation();
 
                 //If not complex, copy from sexual
@@ -70,7 +71,10 @@ namespace BetterRomance
 
                 if (!comp.ResolveConflicts())
                 {
-                    LogUtil.Error($"Unable to resolve orientation conflicts for {pawn.LabelShort}");
+                    //LogUtil.Error($"Unable to resolve orientation conflicts for {pawn.LabelShort}");
+                    Testing.Tests.logger.Log($"Unable to resolve orientation conflicts for {pawn.LabelShort}");
+                    Testing.Tests.logger.Log(debugString);
+                    Testing.Tests.logger.Log($"Gender: {pawn.gender}, Sexual: {comp.sexual.Prefix()}, Romantic: {comp.romantic.Prefix()}");
                 }
 
                 void RollSexualOrientation()
@@ -95,6 +99,7 @@ namespace BetterRomance
                         comp.SetSexualAttraction(Gender.Male, false);
                         comp.SetSexualAttraction(Gender.Female, false);
                         comp.SetSexualAttraction((Gender)3, false);
+                        debugString += "asexual,";
                     }
                     //Bisexual
                     else if (sexualOrientation < (asexualChance + bisexualChance))
@@ -102,6 +107,7 @@ namespace BetterRomance
                         comp.SetSexualAttraction(Gender.Male, true);
                         comp.SetSexualAttraction(Gender.Female, true);
                         //What do with enby?
+                        debugString += "bisexual,";
                     }
                     //Homosexual
                     else if (sexualOrientation < (asexualChance + bisexualChance + homosexualChance))
@@ -109,9 +115,11 @@ namespace BetterRomance
                         comp.SetSexualAttraction(pawn.gender, true);
                         comp.SetSexualAttraction(pawn.gender.Opposite(), false);
                         //What do with enby?
+                        debugString += "homosexual,";
                     }
                     //Heterosexual
                     else
+                        debugString += "heterosexual,";
                     {
                         comp.SetSexualAttraction(pawn.gender, false);
                         comp.SetSexualAttraction(pawn.gender.Opposite(), true);
@@ -167,24 +175,28 @@ namespace BetterRomance
                         comp.SetRomanticAttraction(Gender.Male, false);
                         comp.SetRomanticAttraction(Gender.Female, false);
                         comp.SetRomanticAttraction((Gender)3, false);
+                        debugString += " aromantic";
                     }
                     //Biromantic
                     else if ((romanticOrientation -= aromanticChance) < biromanticChance)
                     {
                         comp.SetRomanticAttraction(Gender.Male, true);
                         comp.SetRomanticAttraction(Gender.Female, true);
+                        debugString += " biromantic";
                     }
                     //Homoromantic
                     else if ((romanticOrientation -= biromanticChance) < homoromanticChance)
                     {
                         comp.SetRomanticAttraction(pawn.gender, true);
                         comp.SetRomanticAttraction(pawn.gender.Opposite(), false);
+                        debugString += " homoromantic";
                     }
                     //Heteroromantic
                     else if ((romanticOrientation -= homoromanticChance) < heteroromanticChance)
                     {
                         comp.SetRomanticAttraction(pawn.gender, false);
                         comp.SetRomanticAttraction(pawn.gender.Opposite(), true);
+                        debugString += " heteroromantic";
                     }
                 }
             }
