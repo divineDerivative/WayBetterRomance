@@ -220,33 +220,33 @@ namespace BetterRomance
             //Hetero
             section.AddLabel(HeteroChance)
                 .WithTooltip(HeteroChanceTooltip);
-            section.AddElement(NewElement.Slider<float>()
+            section.Add(NewElement.Slider<float>()
                 .WithReference(chances, nameof(chances.hetero), chances.hetero)
                 .MinMax(0f, 100f)
-                .RoundTo(1f), "HeteroSlider");
+                .RoundTo(0), "HeteroSlider");
             //Bi
             section.AddLabel(BiChance)
                 .WithTooltip(BiChanceTooltip);
-            section.AddElement(NewElement.Slider<float>()
+            section.Add(NewElement.Slider<float>()
                 .WithReference(chances, nameof(chances.bi), chances.bi)
                 .MinMax(0f, 100f)
-                .RoundTo(1f), "BiSlider");
+                .RoundTo(0), "BiSlider");
             //Homo
             section.AddLabel(HomoChance)
                 .WithTooltip(HomoChanceTooltip);
-            section.AddElement(NewElement.Slider<float>()
+            section.Add(NewElement.Slider<float>()
                 .WithReference(chances, nameof(chances.homo), chances.homo)
                 .MinMax(0f, 100f)
-                .RoundTo(1f), "HomoSlider");
+                .RoundTo(0), "HomoSlider");
             //None
             section.AddLabel(NoneChance)
                 .WithTooltip(NoneChanceTooltip);
             //Buttons
             regularHandler.AddGap(8f);
             UIContainer buttonRow = regularHandler.RegisterNewRow(gap: 0f);
-            buttonRow.AddElement(NewElement.Button(() => chances.CopyFrom(romance ? sexualOrientations : romanticOrientations))
+            buttonRow.Add(NewElement.Button(() => chances.CopyFrom(romance ? sexualOrientations : romanticOrientations))
                 .WithLabel((romance ? "WBR.MatchAboveButton" : "WBR.MatchBelowButton").Translate));
-            buttonRow.AddElement(NewElement.Button(chances.Reset)
+            buttonRow.Add(NewElement.Button(chances.Reset)
                 .WithLabel("RestoreToDefaultSettings".Translate));
 
             //The normalizing needs to be done separately for each value, after the slider for that value
@@ -288,54 +288,54 @@ namespace BetterRomance
             //Date rate
             section.AddLabel(() => "WBR.DateRate".Translate(dateRate))
                 .WithTooltip("WBR.DateRateTip".Translate);
-            section.AddElement(NewElement.Slider<float>()
+            section.Add(NewElement.Slider<float>()
                 .WithReference(this, nameof(dateRate), dateRate)
                 .MinMax(0f, 200f)
-                .RoundTo(1f)
+                .RoundTo(0)
                 .RegisterResetable(regularHandler, 100f), "DateRateSlider");
             //Hook up rate
             section.AddLabel(() => "WBR.HookupRate".Translate(hookupRate))
                 .WithTooltip("WBR.HookupRateTip".Translate);
-            section.AddElement(NewElement.Slider<float>()
+            section.Add(NewElement.Slider<float>()
                 .WithReference(this, nameof(hookupRate), hookupRate)
                 .MinMax(0f, 200f)
-                .RoundTo(1f)
+                .RoundTo(0)
                 .RegisterResetable(regularHandler, 100f), "HookupRateSlider");
             //Alien love chance
             section.AddLabel(() => "WBR.AlienLoveChance".Translate(alienLoveChance))
                 .WithTooltip("WBR.AlienLoveChanceTip".Translate);
-            section.AddElement(NewElement.Slider<float>()
+            section.Add(NewElement.Slider<float>()
                 .WithReference(this, nameof(alienLoveChance), alienLoveChance)
                 .MinMax(-100f, 100f)
-                .RoundTo(1f)
+                .RoundTo(0)
                 .RegisterResetable(regularHandler, 33f), "AlienChanceSlider");
             //Min opinion for romance
             section.AddLabel(() => "WBR.MinOpinionRomance".Translate(minOpinionRomance))
                 .WithTooltip("WBR.MinOpinionRomanceTip".Translate);
-            section.AddElement(NewElement.Slider<int>()
+            section.Add(NewElement.Slider<int>()
                 .WithReference(this, nameof(minOpinionRomance), minOpinionRomance)
                 .MinMax(-100, 100)
                 .RegisterResetable(regularHandler, 5), "MinOpinionRomanceSlider");
             //Min opinion for hook up
             section.AddLabel(() => "WBR.MinOpinionHookup".Translate(minOpinionHookup))
                 .WithTooltip("WBR.MinOpinionHookupTip".Translate);
-            section.AddElement(NewElement.Slider<int>()
+            section.Add(NewElement.Slider<int>()
                 .WithReference(this, nameof(minOpinionHookup), minOpinionHookup)
                 .MinMax(-100, 50)
                 .RegisterResetable(regularHandler, 0), "MinOpinionHookupSlider");
             //Cheat chance
             section.AddLabel(() => "WBR.CheatChance".Translate(cheatChance))
                 .WithTooltip("WBR.CheatChanceTip".Translate);
-            section.AddElement(NewElement.Slider<float>()
+            section.Add(NewElement.Slider<float>()
                 .WithReference(this, nameof(cheatChance), cheatChance)
                 .MinMax(0f, 200f)
-                .RoundTo(1f)
+                .RoundTo(0)
                 .RegisterResetable(regularHandler, 100f), "CheatChanceSlider");
             //Cheat opinion range
             section.AddLabel("WBR.CheatingOpinionRange".Translate)
                 .WithTooltip("WBR.CheatingOpinionRangeTip".Translate)
                 .HideWhen(() => cheatChance == 0f);
-            section.AddElement(NewElement.Range<IntRange, int>(5)
+            section.Add(NewElement.Range<IntRange, int>(5)
                 .WithReference(this, nameof(cheatingOpinion), cheatingOpinion)
                 .MinMax(-100, 100)
                 .RegisterResetable(regularHandler, new IntRange(-75, 75))
@@ -379,6 +379,26 @@ namespace BetterRomance
 
         internal void SetUpSexualHandler()
         {
+            sexualHandler.Clear();
+            //Gender attraction sections
+            sexualHandler.RegisterNewRow()
+                .AddLabel(() => $"Sexual attraction for men:");
+            SetUpGenderChanceSection(sexualHandler.RegisterNewSection(sectionBorder: 6f), Gender.Male, false);
+
+            sexualHandler.RegisterNewRow()
+                .AddLabel(() => $"Sexual attraction for women:");
+            SetUpGenderChanceSection(sexualHandler.RegisterNewSection(sectionBorder: 6f), Gender.Female, false);
+
+            if (NonBinaryActive)
+            {
+                sexualHandler.RegisterNewRow()
+                    .AddLabel(() => $"Sexual attraction for non-binary:");
+                SetUpGenderChanceSection(sexualHandler.RegisterNewSection(sectionBorder: 6f), (Gender)3, false);
+            }
+
+            sexualHandler.RegisterNewRow()
+                .Add(NewElement.Button(() => complex = !complex)
+                .WithLabel(() => complex ? "Simplify it" : "Let's make it complicated"));
 
         }
 
@@ -488,6 +508,54 @@ namespace BetterRomance
                 .Add(NewElement.Checkbox()
                 .WithReference(this, nameof(debugLogging), debugLogging)
                 .WithLabel(() => "Enable dev logging"));
+        }
+
+        internal GenderAttractionChances GenderToChances(Gender gender, bool romance)
+        {
+            return gender switch
+            {
+                Gender.Male => romance ? romanticAttractionForMen : sexualAttractionForMen,
+                Gender.Female => romance ? romanticAttrationForWomen : sexualAttrationForWomen,
+                (Gender)3 => romance ? romanticAttractionForEnby : sexualAttractionForEnby,
+                _ => new()
+            };
+        }
+
+        internal void SetUpGenderChanceSection(UISection section, Gender gender, bool romance)
+        {
+            var handler = romance ? romanticHandler : sexualHandler;
+            GenderAttractionChances chances = GenderToChances(gender, romance);
+            section.AddLabel(() => $"Men: {chances.men * 100f}%");
+            section.Add(NewElement.Slider<float>()
+                .MinMax(0f, 1f)
+                .WithReference(chances, nameof(chances.men), chances.men));
+            section.AddLabel(() => $"Women: {chances.women * 100f}%");
+            section.Add(NewElement.Slider<float>()
+                .MinMax(0f, 1f)
+                .WithReference(chances, nameof(chances.women), chances.women));
+            if (NonBinaryActive)
+            {
+                section.AddLabel(() => $"Non-Binary: {chances.enby * 100f}%");
+                section.Add(NewElement.Slider<float>()
+                    .MinMax(0f, 1f)
+                    .WithReference(chances, nameof(chances.enby), chances.enby));
+            }
+
+            //Buttons
+            var buttonRow = handler.RegisterNewRow(gap: 0f);
+            if (gender != Gender.Male)
+            {
+                buttonRow.Add(NewElement.Button(() => chances.CopyFrom(GenderToChances(gender - 1, romance)))
+                .WithLabel("WBR.MatchAboveButton".Translate));
+            }
+            if (gender != (NonBinaryActive ? (Gender)3 : Gender.Female))
+            {
+                buttonRow.Add(NewElement.Button(() => chances.CopyFrom(GenderToChances(gender + 1, romance)))
+                .WithLabel("WBR.MatchBelowButton".Translate));
+            }
+            buttonRow.Add(NewElement.Button(chances.Reset)
+                .WithLabel(() => "Reset"));
+            handler.AddGap();
         }
 
         private void FertilityModOnClick()
