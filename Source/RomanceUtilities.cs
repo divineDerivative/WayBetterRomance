@@ -450,6 +450,7 @@ namespace BetterRomance
             return false;
         }
 
+        public static bool IsEnby(this Pawn pawn) => (int)pawn.gender == 3;
         public static bool HasAnyLovePartnerOfGender(this Pawn pawn, Gender gender)
         {
             return pawn.relations.DirectRelations.Any(x => LovePartnerRelationUtility.IsLovePartnerRelation(x.def) && x.otherPawn.gender == gender);

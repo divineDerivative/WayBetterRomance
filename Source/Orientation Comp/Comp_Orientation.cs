@@ -337,7 +337,8 @@ namespace BetterRomance
             }
             if (romantic.Unset)
             {
-                LogUtil.Error($"Romantic orientation was not explicitly set for {Pawn.Name.ToStringShort}");
+                //LogUtil.Error($"Romantic orientation was not explicitly set for {Pawn.Name.ToStringShort}");
+                Testing.Tests.logger.Log($"Romantic orientation was not explicitly set for {Pawn.Name.ToStringShort}");
             }
             if (sexual.Unset || romantic.Unset)
             {
