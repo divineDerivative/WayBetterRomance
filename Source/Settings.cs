@@ -251,7 +251,7 @@ namespace BetterRomance
 
             //The normalizing needs to be done separately for each value, after the slider for that value
             //So I'm putting it in the label for the next slider
-            TaggedString HeteroChance() => (romance ? "WBR.HeteroromanticChance" : "WBR.StraightChance").Translate(chances.hetero);
+            TaggedString HeteroChance() => (romance ? "WBR.HeteroromanticChance" : "WBR.StraightChance").Translate(chances.Hetero);
             TaggedString HeteroChanceTooltip() => (romance ? "WBR.HeteroromanticChanceTip" : "WBR.StraightChanceTip").Translate();
             TaggedString BiChance()
             {
@@ -259,7 +259,7 @@ namespace BetterRomance
                 {
                     chances.hetero = 100f - chances.bi - chances.homo;
                 }
-                return (romance ? "WBR.BiromanticChance" : "WBR.BisexualChance").Translate(chances.bi);
+                return (romance ? "WBR.BiromanticChance" : "WBR.BisexualChance").Translate(chances.Bi);
             }
             TaggedString BiChanceTooltip() => (romance ? "WBR.BiromanticChanceTip" : "WBR.BisexualChanceTip").Translate();
             TaggedString HomoChance()
@@ -268,7 +268,7 @@ namespace BetterRomance
                 {
                     chances.bi = 100f - chances.hetero - chances.homo;
                 }
-                return (romance ? "WBR.HomoromanticChance" : "WBR.GayChance").Translate(chances.homo);
+                return (romance ? "WBR.HomoromanticChance" : "WBR.GayChance").Translate(chances.Homo);
             }
             TaggedString HomoChanceTooltip() => (romance ? "WBR.HomoromanticChanceTip" : "WBR.GayChanceTip").Translate();
             TaggedString NoneChance()
@@ -278,7 +278,7 @@ namespace BetterRomance
                     chances.homo = 100f - chances.hetero - chances.bi;
                 }
                 chances.none = 100f - chances.hetero - chances.bi - chances.homo;
-                return (romance ? "WBR.AromanticChance" : "WBR.AsexualChance").Translate(chances.none);
+                return (romance ? "WBR.AromanticChance" : "WBR.AsexualChance").Translate(chances.None);
             }
             TaggedString NoneChanceTooltip() => (romance ? "WBR.AromanticChanceTip" : "WBR.AsexualChanceTip").Translate();
         }
@@ -400,6 +400,24 @@ namespace BetterRomance
                 .Add(NewElement.Button(() => complex = !complex)
                 .WithLabel(() => complex ? "Simplify it" : "Let's make it complicated"));
 
+            //Orientation equivalence
+            sexualHandler.RegisterNewRow(newColumn: true)
+                .AddLabel(() => "Sexual orientation equivalent")
+                .WithTooltip("WBR.SexualOrentationHeadingTip".Translate);
+            SetUpEquivalenceSection(sexualHandler.RegisterNewSection(name: "SexualOrientationMenSection", sectionBorder: 6f), Gender.Male, false);
+
+            sexualHandler.RegisterNewRow()
+                .AddLabel(() => "Sexual orientation equivalent")
+                .WithTooltip("WBR.SexualOrentationHeadingTip".Translate);
+            SetUpEquivalenceSection(sexualHandler.RegisterNewSection(name: "SexualOrientationWomenSection", sectionBorder: 6f), Gender.Female, false);
+
+            if (NonBinaryActive)
+            {
+                sexualHandler.RegisterNewRow()
+                    .AddLabel(() => "Sexual orientation equivalent")
+                    .WithTooltip("WBR.SexualOrentationHeadingTip".Translate);
+                SetUpEquivalenceSection(sexualHandler.RegisterNewSection(name: "SexualOrientationEnbySection", sectionBorder: 6f), (Gender)3, false);
+            }
         }
 
         internal void SetUpRomanticHandler()
@@ -556,6 +574,121 @@ namespace BetterRomance
             buttonRow.Add(NewElement.Button(chances.Reset)
                 .WithLabel(() => "Reset"));
             handler.AddGap();
+        }
+
+        internal void SetUpEquivalenceSection(UISection section, Gender gender, bool romance)
+        {
+            GenderAttractionChances chances = GenderToChances(gender, romance);
+            var handler = romance ? romanticHandler : sexualHandler;
+
+            //Hetero
+            section.AddLabel(HeteroChanceLabel)
+                .WithTooltip(HeteroChanceTooltip);
+            //Bi
+            section.AddLabel(BiChanceLabel)
+                .WithTooltip(BiChanceTooltip);
+            //Homo
+            section.AddLabel(HomoChanceLabel)
+                .WithTooltip(HomoChanceTooltip);
+            //None
+            section.AddLabel(NoneChanceLabel)
+                .WithTooltip(NoneChanceTooltip);
+
+            if (NonBinaryActive)
+            {
+                section.AddLabel(EnbyChanceLabel)
+                    .WithTooltip(EnbyChanceTooltip);
+                if (gender == (Gender)3)
+                {
+                    section.AddLabel(QueerChanceLabel)
+                        .WithTooltip(QueerChanceTooltip); ;
+                }
+                handler.AddGap(Heights.Slider);
+            }
+
+            handler.AddGap();
+            handler.AddGap(Heights.Button);
+
+            //Enby can be added to hetero for men and women without changing the orientation, but not for non-binary
+            float HeteroChance()
+            {
+                return gender switch
+                {
+                    Gender.Male => chances.notMen * chances.women,
+                    Gender.Female => chances.men * chances.notWomen,
+                    (Gender)3 => ((chances.men * chances.notWomen) + (chances.notMen * chances.women)) * chances.notEnby,
+                    _ => 0f,
+                };
+            }
+            //I think I'll include pan in this for men and women, so enby only matters for non-binary
+            float BiChance()
+            {
+                return gender switch
+                {
+                    Gender.Male or Gender.Female => chances.men * chances.women,
+                    (Gender)3 => chances.men * chances.women * chances.notEnby,
+                    _ => 0f,
+                };
+            }
+            //Enby can be added to homo for men and women without changing the orientation
+            float HomoChance()
+            {
+                return gender switch
+                {
+                    Gender.Male => chances.men * chances.notWomen,
+                    Gender.Female => chances.notMen * chances.women,
+                    (Gender)3 => chances.notMen * chances.notWomen * chances.enby,
+                    _ => 0f,
+                };
+            }
+            //Enby cannot be added to none for men and women, so the enby chance does not matter for them
+            float NoneChance()
+            {
+                return gender switch
+                {
+                    Gender.Male or Gender.Female => chances.notMen * chances.notWomen,
+                    (Gender)3 => chances.notMen * chances.notWomen * (NonBinaryActive ? chances.notEnby : 1f),
+                    _ => 0f,
+                };
+            }
+            //For men and women, adding enby does not change the orientation (except for bi->pan but that's fine) so it's not part of the total 
+            float EnbyChance()
+            {
+                return gender switch
+                {
+                    //Can't be added to asexual
+                    Gender.Male or Gender.Female => (HeteroChance() + BiChance() + HomoChance()) * chances.enby,
+                    //We're using this to display pan for non-binary, since they don't get enby just added to another orientation
+                    (Gender)3 => chances.men * chances.women * chances.enby,
+                    _ => 0f,
+                };
+            }
+            //This is the chance for an orientation that doesn't have another explicit label, which so far only happens for non-binary
+            float QueerChance()
+            {
+                return gender switch
+                {
+                    (Gender)3 => ((chances.men * chances.notWomen) + (chances.notMen * chances.women)) * chances.enby,
+                    _ => 0f,
+                };
+            }
+
+            TaggedString HeteroChanceLabel() => (romance ? "WBR.HeteroromanticChance" : "WBR.HeterosexualChance").Translate(HeteroChance());
+            TaggedString HeteroChanceTooltip() => (romance ? "WBR.HeteroromanticChanceTip" : "WBR.HeterosexualChanceTip").Translate();
+            TaggedString BiChanceLabel() => (romance ? "WBR.BiromanticChance" : "WBR.BisexualChance").Translate(BiChance());
+            TaggedString BiChanceTooltip() => (romance ? "WBR.BiromanticChanceTip" : "WBR.BisexualComplexChanceTip").Translate();
+            TaggedString HomoChanceLabel() => (romance ? "WBR.HomoromanticChance" : "WBR.HomosexualChance").Translate(HomoChance());
+            TaggedString HomoChanceTooltip() => (romance ? "WBR.HomoromanticChanceTip" : "WBR.HomosexualChanceTip").Translate();
+            TaggedString NoneChanceLabel() => (romance ? "WBR.AromanticChance" : "WBR.AsexualChance").Translate(NoneChance());
+            TaggedString NoneChanceTooltip() => (romance ? "WBR.AromanticComplexTip" : "WBR.AsexualChanceTip").Translate();
+            TaggedString EnbyChanceLabel() => (romance
+                ? gender == (Gender)3 ? "WBR.PanromanticChance" : "WBR.EnbyromanticChance"
+                : gender == (Gender)3 ? "WBR.PansexualChance" : "WBR.EnbysexualChance").Translate(EnbyChance());
+            TaggedString EnbyChanceTooltip() => (romance
+                ? gender == (Gender)3 ? "WBR.PanromanticChanceTooltip" : "WBR.EnbyromanticChanceTip"
+                : gender == (Gender)3 ? "WBR.PansexualChanceTooltip" : "WBR.EnbysexualChanceTip").Translate();
+            TaggedString QueerChanceLabel() => "WBR.QueerChance".Translate(QueerChance());
+            TaggedString QueerChanceTooltip() => "WBR.QueerChanceTooltip".Translate();
         }
 
         private void FertilityModOnClick()
