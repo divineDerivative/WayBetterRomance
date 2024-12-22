@@ -23,6 +23,7 @@ namespace BetterRomance
         public float homo = -999f;
         public float bi = -999f;
         public float none = -999f;
+        public float enby = 10f;
 
         //Use these to roll against Rand.Value
         public float Hetero => hetero / 100f;
@@ -38,6 +39,7 @@ namespace BetterRomance
             homo = other.homo;
             bi = other.bi;
             none = other.none;
+            enby = other.enby;
         }
 
         public bool AreAnyUnset(out string list, bool asexual)
@@ -75,6 +77,7 @@ namespace BetterRomance
             bi = 50f;
             homo = 20f;
             hetero = 20f;
+            enby = 10f;
         }
     }
 
