@@ -41,7 +41,7 @@ namespace BetterRomance
         public bool complex = false;
         public float complexChance = 25f;
         //Placeholder for now until I figure out how I actually want to implement non-binary
-        public float enbyChance = 5f;
+        public float enbyChance = 50f;
 
         //These are not set by the user
         public static bool HARActive = false;
