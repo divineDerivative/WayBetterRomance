@@ -1,6 +1,7 @@
 using DivineFramework;
 using HarmonyLib;
 using RimWorld;
+using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -456,9 +457,22 @@ namespace BetterRomance
             return false;
         }
 
+        public static bool IsEnby(this Pawn pawn) => (int)pawn.gender == 3;
         public static bool HasAnyLovePartnerOfGender(this Pawn pawn, Gender gender)
         {
             return pawn.relations.DirectRelations.Any(x => LovePartnerRelationUtility.IsLovePartnerRelation(x.def) && x.otherPawn.gender == gender);
+        }
+
+        internal static void DiscardPawn(Pawn pawn)
+        {
+            if (pawn.IsWorldPawn())
+            {
+                Find.WorldPawns.RemoveAndDiscardPawnViaGC(pawn);
+            }
+            else
+            {
+                Find.WorldPawns.PassToWorld(pawn, PawnDiscardDecideMode.Discard);
+            }
         }
     }
 

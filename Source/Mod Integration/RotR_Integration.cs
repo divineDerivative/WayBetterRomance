@@ -57,18 +57,6 @@ namespace BetterRomance
         {
             return (string)HelperClasses.RotRPreceptExplanation.Invoke(null, [preceptDef, value]);
         }
-
-        internal static void DiscardPawn(Pawn pawn)
-        {
-            if (pawn.IsWorldPawn())
-            {
-                Find.WorldPawns.RemoveAndDiscardPawnViaGC(pawn);
-            }
-            else
-            {
-                Find.WorldPawns.PassToWorld(pawn, PawnDiscardDecideMode.Discard);
-            }
-        }
     }
 
     namespace HarmonyPatches
@@ -250,7 +238,7 @@ namespace BetterRomance
                 FloatRange range = new(suitor.MinAgeForSex(), suitor.DeclineAtAge() + (suitor.DeclineAtAge() / 6));
                 if (!range.Includes(suitor.ageTracker.AgeBiologicalYearsFloat))
                 {
-                    RotR_Integration.DiscardPawn(suitor);
+                    RomanceUtilities.DiscardPawn(suitor);
                     SuitorRequest.BiologicalAgeRange = range;
                     suitor = PawnGenerator.GeneratePawn(SuitorRequest);
                     if (!suitor.IsWorldPawn())
