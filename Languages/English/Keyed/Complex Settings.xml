@@ -11,4 +11,7 @@
 	<WBR.RomanticOrientationHeadingTip>Each person in the game will have a romantic orientation, which may not be the same as their sexual orientation.</WBR.RomanticOrientationHeadingTip>
 	<WBR.AromanticComplexTip>Uninterested in all romantic engagements. Will not initiate or accept romance attempts. Will participate in sex based on their sexual orientation.</WBR.AromanticComplexTip>
 	<WBR.ComplexWarning>&lt;color="#e50000"&gt;This set up will not work because it does not allow for a gender overlap. It will result in everyone being {0}.&lt;/color&gt;</WBR.ComplexWarning>
+
+	<WBR.ComplexChanceLabel>Chance for a person to have different romantic and sexual orientations: {0}%</WBR.ComplexChanceLabel>
+	<WBR.ComplexChanceTooltip>There must be at least one gender that a person is both sexually and romantically attracted to. This does not include asexual and aromantic, which are not affected by this setting. Even at 100% some people will have matching orientations simply by chance or by applying the overlap rule.</WBR.ComplexChanceTooltip>
 </LanguageData>
