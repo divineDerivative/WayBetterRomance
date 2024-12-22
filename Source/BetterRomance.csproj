@@ -245,6 +245,7 @@
         <Compile Include="RomanceDefOf.cs" />
         <Compile Include="RomanceUtilities.cs" />
         <Compile Include="SettingsUtilities.cs" />
+        <Compile Include="Testing\Tests.cs" />
     </ItemGroup>
     <ItemGroup />
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
