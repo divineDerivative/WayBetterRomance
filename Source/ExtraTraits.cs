@@ -71,10 +71,9 @@ namespace BetterRomance
 
                 if (!comp.ResolveConflicts())
                 {
-                    //LogUtil.Error($"Unable to resolve orientation conflicts for {pawn.LabelShort}");
-                    Testing.Tests.logger.Log($"Unable to resolve orientation conflicts for {pawn.LabelShort}");
-                    Testing.Tests.logger.Log(debugString);
-                    Testing.Tests.logger.Log($"Gender: {pawn.gender}, Sexual: {comp.sexual.Prefix()}, Romantic: {comp.romantic.Prefix()}");
+                    LogUtil.Error($"Unable to resolve orientation conflicts for {pawn.LabelShort}");
+                    LogUtil.Message(debugString);
+                    LogUtil.Message($"Gender: {pawn.gender}, Sexual: {comp.sexual.Prefix()}, Romantic: {comp.romantic.Prefix()}");
                 }
 
                 void RollSexualOrientation()
@@ -114,8 +113,8 @@ namespace BetterRomance
                     float total = asexualChance + bisexualChance + homosexualChance + heterosexualChance;
                     if (total == 0f)
                     {
-                        //LogUtil.Error($"No valid sexual orientations");
-                        Testing.Tests.logger.Log($"No valid sexual orientations");
+                        LogUtil.Error($"No valid sexual orientations");
+                    }
                     //Roll for sexual orientation
                     float sexualOrientation = Rand.Range(0f, total);
 
