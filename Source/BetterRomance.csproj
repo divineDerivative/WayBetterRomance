@@ -241,9 +241,10 @@
     <Compile Include="RomanceDefOf.cs" />
     <Compile Include="RomanceUtilities.cs" />
     <Compile Include="SettingsUtilities.cs" />
-    <Compile Include="Testing\Tests.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Testing\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>call "$(SolutionDir)..\DivineFramework\PostBuild.bat" "$(TargetName)"</PostBuildEvent>
