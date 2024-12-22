@@ -148,16 +148,14 @@ namespace BetterRomance
             }
         }
 
-        internal SettingsHandler<Settings> regularHandler = new(true);
+        internal SettingsHandler<Settings> regularHandler;
         internal TabbedHandler<Settings> complexHandler;
         internal SettingsHandler<Settings> miscHandler;
         internal SettingsHandler<Settings> sexualHandler;
         internal SettingsHandler<Settings> romanticHandler;
 
-        internal void SetUpRegularHandler(Listing_Standard listing)
+        internal void SetUpRegularHandler()
         {
-            regularHandler.width = listing.ColumnWidth;
-
             //Sexual orientation
             regularHandler.RegisterNewRow("Sexual Orientation Heading row")
                 .AddLabel("WBR.OrientationHeading".Translate)
@@ -210,8 +208,6 @@ namespace BetterRomance
                 .Add(NewElement.Checkbox()
                 .WithReference(this, nameof(debugLogging), debugLogging)
                 .WithLabel(() => "Enable dev logging"));
-
-            regularHandler.Initialize();
         }
 
         internal void SetUpChanceSection(UISection section, bool romance)
@@ -440,7 +436,7 @@ namespace BetterRomance
             }
 
             romanticHandler.RegisterNewRow()
-                .AddElement(NewElement.Button(() => complex = !complex)
+                .Add(NewElement.Button(() => complex = !complex)
                 .WithLabel(() => complex ? "Simplify it" : "Let's make it complicated"));
 
             //Orientation equivalence
@@ -520,14 +516,15 @@ namespace BetterRomance
                 .RoundTo(0));
             //Cheat opinion range
             miscHandler.RegisterNewRow()
+                .HideWhen(() => cheatChance == 0f)
                 .AddLabel("WBR.CheatingOpinionRange".Translate)
-                .WithTooltip("WBR.CheatingOpinionRangeTip".Translate)
-                .HideWhen(() => cheatChance == 0f);
+                .WithTooltip("WBR.CheatingOpinionRangeTip".Translate);
+            //HideWhen is in the wrong spot, it's hiding the element, not the row
             miscHandler.RegisterNewRow()
+                .HideWhen(() => cheatChance == 0f)
                 .Add(NewElement.Range<IntRange, int>(5)
                 .WithReference(this, nameof(cheatingOpinion), cheatingOpinion)
-                .MinMax(-100, 100)
-                .HideWhen(() => cheatChance == 0f), "CheatOpinionRange");
+                .MinMax(-100, 100), "CheatOpinionRange");
 
             miscHandler.AddGap();
             miscHandler.RegisterNewRow().AddResetButton(regularHandler);
@@ -771,7 +768,12 @@ namespace BetterRomance
             Listing_ScrollView outerList = new();
             Listing_Standard list = new();
             Settings.AutoDetectFertilityMod();
+            settings.regularHandler ??= new(true, settings.SetUpRegularHandler);
 
+            if (!settings.regularHandler.Initialized)
+            {
+                settings.regularHandler.SetUp();
+            }
             if (settings.complex)
             {
                 //Need to figure out where to display the complex chance slider and warning
@@ -785,10 +787,6 @@ namespace BetterRomance
             {
                 list = outerList.BeginScrollView(canvas, scrollViewHeight, ref scrollPos);
                 list.ColumnWidth = (canvas.width / 2f) - GenUI.ScrollBarWidth - padding;
-                if (!settings.regularHandler.Initialized)
-                {
-                    settings.SetUpRegularHandler(list);
-                }
                 settings.regularHandler.Draw(list);
             }
 
