@@ -1,15 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 	<WBR.SexualOrientationHeadingTip>Each person in the game will have a sexual orientation. This is for determining sexual attraction only.</WBR.SexualOrientationHeadingTip>
-	<WBR.HeterosexualChance>Heterosexual: {0}%</WBR.HeterosexualChance>
+	<WBR.HeterosexualChance>Heterosexual: {0_percentage}</WBR.HeterosexualChance>
 	<WBR.HeterosexualChanceTip>Sexually interested only in opposite-gender partners</WBR.HeterosexualChanceTip>
 	<WBR.BisexualComplexChanceTip>Sexually interested in both men and women</WBR.BisexualComplexChanceTip>
-	<WBR.HomosexualChance>Homosexual: {0}%</WBR.HomosexualChance>
+	<WBR.HomosexualChance>Homosexual: {0_percentage}</WBR.HomosexualChance>
 	<WBR.HomosexualChanceTip>Sexually interested only in same-gender partners</WBR.HomosexualChanceTip>
+	<WBR.EnbysexualChance>Non-binary: {0_percentage}</WBR.EnbysexualChance>
+	<WBR.EnbysexualChanceTip>Non-binary attraction can be added to any orientation other than asexual.</WBR.EnbysexualChanceTip>
 
 	<WBR.RomanticOrientationHeading>Romantic Orientation Chances</WBR.RomanticOrientationHeading>
 	<WBR.RomanticOrientationHeadingTip>Each person in the game will have a romantic orientation, which may not be the same as their sexual orientation.</WBR.RomanticOrientationHeadingTip>
 	<WBR.AromanticComplexTip>Uninterested in all romantic engagements. Will not initiate or accept romance attempts. Will participate in sex based on their sexual orientation.</WBR.AromanticComplexTip>
+	<WBR.EnbyromanticChance>Non-binary: {0_percentage}</WBR.EnbyromanticChance>
+	<WBR.EnbyromanticChanceTip>Non-binary attraction can be added to any orientation other than aromantic.</WBR.EnbyromanticChanceTip>
+
+	<!--Show pan instead of enby for non-binary, since enby only would just be homo-->
+	<!--Think about if I want to do that, and if it should be also be added to the men/women sections-->
+	<WBR.PansexualChance>Pansexual: {0_percentage}</WBR.PansexualChance>
+	<WBR.PansexualChanceTooltip>Sexually interested in anyone regardless of gender.</WBR.PansexualChanceTooltip>
+	<WBR.PanromanticChance>Panromantic: {0_percentage}</WBR.PanromanticChance>
+	<WBR.PanromanticChanceTooltip>Romantically interested in anyone regardless of gender.</WBR.PanromanticChanceTooltip>
+	<WBR.QueerChance>Queer: {0_percentage}</WBR.QueerChance>
+	<WBR.QueerChanceTooltip>Any combination that does not result in one of the orientations listed above.</WBR.QueerChanceTooltip>
+	
 	<WBR.ComplexWarning>&lt;color="#e50000"&gt;This set up will not work because it does not allow for a gender overlap. It will result in everyone being {0}.&lt;/color&gt;</WBR.ComplexWarning>
 
 	<WBR.ComplexChanceLabel>Chance for a person to have different romantic and sexual orientations: {0}%</WBR.ComplexChanceLabel>

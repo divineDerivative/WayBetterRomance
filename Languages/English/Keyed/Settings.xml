@@ -3,24 +3,24 @@
 	<WBR.WayBetterRomance>Way Better Romance</WBR.WayBetterRomance>
 	<WBR.OrientationHeading>Sexual Orientation Chances</WBR.OrientationHeading>
 	<WBR.OrientationHeadingTip>Each person in the game will be either straight, bisexual, gay, or asexual. The sliders below allow you to determine the relative commonality of each of those orientations.</WBR.OrientationHeadingTip>
-	<WBR.StraightChance>Straight: {0}%</WBR.StraightChance>
+	<WBR.StraightChance>Straight: {0_percentage}</WBR.StraightChance>
 	<WBR.StraightChanceTip>Romantically and sexually interested only in opposite-gender partners</WBR.StraightChanceTip>
-	<WBR.BisexualChance>Bisexual: {0}%</WBR.BisexualChance>
+	<WBR.BisexualChance>Bisexual: {0_percentage}</WBR.BisexualChance>
 	<WBR.BisexualChanceTip>Romantically and sexually interested in both men and women</WBR.BisexualChanceTip>
-	<WBR.GayChance>Gay: {0}%</WBR.GayChance>
+	<WBR.GayChance>Gay: {0_percentage}</WBR.GayChance>
 	<WBR.GayChanceTip>Romantically and sexually interested only in same-gender partners</WBR.GayChanceTip>
-	<WBR.AsexualChance>Asexual: {0}%</WBR.AsexualChance>
+	<WBR.AsexualChance>Asexual: {0_percentage}</WBR.AsexualChance>
 	<WBR.AsexualChanceTip>Uninterested in initiating sexual engagements. Asexual people have a rating for how sex repulsed they are and will agree to sex based on their rating. Their feelings about these encounters can be negative if the rating is low enough.</WBR.AsexualChanceTip>
 
 	<WBR.AceOrientationHeading>Asexual Romantic Orientation Chances</WBR.AceOrientationHeading>
 	<WBR.AceOrientationHeadingTip>Asexual people will be assigned a romantic orientation using the settings below.</WBR.AceOrientationHeadingTip>
-	<WBR.HeteroromanticChance>Heteroromantic: {0}%</WBR.HeteroromanticChance>
+	<WBR.HeteroromanticChance>Heteroromantic: {0_percentage}</WBR.HeteroromanticChance>
 	<WBR.HeteroromanticChanceTip>Romantically interested only in opposite-gender partners</WBR.HeteroromanticChanceTip>
-	<WBR.BiromanticChance>Biromantic: {0}%</WBR.BiromanticChance>
+	<WBR.BiromanticChance>Biromantic: {0_percentage}</WBR.BiromanticChance>
 	<WBR.BiromanticChanceTip>Romantically interested in both men and women</WBR.BiromanticChanceTip>
-	<WBR.HomoromanticChance>Homoromantic: {0}%</WBR.HomoromanticChance>
+	<WBR.HomoromanticChance>Homoromantic: {0_percentage}</WBR.HomoromanticChance>
 	<WBR.HomoromanticChanceTip>Romantically interested only in same-gender partners</WBR.HomoromanticChanceTip>
-	<WBR.AromanticChance>Aromantic: {0}%</WBR.AromanticChance>
+	<WBR.AromanticChance>Aromantic: {0_percentage}</WBR.AromanticChance>
 	<WBR.AromanticChanceTip>Uninterested in all romantic engagements. They will behave similar to asexual people in vanilla.</WBR.AromanticChanceTip>
 
 	<WBR.OtherHeading>Other Settings</WBR.OtherHeading>
