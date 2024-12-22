@@ -104,6 +104,15 @@ namespace BetterRomance
             women = 0.5f;
             enby = 0.25f;
         }
+
+        public void ExposeData(Gender gender, bool romance)
+        {
+            //Depending on mod order, (Gender)3 might not resolve to Enby the first time this is called
+            string genderString = (gender == (Gender)3) ? "Enby" : gender.ToString();
+            Scribe_Values.Look(ref men, $"{genderString}{(romance ? "Romantic" : "Sexual")}AttractionToMen", 0.5f);
+            Scribe_Values.Look(ref women, $"{genderString}{(romance ? "Romantic" : "Sexual")}AttractionToWomen", 0.5f);
+            Scribe_Values.Look(ref enby, $"{genderString}{(romance ? "Romantic" : "Sexual")}AttractionToEnby", 0.25f);
+        }
     }
 
     public class CompSettingsCasualSexRace
