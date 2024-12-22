@@ -16,6 +16,7 @@ namespace BetterRomance
             homo = 20f,
             bi = 50f,
             none = 10f,
+            enby = 10f,
         };
         public OrientationChances romanticOrientations = new()
         {
@@ -23,6 +24,7 @@ namespace BetterRomance
             homo = 20f,
             bi = 50f,
             none = 10f,
+            enby = 10f,
         };
         //Do I need separate objects for the complex chances?
 
@@ -40,8 +42,6 @@ namespace BetterRomance
         public bool joyOnGuests = false;
         public bool complex = false;
         public float complexChance = 25f;
-        //Placeholder for now until I figure out how I actually want to implement non-binary
-        public float enbyChance = 50f;
 
         //These are not set by the user
         public static bool HARActive = false;
