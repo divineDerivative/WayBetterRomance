@@ -69,6 +69,31 @@ namespace BetterRomance
                 };
             }
 
+            internal string Prefix()
+            {
+                if (Pan)
+                {
+                    return "WBR.PanPrefix".Translate();
+                }
+                if (None)
+                {
+                    return "WBR.NonePrefix".Translate();
+                }
+                if (Bi)
+                {
+                    return "WBR.BiPrefix".Translate();
+                }
+                if (Gay)
+                {
+                    return "WBR.HomoPrefix".Translate();
+                }
+                if (Straight)
+                {
+                    return "WBR.HeteroPrefix".Translate();
+                }
+                return "Queer";
+            }
+
             public void ExposeData(bool romance)
             {
                 Scribe_Values.Look(ref men, $"{(romance ? "romantically" : "sexually")}AttractedToMen", false);
@@ -290,41 +315,14 @@ namespace BetterRomance
             {
                 return "WBR.Straight".Translate();
             }
-            string sexualPrefix = Prefix(sexual);
-            string romanticPrefix = Prefix(romantic);
-            string sexualString = sexualPrefix + "WBR.Sexual".Translate();
-            string romanticString = romanticPrefix + "WBR.Romantic".Translate();
+            string sexualPrefix = sexual.Prefix();
+            string romanticPrefix = romantic.Prefix();
             if (sexualPrefix == romanticPrefix)
             {
                 return sexualString;
             }
 
             return $"{sexualString}\\{romanticString}";
-        }
-
-        private string Prefix(AttractionVars type)
-        {
-            if (type.Pan)
-            {
-                return "WBR.PanPrefix".Translate();
-            }
-            if (type.None)
-            {
-                return "WBR.NonePrefix".Translate();
-            }
-            if (type.Bi)
-            {
-                return "WBR.BiPrefix".Translate();
-            }
-            if (type.Gay)
-            {
-                return "WBR.HomoPrefix".Translate();
-            }
-            if (type.Straight)
-            {
-                return "WBR.HeteroPrefix".Translate();
-            }
-            return string.Empty;
         }
 
         /// <summary>
