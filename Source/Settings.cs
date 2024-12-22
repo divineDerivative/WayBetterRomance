@@ -11,6 +11,7 @@ namespace BetterRomance
 {
     public class Settings : ModSettings
     {
+        //Settings for non-complex orientations
         public OrientationChances sexualOrientations = new()
         {
             hetero = 20f,
@@ -27,7 +28,22 @@ namespace BetterRomance
             none = 10f,
             enby = 10f,
         };
-        //Do I need separate objects for the complex chances?
+
+        //Per gender chances, to be used for display only I think
+        public GenderAttractionChances sexualAttractionForMen = new();
+        public GenderAttractionChances sexualAttrationForWomen = new();
+        public GenderAttractionChances sexualAttractionForEnby = new();
+        public GenderAttractionChances romanticAttractionForMen = new();
+        public GenderAttractionChances romanticAttrationForWomen = new();
+        public GenderAttractionChances romanticAttractionForEnby = new();
+
+        //Orientation equivalents of the above, to be used in the code
+        public OrientationChances sexualOrientationForMen = new();
+        public OrientationChances sexualOrientationForWomen = new();
+        public OrientationChances sexualOrientationForEnby = new();
+        public OrientationChances romanticOrientationForMen = new();
+        public OrientationChances romanticOrientationForWomen = new();
+        public OrientationChances romanticOrientationForEnby = new();
 
         public float dateRate = 100f;
         public float hookupRate = 100f;
@@ -74,6 +90,14 @@ namespace BetterRomance
             Scribe_Values.Look(ref romanticOrientations.bi, "biromanticChance", 50.0f);
             Scribe_Values.Look(ref romanticOrientations.homo, "homoromanticChance", 20.0f);
             Scribe_Values.Look(ref romanticOrientations.hetero, "heteroromanticChance", 20.0f);
+
+            //Gender attraction
+            sexualAttractionForMen.ExposeData(Gender.Male, false);
+            sexualAttrationForWomen.ExposeData(Gender.Female, false);
+            sexualAttractionForEnby.ExposeData((Gender)3, false);
+            romanticAttractionForMen.ExposeData(Gender.Male, true);
+            romanticAttrationForWomen.ExposeData(Gender.Female, true);
+            romanticAttractionForEnby.ExposeData((Gender)3, true);
 
             Scribe_Values.Look(ref dateRate, "dateRate", 100.0f);
             Scribe_Values.Look(ref hookupRate, "hookupRate", 100.0f);
