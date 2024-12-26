@@ -24,8 +24,28 @@
 	<WBR.QueerChance>Queer: {0_percentage}</WBR.QueerChance>
 	<WBR.QueerChanceTooltip>Any combination that does not result in one of the orientations listed above.</WBR.QueerChanceTooltip>
 	
+	<!--simplify/complicated it-->
+	<WBR.Simplify>Simplify it</WBR.Simplify>
+	<WBR.Complicated>Let's make it complicated</WBR.Complicated>
+	
 	<WBR.ComplexWarning>&lt;color="#e50000"&gt;This set up will not work because it does not allow for a gender overlap. It will result in everyone being {0}.&lt;/color&gt;</WBR.ComplexWarning>
 
 	<WBR.ComplexChanceLabel>Chance for a person to have different romantic and sexual orientations: {0}%</WBR.ComplexChanceLabel>
 	<WBR.ComplexChanceTooltip>There must be at least one gender that a person is both sexually and romantically attracted to. This does not include asexual and aromantic, which are not affected by this setting. Even at 100% some people will have matching orientations simply by chance or by applying the overlap rule.</WBR.ComplexChanceTooltip>
+	
+	<WBR.SexualTab>Sexual</WBR.SexualTab>
+	<WBR.RomanticTab>Romantic</WBR.RomanticTab>
+	<WBR.MiscTab>Misc</WBR.MiscTab>
+	<WBR.SexualAttractionMen>Sexual attraction for men:</WBR.SexualAttractionMen>
+	<WBR.SexualAttractionWomen>Sexual attraction for women:</WBR.SexualAttractionWomen>
+	<WBR.SexualAttractionEnby>Sexual attraction for non-binary:</WBR.SexualAttractionEnby>
+	<WBR.SexualOrientationEquivalent>Sexual orientation equivalent</WBR.SexualOrientationEquivalent>
+	<WBR.RomanticAttractionMen>Romantic attraction for men:</WBR.RomanticAttractionMen>
+	<WBR.RomanticAttractionWomen>Romantic attraction for women:</WBR.RomanticAttractionWomen>
+	<WBR.RomanticAttractionEnby>Romantic attraction for non-binary:</WBR.RomanticAttractionEnby>
+	<WBR.RomanticOrientationEquivalent>Romantic orientation equivalent</WBR.RomanticOrientationEquivalent>
+
+	<WBR.Men>Men: {0_percentage}</WBR.Men>
+	<WBR.Women>Women: {0_percentage}</WBR.Women>
+	<WBR.NonBinary>Non-binary: {0_percentage}</WBR.NonBinary>
 </LanguageData>
