@@ -177,6 +177,11 @@
         <Compile Include="Orientation Comp\Comp_Orientation.cs" />
         <Compile Include="Orientation Comp\TraitDegreeData.cs" />
         <Compile Include="Orientation Comp\CharacterCardUtility.cs" />
+        <Compile Include="Settings Page\BetterRomanceMod.cs" />
+        <Compile Include="Settings Page\Complex Settings.cs" />
+        <Compile Include="Settings Page\Gender Chances.cs" />
+        <Compile Include="Settings Page\Regular Settings.cs" />
+        <Compile Include="Settings Page\Shared.cs" />
         <Compile Include="Sex Repulsion\Comp_SexRepulsion.cs" />
         <Compile Include="CustomLoveRelationUtility.cs" />
         <Compile Include="Harmony\Biotech\RitualOutcomeComp_PawnAge.cs" />
@@ -210,7 +215,6 @@
         <Compile Include="Harmony\TraitSet.cs" />
         <Compile Include="HookupUtility.cs" />
         <Compile Include="Settings Comp\RaceSettings.cs" />
-        <Compile Include="Settings.cs" />
         <Compile Include="Orientation Comp\Trait.cs" />
         <Compile Include="OrientationUtility.cs" />
         <Compile Include="Sex Repulsion\StatPart_Asexual.cs" />
