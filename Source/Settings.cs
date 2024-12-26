@@ -346,9 +346,9 @@ namespace BetterRomance
             sexualHandler ??= new(true, SetUpSexualHandler);
             romanticHandler ??= new(true, SetUpRomanticHandler);
             miscHandler ??= new(true, SetUpMiscHandler);
-            complexHandler.AddTab(sexualHandler, "Sexual");
-            complexHandler.AddTab(romanticHandler, "Romantic");
-            complexHandler.AddTab(miscHandler, "Misc");
+            complexHandler.AddTab(sexualHandler, "WBR.SexualTab".Translate());
+            complexHandler.AddTab(romanticHandler, "WBR.RomanticTab".Translate());
+            complexHandler.AddTab(miscHandler, "WBR.MiscTab".Translate());
             ////Complex stuff
             //regularHandler.RegisterNewRow("ComplexChanceLabel")
             //    .HideWhen(() => !complex)
@@ -375,7 +375,7 @@ namespace BetterRomance
         private UIButtonText ComplexButton()
         {
             return NewElement.Button(() => complex = !complex)
-                .WithLabel(() => complex ? "Simplify it" : "Let's make it complicated");
+                .WithLabel(() => (complex ? "WBR.Simplify" : "WBR.Complicated").Translate());
         }
 
         UILabel sexualEquivalentLabel;
@@ -385,17 +385,17 @@ namespace BetterRomance
             sexualHandler.Clear();
             //Gender attraction sections
             sexualHandler.RegisterNewRow()
-                .AddLabel(() => $"Sexual attraction for men:");
+                .AddLabel("WBR.SexualAttractionMen".Translate);
             SetUpGenderChanceSection(sexualHandler.RegisterNewSection(sectionBorder: 6f), Gender.Male, false);
 
             sexualHandler.RegisterNewRow()
-                .AddLabel(() => $"Sexual attraction for women:");
+                .AddLabel("WBR.SexualAttractionWomen".Translate);
             SetUpGenderChanceSection(sexualHandler.RegisterNewSection(sectionBorder: 6f), Gender.Female, false);
 
             if (NonBinaryActive)
             {
                 sexualHandler.RegisterNewRow()
-                    .AddLabel(() => $"Sexual attraction for non-binary:");
+                    .AddLabel("WBR.SexualAttractionEnby".Translate);
                 SetUpGenderChanceSection(sexualHandler.RegisterNewSection(sectionBorder: 6f), (Gender)3, false);
             }
 
@@ -403,7 +403,7 @@ namespace BetterRomance
                 .Add(ComplexButton());
 
             //Orientation equivalence
-            sexualEquivalentLabel ??= NewElement.Label(() => "Sexual orientation equivalent")
+            sexualEquivalentLabel ??= NewElement.Label("WBR.SexualOrientationEquivalent".Translate)
                 .WithTooltip("WBR.SexualOrientationHeadingTip".Translate);
 
             sexualHandler.RegisterNewRow(newColumn: true)
@@ -429,17 +429,17 @@ namespace BetterRomance
             romanticHandler.Clear();
             //Gender attraction sections
             romanticHandler.RegisterNewRow()
-                .AddLabel(() => $"Romantic attraction for men:");
+                .AddLabel("WBR.RomanticAttractionMen".Translate);
             SetUpGenderChanceSection(romanticHandler.RegisterNewSection(sectionBorder: 6f), Gender.Male, true);
 
             romanticHandler.RegisterNewRow()
-                .AddLabel(() => $"Romantic attraction for women:");
+                .AddLabel("WBR.RomanticAttractionWomen".Translate);
             SetUpGenderChanceSection(romanticHandler.RegisterNewSection(sectionBorder: 6f), Gender.Female, true);
 
             if (NonBinaryActive)
             {
                 romanticHandler.RegisterNewRow()
-                    .AddLabel(() => $"Romantic attraction for non-binary:");
+                    .AddLabel("WBR.RomanticAttractionEnby".Translate);
                 SetUpGenderChanceSection(romanticHandler.RegisterNewSection(sectionBorder: 6f), (Gender)3, true);
             }
 
@@ -447,7 +447,7 @@ namespace BetterRomance
                 .Add(ComplexButton());
 
             //Orientation equivalence
-            romanticEquivalentLabel ??= NewElement.Label(() => "Romantic orientation equivalent")
+            romanticEquivalentLabel ??= NewElement.Label("WBR.RomanticOrientationEquivalent".Translate)
                 .WithTooltip("WBR.RomanticOrientationHeadingTip".Translate);
 
             romanticHandler.RegisterNewRow(newColumn: true)
@@ -585,17 +585,19 @@ namespace BetterRomance
         {
             var handler = romance ? romanticHandler : sexualHandler;
             GenderAttractionChances chances = GenderToChances(gender, romance);
-            section.AddLabel(() => $"Men: {chances.men * 100f}%");
+            section.AddLabel(() => "WBR.Men".Translate(chances.men));
             section.Add(NewElement.Slider<float>()
                 .MinMax(0f, 1f)
                 .WithReference(chances, nameof(chances.men), chances.men));
-            section.AddLabel(() => $"Women: {chances.women * 100f}%");
+
+            section.AddLabel(() => "WBR.Women".Translate(chances.women));
             section.Add(NewElement.Slider<float>()
                 .MinMax(0f, 1f)
                 .WithReference(chances, nameof(chances.women), chances.women));
+
             if (NonBinaryActive)
             {
-                section.AddLabel(() => $"Non-Binary: {chances.enby * 100f}%");
+                section.AddLabel(() => "WBR.NonBinary".Translate(chances.enby));
                 section.Add(NewElement.Slider<float>()
                     .MinMax(0f, 1f)
                     .WithReference(chances, nameof(chances.enby), chances.enby));
@@ -606,15 +608,15 @@ namespace BetterRomance
             if (gender != Gender.Male)
             {
                 buttonRow.Add(NewElement.Button(() => chances.CopyFrom(GenderToChances(gender - 1, romance)))
-                .WithLabel("WBR.MatchAboveButton".Translate));
+                    .WithLabel("WBR.MatchAboveButton".Translate));
             }
             if (gender != (NonBinaryActive ? (Gender)3 : Gender.Female))
             {
                 buttonRow.Add(NewElement.Button(() => chances.CopyFrom(GenderToChances(gender + 1, romance)))
-                .WithLabel("WBR.MatchBelowButton".Translate));
+                    .WithLabel("WBR.MatchBelowButton".Translate));
             }
             buttonRow.Add(NewElement.Button(chances.Reset)
-                .WithLabel(() => "Reset"));
+                .WithLabel("Reset".Translate));
             handler.AddGap();
         }
 
