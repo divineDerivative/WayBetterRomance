@@ -168,6 +168,7 @@
     <Compile Include="Mod Integration\Pawnmorpher_Integration.cs" />
     <Compile Include="Orientation Classes\GenderAttractionChances.cs" />
     <Compile Include="Orientation Classes\OrientationChances.cs" />
+    <Compile Include="Orientation Classes\OrientationHolder.cs" />
     <Compile Include="Settings Comp\CompSettingsClasses.cs" />
     <Compile Include="Settings Comp\Comp_WBRSettings.cs" />
     <Compile Include="Harmony\ThinkNode_ChancePerHour_Lovin.cs" />

@@ -45,6 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed Strings", "Keyed Stri
 		Languages\English\Keyed\OrientationComp.xml = Languages\English\Keyed\OrientationComp.xml
 		Languages\English\Keyed\Other.xml = Languages\English\Keyed\Other.xml
 		Languages\English\Keyed\Settings.xml = Languages\English\Keyed\Settings.xml
+		Languages\English\Keyed\Shared.xml = Languages\English\Keyed\Shared.xml
 	EndProjectSection
 EndProject
 Global
