@@ -36,16 +36,13 @@
 	<WBR.SexualTab>Sexual</WBR.SexualTab>
 	<WBR.RomanticTab>Romantic</WBR.RomanticTab>
 	<WBR.MiscTab>Misc</WBR.MiscTab>
-	<WBR.SexualAttractionMen>Sexual attraction for men</WBR.SexualAttractionMen>
-	<WBR.SexualAttractionWomen>Sexual attraction for women</WBR.SexualAttractionWomen>
-	<WBR.SexualAttractionEnby>Sexual attraction for non-binary</WBR.SexualAttractionEnby>
+	<WBR.SexualAttractionHeading>Sexual attraction for {0}</WBR.SexualAttractionHeading>
 	<WBR.SexualOrientationEquivalent>Sexual orientation equivalent</WBR.SexualOrientationEquivalent>
-	<WBR.RomanticAttractionMen>Romantic attraction for men</WBR.RomanticAttractionMen>
-	<WBR.RomanticAttractionWomen>Romantic attraction for women</WBR.RomanticAttractionWomen>
-	<WBR.RomanticAttractionEnby>Romantic attraction for non-binary</WBR.RomanticAttractionEnby>
+	<WBR.RomanticAttractionHeading>Romantic attraction for {0}</WBR.RomanticAttractionHeading>
 	<WBR.RomanticOrientationEquivalent>Romantic orientation equivalent</WBR.RomanticOrientationEquivalent>
+	<WBR.OrientationsFor>Orientations for {0}</WBR.OrientationsFor>
 
-	<WBR.Men>Men: {0_percentage}</WBR.Men>
-	<WBR.Women>Women: {0_percentage}</WBR.Women>
-	<WBR.NonBinary>Non-binary: {0_percentage}</WBR.NonBinary>
+	<WBR.MenPercentage>Men: {0_percentage}</WBR.MenPercentage>
+	<WBR.WomenPercentage>Women: {0_percentage}</WBR.WomenPercentage>
+	<WBR.NonBinaryPercentage>Non-binary: {0_percentage}</WBR.NonBinaryPercentage>
 </LanguageData>
