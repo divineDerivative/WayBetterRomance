@@ -14,10 +14,9 @@ namespace BetterRomance
     public class OrientationHolder : IExposable
     {
         public OrientationChances standardOrientation = new();
-        //Don't initialize these because it starts with -999f and that bloats the config file
-        public OrientationChances orientationForMen;
-        public OrientationChances orientationForWomen;
-        public OrientationChances orientationForEnby;
+        public OrientationChances orientationForMen = new();
+        public OrientationChances orientationForWomen = new();
+        public OrientationChances orientationForEnby = new();
 
         public GenderAttractionChances attractionForMen = new();
         public GenderAttractionChances attractionForWomen = new();
