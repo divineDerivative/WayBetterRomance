@@ -109,6 +109,9 @@ namespace BetterRomance
                 Scribe_Values.Look(ref sexualOrientations.standardOrientation.bi, "bisexualChance", 50.0f);
                 Scribe_Values.Look(ref sexualOrientations.standardOrientation.homo, "gayChance", 20.0f);
                 Scribe_Values.Look(ref sexualOrientations.standardOrientation.hetero, "straightChance", 20.0f);
+                sexualOrientations.orientationForMen.CopyFrom(sexualOrientations.standardOrientation);
+                sexualOrientations.orientationForWomen.CopyFrom(sexualOrientations.standardOrientation);
+                sexualOrientations.orientationForEnby.CopyFrom(sexualOrientations.standardOrientation);
             }
             Scribe_Deep.Look(ref romanticOrientations, "romanticOrientations");
             if (romanticOrientations is null)
@@ -118,6 +121,9 @@ namespace BetterRomance
                 Scribe_Values.Look(ref romanticOrientations.standardOrientation.bi, "biromanticChance", 50.0f);
                 Scribe_Values.Look(ref romanticOrientations.standardOrientation.homo, "homoromanticChance", 20.0f);
                 Scribe_Values.Look(ref romanticOrientations.standardOrientation.hetero, "heteroromanticChance", 20.0f);
+                romanticOrientations.orientationForMen.CopyFrom(romanticOrientations.standardOrientation);
+                romanticOrientations.orientationForWomen.CopyFrom(romanticOrientations.standardOrientation);
+                romanticOrientations.orientationForEnby.CopyFrom(romanticOrientations.standardOrientation);
             }
 
             Scribe_Values.Look(ref dateRate, "dateRate", 100.0f);
