@@ -46,11 +46,10 @@ namespace BetterRomance
         internal void SetUpSexualHandler()
         {
             sexualHandler.Clear();
-
             //Gender attraction sections
-            sexualHandler.AddContainer(new ComplexOrientationDisplay(Gender.Male, false), "OrientationTabSexualMen");
-            sexualHandler.AddContainer(new ComplexOrientationDisplay(Gender.Female, false), "OrientationTabSexualWomen");
-            sexualHandler.AddContainer(new ComplexOrientationDisplay((Gender)3, false), "OrientationTabSexualEnby");
+            sexualHandler.AddContainer(new ComplexOrientationDisplay(Gender.Male, false, this), "OrientationTabSexualMen");
+            sexualHandler.AddContainer(new ComplexOrientationDisplay(Gender.Female, false, this), "OrientationTabSexualWomen");
+            sexualHandler.AddContainer(new ComplexOrientationDisplay((Gender)3, false, this), "OrientationTabSexualEnby");
 
             sexualHandler.RegisterNewRow()
                 .Add(ComplexButton());
@@ -80,10 +79,9 @@ namespace BetterRomance
         {
             romanticHandler.Clear();
             //Gender attraction sections
-            //Gender attraction sections
-            romanticHandler.AddContainer(new ComplexOrientationDisplay(Gender.Male, true), "OrientationTabSexualMen");
-            romanticHandler.AddContainer(new ComplexOrientationDisplay(Gender.Female, true), "OrientationTabSexualWomen");
-            romanticHandler.AddContainer(new ComplexOrientationDisplay((Gender)3, true), "OrientationTabSexualEnby");
+            romanticHandler.AddContainer(new ComplexOrientationDisplay(Gender.Male, true, this), "OrientationTabSexualMen");
+            romanticHandler.AddContainer(new ComplexOrientationDisplay(Gender.Female, true, this), "OrientationTabSexualWomen");
+            romanticHandler.AddContainer(new ComplexOrientationDisplay((Gender)3, true, this), "OrientationTabSexualEnby");
 
             romanticHandler.RegisterNewRow()
                 .Add(ComplexButton());
