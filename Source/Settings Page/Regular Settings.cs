@@ -64,7 +64,7 @@ namespace BetterRomance
 
         internal void SetUpChanceSection(UISection section, bool romance)
         {
-            OrientationChances chances = romance ? romanticOrientations : sexualOrientations;
+            OrientationChances chances = romance ? romanticOrientations.standardOrientation : sexualOrientations.standardOrientation;
             //Hetero
             section.AddLabel(HeteroChance)
                 .WithTooltip(HeteroChanceTooltip);
@@ -92,7 +92,7 @@ namespace BetterRomance
             //Buttons
             regularHandler.AddGap(8f);
             UIContainer buttonRow = regularHandler.RegisterNewRow(gap: 0f);
-            buttonRow.Add(NewElement.Button(() => chances.CopyFrom(romance ? sexualOrientations : romanticOrientations))
+            buttonRow.Add(NewElement.Button(() => chances.CopyFrom(romance ? sexualOrientations.standardOrientation : romanticOrientations.standardOrientation))
                 .WithLabel((romance ? "WBR.MatchAboveButton" : "WBR.MatchBelowButton").Translate));
             buttonRow.Add(NewElement.Button(chances.Reset)
                 .WithLabel("RestoreToDefaultSettings".Translate));

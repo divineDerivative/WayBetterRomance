@@ -42,8 +42,8 @@ namespace BetterRomance
                 //Grab or create the comp
                 Comp_Orientation comp = pawn.CheckForComp<Comp_Orientation>();
                 //Grab the relevant orientation objects
-                OrientationChances sexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.sexual ?? BetterRomanceMod.settings.sexualOrientations;
-                OrientationChances romanticChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.asexual ?? BetterRomanceMod.settings.romanticOrientations;
+                OrientationChances sexualChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.sexual ?? BetterRomanceMod.settings.sexualOrientations.standardOrientation;
+                OrientationChances romanticChances = pawn.TryGetComp<WBR_SettingsComp>().orientation?.asexual ?? BetterRomanceMod.settings.romanticOrientations.standardOrientation;
 
                 //Check for existing partners first
                 bool mustLikeMen = pawn.HasAnyLovePartnerOfGender(Gender.Male);
@@ -84,7 +84,7 @@ namespace BetterRomance
                     float homosexualChance = sexualChances.Homo;
                     float heterosexualChance = sexualChances.Hetero;
 
-                    float enbychance = Settings.NonBinaryActive ? (BetterRomanceMod.settings.enbyChance / 100f) : 0f;
+                    float enbychance = Settings.NonBinaryActive ? (sexualChances.enby / 100f) : 0f;
 
                     if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
                     {
@@ -203,7 +203,7 @@ namespace BetterRomance
                     float homoromanticChance = romanticChances.Homo;
                     float heteroromanticChance = romanticChances.Hetero;
 
-                    float enbychance = Settings.NonBinaryActive ? (BetterRomanceMod.settings.enbyChance / 100f) : 0f;
+                    float enbychance = Settings.NonBinaryActive ? (sexualChances.enby / 100f) : 0f;
 
                     //If they're asexual, we don't want to modify chances at all (except for aromantic above)
                     if (!comp.Asexual)

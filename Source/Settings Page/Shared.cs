@@ -8,39 +8,61 @@ namespace BetterRomance
 {
     public partial class Settings : ModSettings
     {
-        //Settings for non-complex orientations
-        public OrientationChances sexualOrientations = new()
+        public OrientationHolder sexualOrientations = new()
         {
-            hetero = 20f,
-            homo = 20f,
-            bi = 50f,
-            none = 10f,
-            enby = 10f,
+            standardOrientation = new()
+            {
+                hetero = 20f,
+                homo = 20f,
+                bi = 50f,
+                none = 10f,
+                enby = 10f,
+            }
         };
-        public OrientationChances romanticOrientations = new()
+        public OrientationHolder romanticOrientations = new()
         {
-            hetero = 20f,
-            homo = 20f,
-            bi = 50f,
-            none = 10f,
-            enby = 10f,
+            standardOrientation = new()
+            {
+                hetero = 20f,
+                homo = 20f,
+                bi = 50f,
+                none = 10f,
+                enby = 10f,
+            }
         };
+        ////Settings for non-complex orientations
+        //public OrientationChances sexualOrientations = new()
+        //{
+        //    hetero = 20f,
+        //    homo = 20f,
+        //    bi = 50f,
+        //    none = 10f,
+        //    enby = 10f,
+        //};
+        //public OrientationChances romanticOrientations = new()
+        //{
+        //    hetero = 20f,
+        //    homo = 20f,
+        //    bi = 50f,
+        //    none = 10f,
+        //    enby = 10f,
+        //};
 
-        //Per gender chances, to be used for display only I think
-        public GenderAttractionChances sexualAttractionForMen = new();
-        public GenderAttractionChances sexualAttrationForWomen = new();
-        public GenderAttractionChances sexualAttractionForEnby = new();
-        public GenderAttractionChances romanticAttractionForMen = new();
-        public GenderAttractionChances romanticAttrationForWomen = new();
-        public GenderAttractionChances romanticAttractionForEnby = new();
+        ////Per gender chances, to be used for display only I think
+        //public GenderAttractionChances sexualAttractionForMen = new();
+        //public GenderAttractionChances sexualAttrationForWomen = new();
+        //public GenderAttractionChances sexualAttractionForEnby = new();
+        //public GenderAttractionChances romanticAttractionForMen = new();
+        //public GenderAttractionChances romanticAttrationForWomen = new();
+        //public GenderAttractionChances romanticAttractionForEnby = new();
 
-        //Orientation equivalents of the above, to be used in the code
-        public OrientationChances sexualOrientationForMen = new();
-        public OrientationChances sexualOrientationForWomen = new();
-        public OrientationChances sexualOrientationForEnby = new();
-        public OrientationChances romanticOrientationForMen = new();
-        public OrientationChances romanticOrientationForWomen = new();
-        public OrientationChances romanticOrientationForEnby = new();
+        ////Orientation equivalents of the above, to be used in the code
+        //public OrientationChances sexualOrientationForMen = new();
+        //public OrientationChances sexualOrientationForWomen = new();
+        //public OrientationChances sexualOrientationForEnby = new();
+        //public OrientationChances romanticOrientationForMen = new();
+        //public OrientationChances romanticOrientationForWomen = new();
+        //public OrientationChances romanticOrientationForEnby = new();
 
         public float dateRate = 100f;
         public float hookupRate = 100f;
@@ -78,23 +100,25 @@ namespace BetterRomance
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref sexualOrientations.none, "asexualChance", 10.0f);
-            Scribe_Values.Look(ref sexualOrientations.bi, "bisexualChance", 50.0f);
-            Scribe_Values.Look(ref sexualOrientations.homo, "gayChance", 20.0f);
-            Scribe_Values.Look(ref sexualOrientations.hetero, "straightChance", 20.0f);
-
-            Scribe_Values.Look(ref romanticOrientations.none, "aromanticChance", 10.0f);
-            Scribe_Values.Look(ref romanticOrientations.bi, "biromanticChance", 50.0f);
-            Scribe_Values.Look(ref romanticOrientations.homo, "homoromanticChance", 20.0f);
-            Scribe_Values.Look(ref romanticOrientations.hetero, "heteroromanticChance", 20.0f);
-
-            //Gender attraction
-            sexualAttractionForMen.ExposeData(Gender.Male, false);
-            sexualAttrationForWomen.ExposeData(Gender.Female, false);
-            sexualAttractionForEnby.ExposeData((Gender)3, false);
-            romanticAttractionForMen.ExposeData(Gender.Male, true);
-            romanticAttrationForWomen.ExposeData(Gender.Female, true);
-            romanticAttractionForEnby.ExposeData((Gender)3, true);
+            Scribe_Deep.Look(ref sexualOrientations, "sexualOrientations");
+            //This is for converting old config files
+            if (sexualOrientations is null)
+            {
+                sexualOrientations = new();
+                Scribe_Values.Look(ref sexualOrientations.standardOrientation.none, "asexualChance", 10.0f);
+                Scribe_Values.Look(ref sexualOrientations.standardOrientation.bi, "bisexualChance", 50.0f);
+                Scribe_Values.Look(ref sexualOrientations.standardOrientation.homo, "gayChance", 20.0f);
+                Scribe_Values.Look(ref sexualOrientations.standardOrientation.hetero, "straightChance", 20.0f);
+            }
+            Scribe_Deep.Look(ref romanticOrientations, "romanticOrientations");
+            if (romanticOrientations is null)
+            {
+                romanticOrientations = new();
+                Scribe_Values.Look(ref romanticOrientations.standardOrientation.none, "aromanticChance", 10.0f);
+                Scribe_Values.Look(ref romanticOrientations.standardOrientation.bi, "biromanticChance", 50.0f);
+                Scribe_Values.Look(ref romanticOrientations.standardOrientation.homo, "homoromanticChance", 20.0f);
+                Scribe_Values.Look(ref romanticOrientations.standardOrientation.hetero, "heteroromanticChance", 20.0f);
+            }
 
             Scribe_Values.Look(ref dateRate, "dateRate", 100.0f);
             Scribe_Values.Look(ref hookupRate, "hookupRate", 100.0f);
