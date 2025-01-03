@@ -9,9 +9,20 @@ namespace BetterRomance
         {
             return gender switch
             {
-                Gender.Male => romance ? romanticAttractionForMen : sexualAttractionForMen,
-                Gender.Female => romance ? romanticAttrationForWomen : sexualAttrationForWomen,
-                (Gender)3 => romance ? romanticAttractionForEnby : sexualAttractionForEnby,
+                Gender.Male => romance ? romanticOrientations.attractionForMen : sexualOrientations.attractionForMen,
+                Gender.Female => romance ? romanticOrientations.attractionForWomen : sexualOrientations.attractionForWomen,
+                (Gender)3 => romance ? romanticOrientations.attractionForEnby : sexualOrientations.attractionForEnby,
+                _ => new()
+            };
+        }
+
+        internal OrientationChances GenderToOrientation(Gender gender, bool romance)
+        {
+            return gender switch
+            {
+                Gender.Male => romance ? romanticOrientations.orientationForMen : sexualOrientations.orientationForMen,
+                Gender.Female => romance ? romanticOrientations.orientationForWomen : sexualOrientations.orientationForWomen,
+                (Gender)3 => romance ? romanticOrientations.orientationForEnby : sexualOrientations.orientationForEnby,
                 _ => new()
             };
         }
@@ -59,6 +70,7 @@ namespace BetterRomance
         {
             GenderAttractionChances chances = GenderToChances(gender, romance);
             SettingsHandler<Settings> handler = romance ? romanticHandler : sexualHandler;
+            OrientationChances orientations = GenderToOrientation(gender, romance);
 
             //Hetero
             section.AddLabel(HeteroChanceLabel)
