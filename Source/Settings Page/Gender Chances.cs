@@ -20,19 +20,19 @@ namespace BetterRomance
         {
             SettingsHandler<Settings> handler = romance ? romanticHandler : sexualHandler;
             GenderAttractionChances chances = GenderToChances(gender, romance);
-            section.AddLabel(() => "WBR.Men".Translate(chances.men));
+            section.AddLabel(() => "WBR.MenPercentage".Translate(chances.men));
             section.Add(NewElement.Slider<float>()
                 .MinMax(0f, 1f)
                 .WithReference(chances, nameof(chances.men), chances.men));
 
-            section.AddLabel(() => "WBR.Women".Translate(chances.women));
+            section.AddLabel(() => "WBR.WomenPercentage".Translate(chances.women));
             section.Add(NewElement.Slider<float>()
                 .MinMax(0f, 1f)
                 .WithReference(chances, nameof(chances.women), chances.women));
 
             if (NonBinaryActive)
             {
-                section.AddLabel(() => "WBR.NonBinary".Translate(chances.enby));
+                section.AddLabel(() => "WBR.NonBinaryPercentage".Translate(chances.enby));
                 section.Add(NewElement.Slider<float>()
                     .MinMax(0f, 1f)
                     .WithReference(chances, nameof(chances.enby), chances.enby));

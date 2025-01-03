@@ -58,8 +58,8 @@ namespace BetterRomance
                 return Genders switch
                 {
                     AttractionGenders.None => null,
-                    AttractionGenders.Men => (string)"WBR.TraitDescMen".Translate(),
-                    AttractionGenders.Women => (string)"WBR.TraitDescWomen".Translate(),
+                    AttractionGenders.Men => (string)"WBR.Men".Translate(),
+                    AttractionGenders.Women => (string)"WBR.Women".Translate(),
                     AttractionGenders.Enby => (string)"WBR.TraitDescEnby".Translate(),
                     AttractionGenders.MenAndWomen => (string)"WBR.TraitDescMenAndWomen".Translate(),
                     AttractionGenders.MenAndEnby => (string)"WBR.TraitDescMenAndEnby".Translate(),

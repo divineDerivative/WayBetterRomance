@@ -14,8 +14,6 @@
 	<WBR.MoreInfo>&lt;i&gt;Click for more info&lt;/i&gt;</WBR.MoreInfo>
 
 	<WBR.TraitDescAceAro>{0_pronoun} is uninterested in sexual or romantic engagements.</WBR.TraitDescAceAro>
-	<WBR.TraitDescMen>men</WBR.TraitDescMen>
-	<WBR.TraitDescWomen>women</WBR.TraitDescWomen>
 	<WBR.TraitDescEnby>non-binary people</WBR.TraitDescEnby>
 	<WBR.TraitDescMenAndWomen>men and women</WBR.TraitDescMenAndWomen>
 	<WBR.TraitDescMenAndEnby>men and non-binary people</WBR.TraitDescMenAndEnby>
