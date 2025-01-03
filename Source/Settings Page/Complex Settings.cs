@@ -46,21 +46,11 @@ namespace BetterRomance
         internal void SetUpSexualHandler()
         {
             sexualHandler.Clear();
+
             //Gender attraction sections
-            sexualHandler.RegisterNewRow()
-                .AddLabel("WBR.SexualAttractionMen".Translate);
-            SetUpGenderChanceSection(sexualHandler.RegisterNewSection(sectionBorder: 6f), Gender.Male, false);
-
-            sexualHandler.RegisterNewRow()
-                .AddLabel("WBR.SexualAttractionWomen".Translate);
-            SetUpGenderChanceSection(sexualHandler.RegisterNewSection(sectionBorder: 6f), Gender.Female, false);
-
-            if (NonBinaryActive)
-            {
-                sexualHandler.RegisterNewRow()
-                    .AddLabel("WBR.SexualAttractionEnby".Translate);
-                SetUpGenderChanceSection(sexualHandler.RegisterNewSection(sectionBorder: 6f), (Gender)3, false);
-            }
+            sexualHandler.AddContainer(new ComplexOrientationDisplay(Gender.Male, false), "OrientationTabSexualMen");
+            sexualHandler.AddContainer(new ComplexOrientationDisplay(Gender.Female, false), "OrientationTabSexualWomen");
+            sexualHandler.AddContainer(new ComplexOrientationDisplay((Gender)3, false), "OrientationTabSexualEnby");
 
             sexualHandler.RegisterNewRow()
                 .Add(ComplexButton());
@@ -90,20 +80,10 @@ namespace BetterRomance
         {
             romanticHandler.Clear();
             //Gender attraction sections
-            romanticHandler.RegisterNewRow()
-                .AddLabel("WBR.RomanticAttractionMen".Translate);
-            SetUpGenderChanceSection(romanticHandler.RegisterNewSection(sectionBorder: 6f), Gender.Male, true);
-
-            romanticHandler.RegisterNewRow()
-                .AddLabel("WBR.RomanticAttractionWomen".Translate);
-            SetUpGenderChanceSection(romanticHandler.RegisterNewSection(sectionBorder: 6f), Gender.Female, true);
-
-            if (NonBinaryActive)
-            {
-                romanticHandler.RegisterNewRow()
-                    .AddLabel("WBR.RomanticAttractionEnby".Translate);
-                SetUpGenderChanceSection(romanticHandler.RegisterNewSection(sectionBorder: 6f), (Gender)3, true);
-            }
+            //Gender attraction sections
+            romanticHandler.AddContainer(new ComplexOrientationDisplay(Gender.Male, true), "OrientationTabSexualMen");
+            romanticHandler.AddContainer(new ComplexOrientationDisplay(Gender.Female, true), "OrientationTabSexualWomen");
+            romanticHandler.AddContainer(new ComplexOrientationDisplay((Gender)3, true), "OrientationTabSexualEnby");
 
             romanticHandler.RegisterNewRow()
                 .Add(ComplexButton());

@@ -13,13 +13,27 @@ namespace BetterRomance
             regularHandler.RegisterNewRow()
                 .AddLabel("WBR.OrientationHeading".Translate)
                 .WithTooltip("WBR.OrientationHeadingTip".Translate);
-            SetUpChanceSection(regularHandler.RegisterNewSection(name: "SexualOrientationSection", sectionBorder: 6f), false);
+            SetUpOrientationChanceSection(regularHandler.RegisterNewSection(name: "SexualOrientationSection", sectionBorder: 6f), false, sexualOrientations.standardOrientation);
+            //Buttons
+            regularHandler.AddGap(8f);
+            UIContainer sexualButtonRow = regularHandler.RegisterNewRow(gap: 0f);
+            sexualButtonRow.Add(NewElement.Button(() => sexualOrientations.standardOrientation.CopyFrom(romanticOrientations.standardOrientation))
+                .WithLabel("WBR.MatchBelowButton".Translate));
+            sexualButtonRow.Add(NewElement.Button(sexualOrientations.standardOrientation.Reset)
+                .WithLabel("RestoreToDefaultSettings".Translate));
             regularHandler.AddGap(10f);
             //Romantic orientation
             regularHandler.RegisterNewRow()
                 .AddLabel("WBR.AceOrientationHeading".Translate)
                 .WithTooltip("WBR.AceOrientationHeadingTip".Translate);
-            SetUpChanceSection(regularHandler.RegisterNewSection(name: "RomanceOrientationSection", sectionBorder: 6f), true);
+            SetUpOrientationChanceSection(regularHandler.RegisterNewSection(name: "RomanceOrientationSection", sectionBorder: 6f), true, romanticOrientations.standardOrientation);
+            //Buttons
+            regularHandler.AddGap(8f);
+            UIContainer romanticButtonRow = regularHandler.RegisterNewRow(gap: 0f);
+            romanticButtonRow.Add(NewElement.Button(() => romanticOrientations.standardOrientation.CopyFrom(sexualOrientations.standardOrientation))
+                .WithLabel("WBR.MatchBelowButton".Translate));
+            romanticButtonRow.Add(NewElement.Button(romanticOrientations.standardOrientation.Reset)
+                .WithLabel("RestoreToDefaultSettings".Translate));
             //Complex button
             regularHandler.RegisterNewRow()
                 .Add(ComplexButton());
@@ -62,9 +76,8 @@ namespace BetterRomance
                 .WithLabel(() => "Enable dev logging"));
         }
 
-        internal void SetUpChanceSection(UISection section, bool romance)
+        internal void SetUpOrientationChanceSection(UISection section, bool romance, OrientationChances chances)
         {
-            OrientationChances chances = romance ? romanticOrientations.standardOrientation : sexualOrientations.standardOrientation;
             //Hetero
             section.AddLabel(HeteroChance)
                 .WithTooltip(HeteroChanceTooltip);
@@ -89,13 +102,6 @@ namespace BetterRomance
             //None
             section.AddLabel(NoneChance)
                 .WithTooltip(NoneChanceTooltip);
-            //Buttons
-            regularHandler.AddGap(8f);
-            UIContainer buttonRow = regularHandler.RegisterNewRow(gap: 0f);
-            buttonRow.Add(NewElement.Button(() => chances.CopyFrom(romance ? sexualOrientations.standardOrientation : romanticOrientations.standardOrientation))
-                .WithLabel((romance ? "WBR.MatchAboveButton" : "WBR.MatchBelowButton").Translate));
-            buttonRow.Add(NewElement.Button(chances.Reset)
-                .WithLabel("RestoreToDefaultSettings".Translate));
 
             //The normalizing needs to be done separately for each value, after the slider for that value
             //So I'm putting it in the label for the next slider

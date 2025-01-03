@@ -36,11 +36,12 @@
 	<WBR.SexualTab>Sexual</WBR.SexualTab>
 	<WBR.RomanticTab>Romantic</WBR.RomanticTab>
 	<WBR.MiscTab>Misc</WBR.MiscTab>
-	<WBR.SexualAttractionHeading>Sexual attraction for {0}</WBR.SexualAttractionHeading>
+	<WBR.GenderAttractionHeading>Gender attraction for {0}</WBR.GenderAttractionHeading>
 	<WBR.SexualOrientationEquivalent>Sexual orientation equivalent</WBR.SexualOrientationEquivalent>
-	<WBR.RomanticAttractionHeading>Romantic attraction for {0}</WBR.RomanticAttractionHeading>
 	<WBR.RomanticOrientationEquivalent>Romantic orientation equivalent</WBR.RomanticOrientationEquivalent>
 	<WBR.OrientationsFor>Orientations for {0}</WBR.OrientationsFor>
+	<WBR.SwitchToOrientation>Switch to orientations</WBR.SwitchToOrientation>
+	<WBR.SwitchToGender>Switch to genders</WBR.SwitchToGender>
 
 	<WBR.MenPercentage>Men: {0_percentage}</WBR.MenPercentage>
 	<WBR.WomenPercentage>Women: {0_percentage}</WBR.WomenPercentage>
