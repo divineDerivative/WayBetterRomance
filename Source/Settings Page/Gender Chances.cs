@@ -27,7 +27,7 @@ namespace BetterRomance
             };
         }
 
-        internal void ConvertGenderToOrientation(Gender gender, bool romance)
+        internal void ConvertGenderAttractionToOrientationChances(Gender gender, bool romance)
         {
             OrientationChances orientations = GenderToOrientation(gender, romance);
             GenderToChances(gender, romance).ConvertToOrientation(gender, ref orientations);
