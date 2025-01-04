@@ -73,12 +73,55 @@ namespace BetterRomance
                     throw new ArgumentException($"Invalid gender: {gender}");
             }
 
-            //Assign separately to avoid precision errors
-            orientation.hetero = Mathf.Round(hetero * 100f);
-            orientation.homo = Mathf.Round(homo * 100f);
-            orientation.bi = Mathf.Round(bi * 100f);
-            orientation.none = Mathf.Round(none * 100f);
-            orientation.enby = Mathf.Round(enby * 100f);
+            hetero *= 100f;
+            homo *= 100f;
+            bi *= 100f;
+            none *= 100f;
+            enby *= 100f;
+
+            float roundedHetero = Mathf.Round(hetero);
+            float roundedHomo = Mathf.Round(homo);
+            float roundedBi = Mathf.Round(bi);
+            float roundedNone = Mathf.Round(none);
+            orientation.enby = Mathf.Round(enby);
+
+            if (roundedHetero + roundedHomo +  roundedBi + roundedNone == 100f)
+            {
+                orientation.hetero = roundedHetero;
+                orientation.homo = roundedHomo;
+                orientation.bi = roundedBi;
+                orientation.none = roundedNone;
+                return orientation;
+            }
+
+            //This is to attempt to fix rounding errors when there's two values that end in .5
+            List<float> list = [hetero, homo, bi, none];
+
+            for (int i = 0; i < 3; i++)
+            {
+                float first = list[i];
+                if (first % 1 == 0)
+                {
+                    continue;
+                }
+                float second = list[i + 1];
+                float preSum = Mathf.Round(first + second);
+                first = Mathf.Round(first);
+                second = Mathf.Round(second);
+                float postSum = first + second;
+                if (preSum != postSum)
+                {
+                    second += (preSum - postSum);
+
+                }
+                list[i] = first;
+                list[i + 1] = second;
+            }
+
+            orientation.hetero = list[0];
+            orientation.homo = list[1];
+            orientation.bi = list[2];
+            orientation.none = list[3];
 
             if (!orientation.TotalCorrect)
             {

@@ -58,7 +58,15 @@ namespace BetterRomance
             return result;
         }
 
-        public bool TotalCorrect => hetero + homo + bi + none == 100f;
+        public bool TotalCorrect
+        {
+            get
+            {
+                //Add first because floats can be dumb
+                float sum = hetero + homo + bi + none;
+                return sum == 100f;
+            } 
+        }
 
         public void Reset()
         {
