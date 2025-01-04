@@ -73,7 +73,7 @@ namespace BetterRomance
                 return gender switch
                 {
                     //Can't be added to asexual
-                    Gender.Male or Gender.Female => (orientations.Hetero + orientations.Bi + orientations.Homo) * chances.enby,
+                    Gender.Male or Gender.Female => (orientations.Hetero + orientations.Bi + orientations.Homo) * orientations.Enby,
                     //We're using this to display pan for non-binary, since they don't get enby just added to another orientation
                     (Gender)3 => chances.men * chances.women * chances.enby,
                     _ => 0f,
