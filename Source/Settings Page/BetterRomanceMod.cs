@@ -1,6 +1,8 @@
 ﻿using DivineFramework;
 using DivineFramework.UI;
+#if v1_5
 using LudeonTK;
+#endif
 using RimWorld;
 using UnityEngine;
 using Verse;
