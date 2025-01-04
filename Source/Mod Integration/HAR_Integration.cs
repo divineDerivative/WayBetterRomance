@@ -109,15 +109,15 @@ namespace BetterRomance
             }
             Pawn fertilizer = ReproductionSettings.ApplicableGender(first, false) ? first : second;
             Pawn gestator = ReproductionSettings.ApplicableGender(first, true) ? first : second;
-            bool fertilizerFertile = fertilizer.GetFertilityLevel() <= 0f;
-            bool gestatorFertile = gestator.GetFertilityLevel() <= 0f;
-            if (fertilizerFertile && gestatorFertile)
+            bool fertilizerInfertile = fertilizer.GetFertilityLevel() <= 0f;
+            bool gestatorInfertile = gestator.GetFertilityLevel() <= 0f;
+            if (fertilizerInfertile && gestatorInfertile)
             {
                 return "WBR.PawnsAreInfertile".Translate(fertilizer.Named("PAWN1"), gestator.Named("PAWN2")).Resolve();
             }
-            if (fertilizerFertile != gestatorFertile)
+            if (fertilizerInfertile != gestatorInfertile)
             {
-                return "WBR.PawnIsInfertile".Translate((fertilizerFertile ? fertilizer : gestator).Named("PAWN")).Resolve();
+                return "WBR.PawnIsInfertile".Translate((fertilizerInfertile ? fertilizer : gestator).Named("PAWN")).Resolve();
             }
             bool fertilizerYoung = !fertilizer.ageTracker.CurLifeStage.reproductive;
             bool gestatorYoung = !gestator.ageTracker.CurLifeStage.reproductive;
