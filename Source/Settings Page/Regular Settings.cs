@@ -128,6 +128,18 @@ namespace BetterRomance
                     chances.none = 100f - chances.hetero - chances.bi - chances.homo;
                 });
 
+            //Non-Binary
+            if (NonBinaryActive)
+            {
+                section.AddLine();
+                section.AddLabel(EnbyChanceLabel)
+                    .WithTooltip(EnbyChanceTooltip);
+                section.Add(NewElement.Slider<float>()
+                    .WithReference(chances, nameof(chances.enby), chances.enby)
+                    .MinMax(0f, 100f)
+                    .RoundTo(0), "EnbySlider");
+            }
+
             TaggedString HeteroChance() => (romance ? "WBR.HeteroromanticChance" : "WBR.StraightChance").Translate(chances.Hetero);
             TaggedString HeteroChanceTooltip() => (romance ? "WBR.HeteroromanticChanceTip" : "WBR.StraightChanceTip").Translate();
             TaggedString BiChance() => (romance ? "WBR.BiromanticChance" : "WBR.BisexualChance").Translate(chances.Bi);
@@ -136,6 +148,8 @@ namespace BetterRomance
             TaggedString HomoChanceTooltip() => (romance ? "WBR.HomoromanticChanceTip" : "WBR.GayChanceTip").Translate();
             TaggedString NoneChance() => (romance ? "WBR.AromanticChance" : "WBR.AsexualChance").Translate(chances.None);
             TaggedString NoneChanceTooltip() => (romance ? "WBR.AromanticChanceTip" : "WBR.AsexualChanceTip").Translate();
+            TaggedString EnbyChanceLabel() => (romance ? "WBR.EnbyromanticChance" : "WBR.EnbysexualChance").Translate(chances.Enby);
+            TaggedString EnbyChanceTooltip() => (romance ? "WBR.EnbyromanticChanceTip" : "WBR.EnbysexualChanceTip").Translate();
         }
 
         internal void SetUpMiscSection(UISection section)
