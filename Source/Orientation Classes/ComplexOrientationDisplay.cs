@@ -107,6 +107,10 @@ namespace BetterRomance
                 UISection section = orientationBox.AddSection(sectionBorder: 6f, name: prefix + "OrientationSectionBox");
                 OrientationChances chances = settings.GenderToOrientation(gender, romance);
                 settings.SetUpOrientationChanceSection(section, romance, chances);
+                section.WithPostDraw(delegate
+                {
+                    settings.GenderToChances(gender, romance).enby = chances.enby / 100f;
+                });
                 orientationBox.AddSpace(8f);
                 UIRow buttonRow = orientationBox.AddRow(gap: 0f, name: prefix + "OrientationButtonRow");
                 if (gender != Gender.Male)
