@@ -84,56 +84,57 @@ namespace BetterRomance
             section.Add(NewElement.Slider<float>()
                 .WithReference(chances, nameof(chances.hetero), chances.hetero)
                 .MinMax(0f, 100f)
-                .RoundTo(0), "HeteroSlider");
+                .RoundTo(0)
+                .WithPostDraw(delegate
+                {
+                    if (chances.hetero > 100f - chances.bi - chances.homo)
+                    {
+                        chances.hetero = 100f - chances.bi - chances.homo;
+                    }
+                }), "HeteroSlider");
             //Bi
             section.AddLabel(BiChance)
                 .WithTooltip(BiChanceTooltip);
             section.Add(NewElement.Slider<float>()
                 .WithReference(chances, nameof(chances.bi), chances.bi)
                 .MinMax(0f, 100f)
-                .RoundTo(0), "BiSlider");
+                .RoundTo(0)
+                .WithPostDraw(delegate
+                {
+                    if (chances.bi > 100f - chances.hetero - chances.homo)
+                    {
+                        chances.bi = 100f - chances.hetero - chances.homo;
+                    }
+                }), "BiSlider");
             //Homo
             section.AddLabel(HomoChance)
                 .WithTooltip(HomoChanceTooltip);
             section.Add(NewElement.Slider<float>()
                 .WithReference(chances, nameof(chances.homo), chances.homo)
                 .MinMax(0f, 100f)
-                .RoundTo(0), "HomoSlider");
+                .RoundTo(0)
+                .WithPostDraw(delegate
+                {
+                    if (chances.homo > 100f - chances.hetero - chances.bi)
+                    {
+                        chances.homo = 100f - chances.hetero - chances.bi;
+                    }
+                }), "HomoSlider");
             //None
             section.AddLabel(NoneChance)
-                .WithTooltip(NoneChanceTooltip);
+                .WithTooltip(NoneChanceTooltip)
+                .WithPreDraw(delegate
+                {
+                    chances.none = 100f - chances.hetero - chances.bi - chances.homo;
+                });
 
-            //The normalizing needs to be done separately for each value, after the slider for that value
-            //So I'm putting it in the label for the next slider
             TaggedString HeteroChance() => (romance ? "WBR.HeteroromanticChance" : "WBR.StraightChance").Translate(chances.Hetero);
             TaggedString HeteroChanceTooltip() => (romance ? "WBR.HeteroromanticChanceTip" : "WBR.StraightChanceTip").Translate();
-            TaggedString BiChance()
-            {
-                if (chances.hetero > 100f - chances.bi - chances.homo)
-                {
-                    chances.hetero = 100f - chances.bi - chances.homo;
-                }
-                return (romance ? "WBR.BiromanticChance" : "WBR.BisexualChance").Translate(chances.Bi);
-            }
+            TaggedString BiChance() => (romance ? "WBR.BiromanticChance" : "WBR.BisexualChance").Translate(chances.Bi);
             TaggedString BiChanceTooltip() => (romance ? "WBR.BiromanticChanceTip" : "WBR.BisexualChanceTip").Translate();
-            TaggedString HomoChance()
-            {
-                if (chances.bi > 100f - chances.hetero - chances.homo)
-                {
-                    chances.bi = 100f - chances.hetero - chances.homo;
-                }
-                return (romance ? "WBR.HomoromanticChance" : "WBR.GayChance").Translate(chances.Homo);
-            }
+            TaggedString HomoChance() => (romance ? "WBR.HomoromanticChance" : "WBR.GayChance").Translate(chances.Homo);
             TaggedString HomoChanceTooltip() => (romance ? "WBR.HomoromanticChanceTip" : "WBR.GayChanceTip").Translate();
-            TaggedString NoneChance()
-            {
-                if (chances.homo > 100f - chances.hetero - chances.bi)
-                {
-                    chances.homo = 100f - chances.hetero - chances.bi;
-                }
-                chances.none = 100f - chances.hetero - chances.bi - chances.homo;
-                return (romance ? "WBR.AromanticChance" : "WBR.AsexualChance").Translate(chances.None);
-            }
+            TaggedString NoneChance() => (romance ? "WBR.AromanticChance" : "WBR.AsexualChance").Translate(chances.None);
             TaggedString NoneChanceTooltip() => (romance ? "WBR.AromanticChanceTip" : "WBR.AsexualChanceTip").Translate();
         }
 
