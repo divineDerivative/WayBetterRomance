@@ -191,9 +191,16 @@ namespace BetterRomance
             }
             if (ModsConfig.IsActive("runaway.simpletrans"))
             {
-                Settings.TransActive = true;
-                HelperClasses.CanSire = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanSire");
-                HelperClasses.CanCarry = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanCarry");
+                try
+                {
+                    Settings.TransActive = true;
+                    HelperClasses.CanSire = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanSire");
+                    HelperClasses.CanCarry = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanCarry");
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"Error encountered while patching Simple Trans: {ex}");
+                }
             }
 
             MakeFertilityModList();
