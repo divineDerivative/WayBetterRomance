@@ -22,8 +22,26 @@
         <member name="T:DivineFramework.UI.SetUpDelegate">
             <summary>A <see langword="delegate"/> used to set up a <see cref="T:DivineFramework.UI.Handler`2"/>.</summary>
         </member>
+        <member name="T:DivineFramework.UI.DrawDelegate">
+            <summary>A <see langword="delegate"/> that can be called before or after drawing an element.</summary>
+        </member>
         <member name="T:DivineFramework.UI.UICheckbox">
             <summary>A simple check box to toggle a setting.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UICheckbox.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
+        <member name="M:DivineFramework.UI.UICheckbox.#ctor(DivineFramework.UI.UIWithReference{System.Boolean})">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
         </member>
         <member name="M:DivineFramework.UI.UICheckbox.Initialize">
             <Initialize>
@@ -31,21 +49,252 @@
 		</Initialize>
         </member>
         <member name="T:DivineFramework.UI.UICheckboxLabelled">
-            <summary>A checkbox with a label.</summary>
+            <summary>A check box with a label.</summary>
         </member>
         <member name="F:DivineFramework.UI.UICheckboxLabelled.labelKey">
             <ILabelled>
 			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
 		</ILabelled>
         </member>
+        <member name="M:DivineFramework.UI.UICheckboxLabelled.#ctor(DivineFramework.UI.UICheckbox)">
+            <Initialize>
+			<summary><inheritdoc /> Sets the <see cref="F:DivineFramework.UI.UIElement.height">height</see> to match the size of the check box.</summary>
+		</Initialize>
+        </member>
+        <member name="T:DivineFramework.UI.UIColumn">
+            <summary>A <see cref="T:DivineFramework.UI.UIElement"/> that can contain other elements. Elements are drawn vertically in the order they were added to the column.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIColumn.#ctor(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single})">
+            <UIColumn>
+		<Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        <param name="spacing">The spacing between elements in the column.</param>
+	</UIColumn>
+        </member>
+        <member name="M:DivineFramework.UI.UIColumn.Draw(UnityEngine.Rect)">
+            <Draw>
+			<summary>Draws all inner <see cref="F:DivineFramework.UI.UIContainer.elements">elements</see> in the order they were added to the section.</summary>
+			<remarks>Hidden elements are not drawn. If the size of any element is not valid, or the sizing of the section has changed, the section is marked as invalid.</remarks>
+			<inheritdoc />
+		</Draw>
+        </member>
+        <member name="T:DivineFramework.UI.UIContainer">
+            <summary>Base class for implementing <see cref="T:DivineFramework.UI.IContainer`1"/>; a <see cref="T:DivineFramework.UI.UIElement"/> that can contain other elements.</summary>
+        </member>
+        <member name="F:DivineFramework.UI.UIContainer.elements">
+            <summary>The elements that will be drawn when this container is drawn.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.Add(DivineFramework.UI.UIElement,System.String)">
+            <AddElement>
+			<summary>Add an element to this container.</summary>
+			<remarks>Only add an element after you have finished modifying it. Some of these operations change the <see langword="type" />, resulting in a new <see langword="object" /> being created. Only add the element at the end to be sure the completed object is what is added to the container.</remarks>
+			<param name="element">The element to add.</param>
+			<param name="name">Optional name for the element. Must be unique within this container.</param>
+			<returns><see langword="true" /> if the element was added.</returns>
+		</AddElement>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.CalculateWidths">
+            <summary>Assign widths to all elements in this container.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.CalculateHeights">
+            <summary>Assign heights to all elements in this container.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.AddLabel(DivineFramework.UI.LabelDelegate,System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddLabel>
+			<summary>Add an element for a text label.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UI.UILabel" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the element. Must be unique within this container.</param>
+			<WithLabel>
+			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
+		</WithLabel>
+		</AddLabel>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.AddHeader(DivineFramework.UI.LabelDelegate,System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddLabel>
+			<summary>Add an element for a text label.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UI.UILabel" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the element. Must be unique within this container.</param>
+			<WithLabel>
+			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
+		</WithLabel>
+		</AddLabel>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.AddSpace(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddSpace>
+			<summary>Add an element for a blank space.</summary>
+			<param name="height">A fixed height for the space; optional.</param>
+			<returns>The newly created <see cref="T:DivineFramework.UI.UISpace" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the element. Must be unique within this container.</param>
+		</AddSpace>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.AddLine(System.Single,System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddLine>
+			<summary>Add a horizontal line</summary>
+			<param name="gapHeight">The height of the element. The line will be drawn in the middle.</param>
+			<returns>The newly created <see cref="T:DivineFramework.UI.UILine" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the element. Must be unique within this container.</param>
+		</AddLine>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.AddResetButton``1(DivineFramework.UI.SettingsHandler{``0},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddResetButton>
+			<summary>Add an element for a button that will reset all values registered to the <paramref name="handler" />.</summary>
+			<param name="handler">The <see cref="T:DivineFramework.UI.SettingsHandler`1" /> to reset.</param>
+			<returns>The newly created <see cref="T:DivineFramework.UI.UIButtonText" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the element. Must be unique within this container.</param>
+			<param name="buttonHeight">A fixed height for the button; optional.</param>
+			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</typeparam>
+		</AddResetButton>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.AddRow(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddRow>
+			<summary>Add an inner row to hold other elements.</summary>
+			<param name="gap">The spacing between elements in the row; optional, will default to <see cref="F:Verse.Listing.ColumnSpacing" />.</param>
+			<returns>The newly created <see cref="T:DivineFramework.UI.UIRow" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the element. Must be unique within this container.</param>
+		</AddRow>
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.AddColumn(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <!-- No matching elements were found for the following include tag --><include file="Docs/UIElements.xml" path="doc/UIContainer/AddColumn" /> doesn't exist yet
+        </member>
+        <member name="M:DivineFramework.UI.UIContainer.AddSection(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
+            <AddSection>
+			<summary>Add an inner section to hold other elements.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UI.UISection" />.</returns>
+			<param name="spacing">The spacing between elements in the section.</param>
+			<param name="sectionBorder">The space between the border of the section and the <see cref="T:UnityEngine.Rect" /> where the elements are drawn, for the top and sides only.</param>
+			<param name="bottomBorder">Same as <paramref name="sectionBorder" /> but for the bottom of the section.</param>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<param name="name">Optional name for the element. Must be unique within this container.</param>
+		</AddSection>
+        </member>
+        <member name="T:DivineFramework.UI.UIRow">
+            <summary>A <see cref="T:DivineFramework.UI.UIElement"/> that can contain other elements. Elements are drawn horizontally in the order they were added to the container.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIRow.#ctor(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+            <param name="gap">The spacing between elements in the row.</param>
+        </member>
+        <member name="M:DivineFramework.UI.UIRow.Initialize">
+            <Initialize>
+			<summary><inheritdoc /> Determines width for any inner <see cref="F:DivineFramework.UI.UIContainer.elements">elements</see> that have no <see cref="P:DivineFramework.UI.UIElement.Width">actual width</see> assigned yet.</summary>
+		</Initialize>
+        </member>
+        <member name="M:DivineFramework.UI.UIRow.Draw(UnityEngine.Rect)">
+            <Draw>
+			<summary>Draws all inner <see cref="F:DivineFramework.UI.UIContainer.elements">elements</see> in the order they were added to the row.</summary>
+			<remarks>Hidden elements are not drawn, but the space they would have taken up is still used. If the size of any element is not valid, the row is marked as invalid.</remarks>
+			<inheritdoc />
+		</Draw>
+        </member>
+        <member name="T:DivineFramework.UI.UISection">
+            <summary>A <see cref="T:DivineFramework.UI.UIElement"/> for a section box that can contain other elements. Elements are drawn vertically in the order they were added to the section.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UISection.#ctor(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single})">
+            <UIColumn>
+		<Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        <param name="spacing">The spacing between elements in the column.</param>
+	</UIColumn>
+            <param name="sectionBorder">The space between the border of the section and the <see cref="T:UnityEngine.Rect" /> where the elements are drawn, for the top and sides only.</param>
+            <param name="bottomBorder">Same as <paramref name="sectionBorder" /> but for the bottom of the section.</param>
+        </member>
+        <member name="M:DivineFramework.UI.UISection.Draw(UnityEngine.Rect)">
+            <Draw>
+			<summary>Draws all inner <see cref="F:DivineFramework.UI.UIContainer.elements">elements</see> in the order they were added to the section.</summary>
+			<remarks>Hidden elements are not drawn. If the size of any element is not valid, or the sizing of the section has changed, the section is marked as invalid.</remarks>
+			<inheritdoc />
+		</Draw>
+        </member>
         <member name="T:DivineFramework.UI.UIInput`1">
             <summary>Base class for elements with an input field.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIInput`1.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
+        <member name="M:DivineFramework.UI.UIInput`1.#ctor(DivineFramework.UI.UIWithReference{`0})">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
         </member>
         <member name="M:DivineFramework.UI.UIInput`1.Reset">
             <summary><inheritdoc/> Also resets the buffer for input fields.</summary>
         </member>
         <member name="T:DivineFramework.UI.UIInputSingleLine`1">
             <summary>Base class for elements with a single line input field.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIInputSingleLine`1.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
+        <member name="M:DivineFramework.UI.UIInputSingleLine`1.#ctor(DivineFramework.UI.UIInput{`0})">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
         </member>
         <member name="M:DivineFramework.UI.UIInputSingleLine`1.Initialize">
             <Initialize>
@@ -55,8 +304,20 @@
         <member name="T:DivineFramework.UI.UIInputInt">
             <summary>An element that allows the user to input an <see cref="T:System.Int32"/>. Optional min and max values.</summary>
         </member>
+        <member name="M:DivineFramework.UI.UIInputInt.#ctor(DivineFramework.UI.UIInputSingleLine{System.Int32})">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
+        </member>
         <member name="T:DivineFramework.UI.UIInputFloat">
             <summary>An element that allows the user to input an <see cref="T:System.Single"/>. Optional min and max values.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIInputFloat.#ctor(DivineFramework.UI.UIInputSingleLine{System.Single})">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
         </member>
         <member name="T:DivineFramework.UI.UIRange`2">
             <UIRange>
@@ -67,23 +328,83 @@
 		</ForRange>
 	</UIRange>
         </member>
+        <member name="M:DivineFramework.UI.UIRange`2.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
         <member name="T:DivineFramework.UI.UIIntRange">
             <summary>A slider for an <see cref="T:Verse.IntRange"/></summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIIntRange.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
         </member>
         <member name="T:DivineFramework.UI.UIFloatRange">
             <summary>
             A slider for an <see cref="T:Verse.FloatRange"/>
             </summary>
         </member>
+        <member name="M:DivineFramework.UI.UIFloatRange.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
         <member name="T:DivineFramework.UI.UISlider`1">
             <summary>Base class for a horizontal slider.</summary>
             <typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
         </member>
+        <member name="M:DivineFramework.UI.UISlider`1.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
         <member name="T:DivineFramework.UI.UISliderInt">
             <summary>A horizontal slider for an <see langword="int"/> value.</summary>
         </member>
+        <member name="M:DivineFramework.UI.UISliderInt.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
         <member name="T:DivineFramework.UI.UISliderFloat">
             <summary>A horizontal slider for a <see langword="float"/> value.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UISliderFloat.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
+        <member name="M:DivineFramework.UI.UISliderFloat.#ctor(DivineFramework.UI.UISlider{System.Single})">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
         </member>
         <member name="T:DivineFramework.UI.UIButton">
             <summary>A base class for simple buttons</summary>
@@ -97,6 +418,21 @@
             <buttonHeight>
 			<summary>The height of the button.</summary>
 		</buttonHeight>
+        </member>
+        <member name="M:DivineFramework.UI.UIButton.#ctor(DivineFramework.UI.OnClickDelegate,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single})">
+            <UIButton>
+		<Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+		<param name="onClick">The <see langword="delegate" /> to be called when the button is clicked.</param>
+		<param name="height">
+			<param name="buttonHeight">A fixed height for the button; optional.</param>
+		</param>
+	</UIButton>
         </member>
         <member name="M:DivineFramework.UI.UIButton.Initialize">
             <Initialize>
@@ -116,6 +452,18 @@
 			<summary>The height of the button.</summary>
 		</buttonHeight>
         </member>
+        <member name="M:DivineFramework.UI.UIButtonResetable`1.#ctor(DivineFramework.UI.UIButton)">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
+        </member>
+        <member name="M:DivineFramework.UI.UIButtonResetable`1.#ctor(DivineFramework.UI.UIWithReference{`0})">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
+        </member>
         <member name="M:DivineFramework.UI.UIButtonResetable`1.Initialize">
             <Initialize>
 			<summary><inheritdoc /> Sets the <see cref="F:DivineFramework.UI.UIElement.height">height</see> of the button.</summary>
@@ -128,6 +476,12 @@
             <ILabelled>
 			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
 		</ILabelled>
+        </member>
+        <member name="M:DivineFramework.UI.UIButtonText.#ctor(DivineFramework.UI.UIButton)">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
         </member>
         <member name="M:DivineFramework.UI.UIButtonText.Draw(UnityEngine.Rect)">
             <Draw>
@@ -143,6 +497,12 @@
 			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
 		</ILabelled>
         </member>
+        <member name="M:DivineFramework.UI.UIButtonTextResetable`1.#ctor(DivineFramework.UI.UIButtonResetable{`0})">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
+        </member>
         <member name="M:DivineFramework.UI.UIButtonTextResetable`1.Draw(UnityEngine.Rect)">
             <Draw>
 			<summary><inheritdoc /> Checks if the height of the element is still valid.</summary>
@@ -153,20 +513,34 @@
             <summary>An element that draws a horizontal line.</summary>
         </member>
         <member name="F:DivineFramework.UI.UILine.gapHeight">
-            <summary>How tall the element should be. The line will be drawn in the middle.</summary>
+            <summary><param name="gapHeight">How tall the element should be. The line will be drawn in the middle.</param></summary>
         </member>
-        <member name="T:DivineFramework.UI.UISection">
-            <summary>A <see cref="T:DivineFramework.UI.UIElement"/> for a section box that can contain other elements. Elements are drawn vertically in the order they were added to the section.</summary>
-        </member>
-        <member name="M:DivineFramework.UI.UISection.Draw(UnityEngine.Rect)">
-            <Draw>
-			<summary>Draws all inner <see cref="F:DivineFramework.UI.UIContainer.elements">elements</see> in the order they were added to the section.</summary>
-			<remarks>Hidden elements are not drawn. If the size of any element is not valid, or the sizing of section has changed, the section is marked as invalid.</remarks>
-			<inheritdoc />
-		</Draw>
+        <member name="M:DivineFramework.UI.UILine.#ctor(System.Single,System.Nullable{System.Single},System.Nullable{System.Single})">
+            <UILine>
+		<Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+		<param name="gapHeight">How tall the element should be. The line will be drawn in the middle.</param>
+	</UILine>
         </member>
         <member name="T:DivineFramework.UI.UISpace">
             <summary>A blank space.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UISpace.#ctor(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single})">
+            <UISpace>
+		<Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+		<param name="height">A fixed height for the space; optional.</param>
+	</UISpace>
         </member>
         <member name="T:DivineFramework.UI.UIWithReference`1">
             <UIWithReference>
@@ -183,6 +557,21 @@
             <defaultValue>
 				<summary>Default value for the setting, used when resetting.</summary>
 			</defaultValue>
+        </member>
+        <member name="M:DivineFramework.UI.UIWithReference`1.#ctor(DivineFramework.UI.UIElement)">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
+        </member>
+        <member name="M:DivineFramework.UI.UIWithReference`1.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
         </member>
         <member name="M:DivineFramework.UI.UIWithReference`1.Reset">
             <summary>Set the <see cref="F:DivineFramework.UI.UIWithReference`1.reference">referenced</see> setting to its <see cref="F:DivineFramework.UI.UIWithReference`1.defaultValue">default value</see>.</summary>
@@ -350,18 +739,39 @@
 		</Common>
 		</HideWhen>
         </member>
-        <member name="M:DivineFramework.UI.ElementExtensions.RoundTo``1(DivineFramework.UI.UISlider{``0},System.Single)">
+        <member name="M:DivineFramework.UI.ElementExtensions.RoundTo(DivineFramework.UI.UISlider{System.Single},System.Int32)">
             <RoundTo>
-			<summary>Add a precision value for the slider to round to.</summary>
-			<remarks>Default is 0.01f, which will constrain a <see langword="float" /> value to two decimal points.</remarks>
-			<param name="round">Precision value to use for rounding.</param>
-			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+			<summary>Specify the number of decimal places to use when rounding the slider's value.</summary>
+			<remarks>Default is 2, which will constrain a <see langword="float" /> value to two decimal places.</remarks>
+			<param name="digits">How many decimal places to round to.</param>
 			<Common>
 			<param name="element">The original <paramref name="element" />.</param>
 			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
 			<returns>The original <paramref name="element" />.</returns>
 		</Common>
 		</RoundTo>
+        </member>
+        <member name="M:DivineFramework.UI.ElementExtensions.WithPreDraw``1(``0,DivineFramework.UI.DrawDelegate)">
+            <WithPreDraw>
+			<summary>Add a <see langword="delegate" /> to be called before the element is drawn.</summary>
+			<param name="drawDelegate" />
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</WithPreDraw>
+        </member>
+        <member name="M:DivineFramework.UI.ElementExtensions.WithPostDraw``1(``0,DivineFramework.UI.DrawDelegate)">
+            <WithPostDraw>
+			<summary>Add a <see langword="delegate" /> to be called after the element is drawn.</summary>
+			<param name="drawDelegate" />
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</WithPostDraw>
         </member>
         <member name="M:DivineFramework.UI.ElementExtensions.WithLabel(DivineFramework.UI.UICheckbox,DivineFramework.UI.LabelDelegate)">
             <WithLabel name="UICheckbox">
@@ -456,14 +866,25 @@
         <member name="F:DivineFramework.UI.Handler`2.Items">
             <summary>The <see langword="List"/> of objects being managed.</summary>
         </member>
-        <member name="P:DivineFramework.UI.Handler`2.Initialized">
-            <summary>Whether all containing items have been initialized.</summary>
-        </member>
         <member name="F:DivineFramework.UI.Handler`2.SetUpMethod">
             <summary>A <see langword="delegate"/> to a method that will create and add the various objects needed to create the desired UI.</summary>
         </member>
+        <member name="P:DivineFramework.UI.Handler`2.Initialized">
+            <summary>Whether all containing items have been initialized.</summary>
+        </member>
         <member name="M:DivineFramework.UI.Handler`2.Initialize">
             <summary>Calls <see cref="F:DivineFramework.UI.Handler`2.SetUpMethod"/> the first time this is called. Initializes all <see cref="F:DivineFramework.UI.Handler`2.Items"/>.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.Handler`2.Add(`1,System.String)">
+            <Add>
+			<summary>Add an item to this <see cref="T:DivineFramework.UI.Handler`2" />.</summary>
+			<param name="item">The <see cref="T:DivineFramework.UI.IItem" /> to add.</param>
+			<param name="name">Optional name for the item. Must be unique within this <see cref="T:DivineFramework.UI.Handler`2" />.</param>
+			<returns><see langword="true" /> if the item was added.</returns>
+		</Add>
+        </member>
+        <member name="M:DivineFramework.UI.Handler`2.Clear">
+            <summary>Clear the <see cref="F:DivineFramework.UI.Handler`2.Items"/> list.</summary>
         </member>
         <member name="M:DivineFramework.UI.Handler`2.SetUp(System.Boolean)">
             <SetUp>
@@ -471,8 +892,179 @@
 			<param name="force">Whether to call <see cref="F:DivineFramework.UI.Handler`2.SetUpMethod" /> even if it's already been called previously. If you use this it is recommended to <see cref="M:DivineFramework.UI.Handler`2.Clear" /> the contents first.</param>
 		</SetUp>
         </member>
-        <member name="M:DivineFramework.UI.Handler`2.Clear">
-            <summary>Clear the <see cref="F:DivineFramework.UI.Handler`2.Items"/> list.</summary>
+        <member name="T:DivineFramework.UI.SettingsHandler`1">
+            <Main>
+			<summary>A class for holding and managing multiple <see cref="T:DivineFramework.UI.UIElement" />s.</summary>
+			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</typeparam>
+		</Main>
+        </member>
+        <member name="F:DivineFramework.UI.SettingsHandler`1.verticalSpacing">
+            <summary>Space of the gap between rows.</summary>
+        </member>
+        <member name="F:DivineFramework.UI.SettingsHandler`1.width">
+            <summary>The width for the settings handler that is passed to all rows.</summary>
+        </member>
+        <member name="F:DivineFramework.UI.SettingsHandler`1.height">
+            <summary>The height of this <see cref="T:DivineFramework.UI.SettingsHandler`1"/> the last time it was drawn.</summary>
+        </member>
+        <member name="F:DivineFramework.UI.SettingsHandler`1.maxOneColumn">
+            <summary><param name="maxOneColumn">Setting this to <see langword="true" /> means that a new column will only be made when a row specifically requests it. Hidden rows will still cause a new column in this case.<br />Setting this to <see langword="false" /> means that a new column will be made if a row will not fit in the <see cref="T:UnityEngine.Rect" /> of the <see cref="T:Verse.Listing" />.</param></summary>
+        </member>
+        <member name="M:DivineFramework.UI.SettingsHandler`1.#ctor(System.Boolean,DivineFramework.UI.SetUpDelegate)">
+            <Constructor>
+			<param name="maxOneColumn">Setting this to <see langword="true" /> means that a new column will only be made when a row specifically requests it. Hidden rows will still cause a new column in this case.<br />Setting this to <see langword="false" /> means that a new column will be made if a row will not fit in the <see cref="T:UnityEngine.Rect" /> of the <see cref="T:Verse.Listing" />.</param>
+			<param name="setUpMethod"><inheritdoc cref="F:DivineFramework.UI.Handler`2.SetUpMethod" path="/summary" /></param>
+		</Constructor>
+        </member>
+        <member name="M:DivineFramework.UI.SettingsHandler`1.AddContainer``1(``0,System.String,System.Boolean)">
+            <AddContainer>
+			<summary>Add an existing <typeparamref name="TContainer" /> to the <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</summary>
+			<typeparam name="TContainer" />
+			<param name="container">The <typeparamref name="TContainer" /> to add.</param>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
+			<param name="newColumn">Whether to start a new column before drawing this row. Has no affect on nested containers.</param>
+			<returns>The original <typeparamref name="TContainer" />.</returns>
+		</AddContainer>
+        </member>
+        <member name="M:DivineFramework.UI.SettingsHandler`1.RegisterNewRow(System.String,System.Single,System.Boolean)">
+            <RegisterNewRow>
+			<summary>Add a new row to the <see cref="T:DivineFramework.UI.SettingsHandler`1" />. This row is a <see cref="T:DivineFramework.UI.UIRow" /> to hold elements that will be drawn horizontally.</summary>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
+			<param name="gap">The spacing between elements in the row.</param>
+			<param name="newColumn">Whether to start a new column before drawing this row. Has no affect on nested containers.</param>
+			<returns>The <see cref="T:DivineFramework.UI.UIRow" /> for the new row.</returns>
+		</RegisterNewRow>
+        </member>
+        <member name="M:DivineFramework.UI.SettingsHandler`1.RegisterNewSection(System.String,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Boolean)">
+            <RegisterNewSection>
+			<summary>Add a new row to the <see cref="T:DivineFramework.UI.SettingsHandler`1" />. This row is a <see cref="T:DivineFramework.UI.UISection" /> to hold elements that will be drawn vertically inside a section box.</summary>
+			<param name="spacing">The spacing between elements in the section.</param>
+			<param name="sectionBorder">The space between the border of the section and the <see cref="T:UnityEngine.Rect" /> where the elements are drawn, for the top and sides only.</param>
+			<param name="bottomBorder">Same as <paramref name="sectionBorder" /> but for the bottom of the section.</param>
+			<returns>The <see cref="T:DivineFramework.UI.UISection" /> for the new row.</returns>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
+			<param name="newColumn">Whether to start a new column before drawing this row. Has no affect on nested containers.</param>
+		</RegisterNewSection>
+        </member>
+        <member name="M:DivineFramework.UI.SettingsHandler`1.RegisterNewColumn(System.String,System.Nullable{System.Single},System.Boolean)">
+            <RegisterNewColumn>
+			<summary>Add a new row to the <see cref="T:DivineFramework.UI.SettingsHandler`1" />. This row is a <see cref="T:DivineFramework.UI.UIColumn" /> to hold elements that will be drawn vertically.</summary>
+			<param name="spacing">The spacing between elements in the section.</param>
+			<returns>The <see cref="T:DivineFramework.UI.UIColumn" /> for the new row.</returns>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
+			<param name="newColumn">Whether to start a new column before drawing this row. Has no affect on nested containers.</param>
+		</RegisterNewColumn>
+        </member>
+        <member name="M:DivineFramework.UI.SettingsHandler`1.Reset">
+            <summary>Reset all registered elements to their <see cref="F:DivineFramework.UI.UIWithReference`1.defaultValue">default values.</see></summary>
+        </member>
+        <member name="M:DivineFramework.UI.SettingsHandler`1.RegisterResetable(DivineFramework.UI.UIElement)">
+            <RegisterResetable>
+			<summary>Register an element that implements <see cref="T:DivineFramework.UI.IResetable" /> so it will be reset when <see cref="M:DivineFramework.UI.SettingsHandler`1.Reset" /> is called.</summary>
+			<param name="element">The element to reset.</param>
+		</RegisterResetable>
+        </member>
+        <member name="M:DivineFramework.UI.SettingsHandler`1.AddGap(System.Single,System.String)">
+            <AddGap>
+			<summary>Add a row that's just an empty gap.</summary>
+			<param name="height">How tall the gap should be.</param>
+			<returns>The <see cref="T:DivineFramework.UI.UIRow" /> for the new row.</returns>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
+		</AddGap>
+        </member>
+        <member name="M:DivineFramework.UI.SettingsHandler`1.AddLine(System.Single,System.String)">
+            <AddLine>
+			<summary>Add a row with a horizontal line</summary>
+			<param name="gapHeight">The height of the element. The line will be drawn in the middle.</param>
+			<returns>The <see cref="T:DivineFramework.UI.UIRow" /> for the new row.</returns>
+			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
+		</AddLine>
+        </member>
+        <member name="M:DivineFramework.UI.SettingsHandler`1.Draw(Verse.Listing)">
+            <Draw>
+			<summary>Draw all registered rows in the order they were added.</summary>
+			<param name="list">The <see cref="T:Verse.Listing" /> where the rows should be drawn.</param>
+		</Draw>
+        </member>
+        <member name="T:DivineFramework.UI.TabbedHandler`1">
+            <inheritdoc/><summary>A class for creating a tabbed UI page.</summary>
+        </member>
+        <member name="P:DivineFramework.UI.TabbedHandler`1.CurTab">
+            <summary>The currently displayed <see cref="T:DivineFramework.UI.Tab`1"/>.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.TabbedHandler`1.#ctor(DivineFramework.UI.SetUpDelegate)">
+            <param name="setUpMethod"><inheritdoc cref="F:DivineFramework.UI.Handler`2.SetUpMethod" path="/summary" /></param>
+        </member>
+        <member name="M:DivineFramework.UI.TabbedHandler`1.Initialize">
+            <summary>Calls <see cref="F:DivineFramework.UI.Handler`2.SetUpMethod"/> the first time this is called. Does not initialize <see cref="F:DivineFramework.UI.Handler`2.Items"/> since the <see cref="T:Verse.Listing"/> needed to set them up properly may not have been created yet.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.TabbedHandler`1.AddTab(DivineFramework.UI.SettingsHandler{`0},System.String,DivineFramework.UI.OnClickDelegate,System.Func{System.Boolean})">
+            <AddTab>
+			<summary>Add a new tab to the <see cref="T:DivineFramework.UI.TabbedHandler`1" />. Each tab has a <see cref="T:DivineFramework.UI.SettingsHandler`1" /> that will be drawn when that tab is selected.</summary>
+			<param name="handler">The <see cref="T:DivineFramework.UI.SettingsHandler`1" /> to draw when this tab is selected.</param>
+			<param name="name">A unique name for the tab which can be used to retrieve this tab later. Will be used as the label for the tab if another label is not provided.</param>
+			<param name="clickedAction">An optional delegate to be called when the tab is clicked. Defaults to just setting the selected tab to be this tab.</param>
+			<param name="selected">An optional delegate to determine if the tab is selected. Defaults to just checking if the selected tab is the same as this tab.</param>
+			<returns><see langword="true" /> if the tab was added.</returns>
+		</AddTab>
+        </member>
+        <member name="M:DivineFramework.UI.TabbedHandler`1.DrawTabs(UnityEngine.Rect,UnityEngine.Rect@)">
+            <DrawTabs>
+			<summary>Draws the tabs at the top of the page in the order they were added.</summary>
+			<param name="canvas">The <see cref="T:UnityEngine.Rect" /> for the entire space of the page.</param>
+			<param name="innerRect">The <see cref="T:UnityEngine.Rect" /> you should use to create the <see cref="T:Verse.Listing" /> for the page's content.</param>
+		</DrawTabs>
+        </member>
+        <member name="M:DivineFramework.UI.TabbedHandler`1.DrawContents(Verse.Listing)">
+            <DrawContents>
+			<summary>Draw the contents of the selected tab.</summary>
+			<param name="listing">The <see cref="T:Verse.Listing" /> to use.</param>
+		</DrawContents>
+        </member>
+        <member name="T:DivineFramework.UI.Tab`1">
+            <Main>
+			<summary>A <see cref="T:Verse.TabRecord" /> that has a <see cref="T:DivineFramework.UI.SettingsHandler`1" /> attached.</summary>
+			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with the tab's <see cref="F:DivineFramework.UI.Tab`1.handler">handler</see>.</typeparam>
+		</Main>
+        </member>
+        <member name="F:DivineFramework.UI.Tab`1.handler">
+            <summary>The <see cref="T:DivineFramework.UI.SettingsHandler`1"/> associated with this tab.</summary>
+        </member>
+        <member name="F:DivineFramework.UI.Tab`1.scrollPos">
+            <summary>Used to keep track of the scroll position for this tab.</summary>
+            <remarks>Should be passed by <see langword="ref"/> to <see cref="M:DivineFramework.UI.Listing_ScrollView.BeginScrollView(UnityEngine.Rect,System.Single,UnityEngine.Vector2@,System.Single)"/>.</remarks>
+        </member>
+        <member name="M:DivineFramework.UI.Tab`1.#ctor(System.String,System.Action,System.Func{System.Boolean},DivineFramework.UI.SettingsHandler{`0})">
+            <Tab>
+		<summary>Creates a new <see cref="T:Verse.TabRecord" /> to use in a <see cref="T:DivineFramework.UI.TabbedHandler`1" />.</summary>
+		<param name="name">The name of the <see cref="T:DivineFramework.UI.Tab`1" />. Must be unique within its <see cref="T:DivineFramework.UI.TabbedHandler`1" />. Will be used as the label for the <see cref="T:Verse.TabRecord" /> unless it is overridden by <see cref="M:DivineFramework.UI.Tab`1.WithLabel(System.String)" />.</param>
+		<param name="onClick">The <see cref="T:System.Action" /> to perform when the tab is clicked.</param>
+		<param name="selectedGetter">A <see cref="T:System.Func`1" /> used to determine if the tab is active.</param>
+		<param name="handler">The <see cref="T:DivineFramework.UI.SettingsHandler`1" /> associated with this tab.</param>
+	</Tab>
+        </member>
+        <member name="M:DivineFramework.UI.Tab`1.Initialize">
+            <summary>Initializes the <see cref="F:DivineFramework.UI.Tab`1.handler"/>.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.Tab`1.GetTip">
+            <summary>Get the <see cref="F:DivineFramework.UI.Tab`1.tooltip"/>, if it exists.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.Tab`1.WithLabel(System.String)">
+            <WithLabel>
+			<summary>Add a label to the tab that is different from the tab's <see cref="P:DivineFramework.UI.Tab`1.Name">name</see>.</summary>
+			<param name="label" />
+			<returns>The original <see cref="T:DivineFramework.UI.Tab`1" />.</returns>
+		</WithLabel>
+        </member>
+        <member name="M:DivineFramework.UI.Tab`1.WithTooltip(DivineFramework.UI.LabelDelegate)">
+            <WithTooltip>
+			<summary>Add a tooltip to the tab.</summary>
+			<returns>The original <see cref="T:DivineFramework.UI.Tab`1" />.</returns>
+			<param name="tooltip"> <see langword="delegate" /> to the function used to determine the plain text of the tooltip.</param>
+		</WithTooltip>
+        </member>
+        <member name="M:DivineFramework.UI.Tab`1.DrawContents(Verse.Listing)">
+            <summary>Just calls <see cref="M:DivineFramework.UI.SettingsHandler`1.Draw(Verse.Listing)"/> on the <see cref="F:DivineFramework.UI.Tab`1.handler"/>.</summary>
         </member>
         <member name="T:DivineFramework.UI.Listing_ScrollView">
             <Listing_ScrollView>
@@ -507,18 +1099,64 @@
 		<summary>Close everything when you're done.</summary>
 	</End>
         </member>
-        <member name="M:DivineFramework.UI.IWidgetElement.Register(System.Single,System.Single)">
+        <member name="T:DivineFramework.UI.IItem">
+            <summary>Interface for classes that can go in an <see cref="T:DivineFramework.UI.IContainer`1"/>.</summary>
+        </member>
+        <member name="P:DivineFramework.UI.IItem.Name">
+            <summary>A unique string used to retrieve this item from its container.</summary>
+        </member>
+        <member name="P:DivineFramework.UI.IItem.ErrorPrefix">
+            <summary>A prefix to add to any error messages generated by this item.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.IItem.Initialize">
+            <summary>Initialize any values that need to be set after all other items are added to the parent <see cref="T:DivineFramework.UI.IContainer`1"/>.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.IItem.Validate(System.String@)">
+            <Validate>
+				<summary>Make sure that all required data is present.</summary>
+				<param name="reasons">List of reasons that validation failed, to be used in error messages.</param>
+				<returns><see langword="false" /> if any critical data is null.</returns>
+			</Validate>
+        </member>
+        <member name="M:DivineFramework.UI.IUIElement.Register(System.Single)">
             <Register>
 				<summary>Register the element within its container.</summary>
 				<param name="parentWidth">The actual width of the parent container.</param>
-				<param name="parentGap">The gap setting for the parent container.</param>
 			</Register>
         </member>
-        <member name="M:DivineFramework.UI.IWidgetElement.Draw(UnityEngine.Rect)">
+        <member name="M:DivineFramework.UI.IUIElement.Draw(UnityEngine.Rect)">
             <Draw>
 				<summary>Draw the element.</summary>
 				<param name="rect">The <see cref="T:UnityEngine.Rect" /> used to draw the element, calculated by the parent container.</param>
 			</Draw>
+        </member>
+        <member name="T:DivineFramework.UI.IContainer`1">
+            <Main>
+				<summary>Interface for classes that contain a list of <see cref="T:DivineFramework.UI.IItem" />s.</summary>
+				<typeparam name="U">The <see langword="type" /> of <see cref="T:DivineFramework.UI.IItem" />s in the list.</typeparam>
+			</Main>
+        </member>
+        <member name="M:DivineFramework.UI.IContainer`1.Initialize">
+            <summary>Do things that need to be done after all other items are added to this <see cref="T:DivineFramework.UI.IContainer`1"/>.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.IContainer`1.Add(`0,System.String)">
+            <Add>
+				<summary>Add an item to the container.</summary>
+				<param name="item">The item to add.</param>
+				<param name="name">Optional name for the element. Must be unique within this container.</param>
+			</Add>
+        </member>
+        <member name="M:DivineFramework.UI.IContainer`1.Clear">
+            <Clear>
+				<summary>Remove all items from the container.</summary>
+			</Clear>
+        </member>
+        <member name="M:DivineFramework.UI.IContainer`1.GetNamed(System.String)">
+            <GetNamed>
+				<summary>Retrieve a specific named <see cref="T:DivineFramework.UI.IItem" /> that has been registered to this <see cref="T:DivineFramework.UI.IContainer`1" />.</summary>
+				<param name="name">The name of the element to retrieve.</param>
+				<returns>The named item, or <see langword="null" /> if none was found.</returns>
+			</GetNamed>
         </member>
         <member name="T:DivineFramework.UI.IReference`1">
             <Main>
@@ -541,38 +1179,6 @@
         <member name="P:DivineFramework.UI.ILabelled.SetLabel">
             <summary>Set the <see langword="delegate"/> that will be used to determine the text of the label.</summary>
         </member>
-        <member name="T:DivineFramework.UI.IContainer`1">
-            <Main>
-				<summary>Interface for classes that contain a list of <see cref="T:DivineFramework.UI.IItem" />s.</summary>
-				<typeparam name="U">The <see langword="type" /> of <see cref="T:DivineFramework.UI.IItem" />s in the list.</typeparam>
-			</Main>
-        </member>
-        <member name="M:DivineFramework.UI.IContainer`1.GetNamed(System.String)">
-            <GetNamed>
-				<summary>Retrieve a specific named <see cref="T:DivineFramework.UI.IItem" /> that has been registered to this <see cref="T:DivineFramework.UI.IContainer`1" />.</summary>
-				<param name="name">The name of the element to retrieve.</param>
-				<returns>The named item, or <see langword="null" /> if none was found.</returns>
-			</GetNamed>
-        </member>
-        <member name="M:DivineFramework.UI.IContainer`1.Initialize">
-            <summary>Do things that need to be done after all other items are added to the <see cref="T:DivineFramework.UI.IContainer`1"/>.</summary>
-        </member>
-        <member name="T:DivineFramework.UI.IItem">
-            <summary>Interface for classes that can go in an <see cref="T:DivineFramework.UI.IContainer`1"/>.</summary>
-        </member>
-        <member name="P:DivineFramework.UI.IItem.Name">
-            <summary>A unique string used to retrieve this item from its container.</summary>
-        </member>
-        <member name="M:DivineFramework.UI.IItem.Initialize">
-            <summary>Initialize any values that need to be set after all other items are added to the <see cref="T:DivineFramework.UI.IContainer`1"/>.</summary>
-        </member>
-        <member name="M:DivineFramework.UI.IItem.Validate(System.String@)">
-            <Validate>
-				<summary>Make sure that all required data is present.</summary>
-				<param name="reasons">List of reasons that validation failed, to be used in error messages.</param>
-				<returns><see langword="false" /> if any critical data is null.</returns>
-			</Validate>
-        </member>
         <member name="T:DivineFramework.UI.IMinMax`1">
             <Main>
 				<summary>Interface for elements with numeric min and max values.</summary>
@@ -590,7 +1196,7 @@
         </member>
         <member name="M:DivineFramework.UI.NewElement.InputLine``1(System.Nullable{System.Single},System.Nullable{System.Single})">
             <InputLine>
-			<summary>Add an input field for entering numbers or text.</summary>
+			<summary>Create an input field for entering numbers or text.</summary>
 			<returns>The newly created <see cref="T:DivineFramework.UI.UIInputSingleLine`1" />.</returns>
 			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
 			<Common>
@@ -601,7 +1207,7 @@
         </member>
         <member name="M:DivineFramework.UI.NewElement.Button(DivineFramework.UI.OnClickDelegate,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single})">
             <Button>
-			<summary>Add a basic button.</summary>
+			<summary>Create a basic button.</summary>
 			<returns>The newly created <see cref="T:DivineFramework.UI.UIButton" />.</returns>
 			<Common>
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
@@ -613,7 +1219,7 @@
         </member>
         <member name="M:DivineFramework.UI.NewElement.Checkbox(System.Nullable{System.Single},System.Nullable{System.Single})">
             <Checkbox>
-			<summary>Add a toggle for a <see langword="bool" /> value that will show a green check mark or a red X.</summary>
+			<summary>Create a toggle for a <see langword="bool" /> value that will show a green check mark or a red X.</summary>
 			<returns>The newly created <see cref="T:DivineFramework.UI.UICheckbox" />.</returns>
 			<Common>
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
@@ -623,7 +1229,7 @@
         </member>
         <member name="M:DivineFramework.UI.NewElement.Slider``1(System.Nullable{System.Single},System.Nullable{System.Single})">
             <Slider>
-			<summary>Add a horizontal slider for a numeric value.</summary>
+			<summary>Create a horizontal slider for a numeric value.</summary>
 			<returns>The newly created <see cref="T:DivineFramework.UI.UISlider`1" />.</returns>
 			<Common>
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
@@ -634,7 +1240,7 @@
         </member>
         <member name="M:DivineFramework.UI.NewElement.Range``2(System.Nullable{``1},System.Nullable{System.Single},System.Nullable{System.Single})">
             <Range>
-			<summary>Add a slider for an <see cref="T:Verse.IntRange" /> or <see cref="T:Verse.FloatRange" />.</summary>
+			<summary>Create a slider for an <see cref="T:Verse.IntRange" /> or <see cref="T:Verse.FloatRange" />.</summary>
 			<param name="minRange">Minimum difference between the min and max of the range; optional</param>
 			<Common>
 			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
@@ -646,154 +1252,24 @@
 		</ForRange>
 		</Range>
         </member>
-        <member name="T:DivineFramework.UI.TabbedHandler`1">
-            <inheritdoc/><summary>A class for creating a tabbed UI page.</summary>
-        </member>
-        <member name="P:DivineFramework.UI.TabbedHandler`1.CurTab">
-            <summary>The currently displayed <see cref="T:DivineFramework.UI.Tab`1"/>.</summary>
-        </member>
-        <member name="M:DivineFramework.UI.TabbedHandler`1.#ctor(DivineFramework.UI.SetUpDelegate)">
-            <param name="setUpMethod"><inheritdoc cref="F:DivineFramework.UI.Handler`2.SetUpMethod" path="/summary" /></param>
-        </member>
-        <member name="M:DivineFramework.UI.TabbedHandler`1.DrawTabs(UnityEngine.Rect,UnityEngine.Rect@)">
-            <DrawTabs>
-			<summary>Draws the tabs at the top of the page in the order they were added.</summary>
-			<param name="canvas">The <see cref="T:UnityEngine.Rect" /> for the entire space of the page.</param>
-			<param name="innerRect">The <see cref="T:UnityEngine.Rect" /> you should use to create the <see cref="T:Verse.Listing" /> for the page's content.</param>
-		</DrawTabs>
-        </member>
-        <member name="M:DivineFramework.UI.TabbedHandler`1.DrawContents(Verse.Listing)">
-            <DrawContents>
-			<summary>Draw the contents of the selected tab.</summary>
-			<param name="listing">The <see cref="T:Verse.Listing" /> to use.</param>
-		</DrawContents>
-        </member>
-        <member name="M:DivineFramework.UI.TabbedHandler`1.AddTab(DivineFramework.UI.SettingsHandler{`0},System.String,DivineFramework.UI.OnClickDelegate,System.Func{System.Boolean})">
-            <AddTab>
-			<summary>Add a new tab to the <see cref="T:DivineFramework.UI.TabbedHandler`1" />. Each tab has a <see cref="T:DivineFramework.UI.SettingsHandler`1" /> that will be drawn when that tab is selected.</summary>
-			<param name="handler">The <see cref="T:DivineFramework.UI.SettingsHandler`1" /> to draw when this tab is selected.</param>
-			<param name="name">A unique name for the tab which can be used to retrieve this tab later. Will be used as the label for the tab if another label is not provided.</param>
-			<param name="clickedAction">An optional delegate to be called when the tab is clicked. Defaults to just setting the selected tab to be this tab.</param>
-			<param name="selected">An optional delegate to determine if the tab is selected. Defaults to just checking if the selected tab is the same as this tab.</param>
-			<returns><see langword="true" /> if the tab was added.</returns>
-		</AddTab>
-        </member>
-        <member name="M:DivineFramework.UI.TabbedHandler`1.Initialize">
-            <summary>Calls <see cref="F:DivineFramework.UI.Handler`2.SetUpMethod"/> the first time this is called. Does not initialize <see cref="F:DivineFramework.UI.Handler`2.Items"/> since the <see cref="T:Verse.Listing"/> needed to set them up properly may not have been created yet.</summary>
-        </member>
-        <member name="T:DivineFramework.UI.Tab`1">
-            <Main>
-			<summary>A <see cref="T:Verse.TabRecord" /> that has a <see cref="T:DivineFramework.UI.SettingsHandler`1" /> attached.</summary>
-			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with the tab's <see cref="F:DivineFramework.UI.Tab`1.handler">handler</see>.</typeparam>
-		</Main>
-        </member>
-        <member name="F:DivineFramework.UI.Tab`1.handler">
-            <summary>The <see cref="T:DivineFramework.UI.SettingsHandler`1"/> associated with this tab.</summary>
-        </member>
-        <member name="F:DivineFramework.UI.Tab`1.scrollPos">
-            <summary>Used to keep track of the scroll position for this tab.</summary>
-            <remarks>Should be passed by <see langword="ref"/> to <see cref="M:DivineFramework.UI.Listing_ScrollView.BeginScrollView(UnityEngine.Rect,System.Single,UnityEngine.Vector2@,System.Single)"/>.</remarks>
-        </member>
-        <member name="M:DivineFramework.UI.Tab`1.Initialize">
-            <summary>Initializes the <see cref="F:DivineFramework.UI.Tab`1.handler"/>.</summary>
-        </member>
-        <member name="M:DivineFramework.UI.Tab`1.GetTip">
-            <summary>Get the <see cref="F:DivineFramework.UI.Tab`1.tooltip"/>, if it exists.</summary>
-        </member>
-        <member name="M:DivineFramework.UI.Tab`1.WithLabel(System.String)">
-            <WithLabel>
-			<summary>Add a label to the tab that is different from the tab's <see cref="P:DivineFramework.UI.Tab`1.Name">name</see>.</summary>
-			<param name="label" />
-			<returns>The original <see cref="T:DivineFramework.UI.Tab`1" />.</returns>
+        <member name="M:DivineFramework.UI.NewElement.Label(DivineFramework.UI.LabelDelegate,System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Label>
+			<summary>Create a basic label.</summary>
+			<returns>The newly created <see cref="T:DivineFramework.UI.UILabel" />.</returns>
+			<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+			<WithLabel>
+			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
 		</WithLabel>
-        </member>
-        <member name="M:DivineFramework.UI.Tab`1.WithTooltip(DivineFramework.UI.LabelDelegate)">
-            <WithTooltip>
-			<summary>Add a tooltip to the tab.</summary>
-			<returns>The original <see cref="T:DivineFramework.UI.Tab`1" />.</returns>
-			<param name="tooltip"> <see langword="delegate" /> to the function used to determine the plain text of the tooltip.</param>
-		</WithTooltip>
-        </member>
-        <member name="M:DivineFramework.UI.Tab`1.DrawContents(Verse.Listing)">
-            <summary>Just calls <see cref="M:DivineFramework.UI.SettingsHandler`1.Draw(Verse.Listing)"/> on the <see cref="F:DivineFramework.UI.Tab`1.handler"/>.</summary>
-        </member>
-        <member name="T:DivineFramework.UI.SettingsHandler`1">
-            <Main>
-			<summary>A class for holding and managing multiple <see cref="T:DivineFramework.UI.UIElement" />s.</summary>
-			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</typeparam>
-		</Main>
-        </member>
-        <member name="F:DivineFramework.UI.SettingsHandler`1.verticalSpacing">
-            <summary>Space of the gap between rows.</summary>
-        </member>
-        <member name="F:DivineFramework.UI.SettingsHandler`1.width">
-            <summary>The width for the settings handler that is passed to all rows.</summary>
-        </member>
-        <member name="F:DivineFramework.UI.SettingsHandler`1.height">
-            <summary>The height of this <see cref="T:DivineFramework.UI.SettingsHandler`1"/> the last time it was drawn.</summary>
-        </member>
-        <member name="F:DivineFramework.UI.SettingsHandler`1.maxOneColumn">
-            <summary><param name="maxOneColumn">Setting this to <see langword="true" /> means that a new column will only be made when a row specifically requests it. Hidden rows will still cause a new column in this case.<br />Setting this to <see langword="false" /> means that a new column will be made if a row will not fit in the <see cref="T:UnityEngine.Rect" /> of the <see cref="T:Verse.Listing" />.</param></summary>
-        </member>
-        <member name="M:DivineFramework.UI.SettingsHandler`1.#ctor(System.Boolean,DivineFramework.UI.SetUpDelegate)">
-            <Constructor>
-			<param name="maxOneColumn">Setting this to <see langword="true" /> means that a new column will only be made when a row specifically requests it. Hidden rows will still cause a new column in this case.<br />Setting this to <see langword="false" /> means that a new column will be made if a row will not fit in the <see cref="T:UnityEngine.Rect" /> of the <see cref="T:Verse.Listing" />.</param>
-			<param name="setUpMethod"><inheritdoc cref="F:DivineFramework.UI.Handler`2.SetUpMethod" path="/summary" /></param>
-		</Constructor>
-        </member>
-        <member name="M:DivineFramework.UI.SettingsHandler`1.RegisterNewRow(System.String,System.Single,System.Boolean)">
-            <RegisterNewRow>
-			<summary>Add a new row to the <see cref="T:DivineFramework.UI.SettingsHandler`1" />. This row is a <see cref="T:DivineFramework.UI.UIContainer" /> to hold elements that will be drawn horizontally.</summary>
-			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
-			<param name="gap">The spacing between elements in the container.</param>
-			<param name="newColumn">Whether to start a new column before drawing this row. Has no affect on nested containers.</param>
-			<returns>The <see cref="T:DivineFramework.UI.UIContainer" /> for the new row.</returns>
-		</RegisterNewRow>
-        </member>
-        <member name="M:DivineFramework.UI.SettingsHandler`1.RegisterNewSection(System.String,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Boolean)">
-            <RegisterNewSection>
-			<summary>Add a new row to the <see cref="T:DivineFramework.UI.SettingsHandler`1" />. This row is a <see cref="T:DivineFramework.UI.UISection" /> to hold elements that will be drawn vertically inside a section box.</summary>
-			<param name="spacing">The spacing between elements in the section.</param>
-			<param name="sectionBorder">The space between the border of the section and the <see cref="T:UnityEngine.Rect" /> where the elements are drawn, for the top and sides only.</param>
-			<param name="bottomBorder">Same as <paramref name="sectionBorder" /> but for the bottom of the section.</param>
-			<returns>The <see cref="T:DivineFramework.UI.UISection" /> for the new row.</returns>
-			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
-			<param name="newColumn">Whether to start a new column before drawing this row. Has no affect on nested containers.</param>
-		</RegisterNewSection>
-        </member>
-        <member name="M:DivineFramework.UI.SettingsHandler`1.RegisterResetable(DivineFramework.UI.UIElement)">
-            <RegisterResetable>
-			<summary>Register an element that implements <see cref="T:DivineFramework.UI.IResetable" /> so it will be reset when <see cref="M:DivineFramework.UI.SettingsHandler`1.Reset" /> is called.</summary>
-			<param name="element">The element to reset.</param>
-		</RegisterResetable>
-        </member>
-        <member name="M:DivineFramework.UI.SettingsHandler`1.AddGap(System.Single,System.String)">
-            <AddGap>
-			<summary>Add a row that's just an empty gap.</summary>
-			<param name="height">How tall the gap should be.</param>
-			<returns>The <see cref="T:DivineFramework.UI.UIContainer" /> for the new row.</returns>
-			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
-		</AddGap>
-        </member>
-        <member name="M:DivineFramework.UI.SettingsHandler`1.AddLine(System.Single,System.String)">
-            <AddLine>
-			<summary>Add a row with a horizontal line</summary>
-			<param name="gapHeight">The height of the element. The line will be drawn in the middle.</param>
-			<returns>The <see cref="T:DivineFramework.UI.UIContainer" /> for the new row.</returns>
-			<param name="name">An optional name for the row, which can be used to retrieve this element later. Must be unique among all rows within this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param>
-		</AddLine>
-        </member>
-        <member name="M:DivineFramework.UI.SettingsHandler`1.Reset">
-            <summary>Reset all registered elements to their <see cref="F:DivineFramework.UI.UIWithReference`1.defaultValue">default values.</see></summary>
-        </member>
-        <member name="M:DivineFramework.UI.SettingsHandler`1.Draw(Verse.Listing)">
-            <Draw>
-			<summary>Draw all registered rows in the order they were added.</summary>
-			<param name="list">The <see cref="T:Verse.Listing" /> where the rows should be drawn.</param>
-		</Draw>
+		</Label>
         </member>
         <member name="T:DivineFramework.UI.UIElement">
-            <summary>The base <see langword="class"/> for implementing <see cref="T:DivineFramework.UI.IWidgetElement"/>.</summary>
+            <summary>The base <see langword="class"/> for implementing <see cref="T:DivineFramework.UI.IUIElement"/>.</summary>
+        </member>
+        <member name="F:DivineFramework.UI.UIElement.actualWidth">
+            <summary>The actual width of the element to be used for drawing.</summary>
         </member>
         <member name="F:DivineFramework.UI.UIElement.relativeWidth">
             <summary>Width of the element relative to its container, used to determine <see cref="F:DivineFramework.UI.UIElement.actualWidth">actual width</see>.</summary>
@@ -801,20 +1277,11 @@
         <member name="F:DivineFramework.UI.UIElement.fixedWidth">
             <summary>A set width to use for the <see cref="F:DivineFramework.UI.UIElement.actualWidth">actual width</see>.</summary>
         </member>
-        <member name="F:DivineFramework.UI.UIElement.actualWidth">
-            <summary>The actual width of the element to be used for drawing.</summary>
-        </member>
         <member name="F:DivineFramework.UI.UIElement.height">
             <summary>The height required to display the element properly.</summary>
         </member>
         <member name="F:DivineFramework.UI.UIElement.sizeValid">
             <summary/>
-        </member>
-        <member name="P:DivineFramework.UI.UIElement.IsHidden">
-            <summary>Whether the element should be drawn or not.</summary>
-        </member>
-        <member name="P:DivineFramework.UI.UIElement.SizeValid">
-            <summary>Used to determine if the element needs to be re-initialized because the desired sizing has changed.</summary>
         </member>
         <member name="P:DivineFramework.UI.UIElement.Width">
             <summary>Property to access the <see cref="F:DivineFramework.UI.UIElement.actualWidth">actual width</see> of the element.</summary>
@@ -822,11 +1289,25 @@
         <member name="P:DivineFramework.UI.UIElement.Height">
             <summary>Property to access the current height of an element.</summary>
         </member>
-        <member name="M:DivineFramework.UI.UIElement.Register(System.Single,System.Single)">
+        <member name="P:DivineFramework.UI.UIElement.IsHidden">
+            <summary>Whether the element should be drawn or not.</summary>
+        </member>
+        <member name="P:DivineFramework.UI.UIElement.SizeValid">
+            <summary>Used to determine if the element needs to be re-initialized because the desired sizing has changed.</summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIElement.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
+        <member name="M:DivineFramework.UI.UIElement.Register(System.Single)">
             <Register>
 			<summary><inheritdoc /> The <see cref="P:DivineFramework.UI.UIElement.Width">actual width</see> is calculated if <see cref="F:DivineFramework.UI.UIElement.relativeWidth">relative width</see> or <see cref="F:DivineFramework.UI.UIElement.fixedWidth">fixed width</see> is set.</summary>
 			<param name="parentWidth">Width of the parent container, used to calculate <see cref="P:DivineFramework.UI.UIElement.Width">actual width</see>.</param>
-			<param name="parentGap">Gap setting of the parent container.</param>
 		</Register>
         </member>
         <member name="M:DivineFramework.UI.UIElement.Hide(System.Boolean)">
@@ -854,130 +1335,20 @@
         <member name="M:DivineFramework.UI.UIElement.ToString">
             <inheritdoc/>
         </member>
-        <member name="T:DivineFramework.UI.UIContainer">
-            <summary>A <see cref="T:DivineFramework.UI.UIElement"/> that can contain other elements. Elements are drawn horizontally in the order they were added to the container.</summary>
-        </member>
-        <member name="F:DivineFramework.UI.UIContainer.elements">
-            <summary>The elements that will be drawn when this container is drawn.</summary>
-        </member>
-        <member name="M:DivineFramework.UI.UIContainer.Initialize">
-            <Initialize>
-			<summary><inheritdoc /> Determines width for any inner <see cref="F:DivineFramework.UI.UIContainer.elements">elements</see> that have no <see cref="P:DivineFramework.UI.UIElement.Width">actual width</see> assigned yet.</summary>
-		</Initialize>
-        </member>
-        <member name="M:DivineFramework.UI.UIContainer.Draw(UnityEngine.Rect)">
-            <Draw>
-			<summary>Draws all inner <see cref="F:DivineFramework.UI.UIContainer.elements">elements</see> in the order they were added to the container.</summary>
-			<remarks>Hidden elements are not drawn, but the space they would have taken up is still used. If the size of any element is not valid, the container is marked as invalid.</remarks>
-			<inheritdoc />
-		</Draw>
-        </member>
-        <member name="M:DivineFramework.UI.UIContainer.AddElement(DivineFramework.UI.UIElement,System.String)">
-            <AddElement>
-			<summary>Add an element to this container.</summary>
-			<remarks>Only add an element after you have finished modifying it. Some of these operations change the <see langword="type" />, resulting in a new <see langword="object" /> being created. Only add the element at the end to be sure the completed object is what is added to the container.</remarks>
-			<param name="element">The element to add.</param>
-			<param name="name">Optional name for the new element. Must be unique within this container.</param>
-			<returns><see langword="true" /> if the element was added.</returns>
-		</AddElement>
-        </member>
-        <member name="M:DivineFramework.UI.UIContainer.AddLabel(DivineFramework.UI.LabelDelegate,System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
-            <AddLabel>
-			<summary>Add an element for a text label.</summary>
-			<returns>The newly created <see cref="T:DivineFramework.UI.UILabel" />.</returns>
-			<Common>
-			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-		</Common>
-			<param name="name">Optional name for the new element. Must be unique within this container.</param>
-			<WithLabel>
-			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
-		</WithLabel>
-		</AddLabel>
-        </member>
-        <member name="M:DivineFramework.UI.UIContainer.AddHeader(DivineFramework.UI.LabelDelegate,System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
-            <AddLabel>
-			<summary>Add an element for a text label.</summary>
-			<returns>The newly created <see cref="T:DivineFramework.UI.UILabel" />.</returns>
-			<Common>
-			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-		</Common>
-			<param name="name">Optional name for the new element. Must be unique within this container.</param>
-			<WithLabel>
-			<param name="labelKey">A <see langword="delegate" /> to the function used to determine the plain text of the label.</param>
-		</WithLabel>
-		</AddLabel>
-        </member>
-        <member name="M:DivineFramework.UI.UIContainer.AddResetButton``1(DivineFramework.UI.SettingsHandler{``0},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
-            <AddResetButton>
-			<summary>Add an element for a button that will reset all values registered to the <paramref name="handler" />.</summary>
-			<param name="handler">The <see cref="T:DivineFramework.UI.SettingsHandler`1" /> to reset.</param>
-			<returns>The newly created <see cref="T:DivineFramework.UI.UIButtonText" />.</returns>
-			<Common>
-			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-		</Common>
-			<param name="name">Optional name for the new element. Must be unique within this container.</param>
-			<param name="buttonHeight">A fixed height for the button; optional.</param>
-			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</typeparam>
-		</AddResetButton>
-        </member>
-        <member name="M:DivineFramework.UI.UIContainer.AddSpace(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
-            <AddSpace>
-			<summary>Add an element for a blank space.</summary>
-			<param name="height">A fixed height for the space; optional.</param>
-			<returns>The newly created <see cref="T:DivineFramework.UI.UISpace" />.</returns>
-			<Common>
-			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-		</Common>
-			<param name="name">Optional name for the new element. Must be unique within this container.</param>
-		</AddSpace>
-        </member>
-        <member name="M:DivineFramework.UI.UIContainer.AddContainer(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
-            <AddContainer>
-			<summary>Add an inner container to hold other elements.</summary>
-			<param name="gap">The spacing between elements in the container; optional, will default to the <see cref="F:DivineFramework.UI.UIContainer.gap">gap</see> of the parent container.</param>
-			<returns>The newly created <see cref="T:DivineFramework.UI.UIContainer" />.</returns>
-			<Common>
-			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-		</Common>
-			<param name="name">Optional name for the new element. Must be unique within this container.</param>
-		</AddContainer>
-        </member>
-        <member name="M:DivineFramework.UI.UIContainer.AddLine(System.Single,System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
-            <AddLine>
-			<summary>Add a horizontal line</summary>
-			<param name="gapHeight">The height of the element. The line will be drawn in the middle.</param>
-			<returns>The newly created <see cref="T:DivineFramework.UI.UILine" />.</returns>
-			<Common>
-			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-		</Common>
-			<param name="name">Optional name for the new element. Must be unique within this container.</param>
-		</AddLine>
-        </member>
-        <member name="M:DivineFramework.UI.UIContainer.AddSection(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
-            <AddSection>
-			<summary>Add an inner section to hold other elements.</summary>
-			<returns>The newly created <see cref="T:DivineFramework.UI.UISection" />.</returns>
-			<param name="spacing">The spacing between elements in the section.</param>
-			<param name="sectionBorder">The space between the border of the section and the <see cref="T:UnityEngine.Rect" /> where the elements are drawn, for the top and sides only.</param>
-			<param name="bottomBorder">Same as <paramref name="sectionBorder" /> but for the bottom of the section.</param>
-			<Common>
-			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
-		</Common>
-			<param name="name">Optional name for the new element. Must be unique within this container.</param>
-		</AddSection>
-        </member>
         <member name="T:DivineFramework.UI.UIIntEntry">
             <summary>An element that allows the user to input an <see cref="T:System.Int32"/> and has buttons to increase/decrease the value by a base <see cref="F:DivineFramework.UI.UIIntEntry.multiplier">amount</see> and that amount x10. Optional min and max values. Can use shift click and ctrl click to increase the amount.</summary>
         </member>
         <member name="F:DivineFramework.UI.UIIntEntry.multiplier">
-            <summary>The base amount for the buttons.</summary>
+            <summary><param name="multiplier">The base amount for the buttons.</param></summary>
+        </member>
+        <member name="M:DivineFramework.UI.UIIntEntry.#ctor(DivineFramework.UI.UIInputInt,System.Int32)">
+            <UIIntEntry>
+		<DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
+		<param name="multiplier">The base amount for the buttons.</param>
+	</UIIntEntry>
         </member>
         <member name="T:DivineFramework.UI.UILabel">
             <summary>A simple text element.</summary>
@@ -986,6 +1357,15 @@
             <ILabelled>
 			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
 		</ILabelled>
+        </member>
+        <member name="M:DivineFramework.UI.UILabel.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
         </member>
         <member name="M:DivineFramework.UI.UILabel.Initialize">
             <Initialize>
@@ -1007,31 +1387,38 @@
         <member name="T:DivineFramework.UI.UIHeader">
             <summary>A <see cref="T:DivineFramework.UI.UILabel"/> but bigger.</summary>
         </member>
+        <member name="M:DivineFramework.UI.UIHeader.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
+            <Common>
+		<summary />
+		<Common>
+			<param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
+		</Common>
+	</Common>
+        </member>
         <member name="T:DivineFramework.LogUtil">
-            <summary>
-            Methods for logging to the console.
-            </summary>
+            <summary>Methods for logging to the console.</summary>
         </member>
         <member name="M:DivineFramework.LogUtil.Message(System.String,System.Boolean)">
             <LogUtil>
 		<summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary>
-        <param name="message">The text of the log message.</param>
-        <param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
+		<param name="message">The text of the log message.</param>
+		<param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
 	</LogUtil>
         </member>
         <member name="M:DivineFramework.LogUtil.Warning(System.String,System.Boolean)">
             <LogUtil>
 		<summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary>
-        <param name="message">The text of the log message.</param>
-        <param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
+		<param name="message">The text of the log message.</param>
+		<param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
 	</LogUtil>
         </member>
         <member name="M:DivineFramework.LogUtil.WarningOnce(System.String,System.Int32,System.Boolean)">
             <LogUtilWithKey>
 		<LogUtil>
 		<summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary>
-        <param name="message">The text of the log message.</param>
-        <param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
+		<param name="message">The text of the log message.</param>
+		<param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
 	</LogUtil>
 		<param name="key">A number used to determine if this message has already been logged. Should be unique for each usage.</param>
 	</LogUtilWithKey>
@@ -1039,19 +1426,42 @@
         <member name="M:DivineFramework.LogUtil.Error(System.String,System.Boolean)">
             <LogUtil>
 		<summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary>
-        <param name="message">The text of the log message.</param>
-        <param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
+		<param name="message">The text of the log message.</param>
+		<param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
 	</LogUtil>
         </member>
         <member name="M:DivineFramework.LogUtil.ErrorOnce(System.String,System.Int32,System.Boolean)">
             <LogUtilWithKey>
 		<LogUtil>
 		<summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary>
-        <param name="message">The text of the log message.</param>
-        <param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
+		<param name="message">The text of the log message.</param>
+		<param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
 	</LogUtil>
 		<param name="key">A number used to determine if this message has already been logged. Should be unique for each usage.</param>
 	</LogUtilWithKey>
+        </member>
+        <member name="T:DivineFramework.LogToFile">
+            <summary>Logs messages to a custom log file on the desktop.</summary>
+        </member>
+        <member name="M:DivineFramework.LogToFile.#ctor(System.String,System.Boolean)">
+            <Constructor>
+			<summary>Initializes a new instance of the <see cref="T:DivineFramework.LogToFile" /> class.</summary>
+			<remarks>You should only have one instance of this class per log file. Make sure to call <see cref="M:DivineFramework.LogToFile.Close" /> when finished.</remarks>
+			<param name="fileName">The name of the log file. Will be placed on the desktop.</param>
+			<param name="autoFlush">If set to <see langword="true" />, the data will be written to the file after every write operation. If set to <see langword="false" />, the data will be written to the file only when the buffer is full.</param>
+		</Constructor>
+        </member>
+        <member name="M:DivineFramework.LogToFile.Log(System.String)">
+            <Log>
+			<summary>Logs a message to the desktop log file.</summary>
+			<param name="message">The text of the log message.</param>
+		</Log>
+        </member>
+        <member name="M:DivineFramework.LogToFile.Close">
+            <Close>
+			<summary>Stops writing to the file and frees up resources.</summary>
+			<remarks>Use this when you've finished logging. The file will be opened again if <see cref="M:DivineFramework.LogToFile.Log(System.String)" /> is used.</remarks>
+		</Close>
         </member>
         <member name="T:DivineFramework.ModManagement">
             <summary/>
