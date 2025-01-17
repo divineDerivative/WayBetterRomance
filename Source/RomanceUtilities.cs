@@ -97,6 +97,11 @@ namespace BetterRomance
         public static float PartnerFactor(Pawn pawn, List<Pawn> partnerList, out Pawn partner, bool forRomance)
         {
             partner = null;
+            //If there's not a real person they're actually cheating on, just pretend
+            if (partnerList.NullOrEmpty())
+            {
+                return PartnerFactor(pawn, null, forRomance);
+            }
             float partnerFactor = 99999f;
             foreach (Pawn p in partnerList)
             {
@@ -120,6 +125,13 @@ namespace BetterRomance
         {
             //Opinion
             IntRange opinionRange = BetterRomanceMod.settings.cheatingOpinion;
+            if (partner is null)
+            {
+                //This is for people who think they are cheating but there's no real people that they are cheating on
+                //Which should only be those with lover and spouse count at 0
+                //So judge based on a hypothetical partner they have 0 opinion of
+                return Mathf.InverseLerp(opinionRange.max, opinionRange.min, 0);
+            }
             float opinion = cheater.relations.OpinionOf(partner);
             float opinionFactor = Mathf.InverseLerp(opinionRange.max, opinionRange.min, opinion);
             //Increase for philanderer
