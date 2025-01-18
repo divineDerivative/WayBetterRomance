@@ -349,16 +349,26 @@ namespace BetterRomance
                 return 0f;
                 //Otherwise their rating is already factored in via secondary romance chance factor
             }
+            //Check non spouse lovin' precepts
+            float preceptFactor = 1f;
+            if (!target.relations.DirectRelationExists(PawnRelationDefOf.Spouse, asker))
+            {
+                preceptFactor = PreceptUtility.NonSpouseLovinWillDoChance(target.ideo.Ideo);
+            }
             RomanceUtilities.WillPawnContinue(target, asker, out float chance, false, false);
             float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
             //Lower chances if they're not in a relationship
             if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, asker))
             {
-                romanceFactor /= 1.5f;
+                //Only if they're not free approved
+                if (target.ideo?.Ideo.GetLovinPreceptDef() != RomanceDefOf.Lovin_FreeApproved)
+                {
+                    romanceFactor /= 1.5f;
+                }
             }
             float opinionFactor = OpinionFactor(target, asker, ordered);
             //Adjust based on opinion and increase chance for forced job
-            return chance * romanceFactor * opinionFactor * (ordered ? 1f : 0.8f);
+            return chance * romanceFactor * opinionFactor * preceptFactor * (ordered ? 1f : 0.8f);
         }
 
         /// <summary>
@@ -455,7 +465,20 @@ namespace BetterRomance
             //Adjustment for not being in a relationship
             if (!LovePartnerRelationUtility.LovePartnerRelationExists(target, initiator))
             {
-                text.AppendLine(HookupFactorLine("WBR.HookupChanceNotPartner".Translate(), 2f / 3f));
+                //Only if they're not free approved
+                if (target.ideo?.Ideo.GetLovinPreceptDef() != RomanceDefOf.Lovin_FreeApproved)
+                {
+                    text.AppendLine(HookupFactorLine("WBR.HookupChanceNotPartner".Translate(), 2f / 3f));
+                }
+            }
+            //Adjustment for non-spouse lovin precept
+            if (!target.relations.DirectRelationExists(PawnRelationDefOf.Spouse, initiator))
+            {
+                float precept = PreceptUtility.NonSpouseLovinWillDoChance(target.ideo.Ideo);
+                if (precept != 1f)
+                {
+                    text.AppendLine(HookupFactorLine("WBR.CantHookupTargetIdeo".Translate(target.ideo.Ideo), precept));
+                }
             }
             //Adjustment for opinion of existing partner
             if (RomanceUtilities.IsThisCheating(target, initiator, out List<Pawn> partnerList) && !partnerList.NullOrEmpty())

@@ -160,5 +160,44 @@ namespace BetterRomance
                 IdeosChecked.Add(ideo);
             }
         }
+
+        /// <summary>Finds a given <paramref name="ideo"/>'s precept for the specified <paramref name="issue"/>.</summary>
+        /// <remarks>Only use for single precept issues.</remarks>
+        public static Precept GetPreceptForIssue(this Ideo ideo, IssueDef issue)
+        {
+            foreach (Precept precept in ideo.PreceptsListForReading)
+            {
+                if (precept.def.issue == issue)
+                {
+                    return precept;
+                }
+            }
+            return null;
+        }
+
+        public static float NonSpouseLovinWillDoChance(Ideo ideo)
+        {
+            PreceptDef precept = ideo.GetLovinPreceptDef();
+            float fromComp = 0f;
+            foreach (PreceptComp comp in precept.comps)
+            {
+                if (comp is PreceptComp_UnwillingToDo_Chance unwillingComp && unwillingComp.eventDef == HistoryEventDefOf.GotLovin_NonSpouse)
+                {
+                    fromComp = unwillingComp.chance;
+                    break;
+                }
+            }
+            return 1f - fromComp;
+        }
+
+        public static PreceptDef GetLovinPreceptDef(this Ideo ideo)
+        {
+            Precept precept = ideo.GetPreceptForIssue(RomanceDefOf.Lovin);
+            if ( precept is null)
+            {
+                LogUtil.Error($"Unable to find lovin' precept for {ideo.name}");
+            }
+            return precept.def;
+        }
     }
 }
