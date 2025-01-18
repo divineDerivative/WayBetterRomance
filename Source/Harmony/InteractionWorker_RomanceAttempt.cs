@@ -56,7 +56,7 @@ namespace BetterRomance.HarmonyPatches
                 return false;
             }
             //Leave them alone if they said no recently enough to remember it
-            if (initiator.needs.mood.thoughts.memories.NumMemoriesOfDef(ThoughtDefOf.RebuffedMyRomanceAttempt) > 0)
+            if (initiator.needs.mood.thoughts.memories.Memories.Any(x => x.def == ThoughtDefOf.RebuffedMyRomanceAttempt && x.otherPawn == recipient))
             {
                 __result = 0f;
                 return false;
