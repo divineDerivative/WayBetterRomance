@@ -177,14 +177,17 @@ namespace BetterRomance
 
         public static float NonSpouseLovinWillDoChance(Ideo ideo)
         {
-            PreceptDef precept = ideo.GetLovinPreceptDef();
             float fromComp = 0f;
-            foreach (PreceptComp comp in precept.comps)
+            if (ideo is not null)
             {
-                if (comp is PreceptComp_UnwillingToDo_Chance unwillingComp && unwillingComp.eventDef == HistoryEventDefOf.GotLovin_NonSpouse)
+                PreceptDef precept = ideo.GetLovinPreceptDef();
+                foreach (PreceptComp comp in precept.comps)
                 {
-                    fromComp = unwillingComp.chance;
-                    break;
+                    if (comp is PreceptComp_UnwillingToDo_Chance unwillingComp && unwillingComp.eventDef == HistoryEventDefOf.GotLovin_NonSpouse)
+                    {
+                        fromComp = unwillingComp.chance;
+                        break;
+                    }
                 }
             }
             return 1f - fromComp;

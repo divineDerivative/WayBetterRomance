@@ -353,7 +353,7 @@ namespace BetterRomance
             float preceptFactor = 1f;
             if (!target.relations.DirectRelationExists(PawnRelationDefOf.Spouse, asker))
             {
-                preceptFactor = PreceptUtility.NonSpouseLovinWillDoChance(target.ideo.Ideo);
+                preceptFactor = PreceptUtility.NonSpouseLovinWillDoChance(target.ideo?.Ideo);
             }
             RomanceUtilities.WillPawnContinue(target, asker, out float chance, false, false);
             float romanceFactor = target.relations.SecondaryRomanceChanceFactor(asker);
@@ -474,7 +474,7 @@ namespace BetterRomance
             //Adjustment for non-spouse lovin precept
             if (!target.relations.DirectRelationExists(PawnRelationDefOf.Spouse, initiator))
             {
-                float precept = PreceptUtility.NonSpouseLovinWillDoChance(target.ideo.Ideo);
+                float precept = PreceptUtility.NonSpouseLovinWillDoChance(target.ideo?.Ideo);
                 if (precept != 1f)
                 {
                     text.AppendLine(HookupFactorLine("WBR.CantHookupTargetIdeo".Translate(target.ideo.Ideo), precept));
