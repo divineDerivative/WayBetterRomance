@@ -21,7 +21,7 @@ namespace BetterRomance
 
         public static bool CaresAboutCheating(this Pawn pawn)
         {
-            if (pawn.ideo?.Ideo.PreceptsListForReading.Any((Precept x) => x.def == RomanceDefOf.Lovin_FreeApproved) ?? false)
+            if (pawn.ideo?.Ideo.GetLovinPreceptDef() == RomanceDefOf.Lovin_FreeApproved)
             {
                 return false;
             }
