@@ -48,7 +48,7 @@ namespace BetterRomance
                         //Create date lead job
                         dateLeadJob = JobMaker.MakeJob(IsDate ? RomanceDefOf.JobDateLead : RomanceDefOf.JobHangoutLead, TargetPawn, list[0]);
                         //Add the path info to the job info
-                        LogUtil.Message("Date walk path found.");
+                        LogUtil.Message("Date walk path found.", true);
                         dateLeadJob.targetQueueB = new();
                         for (int i = 1; i < list.Count; i++)
                         {
@@ -220,7 +220,7 @@ namespace BetterRomance
             if (list.Count == 0)
             {
                 result = false;
-                LogUtil.Message("No date walk destination found.");
+                LogUtil.Message("No date walk destination found.", true);
             }
             else
             {
