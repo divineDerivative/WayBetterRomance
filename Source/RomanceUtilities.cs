@@ -80,11 +80,8 @@ namespace BetterRomance
         /// <summary>
         /// Whether <paramref name="pawn"/> decides to continue with an interaction with <paramref name="otherPawn"/>. Always returns true if interaction is not cheating and is allowed by ideo. Otherwise, uses the partner they would feel the worst about cheating on to decide.
         /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="otherPawn"></param>
-        /// <param name="chance">The chance used to determine result, passed out for use in tool tips</param>
-        /// <param name="forRomance">Whether deciding to cheat would result in a new relationship</param>
-        /// <returns></returns>
+        /// <param name="chance">The chance used to determine the result, passed out for use in tool tips.</param>
+        /// <param name="forRomance">Whether deciding to cheat would result in a new relationship.</param>
         public static bool WillPawnContinue(Pawn pawn, Pawn otherPawn, out float chance, bool forRomance, bool excludeCheatingPrecept)
         {
             chance = 1f;
@@ -104,13 +101,10 @@ namespace BetterRomance
             return true;
         }
 
-        /// <summary>
-        /// Factor based on opinion of most liked partner. Higher opinion means a lower factor. Only call if <paramref name="partnerList"/> is not empty
-        /// </summary>
-        /// <param name="pawn">The <see cref="Pawn"/> in question</param>
+        /// <summary>Factor based on opinion of most liked partner. Higher opinion means a lower factor.</summary>
+        /// <param name="pawn">The <see cref="Pawn"/> in question.</param>
         /// <param name="partnerList">List of partners that would feel cheated on, provided by <see cref="IsThisCheating(Pawn, Pawn, out List{Pawn}, bool)"/></param>
-        /// <param name="partner">The partner <paramref name="pawn"/> would feel the worst about cheating on</param>
-        /// <returns></returns>
+        /// <param name="partner">The partner <paramref name="pawn"/> would feel the worst about cheating on.</param>
         public static float PartnerFactor(Pawn pawn, List<Pawn> partnerList, out Pawn partner, bool forRomance)
         {
             partner = null;
@@ -119,6 +113,7 @@ namespace BetterRomance
             {
                 return PartnerFactor(pawn, null, forRomance);
             }
+            //Find the lowest factor
             float partnerFactor = 99999f;
             foreach (Pawn p in partnerList)
             {
@@ -132,12 +127,7 @@ namespace BetterRomance
             return partnerFactor;
         }
 
-        /// <summary>
-        /// Factor based on <paramref name="cheater"/>'s feelings towards a specific <paramref name="partner"/>. Uses opinion, philanderer status, and type of relationship
-        /// </summary>
-        /// <param name="cheater"></param>
-        /// <param name="partner"></param>
-        /// <returns></returns>
+        /// <summary>Factor based on <paramref name="cheater"/>'s feelings towards a specific <paramref name="partner"/>. Uses opinion, philanderer status, and type of relationship. Higher opinion results in a lower factor.</summary>
         public static float PartnerFactor(Pawn cheater, Pawn partner, bool forRomance)
         {
             //Opinion
@@ -147,10 +137,10 @@ namespace BetterRomance
                 //This is for people who think they are cheating but there's no real people that they are cheating on
                 //Which should only be those with lover and spouse count at 0
                 //So judge based on a hypothetical partner they have 0 opinion of
+                //With default settings this would be 0.5f
                 return Mathf.InverseLerp(opinionRange.max, opinionRange.min, 0);
             }
-            float opinion = cheater.relations.OpinionOf(partner);
-            float opinionFactor = Mathf.InverseLerp(opinionRange.max, opinionRange.min, opinion);
+            float opinionFactor = Mathf.InverseLerp(opinionRange.max, opinionRange.min, cheater.relations.OpinionOf(partner));
             //Increase for philanderer
             if (cheater.story.traits.HasTrait(RomanceDefOf.Philanderer))
             {
@@ -189,9 +179,7 @@ namespace BetterRomance
         /// <summary>
         /// Base chance that a given <paramref name="pawn"/> will cheat. Based on settings and traits.
         /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="excludePrecept">If this is being used for a tooltip, don't include RotR precepts since they have their own tooltips</param>
-        /// <returns></returns>
+        /// <param name="excludePrecept">Whether to include the cheating precepts from RotR. For use in places where RotR has it's own patches to apply the precepts, or for tooltips, since RotR has it's own methods for those.</param>
         public static float CheatingChance(Pawn pawn, bool excludePrecept = false)
         {
             //If they are faithful, don't do it
@@ -218,11 +206,7 @@ namespace BetterRomance
             return cheatChance;
         }
 
-        /// <summary>
-        /// Grabs the first non-spouse love partner of the opposite gender. For use in generating parents.
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <returns></returns>
+        /// <summary>Grabs the first non-spouse love partner of the opposite gender. For use in generating parents.</summary>
         public static Pawn GetFirstLoverOfOppositeGender(Pawn pawn)
         {
             foreach (Pawn lover in GetNonSpouseLovers(pawn, true))
@@ -235,12 +219,7 @@ namespace BetterRomance
             return null;
         }
 
-        /// <summary>
-        /// Generates a list of love partners that does not include spouses or fiances
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="includeDead"></param>
-        /// <returns></returns>
+        /// <summary>Generates a list of love partners that does not include spouses or fianc�es.</summary>
         public static List<Pawn> GetNonSpouseLovers(Pawn pawn, bool includeDead)
         {
             List<Pawn> list = new();
@@ -258,13 +237,9 @@ namespace BetterRomance
             return list;
         }
 
-        /// <summary>
-        /// Generates a list of pawns that are in love relations with <paramref name="pawn"/>. Pawns are only listed once, even if they are in more than one love relation.
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="includeDead">Whether dead pawns are added to the list</param>
-        /// <param name="onMap">Whether pawns must be on the same map to be added to the list</param>
-        /// <returns>A list of pawns that have a love relation with <paramref name="pawn"/></returns>
+        /// <summary>Generates a list of pawns that are in love relations with <paramref name="pawn"/>. Pawns are only listed once, even if they are in more than one love relation.</summary>
+        /// <param name="includeDead">Whether dead pawns are added to the list.</param>
+        /// <param name="onMap">Whether pawns must be on the same map to be added to the list.</param>
         public static List<Pawn> GetAllLoveRelationPawns(Pawn pawn, bool includeDead, bool onMap)
         {
             List<Pawn> list = new();
@@ -285,13 +260,7 @@ namespace BetterRomance
             return list;
         }
 
-        /// <summary>
-        /// Finds the most liked pawn with a specific <paramref name="relation"/> to <paramref name="pawn"/>. Any direct relation will work, no implied relations.
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="relation"></param>
-        /// <param name="allowDead"></param>
-        /// <returns></returns>
+        /// <summary>Finds the most liked pawn with a specific <paramref name="relation"/> to <paramref name="pawn"/>. Any direct relation will work, no implied relations.</summary>
         public static Pawn GetMostLikedOfRel(Pawn pawn, PawnRelationDef relation, bool allowDead)
         {
             Pawn result = null;
@@ -326,11 +295,7 @@ namespace BetterRomance
             return result;
         }
 
-        /// <summary>
-        /// Checks if a <typeparamref name="T"/> already exists on <paramref name="p"/>, adds it if needed, and then returns the comp
-        /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
+        /// <summary>Checks if a <typeparamref name="T"/> already exists on <paramref name="p"/>, adds it if needed, and then returns the comp.</summary>
         public static T CheckForComp<T>(this Pawn p) where T : ThingComp
         {
             T comp = p.GetComp<T>();
@@ -351,12 +316,7 @@ namespace BetterRomance
             return comp;
         }
 
-        /// <summary>
-        /// Adjustment to success chance based on <paramref name="pawn"/>'s orientation and <paramref name="target"/>'s gender
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
+        /// <summary>Adjustment to success chance based on <paramref name="pawn"/>'s orientation and <paramref name="target"/>'s gender.</summary>
         public static float SexualityFactor(Pawn pawn, Pawn target)
         {
             float factor = 1f;
@@ -391,13 +351,7 @@ namespace BetterRomance
             return pawn.health?.hediffSet?.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer) ?? false;
         }
 
-        /// <summary>
-        /// Whether a pawn with the given <paramref name="ideo"/> and <paramref name="gender"/> is able to do an event of <paramref name="def"/>
-        /// </summary>
-        /// <param name="def"></param>
-        /// <param name="ideo"></param>
-        /// <param name="gender"></param>
-        /// <returns></returns>
+        /// <summary>Whether a pawn with the given <paramref name="ideo"/> and <paramref name="gender"/> is able to do an event of <paramref name="def"/>.</summary>
         public static bool WillingToDoGendered(this HistoryEventDef def, Ideo ideo, Gender gender)
         {
             if (ideo == null)
@@ -431,6 +385,7 @@ namespace BetterRomance
             return true;
         }
 
+        /// <summary>Finds a partner in <paramref name="pawn"/>'s bed that will agree to lovin', skipping sex repulsed partners.</summary>
         public static Pawn GetPartnerInMyBedForLovin(Pawn pawn)
         {
             Building_Bed bed = pawn.CurrentBed();
@@ -456,6 +411,7 @@ namespace BetterRomance
             return null;
         }
 
+        /// <summary>Determines the appropriate relationship to give <paramref name="first"/> and <paramref name="second"/> as prospective parents.</summary>
         public static PawnRelationDef GetAppropriateParentRelationship(Pawn first, Pawn second)
         {
             Pawn mom = first.gender == Gender.Female ? first : second;
@@ -479,6 +435,7 @@ namespace BetterRomance
             return PawnRelationDefOf.ExLover;
         }
 
+        /// <summary>Determines male/female roles for pregnancy. Returns false if both roles cannot be fulfilled.</summary>
         public static bool DetermineSexesForPregnancy(Pawn firstPawn, Pawn secondPawn, out Pawn male, out Pawn female)
         {
             male = null;
