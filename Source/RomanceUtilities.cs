@@ -24,40 +24,57 @@ namespace BetterRomance
         /// <summary>
         /// Determines if an interaction between <paramref name="pawn"/> and <paramref name="otherPawn"/> would be cheating from <paramref name="pawn"/>'s point of view. Includes a list of pawns that would think they are being cheated on.
         /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="otherPawn"></param>
-        /// <param name="cheaterList">A list of pawns who will think that <paramref name="pawn"/> cheated on them, regardless of what <paramref name="pawn"/> thinks</param>
-        /// <param name="loverCountOnly">Whether this check is in regards to relationships, as opposed to sex</param>
-        /// <returns>True or False</returns>
-        public static bool IsThisCheating(Pawn pawn, Pawn otherPawn, out List<Pawn> cheaterList, bool loverCountOnly = false)
+        /// <param name="cheaterList">A list of pawns who will think that <paramref name="pawn"/> cheated on them, regardless of what <paramref name="pawn"/> thinks.</param>
+        /// <param name="forRomance">Whether this check is in regards to relationships, as opposed to sex; used for romance attempts and dates.</param>
+        //forRomance is used to differentiate between cheating by having sex with someone and cheating by taking a new lover
+        //The lovin' precept is meant to represent thoughts about sex, not relationships
+        //So you can be totally fine hooking up with other people, but starting a new relationship is not cool
+        //Or the other way around, you can be in as many relationships as you want, but having sex without a relationship first is not cool
+        public static bool IsThisCheating(Pawn pawn, Pawn otherPawn, out List<Pawn> cheaterList, bool forRomance = false)
         {
-            //This has to happen to get passed out
             cheaterList = new();
             //Are they in a relationship?
             if (otherPawn != null && LovePartnerRelationUtility.LovePartnerRelationExists(pawn, otherPawn))
             {
                 return false;
             }
-            //loverCountOnly is used to differentiate between cheating by having sex with someone and cheating by taking a new lover
-            //The free and approved precept is meant to represent thoughts about sex, not relationships
-            //So you can be totally fine hooking up with other people, but starting a new relationship is not cool
-            //Or the other way around, you can be in as many relationships as you want, but having sex without a relationship first is not cool
-            //Currently used only for the romance attempt interaction worker
+            //See what their partners think
             foreach (Pawn p in GetAllLoveRelationPawns(pawn, false, false))
             {
-                //If the pawns have different ideos, I think this will check if the partner would feel cheated on per their ideo and settings
-                if (!pawn.GetHistoryEventForLoveRelationCountPlusOne().WillingToDoGendered(p.Ideo, pawn.gender) && (loverCountOnly || p.CaresAboutCheating()))
+                //Check if a new partner would be allowed by p's ideo according to pawn's gender
+                //If it's for romance they will be upset, otherwise check if they care about cheating
+                if (!pawn.GetHistoryEventForLoveRelationCountPlusOne().WillingToDoGendered(p.Ideo, pawn.gender) && (forRomance || p.CaresAboutCheating()))
                 {
                     cheaterList.Add(p);
                 }
             }
             //The cheater list is for use later, initiator will only look at their ideo and settings to decide if they're cheating
-            if (IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn) || (!loverCountOnly && !pawn.CaresAboutCheating()))
+
+            //First check if they're allowed to do it
+            bool allowed;
+            if (forRomance)
             {
-                //Faithful pawns will respect their partner's ideo
-                return !cheaterList.NullOrEmpty() && pawn.story.traits.HasTrait(RomanceDefOf.Faithful);
+                //Are they allowed to have another lover?
+                allowed = IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn);
             }
-            return true;
+            else
+            {
+                //If it's for sex, check if they care about cheating
+                allowed = !pawn.CaresAboutCheating();
+            }
+            //If it's not allowed, it's cheating, regardless of what partners might think
+            if (!allowed)
+            {
+                return true;
+            }
+            //If it's allowed and no one's upset, it's not cheating
+            if (cheaterList.NullOrEmpty())
+            {
+                return false;
+            }
+            //At this point it's allowed but some partners will be upset
+            //So we're just checking if they have the faithful trait
+            return pawn.story.traits.HasTrait(RomanceDefOf.Faithful);
         }
 
         /// <summary>
