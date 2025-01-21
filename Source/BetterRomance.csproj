@@ -92,6 +92,7 @@
     <Compile Include="Harmony\Dynamic Transpilers\MiscAge.cs" />
     <Compile Include="Harmony\Dynamic Transpilers\RegularSexSettings.cs" />
     <Compile Include="Harmony\Dynamic Transpilers\RelationsSettings.cs" />
+    <Compile Include="Harmony\Ideology\Ideo.cs" />
     <Compile Include="Harmony\Ideology\Pawn_IdeoTracker.cs" />
     <Compile Include="Harmony\PawnRelationWorker_Spouse.cs" />
     <Compile Include="Harmony\Pawn_HealthTracker.cs" />

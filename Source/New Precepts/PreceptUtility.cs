@@ -193,14 +193,22 @@ namespace BetterRomance
             return 1f - fromComp;
         }
 
+        internal static Dictionary<Ideo, PreceptDef> lovinPreceptCache = new();
+
         public static PreceptDef GetLovinPreceptDef(this Ideo ideo)
         {
-            Precept precept = ideo.GetPreceptForIssue(RomanceDefOf.Lovin);
-            if ( precept is null)
+            if (!lovinPreceptCache.ContainsKey(ideo))
             {
-                LogUtil.Error($"Unable to find lovin' precept for {ideo.name}");
+                Precept precept = ideo.GetPreceptForIssue(RomanceDefOf.Lovin);
+                if (precept is null)
+                {
+                    LogUtil.Error($"Unable to find lovin' precept for {ideo.name}");
+                    return null;
+                }
+                lovinPreceptCache[ideo] = precept.def;
             }
-            return precept.def;
+            lovinPreceptCache.TryGetValue(ideo, out PreceptDef cachedPrecept);
+            return cachedPrecept;
         }
     }
 }
