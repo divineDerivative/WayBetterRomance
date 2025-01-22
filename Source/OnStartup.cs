@@ -22,29 +22,41 @@ namespace BetterRomance
             Harmony harmony = new(id: "rimworld.divineDerivative.romance");
             harmony.PatchAll();
 
+            PatchAliens(harmony);
+            PatchRobots(harmony);
+            PatchSex(harmony);
+            PatchRomance(harmony);
+            PatchMisc(harmony);
+
+            MakeFertilityModList();
+            Settings.ApplyJoySettings();
+            MakeRaceSettingsList();
+        }
+
+        private static void PatchAliens(Harmony harmony)
+        {
             if (ModsConfig.IsActive("erdelf.humanoidalienraces") || ModsConfig.IsActive("erdelf.humanoidalienraces.dev"))
             {
                 Settings.HARActive = true;
                 harmony.PatchHAR();
             }
-            if (ModsConfig.IsActive("telardo.romanceontherim"))
+            if (ModsConfig.IsActive("tachyonite.pawnmorpherpublic"))
             {
                 try
                 {
-                    Settings.RotRActive = true;
-                    HelperClasses.RotRFillRomanceBar = AccessTools.DeclaredMethod(Type.GetType("RomanceOnTheRim.RomanceUtility,RomanceOnTheRim"), "TryAffectRomanceNeedLevelForPawn");
-                    HelperClasses.RotRPreceptExplanation = AccessTools.Method(Type.GetType("RomanceOnTheRim.HarmonyPatch_SocialCardUtility_RomanceExplanation,RomanceOnTheRim"), "PreceptExplanation");
-                    harmony.PatchRotR();
+                    Settings.PawnmorpherActive = true;
+                    harmony.PatchPawnmorpher();
+                    HelperClasses.IsHumanlikePM = AccessTools.Method(Type.GetType("Pawnmorph.FormerHumanUtilities, Pawnmorph"), "IsHumanlike");
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Error($"Error encountered while patching Romance on the Rim: {ex}");
+                    LogUtil.Error($"Error encountered while patching Pawnmorpher: {ex}");
                 }
             }
-            if (ModsConfig.IsActive("dylan.csl"))
-            {
-                HelperClasses.CSLLoved = AccessTools.DeclaredMethod(Type.GetType("Children.MorePawnUtilities,ChildrenHelperClasses"), "Loved", [typeof(Pawn), typeof(Pawn), typeof(bool)]);
-            }
+        }
+
+        private static void PatchRobots(Harmony harmony)
+        {
             if (ModsConfig.IsActive("Killathon.AndroidTiersReforged"))
             {
                 try
@@ -73,16 +85,39 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching MH: Android Tiers Core: {ex}");
                 }
             }
-            if (ModsConfig.IsActive("Neronix17.TweaksGalore"))
+            if (ModsConfig.IsActive("Neronix17.Asimov"))
             {
                 try
                 {
-                    MethodInfo IsSexualityTrait = AccessTools.DeclaredMethod(Type.GetType("TweaksGalore.Patch_PawnGenerator_GenerateTraits,TweaksGalore"), "IsSexualityTrait");
-                    harmony.Patch(IsSexualityTrait, prefix: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.IsSexualityTraitPrefix)));
+                    Settings.AsimovActive = true;
+                    HelperClasses.IsHumanlikeAutomaton = AccessTools.DeclaredMethod(Type.GetType("Asimov.AutomatonUtil,Asimov"), "IsHumanlikeAutomaton");
+                    HelperClasses.PawnDef = Type.GetType("Asimov.PawnDef,Asimov");
+                    HelperClasses.pawnSettings = AccessTools.Field(HelperClasses.PawnDef, "pawnSettings");
+                    HelperClasses.AsimovGrowth = AccessTools.Field(Type.GetType("Asimov.PawnSettings,Asimov"), "hasGrowthMoments");
                 }
                 catch (Exception ex)
                 {
-                    LogUtil.Error($"Error encountered while patching Tweaks Galore: {ex}");
+                    LogUtil.Error($"Error encountered while patching Asimov: {ex}");
+                }
+            }
+        }
+
+        private static void PatchSex(Harmony harmony)
+        {
+            if (ModsConfig.IsActive("dylan.csl"))
+            {
+                HelperClasses.CSLLoved = AccessTools.DeclaredMethod(Type.GetType("Children.MorePawnUtilities,ChildrenHelperClasses"), "Loved", [typeof(Pawn), typeof(Pawn), typeof(bool)]);
+            }
+            if (ModsConfig.IsActive("rim.job.world") || ModsConfig.IsActive("safe.job.world"))
+            {
+                try
+                {
+                    harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.xxx,RJW"), "is_asexual"), postfix: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RJWAsexualPostfix)));
+                    harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.CompRJW,RJW"), "VanillaTraitCheck"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.VanillaTraitCheckTranspiler)));
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"Error encountered while patching RimJobWorld: {ex}");
                 }
             }
             if (ModsConfig.IsActive("vanillaracesexpanded.highmate"))
@@ -95,6 +130,37 @@ namespace BetterRomance
                 catch (Exception ex)
                 {
                     LogUtil.Error($"Error encountered while patching Vanilla Races Expanded - Highmate: {ex}");
+                }
+            }
+            if (ModsConfig.IsActive("runaway.simpletrans"))
+            {
+                try
+                {
+                    Settings.TransActive = true;
+                    HelperClasses.CanSire = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanSire");
+                    HelperClasses.CanCarry = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanCarry");
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"Error encountered while patching Simple Trans: {ex}");
+                }
+            }
+        }
+
+        private static void PatchRomance(Harmony harmony)
+        {
+            if (ModsConfig.IsActive("telardo.romanceontherim"))
+            {
+                try
+                {
+                    Settings.RotRActive = true;
+                    HelperClasses.RotRFillRomanceBar = AccessTools.DeclaredMethod(Type.GetType("RomanceOnTheRim.RomanceUtility,RomanceOnTheRim"), "TryAffectRomanceNeedLevelForPawn");
+                    HelperClasses.RotRPreceptExplanation = AccessTools.Method(Type.GetType("RomanceOnTheRim.HarmonyPatch_SocialCardUtility_RomanceExplanation,RomanceOnTheRim"), "PreceptExplanation");
+                    harmony.PatchRotR();
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"Error encountered while patching Romance on the Rim: {ex}");
                 }
             }
             if (ModsConfig.IsActive("VanillaExpanded.VanillaSocialInteractionsExpanded"))
@@ -126,33 +192,6 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Vanilla Social Interactions Expanded: {ex}");
                 }
             }
-            if (ModsConfig.IsActive("rim.job.world") || ModsConfig.IsActive("safe.job.world"))
-            {
-                try
-                {
-                    harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.xxx,RJW"), "is_asexual"), postfix: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RJWAsexualPostfix)));
-                    harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.CompRJW,RJW"), "VanillaTraitCheck"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.VanillaTraitCheckTranspiler)));
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Error($"Error encountered while patching RimJobWorld: {ex}");
-                }
-            }
-            if (ModsConfig.IsActive("Neronix17.Asimov"))
-            {
-                try
-                {
-                    Settings.AsimovActive = true;
-                    HelperClasses.IsHumanlikeAutomaton = AccessTools.DeclaredMethod(Type.GetType("Asimov.AutomatonUtil,Asimov"), "IsHumanlikeAutomaton");
-                    HelperClasses.PawnDef = Type.GetType("Asimov.PawnDef,Asimov");
-                    HelperClasses.pawnSettings = AccessTools.Field(HelperClasses.PawnDef, "pawnSettings");
-                    HelperClasses.AsimovGrowth = AccessTools.Field(Type.GetType("Asimov.PawnSettings,Asimov"), "hasGrowthMoments");
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Error($"Error encountered while patching Asimov: {ex}");
-                }
-            }
             if (ModsConfig.IsActive("RforReload.EdgesOfAcceptence"))
             {
                 try
@@ -176,36 +215,22 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Rimder: Romance Control: {ex}");
                 }
             }
-            if (ModsConfig.IsActive("tachyonite.pawnmorpherpublic"))
-            {
-                try
-                {
-                    Settings.PawnmorpherActive = true;
-                    harmony.PatchPawnmorpher();
-                    HelperClasses.IsHumanlikePM = AccessTools.Method(Type.GetType("Pawnmorph.FormerHumanUtilities, Pawnmorph"), "IsHumanlike");
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Error($"Error encountered while patching Pawnmorpher: {ex}");
-                }
-            }
-            if (ModsConfig.IsActive("runaway.simpletrans"))
-            {
-                try
-                {
-                    Settings.TransActive = true;
-                    HelperClasses.CanSire = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanSire");
-                    HelperClasses.CanCarry = AccessTools.Method(Type.GetType("Simple_Trans.SimpleTransPregnancyUtility,Simple-Trans"), "CanCarry");
-                }
-                catch (Exception ex)
-                {
-                    LogUtil.Error($"Error encountered while patching Simple Trans: {ex}");
-                }
-            }
+        }
 
-            MakeFertilityModList();
-            Settings.ApplyJoySettings();
-            MakeRaceSettingsList();
+        private static void PatchMisc(Harmony harmony)
+        {
+            if (ModsConfig.IsActive("Neronix17.TweaksGalore"))
+            {
+                try
+                {
+                    MethodInfo IsSexualityTrait = AccessTools.DeclaredMethod(Type.GetType("TweaksGalore.Patch_PawnGenerator_GenerateTraits,TweaksGalore"), "IsSexualityTrait");
+                    harmony.Patch(IsSexualityTrait, prefix: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.IsSexualityTraitPrefix)));
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"Error encountered while patching Tweaks Galore: {ex}");
+                }
+            }
         }
 
         public static void MakeRaceSettingsList()
