@@ -7,6 +7,7 @@ using Verse;
 
 namespace BetterRomance.HarmonyPatches
 {
+    //Replaces the message when clicking on the disabled romance button for an aromantic pawn
     [HarmonyPatch(typeof(RelationsUtility), nameof(RelationsUtility.RomanceEligible))]
     public static class RelationsUtility_RomanceEligible
     {
@@ -14,7 +15,6 @@ namespace BetterRomance.HarmonyPatches
         {
             foreach (CodeInstruction code in instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_0))
             {
-                //Replaces the message when clicking on the disabled romance button for an aromantic pawn
                 if (code.LoadsConstant("CantRomanceInitiateMessageAsexual"))
                 {
                     code.operand = "WBR.CantRomanceInitiateMessageAromantic";
@@ -38,6 +38,8 @@ namespace BetterRomance.HarmonyPatches
             return true;
         }
 
+        //Removes the check for target being attracted to initiator's gender
+        //Replaces the reject message if orientation doesn't match
         [HarmonyTranspiler]
         public static IEnumerable<CodeInstruction> OrientationTranspiler(IEnumerable<CodeInstruction> instructions)
         {

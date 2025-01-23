@@ -22,7 +22,7 @@ namespace BetterRomance.HarmonyPatches
             return true;
         }
 
-        //Remove gay bias
+        //Remove gay bias and use age settings
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             foreach (CodeInstruction code in instructions.AgeToHaveChildren(OpCodes.Ldarg_1, OpCodes.Ldarg_2, false))
@@ -40,6 +40,7 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
+    //Use settings
     [HarmonyPatch(typeof(ChildRelationUtility), "NumberOfChildrenFemaleWantsEver")]
     public static class ChildRelationUtility_NumberOfChildrenFemaleWantsEver
     {

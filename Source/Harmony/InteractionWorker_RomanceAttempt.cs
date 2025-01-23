@@ -81,6 +81,7 @@ namespace BetterRomance.HarmonyPatches
             }
 
             float cheatChance = 1f;
+            //Exclude cheating precept because that is included in RotR's postfix
             if (!RomanceUtilities.WillPawnContinue(initiator, recipient, out _, true, true))
             {
                 //Do not allow if they've decided not to cheat
@@ -194,6 +195,7 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.MinOpinionRomanceTranspiler(OpCodes.Ldarg_1);
 
+        //Compatibility with mods that remove mood need
         public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
         {
             if (recipient.needs.mood is null)
@@ -290,6 +292,7 @@ namespace BetterRomance.HarmonyPatches
         }
     }
 
+    //Prevent psychic bonding if the initiator doesn't have the gene
 #if v1_4
     [HarmonyPatch(typeof(InteractionWorker_RomanceAttempt), nameof(InteractionWorker_RomanceAttempt.CanCreatePsychicBondBetween_NewTemp))]
 #else
