@@ -2,12 +2,12 @@ using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using VanillaRacesExpandedHighmate;
 using Verse;
 using VFECore;
+using VREAndroids;
 
 namespace BetterRomance.HarmonyPatches
 {
@@ -120,7 +120,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        public static void PatchVRE(this Harmony harmony)
+        public static void PatchVREHighmates(this Harmony harmony)
         {
             harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", [typeof(LocalTargetInfo), typeof(bool)]), transpiler: new(typeof(VREPatches).GetMethod(nameof(InitiateLovinMinAgeTranspiler))));
             harmony.Patch(typeof(CompAbilityEffect_InitiateLovin).GetMethod("Valid", [typeof(LocalTargetInfo), typeof(bool)]), transpiler: new(typeof(VREPatches).GetMethod(nameof(VREAsexualTranspiler))));
@@ -130,6 +130,22 @@ namespace BetterRomance.HarmonyPatches
             harmony.Patch(typeof(Need_Lovin).GetMethod("get_ShowOnNeedList"), transpiler: new(typeof(VREPatches).GetMethod(nameof(Need_LovinMinAgeTranspiler))));
             harmony.Patch(typeof(Need_Lovin).GetMethod("get_IsFrozen"), transpiler: new(typeof(VREPatches).GetMethod(nameof(Need_LovinMinAgeTranspiler))));
             harmony.Patch(AccessTools.Method(typeof(JobDriver_DoLovinCasual), "GenerateRandomMinTicksToNextLovin"), postfix: new(typeof(VanillaRacesExpandedHighmate_JobDriver_Lovin_GenerateRandomMinTicksToNextLovin_Patch), "PawnFucks"));
+        }
+
+        public static void PatchVREAndroids(this Harmony harmony)
+        {
+            //Add orientation traits to allowed traits list
+            AndroidSettings androidSettings = VREA_DefOf.VREA_AndroidSettings;
+            foreach (TraitDef trait in SexualityUtility.OrientationTraits)
+            {
+                androidSettings.allowedTraits.Add(trait.defName);
+            }
+            //Add age change patches to hook up stuff
+            HarmonyMethod ageChangePrefix = new(typeof(HarmonyPatches_ForRomanceReasonsChangeAge).GetMethod(nameof(HarmonyPatches_ForRomanceReasonsChangeAge.Prefix)));
+            HarmonyMethod ageChangePostfix = new(typeof(HarmonyPatches_ForRomanceReasonsChangeAge).GetMethod(nameof(HarmonyPatches_ForRomanceReasonsChangeAge.Postfix)));
+            harmony.Patch(typeof(HookupUtility).GetMethod(nameof(HookupUtility.CanDrawTryHookup)), prefix: ageChangePrefix, postfix: ageChangePostfix);
+            harmony.Patch(typeof(HookupUtility).GetMethod(nameof(HookupUtility.HookupEligiblePair)), prefix: ageChangePrefix, postfix: ageChangePostfix);
+            harmony.Patch(typeof(HookupUtility).GetMethod(nameof(HookupUtility.HookupEligible)), prefix: ageChangePrefix, postfix: ageChangePostfix);
         }
     }
 

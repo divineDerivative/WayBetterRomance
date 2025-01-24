@@ -100,6 +100,19 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Asimov: {ex}");
                 }
             }
+            if (ModsConfig.IsActive("vanillaracesexpanded.android"))
+            {
+                try
+                {
+                    Settings.VREAndroidActive = true;
+                    HelperClasses.Emotionless = AccessTools.Method(Type.GetType("VREAndroids.Utils, VREAndroids"), "Emotionless");
+                    harmony.PatchVREAndroids();
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"Error encountered while patching Vanilla Races Expanded - Android: {ex}");
+                }
+            }
         }
 
         private static void PatchSex(Harmony harmony)
@@ -125,7 +138,7 @@ namespace BetterRomance
                 try
                 {
                     Settings.VREHighmateActive = true;
-                    harmony.PatchVRE();
+                    harmony.PatchVREHighmates();
                 }
                 catch (Exception ex)
                 {
@@ -279,6 +292,7 @@ namespace BetterRomance
         public static MethodInfo IsHumanlikePM;
         public static MethodInfo CanSire;
         public static MethodInfo CanCarry;
+        public static MethodInfo Emotionless;
     }
 
     public class MayRequireHARAttribute : MayRequireAttribute

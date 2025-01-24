@@ -30,6 +30,10 @@ namespace BetterRomance
             {
                 return true;
             }
+            if (Settings.VREAndroidActive && (bool)HelperClasses.Emotionless?.Invoke(null, [pawn]))
+            {
+                return true;
+            }
             //I specifically want this to only catch former humans, and not just pass any humanlike
             if (Settings.PawnmorpherActive && includeFH && pawn.IsFormerHuman())
             {
