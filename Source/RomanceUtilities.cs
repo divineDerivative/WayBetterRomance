@@ -51,15 +51,11 @@ namespace BetterRomance
             //The cheater list is for use later, initiator will only look at their ideo and settings to decide if they're cheating
 
             //First check if they're allowed to do it
-            bool allowed;
-            if (forRomance)
+            //Are they allowed to have another lover?
+            bool allowed = IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn);
+            //If they can't have another lover, but it's for sex, check if they care about cheating
+            if (!forRomance && !allowed)
             {
-                //Are they allowed to have another lover?
-                allowed = IdeoUtility.DoerWillingToDo(pawn.GetHistoryEventForLoveRelationCountPlusOne(), pawn);
-            }
-            else
-            {
-                //If it's for sex, check if they care about cheating
                 allowed = !pawn.CaresAboutCheating();
             }
             //If it's not allowed, it's cheating, regardless of what partners might think
