@@ -103,6 +103,12 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Reference Include="0DivineFramework">
+      <HintPath>..\..\DivineFramework\Assemblies\0DivineFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Harmony\Anomaly\PsychicRitualDef_Chronophagy.cs" />
     <Compile Include="Harmony\Anomaly\PsychicRitualToil_Chronophagy.cs" />
     <Compile Include="Harmony\Dynamic Transpilers\AdultMinAge.cs" />
