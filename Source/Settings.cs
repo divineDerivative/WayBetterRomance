@@ -84,6 +84,7 @@ namespace BetterRomance
 
         public static void ApplyJoySettings()
         {
+            JoyNeed ??= DefDatabase<NeedDef>.GetNamed("Joy", false);
             JoyNeed.neverOnSlave = !BetterRomanceMod.settings.joyOnSlaves;
             if (BetterRomanceMod.settings.joyOnPrisoners)
             {
