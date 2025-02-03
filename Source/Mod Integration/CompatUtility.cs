@@ -105,6 +105,10 @@ namespace BetterRomance
             {
                 return (bool)HelperClasses.CanSire.Invoke(null, [pawn]);
             }
+            if (Settings.AltFertilityActive)
+            {
+                return (bool)HelperClasses.CanImpregnate.Invoke(null, [pawn]);
+            }
             if (Settings.HARActive)
             {
                 return pawn.CanFertilize();
@@ -117,6 +121,10 @@ namespace BetterRomance
             if (Settings.TransActive)
             {
                 return (bool)HelperClasses.CanCarry.Invoke(null, [pawn]);
+            }
+            if (Settings.AltFertilityActive)
+            {
+                return (bool)HelperClasses.CanGetPregnant.Invoke(null, [pawn]);
             }
             if (Settings.HARActive)
             {

@@ -2,6 +2,7 @@ using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using VanillaRacesExpandedHighmate;
@@ -37,6 +38,23 @@ namespace BetterRomance.HarmonyPatches
         public static IEnumerable<CodeInstruction> RimderExLoveRelationTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
         {
             return instructions.LoveRelationUtilityTranspiler(ilg, PawnRelationDefOf.ExLover, true, true, stopSkipping: (CodeInstruction code) => code.LoadsField(AccessTools.Field(AccessTools.TypeByName("RimderModCore"), "rimderSettings")));
+        }
+
+        //This is a modified version of their transpiler for PawnRelationWorker_Parent.CreateRelation to apply to my prefix
+        public static IEnumerable<CodeInstruction> AltFertilityParentCreateRelationTranspiler(IEnumerable<CodeInstruction> instructions)
+        {
+            List<CodeInstruction> list = instructions.ToList();
+            int maleInd = list.FindIndex((CodeInstruction code) => code.LoadsField(InfoHelper.PawnGender));
+            list[maleInd] = CodeInstructionMethods.Call(HelperClasses.CanImpregnate);
+            list[maleInd + 1] = new CodeInstruction(OpCodes.Nop);
+            list[maleInd + 2] = new CodeInstruction(OpCodes.Nop);
+
+            int femaleInd = list.FindIndex(maleInd + 1, (CodeInstruction code) => code.LoadsField(InfoHelper.PawnGender));
+            list[femaleInd] = CodeInstructionMethods.Call(HelperClasses.CanGetPregnant);
+            list[femaleInd + 1] = new CodeInstruction(OpCodes.Nop);
+            list[femaleInd + 2] = new CodeInstruction(OpCodes.Nop);
+
+            return list.AsEnumerable();
         }
     }
 
@@ -185,6 +203,18 @@ namespace BetterRomance
             {
                 def.Worker.PostLovinEffect(actor, partner);
             }
+        }
+
+        internal static Pawn GetFirstImpregnationPairLover(this Pawn pawn)
+        {
+            foreach (Pawn lover in RomanceUtilities.GetNonSpouseLovers(pawn, true))
+            {
+                if ((bool)HelperClasses.GetImpregnationPossible.Invoke(null, [pawn, lover]))
+                {
+                    return lover;
+                }
+            }
+            return null;
         }
     }
 }

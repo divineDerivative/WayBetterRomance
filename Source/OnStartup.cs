@@ -159,6 +159,25 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Simple Trans: {ex}");
                 }
             }
+            if (ModsConfig.IsActive("eth0net.AlternateFertility"))
+            {
+                try
+                {
+                    Settings.AltFertilityActive = true;
+                    HelperClasses.GetImpregnationPossible = AccessTools.Method(Type.GetType("AlternateFertility.PatcherUtility, AlternateFertility"), "GetImpregnationPossible");
+                    HelperClasses.CanImpregnate = AccessTools.Method(Type.GetType("AlternateFertility.PatcherUtility, AlternateFertility"), "CanImpregnate");
+                    HelperClasses.CanGetPregnant = AccessTools.Method(Type.GetType("AlternateFertility.PatcherUtility, AlternateFertility"), "CanGetPregnant");
+
+                    harmony.Patch(AccessTools.Method(typeof(PawnRelationWorker_Parent_CreateRelation), nameof(PawnRelationWorker_Parent_CreateRelation.Prefix)), transpiler: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.AltFertilityParentCreateRelationTranspiler)));
+                    //Apply their transpiler to my similar method
+                    HarmonyMethod canProduceChildTranspiler = new(AccessTools.Method(Type.GetType("AlternateFertility.Harmony.Harmony_PregnancyUtility_CanEverProduceChild, AlternateFertility"), "Transpiler"));
+                    harmony.Patch(AccessTools.Method(typeof(HookupUtility), nameof(HookupUtility.CanEverProduceChild)), transpiler: canProduceChildTranspiler);
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.Error($"Error encountered while patching AlternateFertility: {ex}");
+                }
+            }
         }
 
         private static void PatchRomance(Harmony harmony)
@@ -294,6 +313,9 @@ namespace BetterRomance
         public static MethodInfo CanSire;
         public static MethodInfo CanCarry;
         public static MethodInfo Emotionless;
+        public static MethodInfo GetImpregnationPossible;
+        public static MethodInfo CanImpregnate;
+        public static MethodInfo CanGetPregnant;
     }
 
     public class MayRequireHARAttribute : MayRequireAttribute

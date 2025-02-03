@@ -49,6 +49,7 @@ namespace BetterRomance
         public static bool AsimovActive;
         public static bool PawnmorpherActive;
         public static bool TransActive;
+        public static bool AltFertilityActive;
         public static NeedDef JoyNeed;
 
         public static bool LoveRelationsLoaded => !CustomLoveRelationUtility.LoveRelations.EnumerableNullOrEmpty();
