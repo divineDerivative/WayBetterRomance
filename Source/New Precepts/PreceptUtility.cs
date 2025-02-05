@@ -182,15 +182,18 @@ namespace BetterRomance
             if (ideo is not null)
             {
                 PreceptDef precept = ideo.GetLovinPreceptDef();
-                foreach (PreceptComp comp in precept.comps)
+                if (precept is not null)
                 {
-                    if (comp is PreceptComp_UnwillingToDo_Chance unwillingComp && unwillingComp.eventDef == HistoryEventDefOf.GotLovin_NonSpouse)
+                    foreach (PreceptComp comp in precept?.comps)
                     {
-                        fromComp = unwillingComp.chance;
-                        break;
+                        if (comp is PreceptComp_UnwillingToDo_Chance unwillingComp && unwillingComp.eventDef == HistoryEventDefOf.GotLovin_NonSpouse)
+                        {
+                            fromComp = unwillingComp.chance;
+                            break;
+                        }
                     }
-                }
             }
+        }
             return 1f - fromComp;
         }
 
@@ -203,10 +206,9 @@ namespace BetterRomance
                 Precept precept = ideo.GetPreceptForIssue(RomanceDefOf.Lovin);
                 if (precept is null)
                 {
-                    LogUtil.Error($"Unable to find lovin' precept for {ideo.name}");
-                    return null;
+                    LogUtil.ErrorOnce($"Unable to find lovin' precept for {ideo.name}", ideo.GetHashCode());
                 }
-                lovinPreceptCache[ideo] = precept.def;
+                lovinPreceptCache[ideo] = precept?.def;
             }
             lovinPreceptCache.TryGetValue(ideo, out PreceptDef cachedPrecept);
             return cachedPrecept;
