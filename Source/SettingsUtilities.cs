@@ -290,7 +290,15 @@ namespace BetterRomance
         //Relation Settings
         public static CompSettingsRelationsPawn GetRelationSettings(Pawn pawn)
         {
+            if (pawn is null)
+            {
+                throw new ArgumentNullException("Pawn is null");
+            }
             WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
+            if (comp is null)
+            {
+                throw new NullReferenceException($"No WBR_SettingsComp found on {pawn.Name.ToStringShort}, race: {pawn.def.defName}, pawnkind: {pawn.kindDef.defName}");
+            }
             return comp.relations;
         }
 
