@@ -292,12 +292,12 @@ namespace BetterRomance
         {
             if (pawn is null)
             {
-                throw new ArgumentNullException("Pawn is null");
+                LogUtil.Error($"GetRelationSettings called with null pawn");
             }
             WBR_SettingsComp comp = pawn.TryGetComp<WBR_SettingsComp>();
             if (comp is null)
             {
-                throw new NullReferenceException($"No WBR_SettingsComp found on {pawn.Name.ToStringShort}, race: {pawn.def.defName}, pawnkind: {pawn.kindDef.defName}");
+                throw new NullReferenceException($"No WBR_SettingsComp found on {pawn.Name?.ToStringShort ?? "namelesspawn"}, race: {pawn.def.defName}, pawnkind: {pawn.kindDef.defName}");
             }
             return comp.relations;
         }

@@ -14,7 +14,7 @@ namespace BetterRomance.HarmonyPatches
         //Check if settings allow children
         public static bool Prefix(Pawn father, Pawn mother, ref float __result)
         {
-            if ((father != null && !father.ChildAllowed()) || (mother != null && !mother.ChildAllowed()))
+            if ((father != null && (!father.IsHumanlike() || !father.ChildAllowed())) || (mother != null && (!mother.IsHumanlike() || !mother.ChildAllowed())))
             {
                 __result = 0f;
                 return false;
