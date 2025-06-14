@@ -5,7 +5,7 @@ using UnityEngine;
 using Verse;
 using Verse.AI;
 using DivineFramework;
-#if v1_5
+#if !v1_4
 using LudeonTK;
 #endif
 

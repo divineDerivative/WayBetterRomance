@@ -122,7 +122,12 @@ namespace BetterRomance
             };
             layDown.tickAction = delegate
             {
+#if !v1_6
+
                 Actor.GainComfortFromCellIfPossible();
+#else
+                Actor.GainComfortFromCellIfPossible(1);
+#endif
             };
             yield return layDown;
 
@@ -168,11 +173,21 @@ namespace BetterRomance
                 {
                     FleckMaker.ThrowMetaIcon(Actor.Position, Actor.Map, FleckDefOf.Heart);
                 }
+
+#if !v1_6
                 Actor.GainComfortFromCellIfPossible();
+#else
+                Actor.GainComfortFromCellIfPossible(1);
+#endif
                 //Gain joy every tick, but only if they have a joy need
                 if (Actor.needs.joy != null)
                 {
+#if !v1_6
+
                     JoyUtility.JoyTickCheckEnd(Actor, JoyTickFullJoyAction.None);
+#else
+                    JoyUtility.JoyTickCheckEnd(Actor, 1, JoyTickFullJoyAction.None);
+#endif
                 }
             };
             loveToil.defaultCompleteMode = ToilCompleteMode.Delay;

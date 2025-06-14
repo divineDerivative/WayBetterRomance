@@ -6,7 +6,8 @@ using Verse;
 
 namespace BetterRomance.HarmonyPatches
 {
-    //Adds a float menu option when right clicking on another pawn
+    //Adds a float menu option when right-clicking on another pawn  
+#if !v1_6
     [HarmonyPatch(typeof(FloatMenuMakerMap), "AddHumanlikeOrders")]
     public static class FloatMenuMakerMap_AddHumanlikeOrders
     {
@@ -30,4 +31,27 @@ namespace BetterRomance.HarmonyPatches
             }
         }
     }
+#else
+    public class FloatMenuOptionProvider_Hookup : FloatMenuOptionProvider
+    {
+        protected override bool Drafted => false;
+        protected override bool Undrafted => true;
+        protected override bool Multiselect => false;
+
+        protected override FloatMenuOption GetSingleOptionFor(Pawn clickedPawn, FloatMenuContext context)
+        {
+            if (clickedPawn.Drafted || clickedPawn.DevelopmentalStage.Baby())
+            {
+                return null;
+            }
+            bool optionAvailable = HookupUtility.HookupOption(context.FirstSelectedPawn, clickedPawn, out FloatMenuOption option, out _);
+            if (option != null)
+            {
+                option.Label = (optionAvailable ? "WBR.CanHookup" : "WBR.CannotHookup").Translate(option.Label);
+            }
+            return option;
+        }
+    }
+
+#endif
 }

@@ -31,6 +31,15 @@
     <ErrorReport>prompt</ErrorReport>
     <DefineConstants>v1_4</DefineConstants>
   </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.6|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\1.6\Assemblies\</OutputPath>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <DefineConstants>v1_6</DefineConstants>
+  </PropertyGroup>
   <Choose>
     <When Condition="'$(Configuration)|$(Platform)' == '1.4|AnyCPU'">
       <ItemGroup>
@@ -69,14 +78,48 @@
     </When>
     <When Condition="'$(Configuration)|$(Platform)' == '1.5|AnyCPU'">
       <ItemGroup>
-        <PackageReference Include="Lib.Harmony" Version="2.3.*">
+        <PackageReference Include="Lib.Harmony" Version="2.3.3">
           <ExcludeAssets>runtime</ExcludeAssets>
         </PackageReference>
-        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*-*">
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*">
           <ExcludeAssets>runtime</ExcludeAssets>
         </PackageReference>
         <Reference Include="AlienRace">
-          <HintPath>..\..\..\..\..\workshop\content\294100\2640710953\1.5\Assemblies\AlienRace.dll</HintPath>
+          <HintPath>..\..\..\..\..\workshop\content\294100\839005762\1.5\Assemblies\AlienRace.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="RomanceOnTheRim">
+          <HintPath>..\..\..\..\..\workshop\content\294100\2654432921\1.5\Assemblies\RomanceOnTheRim.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Pawnmorph">
+          <HintPath>..\..\..\..\..\workshop\content\294100\1786466855\1.5\Assemblies\Pawnmorph.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="VFECore">
+          <HintPath>..\..\..\..\..\workshop\content\294100\2023507013\1.5\Assemblies\VFECore.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="VanillaRacesExpandedHighmate">
+          <HintPath>..\..\..\..\..\workshop\content\294100\2995385834\1.5\Assemblies\VanillaRacesExpandedHighmate.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="VREAndroids">
+          <HintPath>..\..\..\..\..\workshop\content\294100\2975771801\1.5\Assemblies\VREAndroids.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="'$(Configuration)|$(Platform)' == '1.6|AnyCPU'">
+      <ItemGroup>
+        <PackageReference Include="Lib.Harmony" Version="2.3.*">
+          <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.*-*">
+          <ExcludeAssets>runtime</ExcludeAssets>
+        </PackageReference>
+        <Reference Include="AlienRace">
+          <HintPath>..\..\..\..\..\workshop\content\294100\839005762\1.5\Assemblies\AlienRace.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="RomanceOnTheRim">

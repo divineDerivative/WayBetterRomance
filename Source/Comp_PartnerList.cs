@@ -69,7 +69,12 @@ namespace BetterRomance
                         //The path goes directly from cell to cell; the next cell is always one of the 8 surrounding the previous
                         //So the number of nodes can be used as a shortcut for the length of the path
                         //Horizontal/vertical moves are 1f in length, diagonal moves are 1.4142f (sqrt of 2) in length, so the actual distance the path covers will always be >= the number of nodes
+#if !v1_6
+
                         PawnPath path = Pawn.Map.pathFinder.FindPath(Pawn.Position, p.Position, Pawn, PathEndMode.Touch);
+#else
+                        PawnPath path = Pawn.Map.pathFinder.FindPathNow(Pawn.Position, p.Position, Pawn, null, PathEndMode.Touch);
+#endif
                         //If the length of the path is longer than the limit, continue
                         if (path.NodesLeftCount <= distanceLimit)
                         {

@@ -8,7 +8,12 @@ namespace BetterRomance
     {
         public override Job TryGiveJob(Pawn pawn)
         {
+#if !v1_6
+
             if (!InteractionUtility.CanInitiateInteraction(pawn) || PawnUtility.WillSoonHaveBasicNeed(pawn))
+#else
+if (!SocialInteractionUtility.CanInitiateInteraction(pawn) || PawnUtility.WillSoonHaveBasicNeed(pawn))
+#endif
             {
                 return null;
             }

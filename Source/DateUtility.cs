@@ -138,7 +138,12 @@ namespace BetterRomance
 
         public static void DateTickAction(Pawn pawn, bool isDate)
         {
+#if !v1_6
+
             JoyUtility.JoyTickCheckEnd(pawn, JoyTickFullJoyAction.None);
+#else
+            JoyUtility.JoyTickCheckEnd(pawn, 1, JoyTickFullJoyAction.None);
+#endif
             if (isDate)
             {
                 HelperClasses.RotRFillRomanceBar?.Invoke(null, [pawn, 0.00002f]);
