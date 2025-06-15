@@ -17,13 +17,19 @@
             <summary>A <see langword="delegate"/> that will be called when a button is pressed.</summary>
         </member>
         <member name="T:DivineFramework.UI.HideDelegate">
-            <summary>A <see langword="delegate"/> used to determine if an element should be hidden.</summary>
+            <summary>A <see langword="delegate"/> used to determine if an element should be hidden or disabled.</summary>
         </member>
         <member name="T:DivineFramework.UI.SetUpDelegate">
             <summary>A <see langword="delegate"/> used to set up a <see cref="T:DivineFramework.UI.Handler`2"/>.</summary>
         </member>
         <member name="T:DivineFramework.UI.DrawDelegate">
             <summary>A <see langword="delegate"/> that can be called before or after drawing an element.</summary>
+        </member>
+        <member name="T:DivineFramework.UI.ValueGetter`1">
+            <summary>Delegate for getting a value of type <typeparamref name="U"/>.</summary>
+        </member>
+        <member name="T:DivineFramework.UI.ValueSetter`1">
+            <summary>Delegate for setting a value of type <typeparamref name="U"/>.</summary>
         </member>
         <member name="T:DivineFramework.UI.UICheckbox">
             <summary>A simple check box to toggle a setting.</summary>
@@ -176,7 +182,7 @@
 		</Common>
 			<param name="name">Optional name for the element. Must be unique within this container.</param>
 			<param name="buttonHeight">A fixed height for the button; optional.</param>
-			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</typeparam>
+			<typeparam name="T">The class type associated with this <see cref="T:DivineFramework.UI.SettingsHandler`1" />. This can be any reference type, not just a <see cref="T:Verse.ModSettings" /> subclass.</typeparam>
 		</AddResetButton>
         </member>
         <member name="M:DivineFramework.UI.UIContainer.AddRow(System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single},System.String)">
@@ -400,12 +406,6 @@
 		</Common>
 	</Common>
         </member>
-        <member name="M:DivineFramework.UI.UISliderFloat.#ctor(DivineFramework.UI.UISlider{System.Single})">
-            <DerivedFromParent>
-		<summary>Creates a new instance of this class using an existing element as a template.</summary>
-		<param name="element">The existing element to use as a template.</param>
-	</DerivedFromParent>
-        </member>
         <member name="T:DivineFramework.UI.UIButton">
             <summary>A base class for simple buttons</summary>
         </member>
@@ -434,6 +434,12 @@
 		</param>
 	</UIButton>
         </member>
+        <member name="M:DivineFramework.UI.UIButton.#ctor(DivineFramework.UI.UIButton)">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
+        </member>
         <member name="M:DivineFramework.UI.UIButton.Initialize">
             <Initialize>
 			<summary><inheritdoc /> Sets the <see cref="F:DivineFramework.UI.UIElement.height">height</see> of the button.</summary>
@@ -458,7 +464,7 @@
 		<param name="element">The existing element to use as a template.</param>
 	</DerivedFromParent>
         </member>
-        <member name="M:DivineFramework.UI.UIButtonResetable`1.#ctor(DivineFramework.UI.UIWithReference{`0})">
+        <member name="M:DivineFramework.UI.UIButtonResetable`1.#ctor(DivineFramework.UI.UIButtonResetable{`0})">
             <DerivedFromParent>
 		<summary>Creates a new instance of this class using an existing element as a template.</summary>
 		<param name="element">The existing element to use as a template.</param>
@@ -544,7 +550,7 @@
         </member>
         <member name="T:DivineFramework.UI.UIWithReference`1">
             <UIWithReference>
-		<summary>The base <see langword="class" /> for implementing <see cref="T:DivineFramework.UI.IResetable" /> and interacting with members of a <see cref="T:Verse.ModSettings" /> object.</summary>
+		<summary>The base <see langword="class" /> for implementing <see cref="T:DivineFramework.UI.IResetable" /> and interacting with members of a another class via reference.</summary>
 		<typeparam name="U">The <see langword="type" /> of the setting being <see cref="F:DivineFramework.UI.UIWithReference`1.reference">referenced</see>.</typeparam>
 	</UIWithReference>
         </member>
@@ -558,7 +564,19 @@
 				<summary>Default value for the setting, used when resetting.</summary>
 			</defaultValue>
         </member>
+        <member name="P:DivineFramework.UI.UIWithReference`1.Getter">
+            <summary>A <see langword="delegate"/> for getting the value associated with this element, if it should not be referenced directly.</summary>
+        </member>
+        <member name="P:DivineFramework.UI.UIWithReference`1.Setter">
+            <summary>A <see langword="delegate"/> for setting the value associated with this element, if it should not be set directly.</summary>
+        </member>
         <member name="M:DivineFramework.UI.UIWithReference`1.#ctor(DivineFramework.UI.UIElement)">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
+        </member>
+        <member name="M:DivineFramework.UI.UIWithReference`1.#ctor(DivineFramework.UI.UIWithReference{`0})">
             <DerivedFromParent>
 		<summary>Creates a new instance of this class using an existing element as a template.</summary>
 		<param name="element">The existing element to use as a template.</param>
@@ -584,7 +602,7 @@
         </member>
         <member name="F:DivineFramework.UI.ReferenceHolder`3.settingsObject">
             <settingsObject>
-				<summary>The <see cref="T:Verse.ModSettings" /> object that contains the referenced object.</summary>
+				<summary>The <typeparamref name="T" /> object that contains the referenced object.</summary>
 			</settingsObject>
         </member>
         <member name="F:DivineFramework.UI.ReferenceHolder`3.collectionReference">
@@ -604,7 +622,7 @@
         </member>
         <member name="F:DivineFramework.UI.ReferenceHolder`2.settingsObject">
             <settingsObject>
-				<summary>The <see cref="T:Verse.ModSettings" /> object that contains the referenced object.</summary>
+				<summary>The <typeparamref name="T" /> object that contains the referenced object.</summary>
 			</settingsObject>
         </member>
         <member name="F:DivineFramework.UI.ReferenceHolder`2.instanceReference">
@@ -661,6 +679,36 @@
 		</Common>
 		</WithReference>
         </member>
+        <member name="M:DivineFramework.UI.ElementExtensions.WithGetter``2(``0,DivineFramework.UI.ValueGetter{``1})">
+            <WithGetter>
+			<summary>Add a custom getter for the value associated with this element. For use when the referenced field should not be accessed directly.</summary>
+			<param name="getter">The delegate to be used.</param>
+			<WithoutReference>
+			<typeparam name="T">The <see langword="type" /> of the <see langword="object" /> that contains the reference.</typeparam>
+			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+		</WithoutReference>
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</WithGetter>
+        </member>
+        <member name="M:DivineFramework.UI.ElementExtensions.WithSetter``2(``0,DivineFramework.UI.ValueSetter{``1})">
+            <WithSetter>
+			<summary>Add a custom setter for the value associated with this element. For use when the referenced field should not be accessed directly.</summary>
+			<param name="setter">The delegate to be used.</param>
+			<WithoutReference>
+			<typeparam name="T">The <see langword="type" /> of the <see langword="object" /> that contains the reference.</typeparam>
+			<typeparam name="U">The <see langword="type" /> of the setting being referenced.</typeparam>
+		</WithoutReference>
+			<Common>
+			<param name="element">The original <paramref name="element" />.</param>
+			<typeparam name="TElement">The <see langword="type" /> of the <paramref name="element" />.</typeparam>
+			<returns>The original <paramref name="element" />.</returns>
+		</Common>
+		</WithSetter>
+        </member>
         <member name="M:DivineFramework.UI.ElementExtensions.WithReference``4(``0,``1,System.String,``2,``3)">
             <WithReference name="GenericCollection">
 			<summary>Add a reference to an element for a value that is inside a collection.This overload will not change the<see langword="type" /> of the <paramref name="element" />.</summary>
@@ -685,7 +733,7 @@
         <member name="M:DivineFramework.UI.ElementExtensions.RegisterResetable``3(``0,DivineFramework.UI.SettingsHandler{``1},``2)">
             <RegisterResetable>
 			<summary>Register this <paramref name="element" /> to be reset when the <paramref name="handler" /> is reset.</summary>
-			<typeparam name="T">The subclass of <see cref="T:Verse.ModSettings" /> associated with the <paramref name="handler" />.</typeparam>
+			<typeparam name="T">The class associated with the <paramref name="handler" />.</typeparam>
 			<param name="handler">The <see cref="T:DivineFramework.UI.SettingsHandler`1" /> to register this element to.</param>
 			<param name="defaultValue">The value to be used when the element is reset.</param>
 			<Common>
@@ -850,7 +898,7 @@
         <member name="T:DivineFramework.UI.Handler`2">
             <Main>
 			<summary>Base class for holding and managing multiple UI objects.</summary>
-			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.UI.Handler`2" />.</typeparam>
+			<typeparam name="T">The class type associated with this <see cref="T:DivineFramework.UI.Handler`2" />. This can be any reference type, not just a <see cref="T:Verse.ModSettings" /> subclass.</typeparam>
 			<typeparam name="U">The <see langword="type" /> of objects being managed.</typeparam>
 			<param name="setUpMethod"><inheritdoc cref="F:DivineFramework.UI.Handler`2.SetUpMethod" path="/summary" /></param>
 		</Main>
@@ -858,7 +906,7 @@
         <member name="M:DivineFramework.UI.Handler`2.#ctor(DivineFramework.UI.SetUpDelegate)">
             <Main>
 			<summary>Base class for holding and managing multiple UI objects.</summary>
-			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.UI.Handler`2" />.</typeparam>
+			<typeparam name="T">The class type associated with this <see cref="T:DivineFramework.UI.Handler`2" />. This can be any reference type, not just a <see cref="T:Verse.ModSettings" /> subclass.</typeparam>
 			<typeparam name="U">The <see langword="type" /> of objects being managed.</typeparam>
 			<param name="setUpMethod"><inheritdoc cref="F:DivineFramework.UI.Handler`2.SetUpMethod" path="/summary" /></param>
 		</Main>
@@ -868,6 +916,12 @@
         </member>
         <member name="F:DivineFramework.UI.Handler`2.SetUpMethod">
             <summary>A <see langword="delegate"/> to a method that will create and add the various objects needed to create the desired UI.</summary>
+        </member>
+        <member name="F:DivineFramework.UI.Handler`2.scrollPos">
+            <scrollPos>
+			<summary>Used to keep track of the scroll position for this handler.</summary>
+			<remarks>Should be passed by <see langword="ref" /> to <see cref="M:DivineFramework.UI.Listing_ScrollView.BeginScrollView(UnityEngine.Rect,System.Single,UnityEngine.Vector2@,System.Single)" />.</remarks>
+		</scrollPos>
         </member>
         <member name="P:DivineFramework.UI.Handler`2.Initialized">
             <summary>Whether all containing items have been initialized.</summary>
@@ -895,7 +949,7 @@
         <member name="T:DivineFramework.UI.SettingsHandler`1">
             <Main>
 			<summary>A class for holding and managing multiple <see cref="T:DivineFramework.UI.UIElement" />s.</summary>
-			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with this <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</typeparam>
+			<typeparam name="T">The class type associated with this <see cref="T:DivineFramework.UI.SettingsHandler`1" />. This can be any reference type, not just a <see cref="T:Verse.ModSettings" /> subclass.</typeparam>
 		</Main>
         </member>
         <member name="F:DivineFramework.UI.SettingsHandler`1.verticalSpacing">
@@ -987,10 +1041,14 @@
 		</Draw>
         </member>
         <member name="T:DivineFramework.UI.TabbedHandler`1">
-            <inheritdoc/><summary>A class for creating a tabbed UI page.</summary>
+            <summary>A class for creating a tabbed UI page.</summary>
+            <typeparam name="T">The class type associated with this <see cref="T:DivineFramework.UI.Handler`2" />. This can be any reference type, not just a <see cref="T:Verse.ModSettings" /> subclass.</typeparam>
         </member>
         <member name="P:DivineFramework.UI.TabbedHandler`1.CurTab">
             <summary>The currently displayed <see cref="T:DivineFramework.UI.Tab`1"/>.</summary>
+        </member>
+        <member name="F:DivineFramework.UI.TabbedHandler`1.scrollPos">
+            <summary>Only use this if you want the scroll position to be sync'd between all tabs. Use each Tab's <see cref="F:DivineFramework.UI.Tab`1.scrollPos"/> instead for per tab scrolling.</summary>
         </member>
         <member name="M:DivineFramework.UI.TabbedHandler`1.#ctor(DivineFramework.UI.SetUpDelegate)">
             <param name="setUpMethod"><inheritdoc cref="F:DivineFramework.UI.Handler`2.SetUpMethod" path="/summary" /></param>
@@ -1024,15 +1082,17 @@
         <member name="T:DivineFramework.UI.Tab`1">
             <Main>
 			<summary>A <see cref="T:Verse.TabRecord" /> that has a <see cref="T:DivineFramework.UI.SettingsHandler`1" /> attached.</summary>
-			<typeparam name="T">The <see cref="T:Verse.ModSettings" /> subclass associated with the tab's <see cref="F:DivineFramework.UI.Tab`1.handler">handler</see>.</typeparam>
+			<typeparam name="T">The class type associated with the tab's <see cref="F:DivineFramework.UI.Tab`1.handler">handler</see>.</typeparam>
 		</Main>
         </member>
         <member name="F:DivineFramework.UI.Tab`1.handler">
             <summary>The <see cref="T:DivineFramework.UI.SettingsHandler`1"/> associated with this tab.</summary>
         </member>
         <member name="F:DivineFramework.UI.Tab`1.scrollPos">
-            <summary>Used to keep track of the scroll position for this tab.</summary>
-            <remarks>Should be passed by <see langword="ref"/> to <see cref="M:DivineFramework.UI.Listing_ScrollView.BeginScrollView(UnityEngine.Rect,System.Single,UnityEngine.Vector2@,System.Single)"/>.</remarks>
+            <scrollPos>
+			<summary>Used to keep track of the scroll position for this handler.</summary>
+			<remarks>Should be passed by <see langword="ref" /> to <see cref="M:DivineFramework.UI.Listing_ScrollView.BeginScrollView(UnityEngine.Rect,System.Single,UnityEngine.Vector2@,System.Single)" />.</remarks>
+		</scrollPos>
         </member>
         <member name="M:DivineFramework.UI.Tab`1.#ctor(System.String,System.Action,System.Func{System.Boolean},DivineFramework.UI.SettingsHandler{`0})">
             <Tab>
@@ -1303,6 +1363,12 @@
 			<param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
 		</Common>
 	</Common>
+        </member>
+        <member name="M:DivineFramework.UI.UIElement.#ctor(DivineFramework.UI.UIElement)">
+            <DerivedFromParent>
+		<summary>Creates a new instance of this class using an existing element as a template.</summary>
+		<param name="element">The existing element to use as a template.</param>
+	</DerivedFromParent>
         </member>
         <member name="M:DivineFramework.UI.UIElement.Register(System.Single)">
             <Register>
