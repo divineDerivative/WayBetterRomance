@@ -78,7 +78,7 @@ namespace BetterRomance
             {
                 return PawnAvailability.CantInterruptJob;
             }
-            if (pawn.CanCasuallyInteractNow(true) || DontInterruptJobs.Contains(pawn.CurJobDef))
+            if (DontInterruptJobs.Contains(pawn.CurJobDef) || pawn.CanCasuallyInteractNow(true))
             {
                 return PawnAvailability.DontInterruptJob;
             }
