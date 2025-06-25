@@ -6,11 +6,16 @@
 	<WBR.Repulsion05>At {1} {0_pronoun} will only agree to lovin' with existing partners. {0_pronoun} will have negative thoughts about any lovin'.</WBR.Repulsion05>
 	<WBR.Repulsion04>At {1} {0_pronoun} can agree to lovin' with anyone, but will have slightly negative thoughts about it.</WBR.Repulsion04>
 	<WBR.Repulsion00>At {1} {0_pronoun} can agree to lovin' with anyone, and will have positive thoughts about it.</WBR.Repulsion00>
-	<!--Asexual romantic attraction-->
+	<!--Romantic orientations-->
 	<WBR.Heteroromantic>{0_labelShort} is heteroromantic, which means {0_pronoun} is romantically attracted to people of the opposite gender.</WBR.Heteroromantic>
 	<WBR.Homoromantic>{0_labelShort} is homoromantic, which means {0_pronoun} is romantically attracted to people of the same gender.</WBR.Homoromantic>
 	<WBR.Biromantic>{0_labelShort} is biromantic, which means {0_pronoun} is romantically attracted to both men and women.</WBR.Biromantic>
 	<WBR.Aromantic>{0_labelShort} is aromantic, which means {0_pronoun} is not interested in any romantic engagements.</WBR.Aromantic>
+	<!--Sexual orientations-->
+	<WBR.Heterosexual>{0_labelShort} is heterosexual, which means {0_pronoun} is sexually attracted to people of the opposite gender.</WBR.Heterosexual>
+	<WBR.Homosexual>{0_labelShort} is homosexual, which means {0_pronoun} is sexually attracted to people of the same gender.</WBR.Homosexual>
+	<WBR.Bisexual>{0_labelShort} is bisexual, which means {0_pronoun} is sexually attracted to both men and women.</WBR.Bisexual>
+
 	<WBR.MoreInfo>&lt;i&gt;Click for more info&lt;/i&gt;</WBR.MoreInfo>
 
 	<WBR.TraitDescAceAro>{0_pronoun} is uninterested in sexual or romantic engagements.</WBR.TraitDescAceAro>
