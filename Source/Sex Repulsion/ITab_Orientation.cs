@@ -39,6 +39,19 @@ namespace BetterRomance
             //Description of sexual orientation
             handler.RegisterNewRow("SexualDescription")
                 .AddLabel(() => OrientationDescription(false));
+
+            //Use a column for repulsion so I can hide the whole thing when not asexual
+            UIColumn repulsion = handler.RegisterNewColumn("SexRepulsion")
+                .HideWhen(() => !SelPawn.IsAsexual());
+            //slider
+            repulsion.Add(NewElement.Slider<float>()
+                .MinMax(0f, 1f)
+                .WithGetter(() => 1f - SelPawn.CheckForComp<Comp_SexRepulsion>().rating)
+                .WithSetter((float value) => SelPawn.CheckForComp<Comp_SexRepulsion>().rating = 1f - value)
+                .HideWhen(() => !Prefs.DevMode || !OrientationUtility.editOrientation));
+            //description
+            repulsion.AddLabel(RepulsionDescription);
+
             //Men
             handler.RegisterNewRow("SexualMenRow").Add(NewElement.Checkbox(relative: checkboxWidth)
                 .WithGetter(() => SelPawnComp.sexual.Men)
@@ -81,7 +94,7 @@ namespace BetterRomance
                 .DisableWhen(DisableWhen((Gender)3, true)));
         }
 
-        string OrientationDescription(bool romance)
+        TaggedString OrientationDescription(bool romance)
         {
             string text = string.Empty;
             if (romance)
@@ -131,51 +144,27 @@ namespace BetterRomance
             return text.Translate(SelPawn);
         }
 
-        //protected override void FillTab()
-        //{
-        //    Rect rect = new Rect(0f, 0f, size.x, size.y).ContractedBy(10f);
-        //    Listing_Standard list = new();
-        //    list.Begin(rect);
-        //    Text.Font = GameFont.Small;
-        //    if (Prefs.DevMode && SelPawn.IsAsexual())
-        //    {
-        //        string str = "DEV: Edit Repulsion";
-        //        float pct = (Text.CalcSize(str).x + 24f) / size.x;
-        //        list.CheckboxLabeled(str, ref OrientationUtility.editRepulsion, labelPct: pct);
-        //    }
-        //    //Orientation comp
-        //    var comp = SelPawn.CheckForComp<Comp_Orientation>();
-
-        //    //Display sex repulsion, describe the effects of their specific rating.
-        //    if (SelPawn.IsAsexual())
-        //    {
-        //        float repulsion = SelPawn.GetStatValue(StatDef.Named("AsexualRating"));
-        //        string repulsionString = StatDef.Named("AsexualRating").ValueToString(repulsion);
-        //        list.Label();
-        //        //Insert a slider if edit option is selected
-        //        if (OrientationUtility.editRepulsion)
-        //        {
-        //            SelPawn.CheckForComp<Comp_SexRepulsion>().rating = 1f - list.Slider(repulsion, 0f, 1f);
-        //        }
-        //        if (repulsion >= 0.8f)
-        //        {
-        //            list.Label("WBR.Repulsion08".Translate(SelPawn, repulsionString));
-        //        }
-        //        else if (repulsion >= 0.5f)
-        //        {
-        //            list.Label("WBR.Repulsion05".Translate(SelPawn, repulsionString));
-        //        }
-        //        else if (repulsion >= 0.4f)
-        //        {
-        //            list.Label("WBR.Repulsion04".Translate(SelPawn, repulsionString));
-        //        }
-        //        else
-        //        {
-        //            list.Label("WBR.Repulsion00".Translate(SelPawn, repulsionString));
-        //        }
-        //    }
-        //    list.End();
-        //}
+        TaggedString RepulsionDescription()
+        {
+            float repulsion = SelPawn.GetStatValue(StatDef.Named("AsexualRating"));
+            string repulsionString = StatDef.Named("AsexualRating").ValueToString(repulsion);
+            if (repulsion >= 0.8f)
+            {
+                return "WBR.Repulsion08".Translate(SelPawn, repulsionString);
+            }
+            else if (repulsion >= 0.5f)
+            {
+                return "WBR.Repulsion05".Translate(SelPawn, repulsionString);
+            }
+            else if (repulsion >= 0.4f)
+            {
+                return "WBR.Repulsion04".Translate(SelPawn, repulsionString);
+            }
+            else
+            {
+                return "WBR.Repulsion00".Translate(SelPawn, repulsionString);
+            }
+        }
 
         public ITab_Orientation() : base()
         {
