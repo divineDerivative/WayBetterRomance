@@ -6,7 +6,7 @@ namespace BetterRomance
 {
     public static class OrientationUtility
     {
-        public static bool editRepulsion;
+        public static bool editOrientation;
         public static readonly List<TraitDef> OrientationTraits =
         [
             TraitDefOf.Gay,
