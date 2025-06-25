@@ -7,7 +7,11 @@ using System.Reflection;
 using System.Reflection.Emit;
 using VanillaRacesExpandedHighmate;
 using Verse;
+#if !v1_6
 using VFECore;
+#else
+using VEF.Pawns;
+#endif
 using VREAndroids;
 
 namespace BetterRomance.HarmonyPatches

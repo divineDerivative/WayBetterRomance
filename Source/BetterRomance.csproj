@@ -130,8 +130,8 @@
           <HintPath>..\..\..\..\..\workshop\content\294100\1786466855\1.5\Assemblies\Pawnmorph.dll</HintPath>
           <Private>False</Private>
         </Reference>
-        <Reference Include="VFECore">
-          <HintPath>..\..\..\..\..\workshop\content\294100\2023507013\1.5\Assemblies\VFECore.dll</HintPath>
+        <Reference Include="VEF">
+          <HintPath>..\..\..\..\..\workshop\content\294100\2023507013\1.6\Assemblies\VEF.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="VanillaRacesExpandedHighmate">
