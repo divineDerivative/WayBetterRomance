@@ -3,7 +3,7 @@
   <Excluded>
     <exclude>.editorconfig</exclude>
     <exclude>.git</exclude>
-    <exclude>.rimignore</exclude>
+    <exclude>.idea</exclude>
     <exclude>.vs</exclude>
     <exclude>Source</exclude>
     <exclude>WayBetterRomance.sln</exclude>
