@@ -57,11 +57,6 @@
         <member name="T:DivineFramework.UI.UICheckboxLabelled">
             <summary>A check box with a label.</summary>
         </member>
-        <member name="F:DivineFramework.UI.UICheckboxLabelled.labelKey">
-            <ILabelled>
-			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
-		</ILabelled>
-        </member>
         <member name="M:DivineFramework.UI.UICheckboxLabelled.#ctor(DivineFramework.UI.UICheckbox)">
             <Initialize>
 			<summary><inheritdoc /> Sets the <see cref="F:DivineFramework.UI.UIElement.height">height</see> to match the size of the check box.</summary>
@@ -478,11 +473,6 @@
         <member name="T:DivineFramework.UI.UIButtonText">
             <summary>A button with a text label.</summary>
         </member>
-        <member name="F:DivineFramework.UI.UIButtonText.labelKey">
-            <ILabelled>
-			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
-		</ILabelled>
-        </member>
         <member name="M:DivineFramework.UI.UIButtonText.#ctor(DivineFramework.UI.UIButton)">
             <DerivedFromParent>
 		<summary>Creates a new instance of this class using an existing element as a template.</summary>
@@ -497,11 +487,6 @@
         </member>
         <member name="T:DivineFramework.UI.UIButtonTextResetable`1">
             <summary>A button with a text label that implements <see cref="T:DivineFramework.UI.IResetable"/>.</summary>
-        </member>
-        <member name="F:DivineFramework.UI.UIButtonTextResetable`1.labelKey">
-            <ILabelled>
-			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
-		</ILabelled>
         </member>
         <member name="M:DivineFramework.UI.UIButtonTextResetable`1.#ctor(DivineFramework.UI.UIButtonResetable{`0})">
             <DerivedFromParent>
@@ -1126,6 +1111,11 @@
         <member name="M:DivineFramework.UI.Tab`1.DrawContents(Verse.Listing)">
             <summary>Just calls <see cref="M:DivineFramework.UI.SettingsHandler`1.Draw(Verse.Listing)"/> on the <see cref="F:DivineFramework.UI.Tab`1.handler"/>.</summary>
         </member>
+        <member name="F:DivineFramework.UI.LabelHelper.labelKey">
+            <ILabelled>
+			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
+		</ILabelled>
+        </member>
         <member name="T:DivineFramework.UI.Listing_ScrollView">
             <Listing_ScrollView>
 		<summary>A <see cref="T:Verse.Listing" /> to make using scrollbars less confusing.</summary>
@@ -1238,6 +1228,9 @@
         </member>
         <member name="P:DivineFramework.UI.ILabelled.SetLabel">
             <summary>Set the <see langword="delegate"/> that will be used to determine the text of the label.</summary>
+        </member>
+        <member name="P:DivineFramework.UI.ILabelled.FitToText">
+            <summary>Property to determine if the element should resize itself to fit the text of the label.</summary>
         </member>
         <member name="T:DivineFramework.UI.IMinMax`1">
             <Main>
@@ -1398,6 +1391,9 @@
 		</DrawTooltip>
 		</DrawTooltipWithHighlight>
         </member>
+        <member name="M:DivineFramework.UI.UIElement.CheckLabelSize">
+            <summary>Determines if the text of a labelled element still fits in the element's current size. Sets <see cref="F:DivineFramework.UI.UIElement.sizeValid"/> false if the size needs to be recalculated.</summary>
+        </member>
         <member name="M:DivineFramework.UI.UIElement.ToString">
             <inheritdoc/>
         </member>
@@ -1418,11 +1414,6 @@
         </member>
         <member name="T:DivineFramework.UI.UILabel">
             <summary>A simple text element.</summary>
-        </member>
-        <member name="F:DivineFramework.UI.UILabel.labelKey">
-            <ILabelled>
-			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
-		</ILabelled>
         </member>
         <member name="M:DivineFramework.UI.UILabel.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
             <Common>

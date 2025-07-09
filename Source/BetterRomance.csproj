@@ -31,7 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <DefineConstants>v1_4</DefineConstants>
   </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.6|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '1.6|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\1.6\Assemblies\</OutputPath>
     <DebugType>portable</DebugType>
@@ -39,6 +39,9 @@
     <LangVersion>latest</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <DefineConstants>v1_6</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <Choose>
     <When Condition="'$(Configuration)|$(Platform)' == '1.4|AnyCPU'">
@@ -166,6 +169,7 @@
     <Compile Include="Harmony\Pawn_NeedsTracker.cs" />
     <Compile Include="Harmony\StatPart_Age.cs" />
     <Compile Include="Mod Integration\Pawnmorpher_Integration.cs" />
+    <Compile Include="Properties\FrameworkVersion.g.cs" />
     <Compile Include="Settings Comp\CompSettingsClasses.cs" />
     <Compile Include="Settings Comp\Comp_WBRSettings.cs" />
     <Compile Include="Harmony\ThinkNode_ChancePerHour_Lovin.cs" />
@@ -244,6 +248,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>call "$(SolutionDir)..\DivineFramework\PostBuild.bat" "$(TargetName)"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>call "$(SolutionDir)..\DivineFramework\PreBuild.bat" "$(ProjectDir)" "$(RootNamespace)"</PreBuildEvent>
   </PropertyGroup>
   <Target Name="ForcePostBuild" AfterTargets="Build">
     <Touch Files="$(IntermediateOutputPath)TouchMe.txt" />
