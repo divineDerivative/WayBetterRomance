@@ -50,7 +50,9 @@ namespace BetterRomance.HarmonyPatches
                         //So this is required for the VSIE patch, but I'm not sure how to account for it here
                         //Just gonna leave it for now and figure something out if I ever add another patch that needs this
                         //I bet my idea of a dictionary with MethodInfo and arguments could help, since I could check which key I'm using
+                        #if !v1_6
                         yield return new CodeInstruction(OpCodes.Ldarg_0);
+#endif
                         skip = false;
                     }
                     if (addLabel(code))

@@ -404,16 +404,6 @@
         <member name="T:DivineFramework.UI.UIButton">
             <summary>A base class for simple buttons</summary>
         </member>
-        <member name="F:DivineFramework.UI.UIButton.onClick">
-            <onClick>
-			<summary>Delegate to be called when the button is clicked.</summary>
-		</onClick>
-        </member>
-        <member name="F:DivineFramework.UI.UIButton.buttonHeight">
-            <buttonHeight>
-			<summary>The height of the button.</summary>
-		</buttonHeight>
-        </member>
         <member name="M:DivineFramework.UI.UIButton.#ctor(DivineFramework.UI.OnClickDelegate,System.Nullable{System.Single},System.Nullable{System.Single},System.Nullable{System.Single})">
             <UIButton>
 		<Common>
@@ -442,16 +432,6 @@
         </member>
         <member name="T:DivineFramework.UI.UIButtonResetable`1">
             <summary>A base class for buttons that implement <see cref="T:DivineFramework.UI.IResetable"/></summary>
-        </member>
-        <member name="F:DivineFramework.UI.UIButtonResetable`1.onClick">
-            <onClick>
-			<summary>Delegate to be called when the button is clicked.</summary>
-		</onClick>
-        </member>
-        <member name="F:DivineFramework.UI.UIButtonResetable`1.buttonHeight">
-            <buttonHeight>
-			<summary>The height of the button.</summary>
-		</buttonHeight>
         </member>
         <member name="M:DivineFramework.UI.UIButtonResetable`1.#ctor(DivineFramework.UI.UIButton)">
             <DerivedFromParent>
@@ -1115,6 +1095,16 @@
             <ILabelled>
 			<summary>A <see langword="delegate" /> to the function used to determine the plain text of the label.</summary>
 		</ILabelled>
+        </member>
+        <member name="F:DivineFramework.UI.ButtonHelper.onClick">
+            <onClick>
+			<summary>Delegate to be called when the button is clicked.</summary>
+		</onClick>
+        </member>
+        <member name="P:DivineFramework.UI.ButtonHelper.ButtonHeight">
+            <buttonHeight>
+			<summary>The height of the button.</summary>
+		</buttonHeight>
         </member>
         <member name="T:DivineFramework.UI.Listing_ScrollView">
             <Listing_ScrollView>

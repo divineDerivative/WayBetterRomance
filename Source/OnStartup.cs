@@ -201,24 +201,33 @@ namespace BetterRomance
                 try
                 {
                     MethodInfo GetSpouseOrLoverOrFiance = Type.GetType("VanillaSocialInteractionsExpanded.VSIE_Utils, VanillaSocialInteractionsExpanded").GetMethod("GetSpouseOrLoverOrFiance");
-                    MethodInfo prefixDelegate = null;
+                    MethodInfo prefixTarget = null;
+#if !v1_6
                     foreach (Type t in Type.GetType("VanillaSocialInteractionsExpanded.AddDirectRelation_Patch, VanillaSocialInteractionsExpanded").GetNestedTypes(AccessTools.all).Where((Type t) => t.GetCustomAttribute<System.Runtime.CompilerServices.CompilerGeneratedAttribute>() != null))
                     {
                         foreach (MethodInfo method in t.GetMethods(AccessTools.all))
                         {
                             if (method.ReturnType == typeof(void) && method.Name != "Finalize")
                             {
-                                if (prefixDelegate != null)
+                                if (prefixTarget != null)
                                 {
-                                    LogUtil.Error($"Multiple matching methods found: {prefixDelegate.Name} and {method.Name}");
+                                    LogUtil.Error($"Multiple matching methods found: {prefixTarget.Name} and {method.Name}");
                                 }
-                                prefixDelegate = method;
+                                prefixTarget = method;
                                 VSIEPatches.CompilerType = t;
                             }
                         }
                     }
+#else
+                    prefixTarget = AccessTools.Method(AccessTools.TypeByName("VanillaSocialInteractionsExpanded.AddDirectRelation_Patch"), "Prefix");
+#endif
+
                     harmony.Patch(GetSpouseOrLoverOrFiance, postfix: new(typeof(VSIEPatches), nameof(VSIEPatches.GetSpouseOrLoverOrFiancePostfix)));
-                    harmony.Patch(prefixDelegate, transpiler: new(typeof(VSIEPatches), nameof(VSIEPatches.AddDirectRelation_PrefixTranspiler)));
+                    if (prefixTarget == null)
+                    {
+                        LogUtil.Error("Could not find prefix delagate for Ad");
+                    }
+                    harmony.Patch(prefixTarget, transpiler: new(typeof(VSIEPatches), nameof(VSIEPatches.AddDirectRelation_PrefixTranspiler)));
                 }
                 catch (Exception ex)
                 {
