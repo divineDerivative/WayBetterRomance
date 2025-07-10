@@ -16,6 +16,7 @@
 	<WBR.Homosexual>{0_labelShort} is homosexual, which means {0_pronoun} is sexually attracted to people of the same gender.</WBR.Homosexual>
 	<WBR.Bisexual>{0_labelShort} is bisexual, which means {0_pronoun} is sexually attracted to both men and women.</WBR.Bisexual>
 
+	<WBR.EditOrientation>Edit Orientations</WBR.EditOrientation>
 	<WBR.MoreInfo>&lt;i&gt;Click for more info&lt;/i&gt;</WBR.MoreInfo>
 
 	<WBR.TraitDescAceAro>{0_pronoun} is uninterested in sexual or romantic engagements.</WBR.TraitDescAceAro>

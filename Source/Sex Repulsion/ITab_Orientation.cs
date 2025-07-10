@@ -29,13 +29,13 @@ namespace BetterRomance
         internal void SetUpHandler()
         {
             //Edit toggle
-            //Move the checkbox to be closer to the label
             handler.RegisterNewRow("EditToggle")
                 .HideWhen(() => !Prefs.DevMode)
                 .Add(NewElement.Checkbox()
                 .WithGetter(() => OrientationUtility.editOrientation)
                 .WithSetter((bool value) => OrientationUtility.editOrientation = value)
-                .WithLabel(() => "Edit Orientations"));
+                .WithLabel("WBR.EditOrientation".Translate)
+                .FitToText(true));
             //Description of sexual orientation
             handler.RegisterNewRow("SexualDescription")
                 .AddLabel(() => OrientationDescription(false));
@@ -43,31 +43,31 @@ namespace BetterRomance
             //Use a column for repulsion so I can hide the whole thing when not asexual
             UIColumn repulsion = handler.RegisterNewColumn("SexRepulsion")
                 .HideWhen(() => !SelPawn.IsAsexual());
-            //slider
+            //Repulsion slider
             repulsion.Add(NewElement.Slider<float>()
                 .MinMax(0f, 1f)
                 .WithGetter(() => 1f - SelPawn.CheckForComp<Comp_SexRepulsion>().rating)
                 .WithSetter((float value) => SelPawn.CheckForComp<Comp_SexRepulsion>().rating = 1f - value)
                 .HideWhen(() => !Prefs.DevMode || !OrientationUtility.editOrientation));
-            //description
+            //Repulsion description
             repulsion.AddLabel(RepulsionDescription);
 
             //Men
-            handler.RegisterNewRow("SexualMenRow").Add(NewElement.Checkbox(relative: checkboxWidth)
+            handler.RegisterNewRow(name: "SexualMenRow").Add(NewElement.Checkbox(relative: checkboxWidth)
                 .WithGetter(() => SelPawnComp.sexual.Men)
-                .WithSetter((bool value) => SelPawnComp.SetSexualAttraction(Gender.Male, value))
+                .WithSetter((bool value) => OrientationSetter(Gender.Male, false, value))
                 .WithLabel(() => "Men")
                 .DisableWhen(DisableWhen(Gender.Male, false)));
             //Women
-            handler.RegisterNewRow("SexualWomenRow").Add(NewElement.Checkbox(relative: checkboxWidth)
+            handler.RegisterNewRow(name: "SexualWomenRow").Add(NewElement.Checkbox(relative: checkboxWidth)
                 .WithGetter(() => SelPawnComp.sexual.Women)
-                .WithSetter((bool value) => SelPawnComp.SetSexualAttraction(Gender.Female, value))
+                .WithSetter((bool value) => OrientationSetter(Gender.Female, false, value))
                 .WithLabel(() => "Women")
                 .DisableWhen(DisableWhen(Gender.Female, false)));
             //Enby
-            handler.RegisterNewRow("SexualEnbyRow").Add(NewElement.Checkbox(relative: checkboxWidth)
+            handler.RegisterNewRow(name: "SexualEnbyRow").Add(NewElement.Checkbox(relative: checkboxWidth)
                 .WithGetter(() => SelPawnComp.sexual.Enby)
-                .WithSetter((bool value) => SelPawnComp.SetSexualAttraction((Gender)3, value))
+                .WithSetter((bool value) => OrientationSetter((Gender)3, false, value))
                 .WithLabel(() => "Non-binary")
                 .DisableWhen(DisableWhen((Gender)3, false)));
 
@@ -75,21 +75,21 @@ namespace BetterRomance
             handler.RegisterNewRow("RomanticDescription")
                 .AddLabel(() => OrientationDescription(true));
             //Men
-            handler.RegisterNewRow("RomanticMenRow").Add(NewElement.Checkbox(relative: checkboxWidth)
+            handler.RegisterNewRow(name: "RomanticMenRow").Add(NewElement.Checkbox(relative: checkboxWidth)
                 .WithGetter(() => SelPawnComp.romantic.Men)
-                .WithSetter((bool value) => SelPawnComp.SetRomanticAttraction(Gender.Male, value))
+                .WithSetter((bool value) => OrientationSetter(Gender.Male, true, value))
                 .WithLabel(() => "Men")
                 .DisableWhen(DisableWhen(Gender.Male, true)));
             //Women
-            handler.RegisterNewRow("RomanticWomenRow").Add(NewElement.Checkbox(relative: checkboxWidth)
+            handler.RegisterNewRow(name: "RomanticWomenRow").Add(NewElement.Checkbox(relative: checkboxWidth)
                 .WithGetter(() => SelPawnComp.romantic.Women)
-                .WithSetter((bool value) => SelPawnComp.SetRomanticAttraction(Gender.Female, value))
+                .WithSetter((bool value) => OrientationSetter(Gender.Female, true, value))
                 .WithLabel(() => "Women")
                 .DisableWhen(DisableWhen(Gender.Female, true)));
             //Enby
-            handler.RegisterNewRow("RomanticEnbyRow").Add(NewElement.Checkbox(relative: checkboxWidth)
+            handler.RegisterNewRow(name: "RomanticEnbyRow").Add(NewElement.Checkbox(relative: checkboxWidth)
                 .WithGetter(() => SelPawnComp.romantic.Enby)
-                .WithSetter((bool value) => SelPawnComp.SetRomanticAttraction((Gender)3, value))
+                .WithSetter((bool value) => OrientationSetter((Gender)3, true, value))
                 .WithLabel(() => "Non-binary")
                 .DisableWhen(DisableWhen((Gender)3, true)));
         }
@@ -166,9 +166,23 @@ namespace BetterRomance
             }
         }
 
+        void OrientationSetter(Gender gender, bool romance, bool value)
+        {
+            if (Prefs.DevMode && OrientationUtility.editOrientation)
+            {
+                if (romance)
+                {
+                    SelPawnComp.SetRomanticAttraction(gender, value);
+                }
+                else
+                {
+                    SelPawnComp.SetSexualAttraction(gender, value);
+                }
+            }
+        }
+
         public ITab_Orientation() : base()
         {
-            LogUtil.Message($"Instantiating ITab_Orientation");
             handler ??= new(true, SetUpHandler);
             labelKey = "Orientation";
             size = new Vector2(430f, 500f);
@@ -335,6 +349,11 @@ namespace BetterRomance
         {
             return () =>
             {
+                //If editing is disabled, don't actually disable the checkbox, so it doesn't look greyed out for no reason
+                if (!OrientationUtility.editOrientation || !Prefs.DevMode)
+                {
+                    return false;
+                }
                 if (SelPawnComp.AttractedTo(gender, romance))
                 {
                     // If currently attracted, disable if CanDisable returns false
