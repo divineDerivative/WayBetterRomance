@@ -122,7 +122,7 @@
           <ExcludeAssets>runtime</ExcludeAssets>
         </PackageReference>
         <Reference Include="AlienRace">
-          <HintPath>..\..\..\..\..\workshop\content\294100\839005762\1.5\Assemblies\AlienRace.dll</HintPath>
+          <HintPath>..\..\..\..\..\workshop\content\294100\839005762\1.6\Assemblies\AlienRace.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="RomanceOnTheRim">
@@ -138,11 +138,11 @@
           <Private>False</Private>
         </Reference>
         <Reference Include="VanillaRacesExpandedHighmate">
-          <HintPath>..\..\..\..\..\workshop\content\294100\2995385834\1.5\Assemblies\VanillaRacesExpandedHighmate.dll</HintPath>
+          <HintPath>..\..\..\..\..\workshop\content\294100\2995385834\1.6\Assemblies\VanillaRacesExpandedHighmate.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="VREAndroids">
-          <HintPath>..\..\..\..\..\workshop\content\294100\2975771801\1.5\Assemblies\VREAndroids.dll</HintPath>
+          <HintPath>..\..\..\..\..\workshop\content\294100\2975771801\1.6\Assemblies\VREAndroids.dll</HintPath>
           <Private>False</Private>
         </Reference>
       </ItemGroup>
