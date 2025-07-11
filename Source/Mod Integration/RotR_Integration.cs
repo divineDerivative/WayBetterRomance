@@ -86,8 +86,11 @@ namespace BetterRomance
 
                     harmony.Unpatch(typeof(InteractionWorker_RomanceAttempt).GetMethod("SuccessChance"), typeof(HarmonyPatch_InteractionWorker_RomanceAttempt).GetMethod(nameof(HarmonyPatch_InteractionWorker_RomanceAttempt.SuccessChancePostfix)));
                     harmony.Patch(typeof(InteractionWorker_RomanceAttempt).GetMethod("SuccessChance"), postfix: new(typeof(RotRPatches).GetMethod(nameof(SuccessChancePostfix))));
-
+#if !v1_6
                     harmony.Patch(typeof(HarmonyPatch_SocialCardUtility_RomanceExplanation).GetMethod("AddPreceptExplanation"), transpiler: new(typeof(RotRPatches).GetMethod(nameof(AddPreceptExplanationTranspiler))));
+#else
+                    harmony.Patch(typeof(HarmonyPatch_AddExplanationForPrecepts).GetMethod("AddPreceptExplanation"), transpiler: new(typeof(RotRPatches).GetMethod(nameof(AddPreceptExplanationTranspiler))));
+#endif
                     harmony.Patch(AccessTools.Method(typeof(QuestPart_BondOfFreedom_Reject), "DoAction"), prefix: new(typeof(RotRPatches).GetMethod(nameof(BondOfFreedom_RejectPrefix))), postfix: new(typeof(RotRPatches).GetMethod(nameof(BondOfFreedom_RejectPostfix))));
                 }
 #if v1_4

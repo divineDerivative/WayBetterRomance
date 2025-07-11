@@ -126,7 +126,7 @@
           <Private>False</Private>
         </Reference>
         <Reference Include="RomanceOnTheRim">
-          <HintPath>..\..\..\..\..\workshop\content\294100\2654432921\1.5\Assemblies\RomanceOnTheRim.dll</HintPath>
+          <HintPath>..\..\..\..\..\workshop\content\294100\2654432921\1.6\Assemblies\RomanceOnTheRim.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="Pawnmorph">
