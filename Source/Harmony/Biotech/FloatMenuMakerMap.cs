@@ -40,16 +40,31 @@ namespace BetterRomance.HarmonyPatches
 
         protected override FloatMenuOption GetSingleOptionFor(Pawn clickedPawn, FloatMenuContext context)
         {
-            if (clickedPawn.Drafted || clickedPawn.DevelopmentalStage.Baby())
+            if (clickedPawn.DroneCheck() || clickedPawn.Drafted || clickedPawn.DevelopmentalStage.Baby())
             {
                 return null;
             }
+
             bool optionAvailable = HookupUtility.HookupOption(context.FirstSelectedPawn, clickedPawn, out FloatMenuOption option, out _);
             if (option != null)
             {
                 option.Label = (optionAvailable ? "WBR.CanHookup" : "WBR.CannotHookup").Translate(option.Label);
             }
             return option;
+        }
+
+        protected override bool AppliesInt(FloatMenuContext context)
+        {
+            if (context.FirstSelectedPawn.DroneCheck() || context.FirstSelectedPawn.Drafted || context.FirstSelectedPawn.DevelopmentalStage.Baby())
+            {
+                return false;
+            }
+
+            return base.AppliesInt(context);
+        }
+        public override bool Applies(FloatMenuContext context)
+        {
+            return base.Applies(context);
         }
     }
 
