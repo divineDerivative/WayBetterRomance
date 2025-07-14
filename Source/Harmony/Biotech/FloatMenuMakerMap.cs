@@ -40,7 +40,7 @@ namespace BetterRomance.HarmonyPatches
 
         protected override FloatMenuOption GetSingleOptionFor(Pawn clickedPawn, FloatMenuContext context)
         {
-            if (clickedPawn.DroneCheck() || clickedPawn.Drafted || clickedPawn.DevelopmentalStage.Baby())
+            if (!clickedPawn.IsHumanlike() || clickedPawn.DroneCheck() || clickedPawn.Drafted || clickedPawn.DevelopmentalStage.Baby())
             {
                 return null;
             }
