@@ -41,8 +41,10 @@ namespace BetterRomance
             }
 #if v1_4
             return !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
-#else
+#elif v1_5
             return pawn.IsMutant || !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
+            #else
+            return pawn.IsSubhuman || !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
 #endif
         }
 
