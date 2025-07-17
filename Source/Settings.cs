@@ -249,7 +249,7 @@ namespace BetterRomance
                 .WithReference(this, nameof(dateRate), dateRate)
                 .MinMax(0f, 200f)
                 .RoundTo(0)
-                .RegisterResetable(handler, 100f), "DateRateSlider");
+                .RegisterResettable(handler, 100f), "DateRateSlider");
             //Hook up rate
             section.AddLabel(() => "WBR.HookupRate".Translate(hookupRate))
                 .WithTooltip("WBR.HookupRateTip".Translate);
@@ -257,7 +257,7 @@ namespace BetterRomance
                 .WithReference(this, nameof(hookupRate), hookupRate)
                 .MinMax(0f, 200f)
                 .RoundTo(0)
-                .RegisterResetable(handler, 100f), "HookupRateSlider");
+                .RegisterResettable(handler, 100f), "HookupRateSlider");
             //Alien love chance
             section.AddLabel(() => "WBR.AlienLoveChance".Translate(alienLoveChance))
                 .WithTooltip("WBR.AlienLoveChanceTip".Translate);
@@ -265,21 +265,21 @@ namespace BetterRomance
                 .WithReference(this, nameof(alienLoveChance), alienLoveChance)
                 .MinMax(-100f, 100f)
                 .RoundTo(0)
-                .RegisterResetable(handler, 33f), "AlienChanceSlider");
+                .RegisterResettable(handler, 33f), "AlienChanceSlider");
             //Min opinion for romance
             section.AddLabel(() => "WBR.MinOpinionRomance".Translate(minOpinionRomance))
                 .WithTooltip("WBR.MinOpinionRomanceTip".Translate);
             section.Add(NewElement.Slider<int>()
                 .WithReference(this, nameof(minOpinionRomance), minOpinionRomance)
                 .MinMax(-100, 100)
-                .RegisterResetable(handler, 5), "MinOpinionRomanceSlider");
+                .RegisterResettable(handler, 5), "MinOpinionRomanceSlider");
             //Min opinion for hook up
             section.AddLabel(() => "WBR.MinOpinionHookup".Translate(minOpinionHookup))
                 .WithTooltip("WBR.MinOpinionHookupTip".Translate);
             section.Add(NewElement.Slider<int>()
                 .WithReference(this, nameof(minOpinionHookup), minOpinionHookup)
                 .MinMax(-100, 50)
-                .RegisterResetable(handler, 0), "MinOpinionHookupSlider");
+                .RegisterResettable(handler, 0), "MinOpinionHookupSlider");
             //Cheat chance
             section.AddLabel(() => "WBR.CheatChance".Translate(cheatChance))
                 .WithTooltip("WBR.CheatChanceTip".Translate);
@@ -287,7 +287,7 @@ namespace BetterRomance
                 .WithReference(this, nameof(cheatChance), cheatChance)
                 .MinMax(0f, 200f)
                 .RoundTo(0)
-                .RegisterResetable(handler, 100f), "CheatChanceSlider");
+                .RegisterResettable(handler, 100f), "CheatChanceSlider");
             //Cheat opinion range
             section.AddLabel("WBR.CheatingOpinionRange".Translate)
                 .WithTooltip("WBR.CheatingOpinionRangeTip".Translate)
@@ -295,7 +295,7 @@ namespace BetterRomance
             section.Add(NewElement.Range<IntRange, int>(5)
                 .WithReference(this, nameof(cheatingOpinion), cheatingOpinion)
                 .MinMax(-100, 100)
-                .RegisterResetable(handler, new IntRange(-75, 75)), "CheatOpinionRange");
+                .RegisterResettable(handler, new IntRange(-75, 75)), "CheatOpinionRange");
 
             handler.AddGap();
             handler.RegisterNewRow().AddResetButton(handler);
