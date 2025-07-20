@@ -224,7 +224,7 @@
             <summary>Creates a new instance of this class using an existing element as a template.</summary><param name="element">The existing element to use as a template.</param>
         </member>
         <member name="M:DivineFramework.UI.UIButton.Initialize">
-            <summary><inheritdoc/> Sets the <see cref="F:DivineFramework.UI.UIElement.height">height</see> of the button.</summary>
+            <summary><inheritdoc /> Sets the <see cref="F:DivineFramework.UI.UIElement.height">height</see> of the button.</summary>
         </member>
         <member name="T:DivineFramework.UI.UIButtonReference`1">
             <summary>A base class for buttons that implement <see cref="T:DivineFramework.UI.IReferenceBase" /></summary>
@@ -422,13 +422,13 @@
             <summary>Calls <see cref="!:setUpMethod" /> if it exists, but only once, unless <paramref name="force" /> is used.</summary><param name="force">Whether to call <see cref="!:setUpMethod" /> even if it's already been called previously. If you use this it is recommended to <see cref="M:DivineFramework.UI.Handler`2.Clear" /> the contents first.</param>
         </member>
         <member name="T:DivineFramework.UI.ITab_Handler">
-            <summary>An <see cref="T:RimWorld.ITab"/> that uses a <see cref="T:DivineFramework.UI.SettingsHandler`1"/> to manage its contents.</summary>
-        </member>
-        <member name="F:DivineFramework.UI.ITab_Handler.handler">
-            <summary>The <see cref="T:DivineFramework.UI.SettingsHandler`1"/> associated with this <see cref="T:RimWorld.ITab"/>.</summary>
+            <summary>An <see cref="T:RimWorld.ITab" /> that uses a <see cref="T:DivineFramework.UI.SettingsHandler`1" /> to manage its contents.</summary>
         </member>
         <member name="F:DivineFramework.UI.ITab_Handler.margin">
-            <param name="margin">A margin around the <see cref="T:UnityEngine.Rect" /> passed to the <paramref name="handler" />.</param>&gt;
+            <param name="margin">A margin around the <see cref="T:UnityEngine.Rect" /> passed to the <paramref name="handler" />.</param>
+        </member>
+        <member name="F:DivineFramework.UI.ITab_Handler.handler">
+            <summary>The <see cref="T:DivineFramework.UI.SettingsHandler`1" /> associated with this <see cref="T:RimWorld.ITab" />.</summary>
         </member>
         <member name="M:DivineFramework.UI.ITab_Handler.#ctor(System.Single)">
             <summary /><param name="handler">The <see cref="T:DivineFramework.UI.SettingsHandler`1" /> that will be used to draw this <see cref="T:RimWorld.ITab" />.</param><param name="margin">A margin around the <see cref="T:UnityEngine.Rect" /> passed to the <paramref name="handler" />.</param>
@@ -439,14 +439,14 @@
         <member name="T:DivineFramework.UI.SettingsHandler`1">
             <summary>A class for holding and managing multiple <see cref="T:DivineFramework.UI.UIElement" />s.</summary><typeparam name="T">The class type associated with this <see cref="T:DivineFramework.UI.SettingsHandler`1" />. This can be any reference type, not just a <see cref="T:Verse.ModSettings" /> subclass.</typeparam>
         </member>
+        <member name="F:DivineFramework.UI.SettingsHandler`1.verticalSpacing">
+            <summary><param name="verticalSpacing">The spacing between rows in the <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param></summary>
+        </member>
         <member name="F:DivineFramework.UI.SettingsHandler`1.height">
             <summary>The height of this <see cref="T:DivineFramework.UI.SettingsHandler`1" /> the last time it was drawn.</summary>
         </member>
         <member name="F:DivineFramework.UI.SettingsHandler`1.maxOneColumn">
             <summary><param name="maxOneColumn">Setting this to <see langword="true" /> means that a new column will only be made when a row specifically requests it. Hidden rows will still cause a new column in this case.<br />Setting this to <see langword="false" /> means that a new column will be made if a row will not fit in the <see cref="!:Rect" /> of the <see cref="T:Verse.Listing" />.</param></summary>
-        </member>
-        <member name="F:DivineFramework.UI.SettingsHandler`1.verticalSpacing">
-            <summary><param name="verticalSpacing">The spacing between rows in the <see cref="T:DivineFramework.UI.SettingsHandler`1" />.</param></summary>
         </member>
         <member name="F:DivineFramework.UI.SettingsHandler`1.width">
             <summary>The width for the settings handler that is passed to all rows.</summary>
@@ -533,7 +533,7 @@
             <summary>Just calls <see cref="M:DivineFramework.UI.SettingsHandler`1.Draw(Verse.Listing)" /> on the <see cref="F:DivineFramework.UI.Tab`1.handler" />.</summary>
         </member>
         <member name="T:DivineFramework.UI.LabelHelper">
-            <summary>A common class added to element types implementing <see cref="T:DivineFramework.UI.ILabeled"/>, to unify common functionality.</summary>
+            <summary>A common class added to element types implementing <see cref="T:DivineFramework.UI.ILabeled" />, to unify common functionality.</summary>
         </member>
         <member name="F:DivineFramework.UI.LabelHelper.labelKey">
             <summary>A <see langword="delegate" /> function used to determine the plain text of the label.</summary>
@@ -548,7 +548,7 @@
             <summary>A <see cref="T:Verse.Listing" /> to make using scrollbars less confusing.</summary><remarks>All you need to do is make a new <see cref="T:DivineFramework.UI.Listing_ScrollView" />, call <see cref="M:DivineFramework.UI.Listing_ScrollView.BeginScrollView(UnityEngine.Rect,System.Single,UnityEngine.Vector2@,System.Single)" />, use the resulting <see cref="T:Verse.Listing_Standard" /> for all your listing needs, then call <see cref="M:DivineFramework.UI.Listing_ScrollView.End" />.</remarks>
         </member>
         <member name="F:DivineFramework.UI.Listing_ScrollView.endingX">
-            <summary>The final x value of the inner listing after <see cref="M:DivineFramework.UI.Listing_ScrollView.End"/> was called.</summary>
+            <summary>The final x value of the inner listing after <see cref="M:DivineFramework.UI.Listing_ScrollView.End" /> was called.</summary>
         </member>
         <member name="M:DivineFramework.UI.Listing_ScrollView.BeginScrollView(UnityEngine.Rect,System.Single,UnityEngine.Vector2@,System.Single)">
             <summary>Use this instead of <see cref="M:Verse.Listing_Standard.Begin(UnityEngine.Rect)" />. If the <paramref name="height" /> is larger than the <paramref name="canvasRect" />, a scrollbar will be used.</summary><param name="canvasRect">The <see cref="T:UnityEngine.Rect" /> for the visible space on the screen.</param><param name="height">
@@ -578,7 +578,7 @@
         <member name="M:DivineFramework.UI.IItem.Validate(System.String@)">
             <summary>Make sure that all required data is present.</summary>
             <param name="reasons">List of reasons that validation failed, to be used in error messages.</param>
-            <returns><see langword="false"/> if any critical data is null.</returns>
+            <returns><see langword="false" /> if any critical data is null.</returns>
         </member>
         <member name="M:DivineFramework.UI.IUIElement.Register(System.Single)">
             <summary>Register the element within its container.</summary>
@@ -586,11 +586,11 @@
         </member>
         <member name="M:DivineFramework.UI.IUIElement.Draw(UnityEngine.Rect)">
             <summary>Draw the element.</summary>
-            <param name="rect">The <see cref="T:UnityEngine.Rect"/> used to draw the element, calculated by the parent container.</param>
+            <param name="rect">The <see cref="T:UnityEngine.Rect" /> used to draw the element, calculated by the parent container.</param>
         </member>
         <member name="T:DivineFramework.UI.IContainer`1">
-            <summary>Interface for classes that contain a list of <see cref="T:DivineFramework.UI.IItem"/>s.</summary>
-            <typeparam name="U">The <see langword='type'/> of <see cref="T:DivineFramework.UI.IItem"/>s in the list.</typeparam>
+            <summary>Interface for classes that contain a list of <see cref="T:DivineFramework.UI.IItem" />s.</summary>
+            <typeparam name="U">The <see langword='type' /> of <see cref="T:DivineFramework.UI.IItem" />s in the list.</typeparam>
         </member>
         <member name="M:DivineFramework.UI.IContainer`1.Initialize">
             <summary>Do things that need to be done after all other items are added to this <see cref="T:DivineFramework.UI.IContainer`1" />.</summary>
@@ -604,15 +604,15 @@
             <summary>Remove all items from the container.</summary>
         </member>
         <member name="M:DivineFramework.UI.IContainer`1.GetNamed(System.String)">
-            <summary>Retrieve a specific named <see cref="T:DivineFramework.UI.IItem"/> that has been registered to this <see cref="T:DivineFramework.UI.IContainer`1"/>.</summary>
+            <summary>Retrieve a specific named <see cref="T:DivineFramework.UI.IItem" /> that has been registered to this <see cref="T:DivineFramework.UI.IContainer`1" />.</summary>
             <param name="name">The name of the element to retrieve.</param>
-            <returns>The named item, or <see langword="null"/> if none was found.</returns>
+            <returns>The named item, or <see langword="null" /> if none was found.</returns>
         </member>
         <member name="T:DivineFramework.UI.IReferenceBase">
             <summary>A non-generic interface for elements with that use a ReferenceHolder</summary>
         </member>
         <member name="M:DivineFramework.UI.IReferenceBase.Validate(System.String@)">
-            <inheritdoc cref="M:DivineFramework.UI.IItem.Validate(System.String@)"/>
+            <inheritdoc cref="M:DivineFramework.UI.IItem.Validate(System.String@)" />
         </member>
         <member name="M:DivineFramework.UI.IReferenceBase.Reset">
             <summary>Set the referenced setting to its default value.</summary>
@@ -636,7 +636,7 @@
             <summary>Set the <see langword="delegate" /> that will be used to determine the text of the label.</summary>
         </member>
         <member name="P:DivineFramework.UI.ILabeled.FitToText">
-            <summary>Whether the element should be resized to fit the full text of the <see cref="P:DivineFramework.UI.ILabeled.Label"/>.</summary>
+            <summary>Whether the element should be resized to fit the full text of the <see cref="P:DivineFramework.UI.ILabeled.Label" />.</summary>
         </member>
         <member name="T:DivineFramework.UI.IMinMax`1">
             <summary>Interface for elements with numeric min and max values.</summary>
@@ -679,7 +679,7 @@
             <summary>Create a basic label.</summary><returns>The newly created <see cref="T:DivineFramework.UI.UILabel" />.</returns><param name="labelKey">A <see langword="delegate" /> function used to determine the plain text of the label.</param><param name="relative">Width of the new element relative to its container; optional, should be 0f-1f. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param><param name="absolute">Fixed width for the new element; optional. Only use <paramref name="relative" /> or <paramref name="absolute" />, not both.</param>
         </member>
         <member name="T:DivineFramework.UI.UIElement">
-            <summary>The base <see langword="class"/> for implementing <see cref="T:DivineFramework.UI.IUIElement"/>.</summary>
+            <summary>The base <see langword="class" /> for implementing <see cref="T:DivineFramework.UI.IUIElement" />.</summary>
         </member>
         <member name="F:DivineFramework.UI.UIElement.actualWidth">
             <summary>The actual width of the element to be used for drawing.</summary>
@@ -730,7 +730,7 @@
             <summary><include file="../../Docs/UIElements.xml" path="doc/Common/DrawTooltip/summary" /> Also draws a highlight over the whole <paramref name="rect" />.</summary><include file="../../Docs/UIElements.xml" path="doc/Common/DrawTooltip/param" />
         </member>
         <member name="M:DivineFramework.UI.UIElement.CheckLabelSize">
-            <summary>Determines if the text of a labeled element still fits in the element's current size. Sets <see cref="F:DivineFramework.UI.UIElement.sizeValid"/> false if the size needs to be recalculated.</summary>
+            <summary>Determines if the text of a labeled element still fits in the element's current size. Sets <see cref="F:DivineFramework.UI.UIElement.sizeValid" /> false if the size needs to be recalculated.</summary>
         </member>
         <member name="M:DivineFramework.UI.UIElement.GetLabelHeight(DivineFramework.UI.ILabeled)">
             <summary>Determine the height required to display the label of a labeled element.</summary><param name="element">The element that implements <see cref="T:DivineFramework.UI.ILabeled" />.</param><returns>The desired height.</returns>
@@ -739,7 +739,7 @@
             <summary>Determine the width required to display the label of a labeled element.</summary><param name="element">The element that implements <see cref="T:DivineFramework.UI.ILabeled" />.</param><returns>The desired width.</returns>
         </member>
         <member name="M:DivineFramework.UI.UIElement.ToString">
-            <inheritdoc/>
+            <inheritdoc />
         </member>
         <member name="T:DivineFramework.UI.UIIntEntry">
             <summary>An element that allows the user to input an <see cref="T:System.Int32"/>, with buttons to increase/decrease the value by a base <see cref="F:DivineFramework.UI.UIIntEntry.multiplier">amount</see> and that amount x10. Optional min and max values. Can use shift click and ctrl click to increase the amount.</summary>
@@ -771,22 +771,22 @@
         <member name="M:DivineFramework.UI.UIHeader.#ctor(System.Nullable{System.Single},System.Nullable{System.Single})">
             <include file="../../Docs/NewElement.xml" path="doc/NewElement/Common/*" />
         </member>
-        <member name="T:DivineFramework.LogUtil">
+        <member name="T:DivineFramework.Logging">
             <summary>Methods for logging to the console.</summary>
         </member>
-        <member name="M:DivineFramework.LogUtil.Message(System.String,System.Boolean)">
+        <member name="M:DivineFramework.Logging.Message(System.String,System.Boolean)">
             <summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary><param name="message">The text of the log message.</param><param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
         </member>
-        <member name="M:DivineFramework.LogUtil.Warning(System.String,System.Boolean)">
+        <member name="M:DivineFramework.Logging.Warning(System.String,System.Boolean)">
             <summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary><param name="message">The text of the log message.</param><param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
         </member>
-        <member name="M:DivineFramework.LogUtil.WarningOnce(System.String,System.Int32,System.Boolean)">
+        <member name="M:DivineFramework.Logging.WarningOnce(System.String,System.Int32,System.Boolean)">
             <summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary><param name="message">The text of the log message.</param><param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param><param name="key">A number used to determine if this message has already been logged. Should be unique for each usage.</param>
         </member>
-        <member name="M:DivineFramework.LogUtil.Error(System.String,System.Boolean)">
+        <member name="M:DivineFramework.Logging.Error(System.String,System.Boolean)">
             <summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary><param name="message">The text of the log message.</param><param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param>
         </member>
-        <member name="M:DivineFramework.LogUtil.ErrorOnce(System.String,System.Int32,System.Boolean)">
+        <member name="M:DivineFramework.Logging.ErrorOnce(System.String,System.Int32,System.Boolean)">
             <summary>Calls the base <see cref="T:Verse.Log" /> version with a prefix identifying the calling mod.</summary><param name="message">The text of the log message.</param><param name="debugOnly">Whether this message should only be logged if debug logging is active in the calling mod.<br />Defaults to <see langword="false" />, meaning the message will always be logged.</param><param name="key">A number used to determine if this message has already been logged. Should be unique for each usage.</param>
         </member>
         <member name="T:DivineFramework.LogToFile">
@@ -804,7 +804,7 @@
         <member name="T:DivineFramework.ModManagement">
             <summary>A class that allows mods to register with the framework, which will check compatibility for each registered mod.</summary>
         </member>
-        <member name="M:DivineFramework.ModManagement.RegisterMod(System.String,System.String,System.Version,System.String,System.Func{System.Boolean})">
+        <member name="M:DivineFramework.ModManagement.RegisterMod(System.String,System.Version)">
             <summary>Register your mod with the framework; this enables certain logging features and checks that the correct version of the framework is loaded.</summary><remarks>The recommended place to call this is in the constructor of your <see cref="T:Verse.Mod" /> class, or in the constructor of a class with the <see cref="T:Verse.StaticConstructorOnStartup" /> attribute.</remarks><param name="translationKey">A translation key for the name of the mod. Used for player facing messages.</param><param name="assemblyName">The name of the assembly in the mod that references DivineFramework.<br />Recommended usage:<code>typeof(ClassFromYourAssembly).Assembly.GetName().Name</code></param><param name="versionNeeded">The version of DivineFramework required by the mod.</param><param name="wrapMessage">Text to prefix logging messages; optional, will default to <paramref name="assemblyName" />.</param><param name="debugDelegate">A delegate to determine if debug logging is active for this mod; optional, will default to always <see langword="true" />, meaning everything will be logged.</param>
         </member>
     </members>

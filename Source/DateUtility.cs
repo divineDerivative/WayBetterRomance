@@ -1,10 +1,10 @@
-﻿using DivineFramework;
+﻿using System.Collections.Generic;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using static BetterRomance.WBRLogger;
 
 namespace BetterRomance
 {

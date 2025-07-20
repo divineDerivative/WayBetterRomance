@@ -1,11 +1,11 @@
-﻿using DivineFramework;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using Pawnmorph;
 using RimWorld;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Verse;
+using static BetterRomance.WBRLogger;
 
 namespace BetterRomance
 {

@@ -1,11 +1,11 @@
-using BetterRomance.HarmonyPatches;
-using DivineFramework;
-using HarmonyLib;
-using RimWorld;
 using System;
 using System.Linq;
 using System.Reflection;
+using BetterRomance.HarmonyPatches;
+using HarmonyLib;
+using RimWorld;
 using Verse;
+using static BetterRomance.WBRLogger;
 
 namespace BetterRomance
 {

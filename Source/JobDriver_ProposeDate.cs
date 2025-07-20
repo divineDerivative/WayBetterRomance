@@ -4,7 +4,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
-using DivineFramework;
+using static BetterRomance.WBRLogger;
 #if !v1_4
 using LudeonTK;
 #endif

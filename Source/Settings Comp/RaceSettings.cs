@@ -1,8 +1,8 @@
-﻿using DivineFramework;
-using RimWorld;
-using System;
+﻿using System;
 using System.Linq;
+using RimWorld;
 using Verse;
+using static BetterRomance.WBRLogger;
 
 namespace BetterRomance
 {

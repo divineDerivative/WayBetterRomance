@@ -1,8 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using DivineFramework;
 using DivineFramework.UI;
 using RimWorld;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -325,7 +325,7 @@ namespace BetterRomance
         public BetterRomanceMod(ModContentPack content) : base(content)
         {
             settings = GetSettings<Settings>();
-            ModManagement.RegisterMod("WBR.WayBetterRomance", typeof(BetterRomanceMod).Assembly.GetName().Name, new(FrameworkVersionInfo.Version), "<color=#1116e4>[WayBetterRomance]</color>", () => Settings.debugLogging);
+            ModManagement.RegisterMod("WBR.WayBetterRomance", new(FrameworkVersionInfo.Version));
         }
 
         public override string SettingsCategory()
@@ -361,5 +361,11 @@ namespace BetterRomance
             scrollViewHeight = list.MaxColumnHeightSeen;
             outerList.End();
         }
+    }
+
+    internal class WBRLogger : Logging
+    {
+        public static readonly WBRLogger LogUtil = new WBRLogger();
+        private WBRLogger() : base("<color=#1116e4>[WayBetterRomance]</color>", () => Settings.debugLogging) { }
     }
 }

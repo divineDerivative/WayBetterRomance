@@ -1,5 +1,5 @@
-﻿using DivineFramework;
-using Verse;
+﻿using Verse;
+using static BetterRomance.WBRLogger;
 
 namespace BetterRomance
 {
