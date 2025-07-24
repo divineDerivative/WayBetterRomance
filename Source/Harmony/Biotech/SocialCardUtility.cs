@@ -46,14 +46,13 @@ namespace BetterRomance.HarmonyPatches
                 }
             }
         }
-
+        private static readonly Vector2 ButtonSize = (Vector2)AccessTools.Field(typeof(SocialCardUtility), "RoleChangeButtonSize").GetValue(null);
+        private static readonly float padding = (float)AccessTools.Field(typeof(SocialCardUtility), "RowLeftRightPadding").GetValue(null);
         private static void SocialCardHelper(Pawn pawn, Rect rect)
         {
-            Vector2 ButtonSize = (Vector2)AccessTools.Field(typeof(SocialCardUtility), "RoleChangeButtonSize").GetValue(null);
-            float padding = (float)AccessTools.Field(typeof(SocialCardUtility), "RowLeftRightPadding").GetValue(null);
             if (HookupUtility.CanDrawTryHookup(pawn))
             {
-                bool romanceDrawn = (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, [pawn]);
+                bool romanceDrawn = (bool)InfoHelper.CanDrawTryRomance.Invoke(null, [pawn]);
                 //Adjust x position based on if romance button is present
                 float width = romanceDrawn ? rect.width - 150f - ButtonSize.x + padding : rect.width - 150f + (padding * 2);
                 DrawTryHookup(new Rect(width, rect.height - ButtonSize.y, ButtonSize.x, ButtonSize.y), pawn);
@@ -200,7 +199,7 @@ namespace BetterRomance.HarmonyPatches
         //This is to prevent drawing the button since I had to co-opt the bool that usually prevents it
         public static bool Prefix(Pawn pawn)
         {
-            return (bool)AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance").Invoke(null, [pawn]);
+            return (bool)InfoHelper.CanDrawTryRomance.Invoke(null, [pawn]);
         }
     }
 }

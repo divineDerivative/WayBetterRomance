@@ -543,5 +543,6 @@ namespace BetterRomance
         public static FieldInfo DefOfSpouse = AccessTools.Field(typeof(PawnRelationDefOf), nameof(PawnRelationDefOf.Spouse));
         public static MethodInfo RomanceFactorLine = AccessTools.Method(typeof(InteractionWorker_RomanceAttempt), "RomanceFactorLine");
         public static FieldInfo PawnGender = AccessTools.Field(typeof(Pawn), "gender");
+        public static MethodInfo CanDrawTryRomance = AccessTools.Method(typeof(SocialCardUtility), "CanDrawTryRomance");
     }
 }
