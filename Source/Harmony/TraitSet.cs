@@ -7,7 +7,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(TraitSet), nameof(TraitSet.GainTrait))]
     public static class TraitSet_GainTrait
     {
-        public static bool Prefix(Trait trait, ref Trait __state, Pawn ___pawn)
+        public static bool Prefix(Trait trait, ref Trait __state, Pawn ___pawn, ref bool suppressConflicts)
         {
             //Only care about orientation traits
             if (SexualityUtility.OrientationTraits.Contains(trait.def))
@@ -19,14 +19,16 @@ namespace BetterRomance.HarmonyPatches
                     {
                         //Remember it for later
                         __state = ___pawn.story.traits.GetTrait(traitDef);
+                        //Suppressing the old trait makes it hard to remove, since HasTrait will return false
+                        suppressConflicts = false;
                         return true;
                     }
                 }
             }
             return true;
         }
-
-        public static void Postfix(ref Trait __state, Pawn ___pawn, bool suppressConflicts = false)
+        
+        public static void Postfix(ref Trait __state, Pawn ___pawn)
         {
             if (__state != null)
             {
@@ -42,23 +44,9 @@ namespace BetterRomance.HarmonyPatches
                 //Remove the old trait
                 if (traitCount > 1)
                 {
-                    ___pawn.story.traits.RemoveTrait(__state, suppressConflicts);
+                    ___pawn.story.traits.RemoveTrait(__state, true);
                 }
             }
         }
-
-        //private static bool HasTraitIncludeSuppressed(Pawn pawn, TraitDef traitDef)
-        //{
-        //    List<Trait> allTraits = pawn.story.traits.allTraits;
-        //    for (int i = 0; i < allTraits.Count; i++)
-        //    {
-        //        if (allTraits[i].def == traitDef)
-        //        {
-        //            Log.Message("Trait found: " + traitDef.label);
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
     }
 }
