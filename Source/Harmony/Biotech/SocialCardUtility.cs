@@ -62,7 +62,8 @@ namespace BetterRomance.HarmonyPatches
         private static void DrawTryHookup(Rect buttonRect, Pawn pawn)
         {
             Color color = GUI.color;
-            bool isTryHookupOnCooldown = pawn.CheckForComp<Comp_PartnerList>().IsOrderedHookupOnCooldown;
+            Comp_PartnerList comp = pawn.CheckForComp<Comp_PartnerList>();
+            bool isTryHookupOnCooldown = comp.IsOrderedHookupOnCooldown;
             AcceptanceReport canDoHookup = HookupUtility.HookupEligible(pawn, initiator: true);
             bool incapacitated = pawn.IsIncapable(out string reason);
             List<FloatMenuOption> list = canDoHookup.Accepted ? HookupOptions(pawn) : null;
@@ -71,7 +72,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (isTryHookupOnCooldown)
                 {
-                    int numTicks = pawn.CheckForComp<Comp_PartnerList>().orderedHookupTick - Find.TickManager.TicksGame;
+                    int numTicks = comp.orderedHookupTick - Find.TickManager.TicksGame;
                     Messages.Message("WBR.CantHookupInitiateMessageCooldown".Translate(pawn, numTicks.ToStringTicksToPeriod()), MessageTypeDefOf.RejectInput, historical: false);
                     return;
                 }
