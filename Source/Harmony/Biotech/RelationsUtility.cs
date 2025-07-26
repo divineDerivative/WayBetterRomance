@@ -98,6 +98,7 @@ namespace BetterRomance.HarmonyPatches
     }
 
     [HarmonyPatch(typeof(RelationsUtility), nameof(RelationsUtility.AttractedToGender))]
+    [HarmonyBefore("PersonalityPlus.Mod")]
     public static class RelationsUtility_AttractedToGender
     {
         public static bool Prefix(Pawn pawn, Gender gender, ref bool __result)
