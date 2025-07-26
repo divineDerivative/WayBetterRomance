@@ -48,11 +48,19 @@ namespace BetterRomance
             return toil;
         }
 
+        private Pawn WhoIsFaster()
+        {
+            float leaderSpeed = Actor.TicksPerMoveCardinal;
+            float followerSpeed = Partner.TicksPerMoveCardinal;
+            return leaderSpeed < followerSpeed ? Actor : Partner;
+        }
         protected override IEnumerable<Toil> MakeNewToils()
         {
             yield return Toils_General.Do(delegate
                 {
                     LogUtil.Message($"Date lead job started for {Actor.Name.ToStringShort}", true);
+                    Pawn faster = WhoIsFaster();
+                    faster.jobs.curDriver.locomotionUrgencySameAs = (faster == Actor ? Partner : Actor);
                 }
             );
             //Alternate goto and wait toils for each tile in path
