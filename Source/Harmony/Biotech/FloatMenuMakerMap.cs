@@ -55,11 +55,16 @@ namespace BetterRomance.HarmonyPatches
 
         protected override bool AppliesInt(FloatMenuContext context)
         {
-            if (context.FirstSelectedPawn.DroneCheck() || context.FirstSelectedPawn.Drafted || context.FirstSelectedPawn.DevelopmentalStage.Baby())
+            Pawn pawn = context.FirstSelectedPawn;
+            if (!HookupUtility.CanDrawTryHookup(pawn))
             {
                 return false;
             }
-
+            Comp_PartnerList comp = pawn.TryGetComp<Comp_PartnerList>();
+            if (comp is null || comp.IsOrderedHookupOnCooldown)
+            {
+                return false;
+            }
             return base.AppliesInt(context);
         }
         public override bool Applies(FloatMenuContext context)
