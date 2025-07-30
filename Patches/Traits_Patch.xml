@@ -8,7 +8,7 @@
 		<match Class="PatchOperationSequence">
 			<operations>
 				<li Class="PatchOperationAddModExtension">
-					<xpath>Defs/TraitDef[defName = "Straight"]</xpath>
+					<xpath>Defs/TraitDef[exclusionTags/li="SexualOrientation"]</xpath>
 					<value>
 						<li Class="SyrTraitValue.TraitValueExtension">
 							<traitValues>
