@@ -7,6 +7,7 @@ using Verse;
 
 namespace BetterRomance
 {
+    // ReSharper disable once InconsistentNaming
     public class ITab_Orientation : ITab_Handler
     {
         public override bool Hidden => true;
@@ -43,6 +44,7 @@ namespace BetterRomance
             //Use a column for repulsion so I can hide the whole thing when not asexual
             UIColumn repulsion = handler.RegisterNewColumn("SexRepulsion")
                 .HideWhen(() => !SelPawn.IsAsexual());
+            repulsion.AddLabel(RepulsionIntro);
             //Repulsion slider
             repulsion.Add(NewElement.Slider<float>()
                 .MinMax(0f, 1f)
@@ -120,9 +122,7 @@ namespace BetterRomance
             {
                 if (SelPawn.IsAsexual())
                 {
-                    float repulsion = SelPawn.GetStatValue(StatDef.Named("AsexualRating"));
-                    string repulsionString = StatDef.Named("AsexualRating").ValueToString(repulsion);
-                    return "WBR.AsexualExplanation".Translate(SelPawn, repulsionString);
+                    return "WBR.AsexualExplanation".Translate(SelPawn);
                 }
                 else if (SelPawn.IsBi(false))
                 {
@@ -144,7 +144,13 @@ namespace BetterRomance
             return text.Translate(SelPawn);
         }
 
-        TaggedString RepulsionDescription()
+        private TaggedString RepulsionIntro()
+        {
+            float repulsion = SelPawn.GetStatValue(StatDef.Named("AsexualRating"));
+            string repulsionString = StatDef.Named("AsexualRating").ValueToString(repulsion);
+            return "WBR.RepulsionIntro".Translate().Formatted(SelPawn, repulsionString).AdjustedFor(SelPawn).Resolve();
+        }
+        private TaggedString RepulsionDescription()
         {
             float repulsion = SelPawn.GetStatValue(StatDef.Named("AsexualRating"));
             string repulsionString = StatDef.Named("AsexualRating").ValueToString(repulsion);
