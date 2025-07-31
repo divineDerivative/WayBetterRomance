@@ -23,12 +23,12 @@ namespace BetterRomance.HarmonyPatches
                 if (insert && code.Branches(out Label? label))
                 {
                     yield return CodeInstruction.LoadField(typeof(CustomLoveRelationUtility), nameof(CustomLoveRelationUtility.LoveRelations));
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return new CodeInstruction(OpCodes.Ldloc_2);
-                    yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(List<DirectPawnRelation>), "get_Item"));
+                    yield return new(OpCodes.Ldloc_0);
+                    yield return new(OpCodes.Ldloc_2);
+                    yield return new(OpCodes.Callvirt, AccessTools.Method(typeof(List<DirectPawnRelation>), "get_Item"));
                     yield return CodeInstruction.LoadField(typeof(DirectPawnRelation), nameof(DirectPawnRelation.def));
                     yield return CodeInstruction.Call(typeof(HashSet<PawnRelationDef>), nameof(HashSet<PawnRelationDef>.Contains));
-                    yield return new CodeInstruction(OpCodes.Brtrue_S, label);
+                    yield return new(OpCodes.Brtrue_S, label);
                     insert = false;
                 }
             }

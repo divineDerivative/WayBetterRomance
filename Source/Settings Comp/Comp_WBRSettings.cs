@@ -5,8 +5,8 @@ namespace BetterRomance
 {
     public class WBR_SettingsComp : ThingComp
     {
-        Pawn Pawn => (Pawn)parent;
-        RaceSettings raceSettings;
+        private Pawn Pawn => (Pawn)parent;
+        private RaceSettings raceSettings;
 
         public CompSettingsOrientation orientation;
         public CompSettingsCasualSexPawn casualSex;
@@ -30,7 +30,7 @@ namespace BetterRomance
                 regularSex = regularSex.Copy(),
                 relations = relations.Copy(),
                 biotech = biotech.Copy(),
-                misc = misc.Copy()
+                misc = misc.Copy(),
             };
             newPawn.AllComps.Add(newComp);
         }
@@ -38,12 +38,12 @@ namespace BetterRomance
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
-            orientation = new CompSettingsOrientation();
-            casualSex = new CompSettingsCasualSexPawn();
-            regularSex = new CompSettingsRegularSex();
-            relations = new CompSettingsRelationsPawn();
-            biotech = new CompSettingsBiotech();
-            misc = new CompSettingsMisc();
+            orientation = new();
+            casualSex = new();
+            regularSex = new();
+            relations = new();
+            biotech = new();
+            misc = new();
             calculated = false;
 
             FindRaceSettings();
@@ -280,7 +280,7 @@ namespace BetterRomance
                     new CurvePoint((regularSex.declineAtAge / 5) + regularSex.minAgeForSex, 1.5f),
                     new CurvePoint(regularSex.declineAtAge, 4f),
                     new CurvePoint((regularSex.maxAgeForSex / 4) + regularSex.declineAtAge, 12f),
-                    new CurvePoint(regularSex.maxAgeForSex, 36f)
+                    new CurvePoint(regularSex.maxAgeForSex, 36f),
                 ];
             }
         }

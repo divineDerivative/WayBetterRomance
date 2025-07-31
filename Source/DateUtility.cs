@@ -94,10 +94,7 @@ namespace BetterRomance
             return false;
         }
 
-        public static bool IsPartnerNearGoal(Thing t, Pawn p)
-        {
-            return t.Position.InHorDistOf(p.Position, 2f);
-        }
+        public static bool IsPartnerNearGoal(Thing t, Pawn p) => t.Position.InHorDistOf(p.Position, 2f);
 
         /// <summary>
         /// Determines if <paramref name="target"/> accepts a date with <paramref name="asker"/>.
@@ -139,7 +136,6 @@ namespace BetterRomance
         public static void DateTickAction(Pawn pawn, bool isDate)
         {
 #if !v1_6
-
             JoyUtility.JoyTickCheckEnd(pawn, JoyTickFullJoyAction.None);
 #else
             JoyUtility.JoyTickCheckEnd(pawn, 1, JoyTickFullJoyAction.None);

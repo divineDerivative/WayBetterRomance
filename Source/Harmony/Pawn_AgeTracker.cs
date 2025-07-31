@@ -23,9 +23,9 @@ namespace BetterRomance.HarmonyPatches
                     yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code);
                     yield return InfoHelper.AgeTrackerPawn.LoadField();
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, InfoHelper.AdultMinAge);
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 2f);
-                    yield return new CodeInstruction(OpCodes.Sub);
+                    yield return new(OpCodes.Callvirt, InfoHelper.AdultMinAge);
+                    yield return new(OpCodes.Ldc_R4, 2f);
+                    yield return new(OpCodes.Sub);
                 }
                 else
                 {
@@ -38,16 +38,15 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Pawn_AgeTracker), "GrowthPointsFactor", MethodType.Getter)]
     public static class Pawn_AgeTracker_GrowthPointsFactor
     {
-
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             foreach (CodeInstruction code in instructions)
             {
                 if (code.LoadsConstant(7f))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new(OpCodes.Ldarg_0);
                     yield return InfoHelper.AgeTrackerPawn.LoadField();
-                    yield return new CodeInstruction(OpCodes.Ldc_I4, 0);
+                    yield return new(OpCodes.Ldc_I4, 0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetGrowthMomentAsFloat));
                 }
                 else

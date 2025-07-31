@@ -67,10 +67,7 @@ namespace BetterRomance.HarmonyPatches
             }
             return base.AppliesInt(context);
         }
-        public override bool Applies(FloatMenuContext context)
-        {
-            return base.Applies(context);
-        }
+        public override bool Applies(FloatMenuContext context) => base.Applies(context);
     }
 
 #endif

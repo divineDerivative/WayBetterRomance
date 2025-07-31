@@ -22,10 +22,10 @@ namespace BetterRomance.HarmonyPatches
                 yield return code;
                 if (code.Is(OpCodes.Callvirt, AccessTools.DeclaredPropertyGetter(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.AgeBiologicalYears))))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldloc_2);
+                    yield return new(OpCodes.Ldloc_2);
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, InfoHelper.AdultMinAge);
-                    yield return new CodeInstruction(OpCodes.Conv_I4);
+                    yield return new(OpCodes.Callvirt, InfoHelper.AdultMinAge);
+                    yield return new(OpCodes.Conv_I4);
                     i++;
                 }
             }
@@ -48,10 +48,7 @@ namespace BetterRomance.HarmonyPatches
                         Command_Action action1 = new()
                         {
                             defaultLabel = "DEV: Reset ordered hookup cooldown",
-                            action = delegate
-                            {
-                                comp.orderedHookupTick = -1;
-                            }
+                            action = delegate { comp.orderedHookupTick = -1; },
                         };
                         yield return action1;
                     }
@@ -68,16 +65,13 @@ namespace BetterRomance.HarmonyPatches
                             comp.Date.ticksSinceMake = 120000;
                             comp.Hookup.ticksSinceMake = 120000;
                             //Test this
-                            List<Thought_Memory> memories = __instance.needs.mood.thoughts.memories.Memories.FindAll(delegate (Thought_Memory x)
-                            {
-                                return x.def == RomanceDefOf.RebuffedMyHookupAttempt || x.def == RomanceDefOf.RebuffedMyDateAttempt;
-                            });
+                            List<Thought_Memory> memories = __instance.needs.mood.thoughts.memories.Memories.FindAll(delegate(Thought_Memory x) { return x.def == RomanceDefOf.RebuffedMyHookupAttempt || x.def == RomanceDefOf.RebuffedMyDateAttempt; });
                             foreach (Thought_Memory memory in memories)
                             {
                                 __instance.needs.mood.thoughts.memories.RemoveMemory(memory);
                                 memory.otherPawn.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(memory.def, __instance);
                             }
-                        }
+                        },
                     };
                     yield return action2;
                 }
@@ -87,10 +81,7 @@ namespace BetterRomance.HarmonyPatches
                     Command_Action action3 = new()
                     {
                         defaultLabel = "DEV: Reset lovin' tick",
-                        action = delegate
-                        {
-                            __instance.mindState.canLovinTick = -99999;
-                        }
+                        action = delegate { __instance.mindState.canLovinTick = -99999; },
                     };
                     yield return action3;
                 }
@@ -100,10 +91,7 @@ namespace BetterRomance.HarmonyPatches
                     Command_Action action4 = new()
                     {
                         defaultLabel = "DEV: Log settings comp",
-                        action = delegate
-                        {
-                            settingsComp.LogToConsole();
-                        }
+                        action = delegate { settingsComp.LogToConsole(); },
                     };
                     yield return action4;
                 }

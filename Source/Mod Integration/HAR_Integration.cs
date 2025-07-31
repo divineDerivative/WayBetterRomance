@@ -17,10 +17,7 @@ namespace BetterRomance
         /// <param name="p2"></param>
         /// <returns>True or False</returns>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static bool AreRacesConsideredXeno(Pawn p1, Pawn p2)
-        {
-            return p1.def != p2.def && !(p1.def is ThingDef_AlienRace alienDef && alienDef.alienRace.generalSettings.notXenophobistTowards.Contains(p2.def));
-        }
+        public static bool AreRacesConsideredXeno(Pawn p1, Pawn p2) => p1.def != p2.def && !(p1.def is ThingDef_AlienRace alienDef && alienDef.alienRace.generalSettings.notXenophobistTowards.Contains(p2.def));
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static int[] GetGrowthMoments(ThingDef race)
@@ -78,7 +75,7 @@ namespace BetterRomance
             new CurvePoint(14f, 0f),
             new CurvePoint(18f, 1f),
             new CurvePoint(50f, 1f),
-            new CurvePoint(90f, 0f)
+            new CurvePoint(90f, 0f),
         ];
 
         public static readonly SimpleCurve femaleFertilityAgeFactor =
@@ -89,7 +86,7 @@ namespace BetterRomance
             new CurvePoint(35f, 0.5f),
             new CurvePoint(40f, 0.1f),
             new CurvePoint(45f, 0.02f),
-            new CurvePoint(50f, 0f)
+            new CurvePoint(50f, 0f),
         ];
 
         public static AcceptanceReport CanEverProduceChild(Pawn first, Pawn second)
@@ -156,15 +153,9 @@ namespace BetterRomance
             return false;
         }
 
-        public static bool CanFertilize(this Pawn pawn)
-        {
-            return ReproductionSettings.ApplicableGender(pawn, false);
-        }
+        public static bool CanFertilize(this Pawn pawn) => ReproductionSettings.ApplicableGender(pawn, false);
 
-        public static bool CanGestate(this Pawn pawn)
-        {
-            return ReproductionSettings.ApplicableGender(pawn, true);
-        }
+        public static bool CanGestate(this Pawn pawn) => ReproductionSettings.ApplicableGender(pawn, true);
     }
 
     namespace HarmonyPatches
@@ -172,10 +163,7 @@ namespace BetterRomance
         public static class HARPatches
         {
             [MethodImpl(MethodImplOptions.NoInlining)]
-            public static void PatchHAR(this Harmony harmony)
-            {
-                harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), typeof(AlienRace.HarmonyPatches).GetMethod("CompatibilityWithPostfix"));
-            }
+            public static void PatchHAR(this Harmony harmony) => harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), typeof(AlienRace.HarmonyPatches).GetMethod("CompatibilityWithPostfix"));
         }
     }
 }

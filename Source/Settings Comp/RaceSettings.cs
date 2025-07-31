@@ -19,17 +19,17 @@ namespace BetterRomance
         public RaceSettings(ThingDef race)
         {
             this.race = race;
-            orientation = new CompSettingsOrientation();
+            orientation = new();
             SetOrientationChances();
-            casualSex = new CompSettingsCasualSexRace();
+            casualSex = new();
             SetCasualSexSettings();
-            regularSex = new CompSettingsRegularSex();
+            regularSex = new();
             SetRegularSexSettings();
-            relations = new CompSettingsRelationsRace();
+            relations = new();
             SetRelationSettings();
-            biotech = new CompSettingsBiotech();
+            biotech = new();
             SetGrowthMoments();
-            misc = new CompSettingsMisc();
+            misc = new();
             SetMiscSettings();
             SetBiotechSettings();
         }
@@ -125,27 +125,30 @@ namespace BetterRomance
             }
             if (difference % 3 == 0)
             {
-                return [
-                            childAge + interval,
-                            childAge + (interval * 2),
-                            adultAge,
-                        ];
+                return
+                [
+                    childAge + interval,
+                    childAge + (interval * 2),
+                    adultAge,
+                ];
             }
             else if (difference % 3 == 1)
             {
-                return [
-                            childAge + interval + 1,
-                            childAge + (interval * 2) + 1,
-                            adultAge,
-                        ];
+                return
+                [
+                    childAge + interval + 1,
+                    childAge + (interval * 2) + 1,
+                    adultAge,
+                ];
             }
             else if (difference % 3 == 2)
             {
-                return [
-                            childAge + interval + 1,
-                            childAge + (interval * 2) + 2,
-                            adultAge,
-                        ];
+                return
+                [
+                    childAge + interval + 1,
+                    childAge + (interval * 2) + 2,
+                    adultAge,
+                ];
             }
             else
             {
@@ -212,14 +215,14 @@ namespace BetterRomance
             //A different effect of age on skill
             misc.ageSkillMaxFactorCurve =
             [
-                new CurvePoint(0f,0f),
+                new CurvePoint(0f, 0f),
                 new CurvePoint(biotech.growthMoments?[1] ?? 0f, 0.7f),
                 new CurvePoint(misc.adultAgeForLearning * 2f, 1f),
-                new CurvePoint(race.race.lifeExpectancy - (race.race.lifeExpectancy/4), 1.6f),
+                new CurvePoint(race.race.lifeExpectancy - (race.race.lifeExpectancy / 4), 1.6f),
             ];
 
-        //Curve for lovin' MTB
-        LovinCurve:
+            //Curve for lovin' MTB
+            LovinCurve:
             if (!regularSex.IsEmpty())
             {
                 misc.lovinCurve =
@@ -228,7 +231,7 @@ namespace BetterRomance
                     new CurvePoint((regularSex.declineAtAge.IsUnset() ? 30f : regularSex.declineAtAge / 5) + regularSex.minAgeForSex, 1.5f),
                     new CurvePoint(regularSex.declineAtAge.IsUnset() ? 30f : regularSex.declineAtAge, 4f),
                     new CurvePoint((regularSex.maxAgeForSex.IsUnset() ? 80f : regularSex.maxAgeForSex / 4) + (regularSex.declineAtAge.IsUnset() ? 30f : regularSex.declineAtAge), 12f),
-                    new CurvePoint(regularSex.maxAgeForSex.IsUnset() ? 80f : regularSex.maxAgeForSex, 36f)
+                    new CurvePoint(regularSex.maxAgeForSex.IsUnset() ? 80f : regularSex.maxAgeForSex, 36f),
                 ];
             }
         }
@@ -249,7 +252,7 @@ namespace BetterRomance
             {
                 return
                 [
-                    new CurvePoint(0f,0f)
+                    new CurvePoint(0f, 0f),
                 ];
             }
             //First, check if there is a curve supplied via the extension
@@ -374,16 +377,16 @@ namespace BetterRomance
             //Life expectancy is 80; males end at 90, females at 50
 
             return
-                [
-                    //14f
-                    new CurvePoint(startPoint, 0f),
-                    //18f
-                    new CurvePoint(malePeakStart, 1f),
-                    //50f
-                    new CurvePoint(malePeakEnd, 1f),
-                    //90f
-                    new CurvePoint(maleEndPoint, 0f)
-                ];
+            [
+                //14f
+                new CurvePoint(startPoint, 0f),
+                //18f
+                new CurvePoint(malePeakStart, 1f),
+                //50f
+                new CurvePoint(malePeakEnd, 1f),
+                //90f
+                new CurvePoint(maleEndPoint, 0f),
+            ];
         }
 
         //This doesn't really work yet

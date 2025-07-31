@@ -20,10 +20,9 @@ namespace BetterRomance
             }
             //Checks on whether pawn should try hookup now
 #if !v1_6
-
             if (!InteractionUtility.CanInitiateInteraction(pawn) || !HookupUtility.WillPawnTryHookup(pawn, true, false) || PawnUtility.WillSoonHaveBasicNeed(pawn))
 #else
-if (!SocialInteractionUtility.CanInitiateInteraction(pawn) || !HookupUtility.WillPawnTryHookup(pawn, true, false) || PawnUtility.WillSoonHaveBasicNeed(pawn))
+            if (!SocialInteractionUtility.CanInitiateInteraction(pawn) || !HookupUtility.WillPawnTryHookup(pawn, true, false) || PawnUtility.WillSoonHaveBasicNeed(pawn))
 #endif
             {
                 return null;

@@ -16,10 +16,7 @@ namespace BetterRomance.HarmonyPatches
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.MinAgeForSexTranspiler(OpCodes.Ldarg_0);
 
         //Don't allow for those incapable of romance
-        public static void Postfix(Pawn pawn, ref bool __result)
-        {
-            __result = __result && pawn.CanInitiateRomance();
-        }
+        public static void Postfix(Pawn pawn, ref bool __result) => __result = __result && pawn.CanInitiateRomance();
     }
 
     //Adds a button for ordered hookups to the social card
@@ -33,16 +30,16 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.Calls(typeof(Widgets), nameof(Widgets.EndGroup)))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new(OpCodes.Ldarg_1);
+                    yield return new(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(SocialCardUtility_DrawRelationsAndOpinions), nameof(SocialCardHelper));
                 }
                 yield return code;
                 if (code.Calls(typeof(SocialCardUtility), "CanDrawTryRomance"))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return new(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(HookupUtility), nameof(HookupUtility.CanDrawTryHookup));
-                    yield return new CodeInstruction(OpCodes.Or);
+                    yield return new(OpCodes.Or);
                 }
             }
         }
@@ -55,7 +52,7 @@ namespace BetterRomance.HarmonyPatches
                 bool romanceDrawn = (bool)InfoHelper.CanDrawTryRomance.Invoke(null, [pawn]);
                 //Adjust x position based on if romance button is present
                 float width = romanceDrawn ? rect.width - 150f - ButtonSize.x + padding : rect.width - 150f + (padding * 2);
-                DrawTryHookup(new Rect(width, rect.height - ButtonSize.y, ButtonSize.x, ButtonSize.y), pawn);
+                DrawTryHookup(new(width, rect.height - ButtonSize.y, ButtonSize.x, ButtonSize.y), pawn);
             }
         }
 
@@ -64,7 +61,7 @@ namespace BetterRomance.HarmonyPatches
             Color color = GUI.color;
             Comp_PartnerList comp = pawn.CheckForComp<Comp_PartnerList>();
             bool isTryHookupOnCooldown = comp.IsOrderedHookupOnCooldown;
-            AcceptanceReport canDoHookup = HookupUtility.HookupEligible(pawn, initiator: true);
+            AcceptanceReport canDoHookup = HookupUtility.HookupEligible(pawn, true);
             bool incapacitated = pawn.IsIncapable(out string reason);
             List<FloatMenuOption> list = canDoHookup.Accepted ? HookupOptions(pawn) : null;
             GUI.color = (!canDoHookup.Accepted || list.NullOrEmpty() || isTryHookupOnCooldown || incapacitated) ? ColoredText.SubtleGrayColor : Color.white;
@@ -73,14 +70,14 @@ namespace BetterRomance.HarmonyPatches
                 if (isTryHookupOnCooldown)
                 {
                     int numTicks = comp.orderedHookupTick - Find.TickManager.TicksGame;
-                    Messages.Message("WBR.CantHookupInitiateMessageCooldown".Translate(pawn, numTicks.ToStringTicksToPeriod()), MessageTypeDefOf.RejectInput, historical: false);
+                    Messages.Message("WBR.CantHookupInitiateMessageCooldown".Translate(pawn, numTicks.ToStringTicksToPeriod()), MessageTypeDefOf.RejectInput, false);
                     return;
                 }
                 if (!canDoHookup.Accepted)
                 {
                     if (!canDoHookup.Reason.NullOrEmpty())
                     {
-                        Messages.Message(canDoHookup.Reason, MessageTypeDefOf.RejectInput, historical: false);
+                        Messages.Message(canDoHookup.Reason, MessageTypeDefOf.RejectInput, false);
                     }
                     return;
                 }
@@ -91,7 +88,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 if (list.NullOrEmpty())
                 {
-                    Messages.Message("WBR.TryHookupNoOptsMessage".Translate(pawn), MessageTypeDefOf.RejectInput, historical: false);
+                    Messages.Message("WBR.TryHookupNoOptsMessage".Translate(pawn), MessageTypeDefOf.RejectInput, false);
                 }
                 else
                 {
@@ -149,9 +146,9 @@ namespace BetterRomance.HarmonyPatches
                 if (insert && code.opcode == OpCodes.Pop)
                 {
                     yield return new CodeInstruction(OpCodes.Ldarg_1).WithLabels(newLabel);
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(AccessTools.Inner(typeof(SocialCardUtility), "CachedSocialTabEntry"), "otherPawn");
-                    yield return new CodeInstruction(OpCodes.Ldloca, 0);
+                    yield return new(OpCodes.Ldloca, 0);
                     yield return CodeInstruction.Call(typeof(SocialCardUtility_GetPawnRowTooltip), nameof(PawnRowTooltipHelper));
                     insert = false;
                 }
@@ -178,7 +175,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 return null;
             }
-            AcceptanceReport ar = HookupUtility.HookupEligiblePair(initiator, target, forOpinionExplanation: true);
+            AcceptanceReport ar = HookupUtility.HookupEligiblePair(initiator, target, true);
             if (!ar.Accepted && ar.Reason.NullOrEmpty())
             {
                 return null;
@@ -198,9 +195,6 @@ namespace BetterRomance.HarmonyPatches
     public static class SocialCardUtility_DrawTryRomance
     {
         //This is to prevent drawing the button since I had to co-opt the bool that usually prevents it
-        public static bool Prefix(Pawn pawn)
-        {
-            return (bool)InfoHelper.CanDrawTryRomance.Invoke(null, [pawn]);
-        }
+        public static bool Prefix(Pawn pawn) => (bool)InfoHelper.CanDrawTryRomance.Invoke(null, [pawn]);
     }
 }

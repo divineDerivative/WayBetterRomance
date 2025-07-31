@@ -101,7 +101,7 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.CompatibilityWith))]
     public static class Pawn_RelationsTracker_CompatibilityWith
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg) => instructions.MaxAgeGapTranspiler(ilg, [new CodeInstruction(OpCodes.Ldarg_0), CodeInstruction.LoadField(typeof(Pawn_RelationsTracker), "pawn"),], null).DefToHumanlike(false);
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg) => instructions.MaxAgeGapTranspiler(ilg, [new CodeInstruction(OpCodes.Ldarg_0), CodeInstruction.LoadField(typeof(Pawn_RelationsTracker), "pawn")], null).DefToHumanlike(false);
     }
 
     //Adjusts SecondaryLovinChanceFactor based on attractiveness

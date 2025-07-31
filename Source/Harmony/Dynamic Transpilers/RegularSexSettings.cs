@@ -19,17 +19,17 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.LoadsConstant(16f))
                 {
-                    yield return new CodeInstruction(loadPawn);
+                    yield return new(loadPawn);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                 }
                 else if (code.LoadsConstant(25f))
                 {
-                    yield return new CodeInstruction(loadPawn);
+                    yield return new(loadPawn);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.DeclineAtAge));
                 }
                 else if (code.LoadsConstant(80f))
                 {
-                    yield return new CodeInstruction(loadPawn);
+                    yield return new(loadPawn);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
                 }
                 else
@@ -56,16 +56,16 @@ namespace BetterRomance.HarmonyPatches
                 local_p2MinAgeForSex = ilg.DeclareLocal(typeof(float));
 
                 //Calculate and store p2MinAgeForSex first so we can call it easier later
-                yield return new CodeInstruction(secondCode);
+                yield return new(secondCode);
                 yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                yield return new CodeInstruction(OpCodes.Stloc, local_p2MinAgeForSex.LocalIndex);
+                yield return new(OpCodes.Stloc, local_p2MinAgeForSex.LocalIndex);
             }
             bool firstFound = false;
             foreach (CodeInstruction code in instructions)
             {
                 if (code.LoadsConstant(ageToReplace) && !firstFound)
                 {
-                    yield return new CodeInstruction(firstCode);
+                    yield return new(firstCode);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                     firstFound = true;
                 }
@@ -73,11 +73,11 @@ namespace BetterRomance.HarmonyPatches
                 {
                     if (saveSecond)
                     {
-                        yield return new CodeInstruction(OpCodes.Ldloc, local_p2MinAgeForSex.LocalIndex);
+                        yield return new(OpCodes.Ldloc, local_p2MinAgeForSex.LocalIndex);
                     }
                     else
                     {
-                        yield return new CodeInstruction(secondCode);
+                        yield return new(secondCode);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                     }
                 }
@@ -107,7 +107,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                     if (code.LoadsConstant(16))
                     {
-                        yield return new CodeInstruction(OpCodes.Conv_I4);
+                        yield return new(OpCodes.Conv_I4);
                     }
                 }
                 else if (code.LoadsConstant(14f))
@@ -117,8 +117,8 @@ namespace BetterRomance.HarmonyPatches
                         yield return instruction;
                     }
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
-                    yield return new CodeInstruction(OpCodes.Sub);
+                    yield return new(OpCodes.Ldc_R4, 2f);
+                    yield return new(OpCodes.Sub);
                 }
                 else
                 {
@@ -133,10 +133,7 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="instructions">Instructions from the original trasnpiler</param>
         /// <param name="loadPawn">OpCode needed to load the pawn on the stack</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> MinAgeForSexTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn)
-        {
-            return instructions.MinAgeForSexTranspiler([new CodeInstruction(loadPawn)]);
-        }
+        public static IEnumerable<CodeInstruction> MinAgeForSexTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn) => instructions.MinAgeForSexTranspiler([new CodeInstruction(loadPawn)]);
 
         /// <summary>
         /// Converts hard coded 40f and 20f to call MaxAgeGap and MaxAgeGap / 2f respectively
@@ -172,11 +169,11 @@ namespace BetterRomance.HarmonyPatches
                             yield return instruction;
                         }
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
-                        yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), parameters: [typeof(float), typeof(float)]);
+                        yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), [typeof(float), typeof(float)]);
                     }
                     //need to store this value somewhere
-                    yield return new CodeInstruction(OpCodes.Stloc, local_maxAgeGap.LocalIndex);
-                    yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
+                    yield return new(OpCodes.Stloc, local_maxAgeGap.LocalIndex);
+                    yield return new(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
                 }
                 else if (code.LoadsConstant(20f))
                 {
@@ -184,7 +181,7 @@ namespace BetterRomance.HarmonyPatches
                     if (localExists)
                     {
                         //put the stored value on the stack
-                        yield return new CodeInstruction(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
+                        yield return new(OpCodes.Ldloc, local_maxAgeGap.LocalIndex);
                     }
                     else
                     {
@@ -195,8 +192,8 @@ namespace BetterRomance.HarmonyPatches
                         }
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeGap));
                     }
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, operand: 2f);
-                    yield return new CodeInstruction(OpCodes.Div);
+                    yield return new(OpCodes.Ldc_R4, 2f);
+                    yield return new(OpCodes.Div);
                 }
                 else
                 {
@@ -213,9 +210,6 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="firstPawn">OpCode to get the first pawn on the stack</param>
         /// <param name="secondPawn">If there is a second pawn, OpCode to get them on the stack</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> MaxAgeGapTranspiler(this IEnumerable<CodeInstruction> instructions, ILGenerator ilg, OpCode firstPawn, OpCode? secondPawn)
-        {
-            return instructions.MaxAgeGapTranspiler(ilg, [new CodeInstruction(firstPawn)], secondPawn is null ? null : [new CodeInstruction((OpCode)secondPawn)]);
-        }
+        public static IEnumerable<CodeInstruction> MaxAgeGapTranspiler(this IEnumerable<CodeInstruction> instructions, ILGenerator ilg, OpCode firstPawn, OpCode? secondPawn) => instructions.MaxAgeGapTranspiler(ilg, [new CodeInstruction(firstPawn)], secondPawn is null ? null : [new CodeInstruction((OpCode)secondPawn)]);
     }
 }

@@ -9,10 +9,9 @@ namespace BetterRomance
         public override Job TryGiveJob(Pawn pawn)
         {
 #if !v1_6
-
             if (!InteractionUtility.CanInitiateInteraction(pawn) || PawnUtility.WillSoonHaveBasicNeed(pawn))
 #else
-if (!SocialInteractionUtility.CanInitiateInteraction(pawn) || PawnUtility.WillSoonHaveBasicNeed(pawn))
+            if (!SocialInteractionUtility.CanInitiateInteraction(pawn) || PawnUtility.WillSoonHaveBasicNeed(pawn))
 #endif
             {
                 return null;
@@ -26,7 +25,7 @@ if (!SocialInteractionUtility.CanInitiateInteraction(pawn) || PawnUtility.WillSo
 #if v1_4
             if (!RCellFinder.TryFindSkydreamingSpotOutsideColony(pawn.Position, pawn, out _, minDistanceFromColonyThing: 0, maxDistanceFromColonyThing: DateUtility.distanceLimit))
 #else
-            if (!RCellFinder.TryFindAllowedUnroofedSpotOutsideColony(pawn.Position, pawn, out _, minDistanceFromColonyThing: 0, maxDistanceFromColonyThing: DateUtility.distanceLimit))
+            if (!RCellFinder.TryFindAllowedUnroofedSpotOutsideColony(pawn.Position, pawn, out _, 0, DateUtility.distanceLimit))
 #endif
             {
                 return null;

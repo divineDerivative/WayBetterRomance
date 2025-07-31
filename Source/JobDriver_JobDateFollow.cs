@@ -13,15 +13,9 @@ namespace BetterRomance
         private Pawn Partner => (Pawn)(Thing)job.GetTarget(PartnerInd);
         private bool IsDate => job.def == RomanceDefOf.JobDateFollow;
 
-        public override bool TryMakePreToilReservations(bool errorOnFailed)
-        {
-            return pawn.Reserve(Partner, job, errorOnFailed: errorOnFailed);
-        }
+        public override bool TryMakePreToilReservations(bool errorOnFailed) => pawn.Reserve(Partner, job, errorOnFailed: errorOnFailed);
 
-        public override RandomSocialMode DesiredSocialMode()
-        {
-            return RandomSocialMode.SuperActive;
-        }
+        public override RandomSocialMode DesiredSocialMode() => RandomSocialMode.SuperActive;
 
         protected override IEnumerable<Toil> MakeNewToils()
         {

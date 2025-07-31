@@ -51,7 +51,7 @@ namespace BetterRomance
                 }
                 if (mightBeGay && mightBeStraight)
                 {
-                    pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
+                    pawn.story.traits.GainTrait(new(TraitDefOf.Bisexual));
                     return;
                 }
 
@@ -63,7 +63,7 @@ namespace BetterRomance
                 {
                     if (pawn.story.traits.HasTrait(RomanceDefOf.Philanderer))
                     {
-                        pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
+                        pawn.story.traits.GainTrait(new(TraitDefOf.Bisexual));
                     }
                     //Need to roll again to determine romantic orientation
                     else
@@ -77,11 +77,11 @@ namespace BetterRomance
 
                         if (mightBeGay)
                         {
-                            pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HomoAce));
+                            pawn.story.traits.GainTrait(new(RomanceDefOf.HomoAce));
                         }
                         else if (mightBeStraight)
                         {
-                            pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HeteroAce));
+                            pawn.story.traits.GainTrait(new(RomanceDefOf.HeteroAce));
                         }
                         else
                         {
@@ -89,33 +89,33 @@ namespace BetterRomance
                             //Asexual chance
                             if (romantic < aceAroChance)
                             {
-                                pawn.story.traits.GainTrait(new Trait(TraitDefOf.Asexual));
+                                pawn.story.traits.GainTrait(new(TraitDefOf.Asexual));
                             }
                             //Bisexual chance
-                            else if (romantic < (aceAroChance + aceBiChance))
+                            else if (romantic < aceAroChance + aceBiChance)
                             {
-                                pawn.story.traits.GainTrait(new Trait(RomanceDefOf.BiAce));
+                                pawn.story.traits.GainTrait(new(RomanceDefOf.BiAce));
                             }
                             //Gay chance
-                            else if (romantic < (aceAroChance + aceBiChance + aceHomoChance))
+                            else if (romantic < aceAroChance + aceBiChance + aceHomoChance)
                             {
-                                pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HomoAce));
+                                pawn.story.traits.GainTrait(new(RomanceDefOf.HomoAce));
                             }
                             //Straight chance
                             else
                             {
-                                pawn.story.traits.GainTrait(new Trait(RomanceDefOf.HeteroAce));
+                                pawn.story.traits.GainTrait(new(RomanceDefOf.HeteroAce));
                             }
                         }
                     }
                 }
                 //Bisexual chance
-                else if (orientation < (asexualChance + bisexualChance))
+                else if (orientation < asexualChance + bisexualChance)
                 {
-                    pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
+                    pawn.story.traits.GainTrait(new(TraitDefOf.Bisexual));
                 }
                 //Gay chance
-                else if (orientation < (asexualChance + bisexualChance + gayChance))
+                else if (orientation < asexualChance + bisexualChance + gayChance)
                 {
                     if (mightBeStraight)
                     {
@@ -124,20 +124,20 @@ namespace BetterRomance
                         float num = Rand.Range(0f, total);
                         if (num < gayChance)
                         {
-                            pawn.story.traits.GainTrait(new Trait(TraitDefOf.Gay));
+                            pawn.story.traits.GainTrait(new(TraitDefOf.Gay));
                         }
                         else if (num < gayChance + bisexualChance)
                         {
-                            pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
+                            pawn.story.traits.GainTrait(new(TraitDefOf.Bisexual));
                         }
                         else if (num < total)
                         {
-                            pawn.story.traits.GainTrait(new Trait(RomanceDefOf.Straight));
+                            pawn.story.traits.GainTrait(new(RomanceDefOf.Straight));
                         }
                     }
                     else
                     {
-                        pawn.story.traits.GainTrait(new Trait(TraitDefOf.Gay));
+                        pawn.story.traits.GainTrait(new(TraitDefOf.Gay));
                     }
                 }
                 //Straight chance
@@ -150,20 +150,20 @@ namespace BetterRomance
                         float num = Rand.Range(0f, total);
                         if (num < gayChance)
                         {
-                            pawn.story.traits.GainTrait(new Trait(TraitDefOf.Gay));
+                            pawn.story.traits.GainTrait(new(TraitDefOf.Gay));
                         }
                         else if (num < gayChance + bisexualChance)
                         {
-                            pawn.story.traits.GainTrait(new Trait(TraitDefOf.Bisexual));
+                            pawn.story.traits.GainTrait(new(TraitDefOf.Bisexual));
                         }
                         else if (num < total)
                         {
-                            pawn.story.traits.GainTrait(new Trait(RomanceDefOf.Straight));
+                            pawn.story.traits.GainTrait(new(RomanceDefOf.Straight));
                         }
                     }
                     else
                     {
-                        pawn.story.traits.GainTrait(new Trait(RomanceDefOf.Straight));
+                        pawn.story.traits.GainTrait(new(RomanceDefOf.Straight));
                     }
                 }
             }

@@ -43,10 +43,7 @@ namespace BetterRomance
             }
         }
 
-        public static bool IsFormerHuman(this Pawn pawn)
-        {
-            return pawn.IsFormerHuman(false);
-        }
+        public static bool IsFormerHuman(this Pawn pawn) => pawn.IsFormerHuman(false);
 
         public static void AdjustAges(WBR_SettingsComp comp, ThingDef oldRace, ThingDef newRace)
         {
@@ -88,7 +85,7 @@ namespace BetterRomance
             SimpleCurve newCurve = new();
             foreach (CurvePoint point in curve)
             {
-                newCurve.Points.Add(new CurvePoint(TransformerUtility.ConvertAge(point.x, oldLE, newLE), point.y));
+                newCurve.Points.Add(new(TransformerUtility.ConvertAge(point.x, oldLE, newLE), point.y));
             }
             return newCurve;
         }
@@ -110,13 +107,13 @@ namespace BetterRomance
         {
             public static void PatchPawnmorpher(this Harmony harmony)
             {
-                harmony.Patch(typeof(FormerHumanUtilities).GetMethod(nameof(FormerHumanUtilities.TransferEverything)), postfix: new HarmonyMethod(typeof(PawnmorpherPatches).GetMethod(nameof(TransferEverythingPostfix))));
+                harmony.Patch(typeof(FormerHumanUtilities).GetMethod(nameof(FormerHumanUtilities.TransferEverything)), postfix: new(typeof(PawnmorpherPatches).GetMethod(nameof(TransferEverythingPostfix))));
                 Type InteractionPatches = AccessTools.TypeByName("Pawnmorph.HPatches.InteractionPatches");
                 MethodInfo lovin = AccessTools.Method(AccessTools.Inner(InteractionPatches, "SecondaryLoveFactorPatch"), "SecondaryLovinChanceFactor");
                 harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod(nameof(Pawn_RelationsTracker.SecondaryLovinChanceFactor)), lovin);
                 MethodInfo compatibility = AccessTools.Method(AccessTools.Inner(InteractionPatches, "RelationshipPatches"), "CompatibilityWithPostfix");
                 harmony.Unpatch(typeof(Pawn_RelationsTracker).GetMethod("CompatibilityWith"), compatibility);
-                harmony.Patch(AccessTools.PropertyGetter(typeof(TraitSet), nameof(TraitSet.TraitsSorted)), postfix: new HarmonyMethod(typeof(PawnmorpherPatches).GetMethod(nameof(TraitSetPostfix))));
+                harmony.Patch(AccessTools.PropertyGetter(typeof(TraitSet), nameof(TraitSet.TraitsSorted)), postfix: new(typeof(PawnmorpherPatches).GetMethod(nameof(TraitSetPostfix))));
             }
 
             //This happens whenever a former human is generated, either on its own or by transforming an existing pawn

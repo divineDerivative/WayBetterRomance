@@ -178,79 +178,84 @@ namespace BetterRomance
         //Turn a PawnAvailability into a string for reporting to player
         public static readonly Dictionary<PawnAvailability, string> AvailabilityReasons = new()
         {
-            {PawnAvailability.Free, "free" },
-            {PawnAvailability.NeedSoon, "WBR.CantHookupReasonNeed".Translate() },
-            {PawnAvailability.InDanger, "WBR.CantHookupReasonDanger".Translate() },
-            {PawnAvailability.DontInterruptJob, "WBR.CantHookupReasonBusy".Translate() },
-            {PawnAvailability.CantInterruptJob, "WBR.CantHookupReasonBusy".Translate() },
-            {PawnAvailability.Downed, "WBR.CantHookupReasonDowned".Translate() },
-            {PawnAvailability.Drafted, "WBR.CantHookupReasonDrafted".Translate() },
-            {PawnAvailability.InLabor, "WBR.CantHookupReasonInLabor".Translate() },
-            {PawnAvailability.MentalState, "WBR.CantHookupReasonMentalState".Translate() },
-            {PawnAvailability.Dead, "WBR.CantHookupReasonDead".Translate() },
+            { PawnAvailability.Free, "free" },
+            { PawnAvailability.NeedSoon, "WBR.CantHookupReasonNeed".Translate() },
+            { PawnAvailability.InDanger, "WBR.CantHookupReasonDanger".Translate() },
+            { PawnAvailability.DontInterruptJob, "WBR.CantHookupReasonBusy".Translate() },
+            { PawnAvailability.CantInterruptJob, "WBR.CantHookupReasonBusy".Translate() },
+            { PawnAvailability.Downed, "WBR.CantHookupReasonDowned".Translate() },
+            { PawnAvailability.Drafted, "WBR.CantHookupReasonDrafted".Translate() },
+            { PawnAvailability.InLabor, "WBR.CantHookupReasonInLabor".Translate() },
+            { PawnAvailability.MentalState, "WBR.CantHookupReasonMentalState".Translate() },
+            { PawnAvailability.Dead, "WBR.CantHookupReasonDead".Translate() },
         };
 
         //Each activity type has its own set of availabilities that prevent it
         //Currently they're all the same except for ordered hookup, but this setup will allow easier adjusting later if needed
         public static readonly Dictionary<RomanticActivityType, List<PawnAvailability>> AvailabilityPerActivity = new()
         {
-            {RomanticActivityType.Any, new List<PawnAvailability>()
             {
-                PawnAvailability.NeedSoon,
-                PawnAvailability.InDanger,
-                PawnAvailability.DontInterruptJob,
-                PawnAvailability.CantInterruptJob,
-                PawnAvailability.Downed,
-                PawnAvailability.Drafted,
-                PawnAvailability.InLabor,
-                PawnAvailability.MentalState,
-                PawnAvailability.Dead,
-            } },
-            {RomanticActivityType.CasualHookup, new List<PawnAvailability>()
+                RomanticActivityType.Any, [
+                    PawnAvailability.NeedSoon,
+                    PawnAvailability.InDanger,
+                    PawnAvailability.DontInterruptJob,
+                    PawnAvailability.CantInterruptJob,
+                    PawnAvailability.Downed,
+                    PawnAvailability.Drafted,
+                    PawnAvailability.InLabor,
+                    PawnAvailability.MentalState,
+                    PawnAvailability.Dead,
+                ]
+            },
             {
-                PawnAvailability.NeedSoon,
-                PawnAvailability.InDanger,
-                PawnAvailability.DontInterruptJob,
-                PawnAvailability.CantInterruptJob,
-                PawnAvailability.Downed,
-                PawnAvailability.Drafted,
-                PawnAvailability.InLabor,
-                PawnAvailability.MentalState,
-                PawnAvailability.Dead,
-            } },
-            { RomanticActivityType.OrderedHookup, new List<PawnAvailability>()
+                RomanticActivityType.CasualHookup, [
+                    PawnAvailability.NeedSoon,
+                    PawnAvailability.InDanger,
+                    PawnAvailability.DontInterruptJob,
+                    PawnAvailability.CantInterruptJob,
+                    PawnAvailability.Downed,
+                    PawnAvailability.Drafted,
+                    PawnAvailability.InLabor,
+                    PawnAvailability.MentalState,
+                    PawnAvailability.Dead,
+                ]
+            },
             {
-                PawnAvailability.CantInterruptJob,
-                PawnAvailability.Downed,
-                PawnAvailability.Drafted,
-                PawnAvailability.InLabor,
-                PawnAvailability.MentalState,
-                PawnAvailability.Dead,
-            } },
-            {RomanticActivityType.Date, new List<PawnAvailability>()
+                RomanticActivityType.OrderedHookup, [
+                    PawnAvailability.CantInterruptJob,
+                    PawnAvailability.Downed,
+                    PawnAvailability.Drafted,
+                    PawnAvailability.InLabor,
+                    PawnAvailability.MentalState,
+                    PawnAvailability.Dead,
+                ]
+            },
             {
-                PawnAvailability.NeedSoon,
-                PawnAvailability.InDanger,
-                PawnAvailability.DontInterruptJob,
-                PawnAvailability.CantInterruptJob,
-                PawnAvailability.Downed,
-                PawnAvailability.Drafted,
-                PawnAvailability.InLabor,
-                PawnAvailability.MentalState,
-                PawnAvailability.Dead,
-            } },
-            {RomanticActivityType.Hangout, new List<PawnAvailability>()
+                RomanticActivityType.Date, [
+                    PawnAvailability.NeedSoon,
+                    PawnAvailability.InDanger,
+                    PawnAvailability.DontInterruptJob,
+                    PawnAvailability.CantInterruptJob,
+                    PawnAvailability.Downed,
+                    PawnAvailability.Drafted,
+                    PawnAvailability.InLabor,
+                    PawnAvailability.MentalState,
+                    PawnAvailability.Dead,
+                ]
+            },
             {
-                PawnAvailability.NeedSoon,
-                PawnAvailability.InDanger,
-                PawnAvailability.DontInterruptJob,
-                PawnAvailability.CantInterruptJob,
-                PawnAvailability.Downed,
-                PawnAvailability.Drafted,
-                PawnAvailability.InLabor,
-                PawnAvailability.MentalState,
-                PawnAvailability.Dead,
-            } },
+                RomanticActivityType.Hangout, [
+                    PawnAvailability.NeedSoon,
+                    PawnAvailability.InDanger,
+                    PawnAvailability.DontInterruptJob,
+                    PawnAvailability.CantInterruptJob,
+                    PawnAvailability.Downed,
+                    PawnAvailability.Drafted,
+                    PawnAvailability.InLabor,
+                    PawnAvailability.MentalState,
+                    PawnAvailability.Dead,
+                ]
+            },
         };
     }
 }

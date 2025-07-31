@@ -13,15 +13,9 @@ namespace BetterRomance
         private Pawn Partner => (Pawn)(Thing)job.GetTarget(PartnerInd);
         private bool IsDate => job.def == RomanceDefOf.JobDateLead;
 
-        public override bool TryMakePreToilReservations(bool errorOnFailed)
-        {
-            return pawn.Reserve(Partner, job, errorOnFailed: errorOnFailed);
-        }
+        public override bool TryMakePreToilReservations(bool errorOnFailed) => pawn.Reserve(Partner, job, errorOnFailed: errorOnFailed);
 
-        public override RandomSocialMode DesiredSocialMode()
-        {
-            return RandomSocialMode.SuperActive;
-        }
+        public override RandomSocialMode DesiredSocialMode() => RandomSocialMode.SuperActive;
 
         //Generates a toil to go to the next tile in the path
         public Toil GotoCell(LocalTargetInfo target)
@@ -60,7 +54,7 @@ namespace BetterRomance
                 {
                     LogUtil.Message($"Date lead job started for {Actor.Name.ToStringShort}", true);
                     Pawn faster = WhoIsFaster();
-                    faster.jobs.curDriver.locomotionUrgencySameAs = (faster == Actor ? Partner : Actor);
+                    faster.jobs.curDriver.locomotionUrgencySameAs = faster == Actor ? Partner : Actor;
                 }
             );
             //Alternate goto and wait toils for each tile in path

@@ -38,10 +38,7 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="instructions">Instructions from the original transpiler</param>
         /// <param name="toGetPawn">OpCode to load the pawn on the stack</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> AgeReversalDemandAgeTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode toGetPawn)
-        {
-            return instructions.AgeReversalDemandAgeTranspiler([new CodeInstruction(toGetPawn)]);
-        }
+        public static IEnumerable<CodeInstruction> AgeReversalDemandAgeTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode toGetPawn) => instructions.AgeReversalDemandAgeTranspiler([new CodeInstruction(toGetPawn)]);
 
         /// <summary>
         /// Replaces a hard coded 25 with a call to AgeReversalDemandAge
@@ -64,9 +61,9 @@ namespace BetterRomance.HarmonyPatches
                     //Turn it into ticks
                     if (code.LoadsConstant(90000000L))
                     {
-                        yield return new CodeInstruction(OpCodes.Conv_I8);
-                        yield return new CodeInstruction(OpCodes.Ldc_I8, 3600000L);
-                        yield return new CodeInstruction(OpCodes.Mul);
+                        yield return new(OpCodes.Conv_I8);
+                        yield return new(OpCodes.Ldc_I8, 3600000L);
+                        yield return new(OpCodes.Mul);
                     }
                 }
                 else

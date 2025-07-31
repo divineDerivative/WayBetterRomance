@@ -28,7 +28,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 else if (code.Calls(typeof(Pawn_AgeTracker), nameof(Pawn_AgeTracker.LifeStageMinAge)))
                 {
-                    yield return new CodeInstruction(OpCodes.Conv_R4);
+                    yield return new(OpCodes.Conv_R4);
                 }
                 else
                 {

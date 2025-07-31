@@ -102,7 +102,7 @@ namespace BetterRomance.HarmonyPatches
                 //Change from true to false
                 else if (!done && replaced && code.Branches(out Label? label))
                 {
-                    yield return new CodeInstruction(OpCodes.Brfalse, label);
+                    yield return new(OpCodes.Brfalse, label);
                     done = true;
                 }
                 else
@@ -112,10 +112,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        public static IEnumerable<CodeInstruction> TraitTranspiler(IEnumerable<CodeInstruction> instructions)
-        {
-            return instructions.TraitToOrientationTranspiler(true);
-        }
+        public static IEnumerable<CodeInstruction> TraitTranspiler(IEnumerable<CodeInstruction> instructions) => instructions.TraitToOrientationTranspiler(true);
 
         public static void PatchForceLoveHate(this Harmony harmony)
         {

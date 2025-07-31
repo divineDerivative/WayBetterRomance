@@ -18,8 +18,8 @@ namespace BetterRomance
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
-            Date = new CompListVars();
-            Hookup = new CompListVars();
+            Date = new();
+            Hookup = new();
         }
 
         public override void PostExposeData()
@@ -70,7 +70,6 @@ namespace BetterRomance
                         //So the number of nodes can be used as a shortcut for the length of the path
                         //Horizontal/vertical moves are 1f in length, diagonal moves are 1.4142f (sqrt of 2) in length, so the actual distance the path covers will always be >= the number of nodes
 #if !v1_6
-
                         PawnPath path = Pawn.Map.pathFinder.FindPath(Pawn.Position, p.Position, Pawn, PathEndMode.Touch);
 #else
                         PawnPath path = Pawn.Map.pathFinder.FindPathNow(Pawn.Position, p.Position, Pawn, null, PathEndMode.Touch);
@@ -146,10 +145,7 @@ namespace BetterRomance
                     else if ((hookup && pawn.relations.SecondaryRomanceChanceFactor(p) > num) || (!hookup && pawn.relations.OpinionOf(p) > num))
                     {
                         //This will skip people who recently turned them down
-                        Thought_Memory memory = pawn.needs.mood.thoughts.memories.Memories.Find(delegate (Thought_Memory x)
-                        {
-                            return x.def == (hookup ? RomanceDefOf.RebuffedMyHookupAttempt : RomanceDefOf.RebuffedMyDateAttempt) && x.otherPawn == p;
-                        });
+                        Thought_Memory memory = pawn.needs.mood.thoughts.memories.Memories.Find(delegate(Thought_Memory x) { return x.def == (hookup ? RomanceDefOf.RebuffedMyHookupAttempt : RomanceDefOf.RebuffedMyDateAttempt) && x.otherPawn == p; });
                         //Need to also check opinion against setting for a hookup
                         if (!hookup || (memory == null && pawn.relations.OpinionOf(p) >= pawn.MinOpinionForHookup()))
                         {

@@ -123,16 +123,16 @@ namespace BetterRomance
             handler.RegisterNewRow("Sexual Orientation Heading row")
                 .AddLabel("WBR.OrientationHeading".Translate, name: "Sexual Orientation Heading label")
                 .WithTooltip("WBR.OrientationHeadingTip".Translate);
-            SetUpChanceSection(handler.RegisterNewSection(name: "SexualOrientationSection", sectionBorder: 6f), false);
+            SetUpChanceSection(handler.RegisterNewSection("SexualOrientationSection", sectionBorder: 6f), false);
             handler.AddGap(10f);
 
             handler.RegisterNewRow("Ace Orientation Heading row")
                 .AddLabel("WBR.AceOrientationHeading".Translate, name: "Asexual Orientation Heading label")
                 .WithTooltip("WBR.AceOrientationHeadingTip".Translate);
-            SetUpChanceSection(handler.RegisterNewSection(name: "RomanceOrientationSection", sectionBorder: 6f), true);
+            SetUpChanceSection(handler.RegisterNewSection("RomanceOrientationSection", sectionBorder: 6f), true);
 
             handler.RegisterNewRow(newColumn: true).AddLabel("WBR.OtherHeading".Translate);
-            SetUpMiscSection(handler.RegisterNewSection(name: "MiscSection", sectionBorder: 6f));
+            SetUpMiscSection(handler.RegisterNewSection("MiscSection", sectionBorder: 6f));
             handler.AddGap();
             //Fertility mod
             UIContainer fertilityRow = handler.RegisterNewRow();
@@ -154,7 +154,7 @@ namespace BetterRomance
                 .Add(NewElement.Checkbox()
                 .WithReference(this, nameof(joyOnPrisoners), joyOnPrisoners)
                 .WithLabel("PrisonersSection".Translate));
-            var guestRow = handler.RegisterNewRow()
+            UIRow guestRow = handler.RegisterNewRow()
                 .HideWhen(() => !joyOnPrisoners);
             guestRow.AddSpace(relative: 0.02f);
             guestRow.Add(NewElement.Checkbox()
@@ -216,17 +216,14 @@ namespace BetterRomance
                     }
                 }), "Homo slider");
             //None
-            section.AddLabel(NoneChance, name: romance? "Aromantic chance label" : "Asexual chance label")
+            section.AddLabel(NoneChance, name: romance ? "Aromantic chance label" : "Asexual chance label")
                 .WithTooltip(NoneChanceTooltip)
-                .WithPreDraw(delegate
-                {
-                    chances.none = 100f - chances.hetero - chances.bi - chances.homo;
-                });
+                .WithPreDraw(delegate { chances.none = 100f - chances.hetero - chances.bi - chances.homo; });
             //Buttons
             handler.AddGap(8f);
             UIContainer buttonRow = handler.RegisterNewRow(gap: 0f, name: "Match button row " + (romance ? "romance" : "sexual"));
             buttonRow.Add(NewElement.Button(() => chances.CopyFrom(romance ? sexualOrientations : asexualOrientations))
-                .WithLabel((romance ? "WBR.MatchAboveButton" : "WBR.MatchBelowButton").Translate), $"Match {(romance ? "above" : "below")} button");
+                    .WithLabel((romance ? "WBR.MatchAboveButton" : "WBR.MatchBelowButton").Translate), $"Match {(romance ? "above" : "below")} button");
             buttonRow.Add(NewElement.Button(chances.Reset)
                 .WithLabel("RestoreToDefaultSettings".Translate), "Default button");
 
@@ -306,10 +303,7 @@ namespace BetterRomance
             List<FloatMenuOption> options = new();
             foreach (KeyValuePair<string, string> item in FertilityMods)
             {
-                options.Add(new FloatMenuOption(item.Value, delegate
-                {
-                    fertilityMod = item.Key;
-                }));
+                options.Add(new(item.Value, delegate { fertilityMod = item.Key; }));
             }
             if (!options.NullOrEmpty())
             {
@@ -328,10 +322,7 @@ namespace BetterRomance
             ModManagement.RegisterMod("WBR.WayBetterRomance", new(FrameworkVersionInfo.Version));
         }
 
-        public override string SettingsCategory()
-        {
-            return "WBR.WayBetterRomance".Translate();
-        }
+        public override string SettingsCategory() => "WBR.WayBetterRomance".Translate();
 
         public override void WriteSettings()
         {
@@ -365,7 +356,7 @@ namespace BetterRomance
 
     internal class WBRLogger : Logging
     {
-        public static readonly WBRLogger LogUtil = new WBRLogger();
+        public static readonly WBRLogger LogUtil = new();
         private WBRLogger() : base("<color=#1116e4>[WayBetterRomance]</color>", () => Settings.debugLogging) { }
     }
 }

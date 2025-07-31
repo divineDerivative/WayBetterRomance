@@ -28,7 +28,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.LoadsField(GrowthMomentAges))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(typeof(ChoiceLetter_GrowthMoment), nameof(ChoiceLetter_GrowthMoment.pawn));
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetBiotechSettings));
                     yield return CodeInstruction.LoadField(typeof(CompSettingsBiotech), nameof(CompSettingsBiotech.growthMoments));

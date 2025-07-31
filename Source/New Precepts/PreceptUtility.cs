@@ -192,8 +192,8 @@ namespace BetterRomance
                             break;
                         }
                     }
+                }
             }
-        }
             return 1f - fromComp;
         }
 

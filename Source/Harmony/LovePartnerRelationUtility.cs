@@ -34,17 +34,17 @@ namespace BetterRomance.HarmonyPatches
                     //if (!generated.CouldWeBeLovers(other)) { return 0f; }
                     yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code).WithLabels(firstLabel);
                     code.labels.Add(secondLabel);
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return new(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SexualityUtility), nameof(SexualityUtility.CouldWeBeLovers));
-                    yield return new CodeInstruction(OpCodes.Brtrue, secondLabel);
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 0f);
-                    yield return new CodeInstruction(OpCodes.Ret);
+                    yield return new(OpCodes.Brtrue, secondLabel);
+                    yield return new(OpCodes.Ldc_R4, 0f);
+                    yield return new(OpCodes.Ret);
                 }
                 //Remove the gay reduction by storing 1f no matter what
                 if (code.opcode == OpCodes.Stloc_1)
                 {
-                    yield return new CodeInstruction(OpCodes.Pop);
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
+                    yield return new(OpCodes.Pop);
+                    yield return new(OpCodes.Ldc_R4, 1f);
                 }
 
                 yield return code;
@@ -99,7 +99,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.LoadsConstant(0.001f))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 0.01f);
+                    yield return new(OpCodes.Ldc_R4, 0.01f);
                 }
                 else
                 {
@@ -193,9 +193,6 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(LovePartnerRelationUtility), nameof(LovePartnerRelationUtility.TryToShareChildrenForGeneratedLovePartner))]
     public static class LovePartnerRelationUtility_TryToShareChildrenForGeneratedLovePartner
     {
-        public static bool Prefix(Pawn generated)
-        {
-            return generated.ChildAllowed();
-        }
+        public static bool Prefix(Pawn generated) => generated.ChildAllowed();
     }
 }

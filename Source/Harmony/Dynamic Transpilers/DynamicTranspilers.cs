@@ -50,7 +50,7 @@ namespace BetterRomance.HarmonyPatches
                         //So this is required for the VSIE patch, but I'm not sure how to account for it here
                         //Just gonna leave it for now and figure something out if I ever add another patch that needs this
                         //I bet my idea of a dictionary with MethodInfo and arguments could help, since I could check which key I'm using
-                        #if !v1_6
+#if !v1_6
                         yield return new CodeInstruction(OpCodes.Ldarg_0);
 #endif
                         skip = false;
@@ -64,7 +64,7 @@ namespace BetterRomance.HarmonyPatches
                 if (code.LoadsField(AccessTools.Field(typeof(PawnRelationDefOf), def.defName)))
                 {
                     yield return CodeInstruction.Call(typeof(LovePartnerRelationUtility), ex ? nameof(LovePartnerRelationUtility.IsExLovePartnerRelation) : nameof(LovePartnerRelationUtility.IsLovePartnerRelation));
-                    yield return new CodeInstruction(condition ? OpCodes.Brtrue : OpCodes.Brfalse, label);
+                    yield return new(condition ? OpCodes.Brtrue : OpCodes.Brfalse, label);
                     skip = true;
                 }
                 if (!skip)
@@ -87,8 +87,8 @@ namespace BetterRomance.HarmonyPatches
                 if (code.LoadsField(InfoHelper.RitualPawnAgeCurve))
                 {
                     //The preceding code loads the instance, which we're not using so yeet
-                    yield return useRoleID ? CodeInstruction.LoadField(typeof(RitualOutcomeComp_PawnAge), nameof(RitualOutcomeComp_PawnAge.roleId)) : new CodeInstruction(OpCodes.Pop);
-                    yield return new CodeInstruction(loadPawn);
+                    yield return useRoleID ? CodeInstruction.LoadField(typeof(RitualOutcomeComp_PawnAge), nameof(RitualOutcomeComp_PawnAge.roleId)) : new(OpCodes.Pop);
+                    yield return new(loadPawn);
                     if (useRoleID)
                     {
                         yield return CodeInstruction.Call(typeof(DynamicTranspilers), nameof(RolePawn));
@@ -102,10 +102,7 @@ namespace BetterRomance.HarmonyPatches
             }
         }
 
-        private static Pawn RolePawn(string roleID, LordJob_Ritual ritual)
-        {
-            return ritual.PawnWithRole(roleID);
-        }
+        private static Pawn RolePawn(string roleID, LordJob_Ritual ritual) => ritual.PawnWithRole(roleID);
 
         /// <summary>
         /// Replaces a hard coded 20 or 20f to call GetMinAgeForAdulthood
@@ -127,7 +124,7 @@ namespace BetterRomance.HarmonyPatches
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.GetMinAgeForAdulthood));
                     if (integer)
                     {
-                        yield return new CodeInstruction(OpCodes.Conv_I4);
+                        yield return new(OpCodes.Conv_I4);
                     }
                 }
                 else
@@ -144,10 +141,7 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="loadPawn">OpCode to load the pawn on the stack</param>
         /// <param name="integer">Whether to convert the result to an int</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> MinAgeForAdulthoodTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn, bool integer)
-        {
-            return instructions.MinAgeForAdulthoodTranspiler([new CodeInstruction(loadPawn)], integer);
-        }
+        public static IEnumerable<CodeInstruction> MinAgeForAdulthoodTranspiler(this IEnumerable<CodeInstruction> instructions, OpCode loadPawn, bool integer) => instructions.MinAgeForAdulthoodTranspiler([new CodeInstruction(loadPawn)], integer);
 
         /// <summary>
         /// Replaces trait checks with appropriate orientation check without removing a bunch of other instructions
@@ -161,7 +155,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.Calls(AccessTools.Method(typeof(TraitSet), nameof(TraitSet.HasTrait), [typeof(TraitDef)])))
                 {
-                    yield return new CodeInstruction(romance ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
+                    yield return new(romance ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(DynamicTranspilers), nameof(TraitConversion));
                 }
                 else
@@ -255,7 +249,7 @@ namespace BetterRomance.HarmonyPatches
                 if (gayFound && code.Branches(out _))
                 {
                     //Need to remove the bool from the stack first
-                    yield return new CodeInstruction(OpCodes.Pop);
+                    yield return new(OpCodes.Pop);
                     code.opcode = OpCodes.Br_S;
                     if (label != null)
                     {

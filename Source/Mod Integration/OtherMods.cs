@@ -24,25 +24,13 @@ namespace BetterRomance.HarmonyPatches
             return false;
         }
 
-        public static void RJWAsexualPostfix(ref bool __result, Pawn pawn)
-        {
-            __result = __result || pawn.IsAsexual();
-        }
+        public static void RJWAsexualPostfix(ref bool __result, Pawn pawn) => __result = __result || pawn.IsAsexual();
 
-        public static IEnumerable<CodeInstruction> VanillaTraitCheckTranspiler(IEnumerable<CodeInstruction> instructions)
-        {
-            return instructions.TraitToOrientationTranspiler(false);
-        }
+        public static IEnumerable<CodeInstruction> VanillaTraitCheckTranspiler(IEnumerable<CodeInstruction> instructions) => instructions.TraitToOrientationTranspiler(false);
 
-        public static IEnumerable<CodeInstruction> RimderLoveRelationTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
-        {
-            return instructions.LoveRelationUtilityTranspiler(ilg, PawnRelationDefOf.Lover, true, false, stopSkipping: (CodeInstruction code) => code.LoadsField(AccessTools.Field(AccessTools.TypeByName("RimderModCore"), "rimderSettings")));
-        }
+        public static IEnumerable<CodeInstruction> RimderLoveRelationTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg) => instructions.LoveRelationUtilityTranspiler(ilg, PawnRelationDefOf.Lover, true, false, (CodeInstruction code) => code.LoadsField(AccessTools.Field(AccessTools.TypeByName("RimderModCore"), "rimderSettings")));
 
-        public static IEnumerable<CodeInstruction> RimderExLoveRelationTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
-        {
-            return instructions.LoveRelationUtilityTranspiler(ilg, PawnRelationDefOf.ExLover, true, true, stopSkipping: (CodeInstruction code) => code.LoadsField(AccessTools.Field(AccessTools.TypeByName("RimderModCore"), "rimderSettings")));
-        }
+        public static IEnumerable<CodeInstruction> RimderExLoveRelationTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg) => instructions.LoveRelationUtilityTranspiler(ilg, PawnRelationDefOf.ExLover, true, true, (CodeInstruction code) => code.LoadsField(AccessTools.Field(AccessTools.TypeByName("RimderModCore"), "rimderSettings")));
 
         //This is a modified version of their transpiler for PawnRelationWorker_Parent.CreateRelation to apply to my prefix
         public static IEnumerable<CodeInstruction> AltFertilityParentCreateRelationTranspiler(IEnumerable<CodeInstruction> instructions)
@@ -50,13 +38,13 @@ namespace BetterRomance.HarmonyPatches
             List<CodeInstruction> list = instructions.ToList();
             int maleInd = list.FindIndex((CodeInstruction code) => code.LoadsField(InfoHelper.PawnGender));
             list[maleInd] = CodeInstructionMethods.Call(HelperClasses.CanImpregnate);
-            list[maleInd + 1] = new CodeInstruction(OpCodes.Nop);
-            list[maleInd + 2] = new CodeInstruction(OpCodes.Nop);
+            list[maleInd + 1] = new(OpCodes.Nop);
+            list[maleInd + 2] = new(OpCodes.Nop);
 
             int femaleInd = list.FindIndex(maleInd + 1, (CodeInstruction code) => code.LoadsField(InfoHelper.PawnGender));
             list[femaleInd] = CodeInstructionMethods.Call(HelperClasses.CanGetPregnant);
-            list[femaleInd + 1] = new CodeInstruction(OpCodes.Nop);
-            list[femaleInd + 2] = new CodeInstruction(OpCodes.Nop);
+            list[femaleInd + 1] = new(OpCodes.Nop);
+            list[femaleInd + 2] = new(OpCodes.Nop);
 
             return list.AsEnumerable();
         }
@@ -64,15 +52,9 @@ namespace BetterRomance.HarmonyPatches
 
     public static class VREPatches
     {
-        public static IEnumerable<CodeInstruction> InitiateLovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
-        {
-            return instructions.MinAgeForSexTranspiler(OpCodes.Ldloc_0);
-        }
+        public static IEnumerable<CodeInstruction> InitiateLovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions) => instructions.MinAgeForSexTranspiler(OpCodes.Ldloc_0);
 
-        public static IEnumerable<CodeInstruction> Need_LovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions)
-        {
-            return instructions.MinAgeForSexTranspiler(new List<CodeInstruction>() { new(OpCodes.Ldarg_0), CodeInstruction.LoadField(typeof(Need_Lovin), "pawn") });
-        }
+        public static IEnumerable<CodeInstruction> Need_LovinMinAgeTranspiler(IEnumerable<CodeInstruction> instructions) => instructions.MinAgeForSexTranspiler(new List<CodeInstruction> { new(OpCodes.Ldarg_0), CodeInstruction.LoadField(typeof(Need_Lovin), "pawn") });
 
         public static IEnumerable<CodeInstruction> VREAsexualTranspiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -84,7 +66,7 @@ namespace BetterRomance.HarmonyPatches
                 {
                     asexualFound = true;
                     yield return new CodeInstruction(OpCodes.Pop).MoveLabelsFrom(code);
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    yield return new(OpCodes.Ldloc_0);
                 }
                 else if (asexualFound)
                 {
@@ -174,10 +156,7 @@ namespace BetterRomance.HarmonyPatches
     public static class VSIEPatches
     {
         //Check for custom love relations
-        public static void GetSpouseOrLoverOrFiancePostfix(ref Pawn __result, Pawn pawn)
-        {
-            __result ??= pawn.FirstCustomLoveRelation()?.otherPawn;
-        }
+        public static void GetSpouseOrLoverOrFiancePostfix(ref Pawn __result, Pawn pawn) => __result ??= pawn.FirstCustomLoveRelation()?.otherPawn;
 
         public static Type CompilerType;
 

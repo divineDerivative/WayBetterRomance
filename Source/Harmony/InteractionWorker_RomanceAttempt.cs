@@ -183,10 +183,7 @@ namespace BetterRomance.HarmonyPatches
     {
         //Changes from Vanilla:
         //Checks if pawn cares about cheating
-        public static bool Prefix(Pawn pawn)
-        {
-            return pawn.CaresAboutCheating();
-        }
+        public static bool Prefix(Pawn pawn) => pawn.CaresAboutCheating();
     }
 
     //Determines factors based on opinion of other pawn, used by SuccessChance
@@ -265,22 +262,22 @@ namespace BetterRomance.HarmonyPatches
                 {
                     //num = RomanceUtilities.SexualityFactor(romanceTarget, romancer);
                     yield return new CodeInstruction(OpCodes.Ldarg_1).WithLabels(newLabel);
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(RomanceUtilities), nameof(RomanceUtilities.SexualityFactor));
-                    yield return new CodeInstruction(OpCodes.Stloc, num);
+                    yield return new(OpCodes.Stloc, num);
                     //if (num != 1f)
-                    yield return new CodeInstruction(OpCodes.Ldloc, num);
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
-                    yield return new CodeInstruction(OpCodes.Beq_S, oldLabel);
+                    yield return new(OpCodes.Ldloc, num);
+                    yield return new(OpCodes.Ldc_R4, 1f);
+                    yield return new(OpCodes.Beq_S, oldLabel);
                     //stringBuilder.AppendLine(RomanceFactorLine("WBR.HookupChanceSexuality".Translate(), num);
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return new CodeInstruction(OpCodes.Ldstr, "WBR.HookupChanceSexuality");
+                    yield return new(OpCodes.Ldloc_0);
+                    yield return new(OpCodes.Ldstr, "WBR.HookupChanceSexuality");
                     yield return CodeInstruction.Call(typeof(Translator), nameof(Translator.Translate), [typeof(string)]);
                     yield return CodeInstruction.Call(typeof(TaggedString), "op_Implicit", [typeof(TaggedString)]);
-                    yield return new CodeInstruction(OpCodes.Ldloc, num);
+                    yield return new(OpCodes.Ldloc, num);
                     yield return CodeInstruction.Call(typeof(InteractionWorker_RomanceAttempt), "RomanceFactorLine");
                     yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]);
-                    yield return new CodeInstruction(OpCodes.Pop);
+                    yield return new(OpCodes.Pop);
 
                     startFound = false;
                 }

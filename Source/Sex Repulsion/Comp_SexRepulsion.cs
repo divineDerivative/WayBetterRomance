@@ -8,7 +8,7 @@ namespace BetterRomance
         public float rating;
 
         //Seed is based on pawn's ID, so it will always return the same number for a given pawn.
-        float InitialRating()
+        private float InitialRating()
         {
             Rand.PushState();
             Rand.Seed = Pawn.thingIDNumber;

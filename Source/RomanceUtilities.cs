@@ -306,7 +306,7 @@ namespace BetterRomance
                 ThingComp newComp = (ThingComp)Activator.CreateInstance(typeof(T));
                 newComp.parent = p;
                 compList.Add(newComp);
-                newComp.Initialize(new CompProperties());
+                newComp.Initialize(new());
                 newComp.PostExposeData();
                 comp = p.GetComp<T>();
                 if (comp == null)
@@ -342,15 +342,9 @@ namespace BetterRomance
             return factor;
         }
 
-        public static bool EitherHasLoveEnhancer(Pawn first, Pawn second)
-        {
-            return HasLoveEnhancer(first) || HasLoveEnhancer(second);
-        }
+        public static bool EitherHasLoveEnhancer(Pawn first, Pawn second) => HasLoveEnhancer(first) || HasLoveEnhancer(second);
 
-        public static bool HasLoveEnhancer(Pawn pawn)
-        {
-            return pawn.health?.hediffSet?.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer) ?? false;
-        }
+        public static bool HasLoveEnhancer(Pawn pawn) => pawn.health?.hediffSet?.hediffs.Any((Hediff h) => h.def == HediffDefOf.LoveEnhancer) ?? false;
 
         /// <summary>Whether a pawn with the given <paramref name="ideo"/> and <paramref name="gender"/> is able to do an event of <paramref name="def"/>.</summary>
         public static bool WillingToDoGendered(this HistoryEventDef def, Ideo ideo, Gender gender)
@@ -465,7 +459,7 @@ namespace BetterRomance
             {
                 throw new ArgumentException($"fieldInfo is null");
             }
-            return new CodeInstruction((!useAddress) ? (fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld) : (fieldInfo.IsStatic ? OpCodes.Ldsflda : OpCodes.Ldflda), fieldInfo);
+            return new(!useAddress ? fieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld : fieldInfo.IsStatic ? OpCodes.Ldsflda : OpCodes.Ldflda, fieldInfo);
         }
 
         public static bool LoadsField(this CodeInstruction code, Type type, string name)
@@ -482,7 +476,7 @@ namespace BetterRomance
                 throw new ArgumentException($"methodInfo is null");
             }
 
-            return new CodeInstruction(OpCodes.Call, methodInfo);
+            return new(OpCodes.Call, methodInfo);
         }
 
         public static bool Calls(this CodeInstruction code, Type type, string name)

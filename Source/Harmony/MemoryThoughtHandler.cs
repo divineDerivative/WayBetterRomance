@@ -18,7 +18,7 @@ namespace BetterRomance.HarmonyPatches
                     //Making floor lower so 0.2f, which is the lowest rating that should get this thought, gets the correct modifiers, -8 and -6
                     int moodOffset = (int)GenMath.LerpDouble(0f, 1f, -12f, 8f, ___pawn.AsexualRating());
                     float opinionOffset = GenMath.LerpDouble(0f, 1f, -9f, 6f, ___pawn.AsexualRating());
-                    Thought_MemorySocial replacementThought = ThoughtMaker.MakeThought((moodOffset < 0) ? RomanceDefOf.LovinAsexualNegative : RomanceDefOf.LovinAsexualPositive) as Thought_MemorySocial;
+                    Thought_MemorySocial replacementThought = ThoughtMaker.MakeThought(moodOffset < 0 ? RomanceDefOf.LovinAsexualNegative : RomanceDefOf.LovinAsexualPositive) as Thought_MemorySocial;
                     if (RomanceUtilities.EitherHasLoveEnhancer(___pawn, otherPawn))
                     {
                         replacementThought.moodPowerFactor = 1.5f;
@@ -37,7 +37,7 @@ namespace BetterRomance.HarmonyPatches
                     //Making floor lower so 0.2f, which is the lowest rating that should get this thought, gets the correct modifiers, -10 and -8
                     int moodOffset = (int)GenMath.LerpDouble(0f, 1f, -15f, 10f, ___pawn.AsexualRating());
                     float opinionOffset = GenMath.LerpDouble(0f, 1f, -12f, 8f, ___pawn.AsexualRating());
-                    Thought_MemorySocial replacementThought = ThoughtMaker.MakeThought((moodOffset < 0) ? RomanceDefOf.PassionateLovinAsexualNegative : RomanceDefOf.PassionateLovinAsexualPositive) as Thought_MemorySocial;
+                    Thought_MemorySocial replacementThought = ThoughtMaker.MakeThought(moodOffset < 0 ? RomanceDefOf.PassionateLovinAsexualNegative : RomanceDefOf.PassionateLovinAsexualPositive) as Thought_MemorySocial;
 
                     if (RomanceUtilities.EitherHasLoveEnhancer(___pawn, otherPawn))
                     {

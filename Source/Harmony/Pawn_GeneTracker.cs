@@ -31,7 +31,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.LoadsField(biologicalAgeTickFactorFromAgeCurve))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new(OpCodes.Ldarg_0);
                     yield return CodeInstruction.LoadField(typeof(Pawn_GeneTracker), nameof(Pawn_GeneTracker.pawn));
                     yield return CodeInstruction.Call(typeof(Pawn_GeneTracker_BiologicalAgeTickFactor), nameof(CurveHelper));
                 }
@@ -49,7 +49,7 @@ namespace BetterRomance.HarmonyPatches
                 return
                 [
                     new CurvePoint(pawn.ageTracker.AdultMinAge, 1f),
-                    new CurvePoint(SettingsUtilities.AdultAgeForLearning(pawn) + 0.5f, 0f)
+                    new CurvePoint(SettingsUtilities.AdultAgeForLearning(pawn) + 0.5f, 0f),
                 ];
             }
 

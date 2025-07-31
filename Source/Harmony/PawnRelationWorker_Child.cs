@@ -18,7 +18,7 @@ namespace BetterRomance.HarmonyPatches
             LocalBuilder otherParent = ilg.DeclareLocal(typeof(Pawn));
             Label endLabel = ilg.DefineLabel();
 
-            List<CodeInstruction> codes = instructions.SkipGayCheckTranspiler().GetAppropriateParentRelationshipTranspiler(new CodeInstruction(OpCodes.Ldarg_1), new CodeInstruction(OpCodes.Ldloc, otherParent.LocalIndex)).ToList();
+            List<CodeInstruction> codes = instructions.SkipGayCheckTranspiler().GetAppropriateParentRelationshipTranspiler(new(OpCodes.Ldarg_1), new(OpCodes.Ldloc, otherParent.LocalIndex)).ToList();
             bool retAdded = false;
             foreach (CodeInstruction code in codes)
             {
@@ -34,13 +34,13 @@ namespace BetterRomance.HarmonyPatches
                     //if (generated.relations.DirectRelationExists(PawnRelationDefOf.Spouse, otherParent))
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.relations));
                     yield return InfoHelper.DefOfSpouse.LoadField();
-                    yield return new CodeInstruction(OpCodes.Ldloc, otherParent.LocalIndex);
+                    yield return new(OpCodes.Ldloc, otherParent.LocalIndex);
                     yield return CodeInstruction.Call(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.DirectRelationExists));
                     //request is left on the stack, so get rid of it
-                    yield return new CodeInstruction(OpCodes.Pop);
-                    yield return new CodeInstruction(OpCodes.Brfalse_S, endLabel);
-                    yield return new CodeInstruction(OpCodes.Ldarg_3);
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return new(OpCodes.Pop);
+                    yield return new(OpCodes.Brfalse_S, endLabel);
+                    yield return new(OpCodes.Ldarg_3);
+                    yield return new(OpCodes.Ldarg_1);
                 }
 
                 yield return code;
@@ -49,16 +49,16 @@ namespace BetterRomance.HarmonyPatches
                 if (code.Calls(AccessTools.Method(typeof(ParentRelationUtility), nameof(ParentRelationUtility.SetFather))))
                 {
                     //otherParent = other.GetMother();
-                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return new(OpCodes.Ldarg_2);
                     yield return CodeInstruction.Call(typeof(ParentRelationUtility), nameof(ParentRelationUtility.GetMother));
-                    yield return new CodeInstruction(OpCodes.Stloc, otherParent.LocalIndex);
+                    yield return new(OpCodes.Stloc, otherParent.LocalIndex);
                 }
                 if (code.Calls(AccessTools.Method(typeof(ParentRelationUtility), nameof(ParentRelationUtility.SetMother))))
                 {
                     //otherParent = other.GetFather();
-                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return new(OpCodes.Ldarg_2);
                     yield return CodeInstruction.Call(typeof(ParentRelationUtility), nameof(ParentRelationUtility.GetFather));
-                    yield return new CodeInstruction(OpCodes.Stloc, otherParent.LocalIndex);
+                    yield return new(OpCodes.Stloc, otherParent.LocalIndex);
                 }
             }
         }

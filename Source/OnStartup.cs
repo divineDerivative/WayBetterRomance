@@ -168,7 +168,7 @@ namespace BetterRomance
                     HelperClasses.CanImpregnate = AccessTools.Method(Type.GetType("AlternateFertility.PatcherUtility, AlternateFertility"), "CanImpregnate");
                     HelperClasses.CanGetPregnant = AccessTools.Method(Type.GetType("AlternateFertility.PatcherUtility, AlternateFertility"), "CanGetPregnant");
 
-                    harmony.Patch(AccessTools.Method(typeof(PawnRelationWorker_Parent_CreateRelation), nameof(PawnRelationWorker_Parent_CreateRelation.Prefix)), transpiler: new HarmonyMethod(typeof(OtherMod_Patches), nameof(OtherMod_Patches.AltFertilityParentCreateRelationTranspiler)));
+                    harmony.Patch(AccessTools.Method(typeof(PawnRelationWorker_Parent_CreateRelation), nameof(PawnRelationWorker_Parent_CreateRelation.Prefix)), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.AltFertilityParentCreateRelationTranspiler)));
                     //Apply their transpiler to my similar method
                     HarmonyMethod canProduceChildTranspiler = new(AccessTools.Method(Type.GetType("AlternateFertility.Harmony.Harmony_PregnancyUtility_CanEverProduceChild, AlternateFertility"), "Transpiler"));
                     harmony.Patch(AccessTools.Method(typeof(HookupUtility), nameof(HookupUtility.CanEverProduceChild)), transpiler: canProduceChildTranspiler);
@@ -279,8 +279,8 @@ namespace BetterRomance
         {
             foreach (ThingDef race in DefDatabase<ThingDef>.AllDefsListForReading.Where(td => td.race != null && !td.IsCorpse && td.race.Humanlike))
             {
-                race.comps.Add(new CompProperties(typeof(WBR_SettingsComp)));
-                Settings.RaceSettingsList.Add(new RaceSettings(race));
+                race.comps.Add(new(typeof(WBR_SettingsComp)));
+                Settings.RaceSettingsList.Add(new(race));
             }
         }
 
@@ -330,28 +330,24 @@ namespace BetterRomance
     public class MayRequireHARAttribute : MayRequireAttribute
     {
         public MayRequireHARAttribute()
-            : base("erdelf.humanoidalienraces")
-        { }
+            : base("erdelf.humanoidalienraces") { }
     }
 
     public class MayRequirePersonalityM2Attribute : MayRequireAttribute
     {
         public MayRequirePersonalityM2Attribute()
-            : base("hahkethomemah.simplepersonalities.module2")
-        { }
+            : base("hahkethomemah.simplepersonalities.module2") { }
     }
 
     public class MayRequireCSLAttribute : MayRequireAttribute
     {
         public MayRequireCSLAttribute()
-            : base("dylan.csl")
-        { }
+            : base("dylan.csl") { }
     }
 
     public class MayRequireRJWAttribute : MayRequireAttribute
     {
         public MayRequireRJWAttribute()
-            : base("rim.job.world")
-        { }
+            : base("rim.job.world") { }
     }
 }

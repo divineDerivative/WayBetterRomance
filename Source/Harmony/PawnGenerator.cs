@@ -21,13 +21,13 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyPatch(typeof(PawnGenerator), "GenerateSkills")]
     public static class PawnGenerator_GenerateSkills
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AdultMinAgeInt(OpCodes.Ldarg_0).ChildAgeTranspiler(new CodeInstruction(OpCodes.Ldarg_0), false);
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AdultMinAgeInt(OpCodes.Ldarg_0).ChildAgeTranspiler(new(OpCodes.Ldarg_0), false);
     }
 
     [HarmonyPatch(typeof(PawnGenerator), "GenerateTraits")]
     public static class PawnGenerator_GenerateTraits
     {
-        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AdultMinAgeInt(OpCodes.Ldarg_0).ChildAgeTranspiler(new CodeInstruction(OpCodes.Ldarg_0));
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.AdultMinAgeInt(OpCodes.Ldarg_0).ChildAgeTranspiler(new(OpCodes.Ldarg_0));
     }
 
     [HarmonyPatch(typeof(PawnGenerator), "GenerateInitialHediffs")]
@@ -47,12 +47,12 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.LoadsField(AccessTools.Field(typeof(PawnGenerator), "AgeSkillMaxFactorCurve")))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.AgeSkillMaxFactorCurve));
                 }
                 else if (code.LoadsField(AccessTools.Field(typeof(PawnGenerator), "AgeSkillFactor")))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new(OpCodes.Ldarg_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.AgeSkillFactor));
                 }
                 else

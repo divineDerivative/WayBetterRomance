@@ -26,8 +26,8 @@ namespace BetterRomance.HarmonyPatches
                         yield return instruction;
                     }
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, InfoHelper.AdultMinAge);
-                    yield return new CodeInstruction(OpCodes.Conv_I4);
+                    yield return new(OpCodes.Callvirt, InfoHelper.AdultMinAge);
+                    yield return new(OpCodes.Conv_I4);
                     done = !repeat;
                 }
                 else
@@ -44,10 +44,7 @@ namespace BetterRomance.HarmonyPatches
         /// <param name="toGetPawn">OpCode needed to get the pawn on the stack</param>
         /// <param name="repeat">Whether to replace all occurrences of 13, or only the first one</param>
         /// <returns></returns>
-        public static IEnumerable<CodeInstruction> AdultMinAgeInt(this IEnumerable<CodeInstruction> instructions, OpCode toGetPawn, bool repeat = true)
-        {
-            return instructions.AdultMinAgeInt([new CodeInstruction(toGetPawn)], repeat);
-        }
+        public static IEnumerable<CodeInstruction> AdultMinAgeInt(this IEnumerable<CodeInstruction> instructions, OpCode toGetPawn, bool repeat = true) => instructions.AdultMinAgeInt([new CodeInstruction(toGetPawn)], repeat);
 
         /// <summary>
         /// Transpiler to convert a hardcoded 13f to Pawn_AgeTracker.AdultMinAge
@@ -61,9 +58,9 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.LoadsConstant(13f))
                 {
-                    yield return new CodeInstruction(toGetPawn);
+                    yield return new(toGetPawn);
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.ageTracker));
-                    yield return new CodeInstruction(OpCodes.Callvirt, InfoHelper.AdultMinAge);
+                    yield return new(OpCodes.Callvirt, InfoHelper.AdultMinAge);
                 }
                 else
                 {

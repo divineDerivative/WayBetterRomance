@@ -55,7 +55,7 @@ namespace BetterRomance.HarmonyPatches
                 if (attractedToFound == 2 && code.Branches(out _))
                 {
                     //Remove the bool from the stack
-                    yield return new CodeInstruction(OpCodes.Pop);
+                    yield return new(OpCodes.Pop);
                     //Change to jump unconditionally
                     code.opcode = OpCodes.Br;
                     attractedToFound++;

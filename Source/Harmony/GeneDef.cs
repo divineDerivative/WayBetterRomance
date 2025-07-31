@@ -43,13 +43,13 @@ namespace BetterRomance.HarmonyPatches
                     //if Settings.HARActive && geneDef.defName == "Ageless"
                     yield return new CodeInstruction(OpCodes.Ldarg_0).WithLabels(newLabel);
                     yield return CodeInstruction.Call(typeof(GeneDef_GetDescriptionFull), nameof(CheckDef));
-                    yield return new CodeInstruction(OpCodes.Brfalse_S, oldLabel);
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
+                    yield return new(OpCodes.Brfalse_S, oldLabel);
+                    yield return new(OpCodes.Ldloc_0);
                     //sb.AppendLine("WBR.AgelessGeneWarning".Translate());
                     yield return CodeInstruction.LoadField(type, "sb");
                     yield return CodeInstruction.Call(typeof(GeneDef_GetDescriptionFull), nameof(MakeAgelessString));
-                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), parameters: [typeof(string)]);
-                    yield return new CodeInstruction(OpCodes.Pop);
+                    yield return CodeInstruction.Call(typeof(StringBuilder), nameof(StringBuilder.AppendLine), [typeof(string)]);
+                    yield return new(OpCodes.Pop);
                     fieldFound++;
                 }
             }
@@ -93,15 +93,9 @@ namespace BetterRomance.HarmonyPatches
         //    }
         //}
 
-        private static bool CheckDef(GeneDef geneDef)
-        {
-            return Settings.HARActive && geneDef.defName == "Ageless";
-        }
+        private static bool CheckDef(GeneDef geneDef) => Settings.HARActive && geneDef.defName == "Ageless";
 
-        private static string MakeAgelessString()
-        {
-            return "WBR.AgelessGeneWarning".Translate();
-        }
+        private static string MakeAgelessString() => "WBR.AgelessGeneWarning".Translate();
 
         //private static string MakeMinAgeString()
         //{

@@ -25,10 +25,7 @@ namespace BetterRomance
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns>float between 0 and 1</returns>
-        public static float AsexualRating(this Pawn pawn)
-        {
-            return pawn.CheckForComp<Comp_SexRepulsion>().rating;
-        }
+        public static float AsexualRating(this Pawn pawn) => pawn.CheckForComp<Comp_SexRepulsion>().rating;
 
         /// <summary>
         /// Determines the romantic <see cref="Orientation"/> of a <paramref name="pawn"/> based on their traits
@@ -75,25 +72,13 @@ namespace BetterRomance
             return false;
         }
 
-        public static bool IsAro(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.None;
-        }
+        public static bool IsAro(this Pawn pawn) => pawn.GetOrientation() == Orientation.None;
 
-        public static bool IsBi(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Bi;
-        }
+        public static bool IsBi(this Pawn pawn) => pawn.GetOrientation() == Orientation.Bi;
 
-        public static bool IsHetero(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Hetero;
-        }
+        public static bool IsHetero(this Pawn pawn) => pawn.GetOrientation() == Orientation.Hetero;
 
-        public static bool IsHomo(this Pawn pawn)
-        {
-            return pawn.GetOrientation() == Orientation.Homo;
-        }
+        public static bool IsHomo(this Pawn pawn) => pawn.GetOrientation() == Orientation.Homo;
 
         /// <summary>
         /// Checks if a marriage between <paramref name="first"/> and <paramref name="second"/> is allowed by orientation, settings, and sex repulsion rules for both pawns
@@ -139,10 +124,7 @@ namespace BetterRomance
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static bool CouldWeBeLovers(this Pawn first, Pawn second)
-        {
-            return RelationsUtility.AttractedToGender(first, second.gender) && RelationsUtility.AttractedToGender(second, first.gender);
-        }
+        public static bool CouldWeBeLovers(this Pawn first, Pawn second) => RelationsUtility.AttractedToGender(first, second.gender) && RelationsUtility.AttractedToGender(second, first.gender);
 
         /// <summary>
         /// If <paramref name="pawn"/>'s asexual rating is low enough to refuse all sex. If <paramref name="other"/> is provided, they must also be asexual for result to be false.
@@ -150,10 +132,7 @@ namespace BetterRomance
         /// <param name="pawn"></param>
         /// <param name="other"></param>
         /// <returns></returns>
-        public static bool SexRepulsed(this Pawn pawn, Pawn other = null)
-        {
-            return pawn.IsAsexual() && pawn.AsexualRating() < 0.2f && (other == null || !other.IsAsexual());
-        }
+        public static bool SexRepulsed(this Pawn pawn, Pawn other = null) => pawn.IsAsexual() && pawn.AsexualRating() < 0.2f && (other == null || !other.IsAsexual());
 
         /// <summary>
         /// If <paramref name="pawn"/>'s asexual rating is low enough to only accept sex from existing partners. If <paramref name="other"/> is provided, checks whether they are in a relationship.
@@ -161,10 +140,7 @@ namespace BetterRomance
         /// <param name="pawn"></param>
         /// <param name="other"></param>
         /// <returns></returns>
-        public static bool SexAverse(this Pawn pawn, Pawn other = null)
-        {
-            return pawn.IsAsexual() && pawn.AsexualRating() < 0.5f && (other == null || !LovePartnerRelationUtility.LovePartnerRelationExists(pawn, other));
-        }
+        public static bool SexAverse(this Pawn pawn, Pawn other = null) => pawn.IsAsexual() && pawn.AsexualRating() < 0.5f && (other == null || !LovePartnerRelationUtility.LovePartnerRelationExists(pawn, other));
     }
 
     public enum Orientation

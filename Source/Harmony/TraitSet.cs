@@ -27,7 +27,7 @@ namespace BetterRomance.HarmonyPatches
             }
             return true;
         }
-        
+
         public static void Postfix(ref Trait __state, Pawn ___pawn)
         {
             if (__state != null)

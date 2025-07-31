@@ -9,7 +9,7 @@ namespace BetterRomance
 
         public CompSettingsOrientation Copy()
         {
-            return new CompSettingsOrientation
+            return new()
             {
                 sexual = sexual?.Copy,
                 asexual = asexual?.Copy,
@@ -57,12 +57,12 @@ namespace BetterRomance
             }
             if (bi.IsUnset())
             {
-                list += asexual ? " aceBiChance" : " bisexualChance"; ;
+                list += asexual ? " aceBiChance" : " bisexualChance";
                 result = true;
             }
             if (none.IsUnset())
             {
-                list += asexual ? " aceAroChance" : " asexualChance"; ;
+                list += asexual ? " aceAroChance" : " asexualChance";
                 result = true;
             }
             return result;
@@ -92,12 +92,12 @@ namespace BetterRomance
 
         public CompSettingsCasualSexPawn CopyToPawn()
         {
-            return new CompSettingsCasualSexPawn
+            return new()
             {
                 hookupRate = hookupRate,
                 alienLoveChance = alienLoveChance,
                 minOpinionForHookup = minOpinionForHookup,
-                minOpinionForOrderedHookup = minOpinionForOrderedHookup
+                minOpinionForOrderedHookup = minOpinionForOrderedHookup,
             };
         }
     }
@@ -128,7 +128,7 @@ namespace BetterRomance
 
         public CompSettingsRegularSex Default()
         {
-            return new CompSettingsRegularSex
+            return new()
             {
                 minAgeForSex = 16f,
                 maxAgeForSex = 80f,
@@ -139,19 +139,10 @@ namespace BetterRomance
 
         public override bool Equals(object obj) => obj is CompSettingsRegularSex sex && minAgeForSex == sex.minAgeForSex && maxAgeForSex == sex.maxAgeForSex && maxAgeGap == sex.maxAgeGap && declineAtAge == sex.declineAtAge;
 
-        public bool IsEmpty()
-        {
-            return minAgeForSex.IsUnset() && maxAgeForSex.IsUnset() && maxAgeGap.IsUnset() && declineAtAge.IsUnset();
-        }
+        public bool IsEmpty() => minAgeForSex.IsUnset() && maxAgeForSex.IsUnset() && maxAgeGap.IsUnset() && declineAtAge.IsUnset();
 
-        public static bool operator ==(CompSettingsRegularSex left, CompSettingsRegularSex right)
-        {
-            return left.minAgeForSex == right.minAgeForSex && left.maxAgeForSex == right.maxAgeForSex && left.maxAgeGap == right.maxAgeGap && left.declineAtAge == right.declineAtAge;
-        }
-        public static bool operator !=(CompSettingsRegularSex left, CompSettingsRegularSex right)
-        {
-            return left.minAgeForSex != right.minAgeForSex || left.maxAgeForSex != right.maxAgeForSex || left.maxAgeGap != right.maxAgeGap || left.declineAtAge != right.declineAtAge;
-        }
+        public static bool operator ==(CompSettingsRegularSex left, CompSettingsRegularSex right) => left.minAgeForSex == right.minAgeForSex && left.maxAgeForSex == right.maxAgeForSex && left.maxAgeGap == right.maxAgeGap && left.declineAtAge == right.declineAtAge;
+        public static bool operator !=(CompSettingsRegularSex left, CompSettingsRegularSex right) => left.minAgeForSex != right.minAgeForSex || left.maxAgeForSex != right.maxAgeForSex || left.maxAgeGap != right.maxAgeGap || left.declineAtAge != right.declineAtAge;
     }
 
     public class CompSettingsRelationsRace
@@ -176,7 +167,7 @@ namespace BetterRomance
 
         public CompSettingsRelationsPawn CopyToPawn()
         {
-            return new CompSettingsRelationsPawn
+            return new()
             {
                 pawnKindForParentGlobal = pawnKindForParentGlobal,
                 pawnKindForParentFemale = pawnKindForParentFemale,

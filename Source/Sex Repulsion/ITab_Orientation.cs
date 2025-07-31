@@ -77,12 +77,9 @@ namespace BetterRomance
 
         public ITab_Orientation()
         {
-            size = new Vector2(400f, 300f);
+            size = new(400f, 300f);
         }
 
-        public bool CanShowSexualityTab()
-        {
-            return SelPawn.IsHumanlike();
-        }
+        public bool CanShowSexualityTab() => SelPawn.IsHumanlike();
     }
 }

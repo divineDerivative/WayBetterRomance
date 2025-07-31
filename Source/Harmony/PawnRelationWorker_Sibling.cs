@@ -67,7 +67,7 @@ namespace BetterRomance.HarmonyPatches
             }
 
             bool spouseFound = false;
-            foreach (CodeInstruction code in codes.GetAppropriateParentRelationshipTranspiler(new CodeInstruction(OpCodes.Ldloc_S, fatherIndex), new CodeInstruction(OpCodes.Ldloc_S, motherIndex)))
+            foreach (CodeInstruction code in codes.GetAppropriateParentRelationshipTranspiler(new(OpCodes.Ldloc_S, fatherIndex), new(OpCodes.Ldloc_S, motherIndex)))
             {
                 yield return code;
 
@@ -80,12 +80,12 @@ namespace BetterRomance.HarmonyPatches
                 if (spouseFound && code.Calls(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.AddDirectRelation)))
                 {
                     // if (father.relations.DirectRelationExists(PawnRelationDefOf.Spouse, mother))
-                    yield return new CodeInstruction(OpCodes.Ldloc_S, fatherIndex);
+                    yield return new(OpCodes.Ldloc_S, fatherIndex);
                     yield return CodeInstruction.LoadField(typeof(Pawn), nameof(Pawn.relations));
                     yield return InfoHelper.DefOfSpouse.LoadField();
-                    yield return new CodeInstruction(OpCodes.Ldloc, motherIndex);
+                    yield return new(OpCodes.Ldloc, motherIndex);
                     yield return CodeInstruction.Call(typeof(Pawn_RelationsTracker), nameof(Pawn_RelationsTracker.DirectRelationExists));
-                    yield return new CodeInstruction(OpCodes.Brfalse_S, (Label)endLabel);
+                    yield return new(OpCodes.Brfalse_S, (Label)endLabel);
                     spouseFound = false;
                 }
             }
@@ -103,7 +103,7 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.LoadsField(AccessTools.Field(typeof(Pawn), nameof(Pawn.kindDef))))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return new(OpCodes.Ldarg_2);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.ParentPawnkind));
                 }
                 else
@@ -125,24 +125,24 @@ namespace BetterRomance.HarmonyPatches
                 if (code.Is(OpCodes.Ldc_R4, 40f))
                 {
                     //Mathf.Min(generated.MaxAgeForSex(), other.MaxAgeForSex()) / 2f
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return new(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
-                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return new(OpCodes.Ldarg_2);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
                     yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), [typeof(float), typeof(float)]);
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 2f);
-                    yield return new CodeInstruction(OpCodes.Div);
+                    yield return new(OpCodes.Ldc_R4, 2f);
+                    yield return new(OpCodes.Div);
                 }
                 else if (code.Is(OpCodes.Ldc_R4, 10f))
                 {
                     //Mathf.Min(generated.MaxAgeForSex(), other.MaxAgeForSex()) / 8f
-                    yield return new CodeInstruction(OpCodes.Ldarg_1);
+                    yield return new(OpCodes.Ldarg_1);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
-                    yield return new CodeInstruction(OpCodes.Ldarg_2);
+                    yield return new(OpCodes.Ldarg_2);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeForSex));
                     yield return CodeInstruction.Call(typeof(Mathf), nameof(Mathf.Min), [typeof(float), typeof(float)]);
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 8f);
-                    yield return new CodeInstruction(OpCodes.Div);
+                    yield return new(OpCodes.Ldc_R4, 8f);
+                    yield return new(OpCodes.Div);
                 }
                 else
                 {

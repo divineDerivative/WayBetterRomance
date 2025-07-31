@@ -43,15 +43,12 @@ namespace BetterRomance
             return !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
 #elif v1_5
             return pawn.IsMutant || !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
-            #else
+#else
             return pawn.IsSubhuman || !PawnCapacityUtility.BodyCanEverDoCapacity(pawn.RaceProps.body, RimWorld.PawnCapacityDefOf.Talking);
 #endif
         }
 
-        public static bool CanInitiateRomance(this Pawn pawn)
-        {
-            return !pawn.DroneCheck(true) && pawn.needs.mood != null;
-        }
+        public static bool CanInitiateRomance(this Pawn pawn) => !pawn.DroneCheck(true) && pawn.needs.mood != null;
 
         public static bool HasNoGrowth(this Pawn pawn)
         {

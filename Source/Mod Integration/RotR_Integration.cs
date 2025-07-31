@@ -53,10 +53,7 @@ namespace BetterRomance
             return result;
         }
 
-        private static string PreceptExplanation(PreceptDef preceptDef, float value)
-        {
-            return (string)HelperClasses.RotRPreceptExplanation.Invoke(null, [preceptDef, value]);
-        }
+        private static string PreceptExplanation(PreceptDef preceptDef, float value) => (string)HelperClasses.RotRPreceptExplanation.Invoke(null, [preceptDef, value]);
 
         internal static void DiscardPawn(Pawn pawn)
         {
@@ -207,10 +204,7 @@ namespace BetterRomance
             }
 
             //Use age settings
-            public static IEnumerable<CodeInstruction> QuestNode_Root_CrushTranspiler(IEnumerable<CodeInstruction> instructions)
-            {
-                return instructions.MinAgeForSexTranspiler(OpCodes.Ldloc_2);
-            }
+            public static IEnumerable<CodeInstruction> QuestNode_Root_CrushTranspiler(IEnumerable<CodeInstruction> instructions) => instructions.MinAgeForSexTranspiler(OpCodes.Ldloc_2);
             public static IEnumerable<CodeInstruction> QuestNode_Root_Crush_GetSinglePawnsTranspiler(IEnumerable<CodeInstruction> instructions)
             {
                 foreach (CodeInstruction code in instructions)
@@ -221,7 +215,7 @@ namespace BetterRomance
                     }
                     else if (code.opcode == OpCodes.Ldarg_0)
                     {
-                        yield return new CodeInstruction(OpCodes.Ldloc_2);
+                        yield return new(OpCodes.Ldloc_2);
                     }
                     else
                     {
@@ -274,12 +268,12 @@ namespace BetterRomance
                     if (code.opcode == OpCodes.Ldloc_0)
                     {
                         yield return CodeInstruction.StoreField(typeof(RotRPatches), nameof(SuitorRequest));
-                        yield return new CodeInstruction(OpCodes.Ldloc_0);
+                        yield return new(OpCodes.Ldloc_0);
                     }
                 }
             }
 
-            static Type AddRejectAndAcceptButtonsCompilerType;
+            private static Type AddRejectAndAcceptButtonsCompilerType;
 
             //The original assumes that SecondaryLovinChanceFactor will be 0 for an orientation mismatch
             //Since I make it non-zero, need to do a different check
@@ -302,7 +296,7 @@ namespace BetterRomance
                         yield return new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(code);
                         yield return thisField.LoadField();
                         yield return CodeInstruction.LoadField(thisField.FieldType, "suitor");
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return new(OpCodes.Ldarg_0);
                         yield return thisField.LoadField();
                         yield return CodeInstruction.LoadField(thisField.FieldType, "betrothed");
                         yield return CodeInstruction.Call(typeof(RotRPatches), nameof(MarriageDialogHelper));
@@ -311,15 +305,9 @@ namespace BetterRomance
                 }
             }
 
-            private static bool MarriageDialogHelper(bool result, Pawn suitor, Pawn betrothed)
-            {
-                return result && suitor.CouldWeBeMarried(betrothed);
-            }
+            private static bool MarriageDialogHelper(bool result, Pawn suitor, Pawn betrothed) => result && suitor.CouldWeBeMarried(betrothed);
 
-            public static void AcceptButtonActivePostfix(Pawn ___suitor, Pawn ___betrothed, ref bool __result)
-            {
-                __result = __result && ___suitor.CouldWeBeMarried(___betrothed);
-            }
+            public static void AcceptButtonActivePostfix(Pawn ___suitor, Pawn ___betrothed, ref bool __result) => __result = __result && ___suitor.CouldWeBeMarried(___betrothed);
 
             //Check custom love relations
             //Hasn't really been tested

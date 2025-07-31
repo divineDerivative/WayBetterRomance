@@ -30,7 +30,7 @@ namespace BetterRomance.HarmonyPatches
                 if (code.opcode == OpCodes.Ldloc_3)
                 {
                     //This just replaces num4 with 1f at the end, negating the gay reduction
-                    yield return new CodeInstruction(OpCodes.Ldc_R4, 1f);
+                    yield return new(OpCodes.Ldc_R4, 1f);
                 }
                 else
                 {
@@ -58,7 +58,7 @@ namespace BetterRomance.HarmonyPatches
                     }
                     else
                     {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
+                        yield return new(OpCodes.Ldarg_0);
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxChildren));
                     }
                 }

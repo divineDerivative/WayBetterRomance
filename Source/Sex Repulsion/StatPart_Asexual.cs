@@ -5,10 +5,7 @@ namespace BetterRomance
 {
     public class StatPart_Asexual : StatPart
     {
-        private bool ActiveFor(Pawn pawn)
-        {
-            return pawn.IsAsexual();
-        }
+        private bool ActiveFor(Pawn pawn) => pawn.IsAsexual();
 
         public override void TransformValue(StatRequest req, ref float val)
         {
@@ -18,9 +15,6 @@ namespace BetterRomance
             }
         }
 
-        public override string ExplanationPart(StatRequest req)
-        {
-            return null;
-        }
+        public override string ExplanationPart(StatRequest req) => null;
     }
 }

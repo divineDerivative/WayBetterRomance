@@ -37,7 +37,7 @@ namespace BetterRomance.HarmonyPatches
                 }
                 if (foundGender && code.IsStloc())
                 {
-                    yield return new CodeInstruction(OpCodes.Pop);
+                    yield return new(OpCodes.Pop);
                     foundGender = false;
                 }
                 else
@@ -155,7 +155,7 @@ namespace BetterRomance.HarmonyPatches
                         }
                     }
                     letterText = stringBuilder.ToString().TrimEndNewlines();
-                    lookTargets = new LookTargets(initiator, recipient);
+                    lookTargets = new(initiator, recipient);
                 }
                 return false;
             }

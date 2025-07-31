@@ -21,20 +21,11 @@ namespace BetterRomance
         private string ActorName => Actor.Name.ToStringShort;
         private string TargetName => TargetPawn.Name.ToStringShort;
 
-        public override bool TryMakePreToilReservations(bool errorOnFailed)
-        {
-            return true;
-        }
+        public override bool TryMakePreToilReservations(bool errorOnFailed) => true;
 
-        private bool DoesTargetPawnAcceptAdvance(out string rejectReason)
-        {
-            return TargetPawn.IsFree(Ordered ? RomanticActivityType.OrderedHookup : RomanticActivityType.CasualHookup, out rejectReason) && HookupUtility.WillPawnTryHookup(TargetPawn, false, Ordered) && Rand.Range(0.05f, 1f) < HookupUtility.HookupSuccessChance(TargetPawn, Actor, Ordered);
-        }
+        private bool DoesTargetPawnAcceptAdvance(out string rejectReason) => TargetPawn.IsFree(Ordered ? RomanticActivityType.OrderedHookup : RomanticActivityType.CasualHookup, out rejectReason) && HookupUtility.WillPawnTryHookup(TargetPawn, false, Ordered) && Rand.Range(0.05f, 1f) < HookupUtility.HookupSuccessChance(TargetPawn, Actor, Ordered);
 
-        private bool IsTargetPawnOkay()
-        {
-            return !TargetPawn.Dead && !TargetPawn.Downed;
-        }
+        private bool IsTargetPawnOkay() => !TargetPawn.Dead && !TargetPawn.Downed;
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
@@ -76,7 +67,7 @@ namespace BetterRomance
                         TargetPawn.jobs.SuspendCurrentJob(JobCondition.InterruptForced);
                         if (!pawn.interactions.CanInteractNowWith(TargetPawn, RomanceDefOf.TriedHookupWith))
                         {
-                            Messages.Message("HookupFailedUnexpected".Translate(pawn, TargetPawn), MessageTypeDefOf.NegativeEvent, historical: false);
+                            Messages.Message("HookupFailedUnexpected".Translate(pawn, TargetPawn), MessageTypeDefOf.NegativeEvent, false);
                         }
                     }
                 });
@@ -113,13 +104,13 @@ namespace BetterRomance
                 {
                     //Make hearts and add correct string to the log
                     FleckMaker.ThrowMetaIcon(TargetPawn.Position, TargetPawn.Map, FleckDefOf.Heart);
-                    Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.InitiatedLovin, pawn.Named(HistoryEventArgsNames.Doer)));
+                    Find.HistoryEventsManager.RecordEvent(new(HistoryEventDefOf.InitiatedLovin, pawn.Named(HistoryEventArgsNames.Doer)));
                     list.Add(RomanceDefOf.HookupSucceeded);
                     LogUtil.Message($"{TargetName} agreed to hook up with {ActorName}", true);
                     //Send message if job was ordered
                     if (Ordered)
                     {
-                        Messages.Message("WBR.TryHookupSuccessMessage".Translate(Actor, TargetPawn), Actor, MessageTypeDefOf.NegativeEvent, historical: false);
+                        Messages.Message("WBR.TryHookupSuccessMessage".Translate(Actor, TargetPawn), Actor, MessageTypeDefOf.NegativeEvent, false);
                     }
                 }
                 else
@@ -141,11 +132,11 @@ namespace BetterRomance
                     {
                         if (rejectReason == PawnAvailabilityExtensions.AvailabilityReasons[PawnAvailability.Free])
                         {
-                            Messages.Message("WBR.TryHookupRejectedMessage".Translate(Actor, TargetPawn), Actor, MessageTypeDefOf.NegativeEvent, historical: false);
+                            Messages.Message("WBR.TryHookupRejectedMessage".Translate(Actor, TargetPawn), Actor, MessageTypeDefOf.NegativeEvent, false);
                         }
                         else
                         {
-                            Messages.Message("WBR.HookupTargetNotFreeReason".Translate() + rejectReason, Actor, MessageTypeDefOf.NegativeEvent, historical: false);
+                            Messages.Message("WBR.HookupTargetNotFreeReason".Translate() + rejectReason, Actor, MessageTypeDefOf.NegativeEvent, false);
                         }
                     }
                 }

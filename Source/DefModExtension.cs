@@ -25,7 +25,7 @@ namespace BetterRomance
             //Convert old values to the new form
             if (sexual == null && (!asexualChance.IsUnset() || !bisexualChance.IsUnset() || !gayChance.IsUnset() || !straightChance.IsUnset()))
             {
-                sexual = new OrientationChances
+                sexual = new()
                 {
                     none = asexualChance,
                     bi = bisexualChance,
@@ -35,7 +35,7 @@ namespace BetterRomance
             }
             if (asexual == null && (!aceAroChance.IsUnset() || !aceBiChance.IsUnset() || !aceHomoChance.IsUnset() || !aceHeteroChance.IsUnset()))
             {
-                asexual = new OrientationChances
+                asexual = new()
                 {
                     none = aceAroChance,
                     bi = aceBiChance,
@@ -98,12 +98,12 @@ namespace BetterRomance
                 hookupTriggers.forBreedingOnly = false;
                 yield return "forBreedingOnly is for ordered hookups only. Setting to false.";
             }
-            if (hookupTriggers?.minOpinion is < (-100) or > 100)
+            if (hookupTriggers?.minOpinion is < -100 or > 100)
             {
                 yield return "minOpinion for hookups must be between -100 and 100";
                 hookupTriggers.minOpinion = Mathf.Clamp((int)hookupTriggers.minOpinion, -100, 100);
             }
-            if (orderedHookupTriggers?.minOpinion is < (-100) or > 100)
+            if (orderedHookupTriggers?.minOpinion is < -100 or > 100)
             {
                 yield return "minOpinion for ordered hookups must be between -100 and 100";
                 orderedHookupTriggers.minOpinion = Mathf.Clamp((int)orderedHookupTriggers.minOpinion, -100, 100);
@@ -112,7 +112,7 @@ namespace BetterRomance
 
         public CompSettingsCasualSexRace CopyToRace()
         {
-            return new CompSettingsCasualSexRace
+            return new()
             {
                 caresAboutCheating = caresAboutCheating,
                 willDoHookup = willDoHookup,
@@ -191,7 +191,7 @@ namespace BetterRomance
 
         public CompSettingsRegularSex Copy()
         {
-            return new CompSettingsRegularSex
+            return new()
             {
                 minAgeForSex = minAgeForSex,
                 maxAgeForSex = maxAgeForSex,
@@ -295,7 +295,7 @@ namespace BetterRomance
 
         public CompSettingsRelationsRace CopyToRace()
         {
-            return new CompSettingsRelationsRace
+            return new()
             {
                 spousesAllowed = spousesAllowed,
                 childrenAllowed = childrenAllowed,
@@ -330,7 +330,7 @@ namespace BetterRomance
 
         public CompSettingsBiotech CopyToRace()
         {
-            return new CompSettingsBiotech
+            return new()
             {
                 maleFertilityAgeFactor = maleFertilityAgeFactor,
                 femaleFertilityAgeFactor = femaleFertilityAgeFactor,

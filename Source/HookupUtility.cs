@@ -29,7 +29,7 @@ namespace BetterRomance
                 return false;
             }
             //Check eligibility
-            AcceptanceReport acceptanceReport = HookupEligiblePair(initiator, hookupTarget, forOpinionExplanation: false);
+            AcceptanceReport acceptanceReport = HookupEligiblePair(initiator, hookupTarget, false);
             //If rejected but no reason was given, no option is created
             if (!acceptanceReport.Accepted && acceptanceReport.Reason.NullOrEmpty())
             {
@@ -42,15 +42,12 @@ namespace BetterRomance
             {
                 chance = HookupSuccessChance(hookupTarget, initiator, true);
                 string label = string.Format("{0} ({1} {2})", hookupTarget.LabelShort, chance.ToStringPercent(), "chance".Translate());
-                option = new FloatMenuOption(label, delegate
-                {
-                    GiveHookupJobWithWarning(initiator, hookupTarget);
-                }, MenuOptionPriority.Low);
+                option = new(label, delegate { GiveHookupJobWithWarning(initiator, hookupTarget); }, MenuOptionPriority.Low);
                 return true;
             }
             //If rejected, create disabled option with rejection reason listed
             chance = 0f;
-            option = new FloatMenuOption(hookupTarget.LabelShort + " (" + acceptanceReport.Reason + ")", null);
+            option = new(hookupTarget.LabelShort + " (" + acceptanceReport.Reason + ")", null);
             return false;
         }
 
@@ -79,8 +76,8 @@ namespace BetterRomance
             //Check if pawns are in a relationship with each other
             DirectPawnRelation existingRelation = LovePartnerRelationUtility.ExistingLoveRealtionshipBetween(romancer, romanceTarget, false);
             if (existingRelation == null)
-            //Create string for warning if either pawn is in a relationship
             {
+                //Create string for warning if either pawn is in a relationship
                 text = GetRelationshipWarning(romancer) + GetRelationshipWarning(romanceTarget);
             }
             //If neither is in a relationship or they're in a relationship with each other, give the job
@@ -91,10 +88,7 @@ namespace BetterRomance
             //Otherwise, create warning message and allow player to decide whether to continue
             else
             {
-                Dialog_MessageBox window = Dialog_MessageBox.CreateConfirmation("WBR.HookupExistingRelationshipWarning".Translate(romancer.Named("INITIATOR"), romanceTarget.Named("TARGET")) + "\n\n" + text + "\n" + "StillWishContinue".Translate(), delegate
-                {
-                    GiveHookupJob(romancer, romanceTarget, bed);
-                }, destructive: true);
+                Dialog_MessageBox window = Dialog_MessageBox.CreateConfirmation("WBR.HookupExistingRelationshipWarning".Translate(romancer.Named("INITIATOR"), romanceTarget.Named("TARGET")) + "\n\n" + text + "\n" + "StillWishContinue".Translate(), delegate { GiveHookupJob(romancer, romanceTarget, bed); }, true);
                 Find.WindowStack.Add(window);
             }
         }
@@ -130,7 +124,7 @@ namespace BetterRomance
             {
                 return "";
             }
-            return count <= 1 ? (" - " + "WBR.HookupWarningMonogamous".Translate(pawn) + "\n") : (" - " + "WBR.HookupWarningPolygamous".Translate(pawn, count) + "\n");
+            return count <= 1 ? " - " + "WBR.HookupWarningMonogamous".Translate(pawn) + "\n" : " - " + "WBR.HookupWarningPolygamous".Translate(pawn, count) + "\n";
         }
 
         /// <summary>
@@ -147,7 +141,7 @@ namespace BetterRomance
                 return false;
             }
             //Don't allow if initiator can't do hookups at all
-            if (!HookupEligible(initiator, initiator: true))
+            if (!HookupEligible(initiator, true))
             {
                 return false;
             }
@@ -188,7 +182,7 @@ namespace BetterRomance
                 return "WBR.CantHookupTargetPregnancy".Translate();
             }
             //Next check if target is eligible for hookups
-            AcceptanceReport acceptanceReport = HookupEligible(target, initiator: false);
+            AcceptanceReport acceptanceReport = HookupEligible(target, false);
             if (!acceptanceReport)
             {
                 return acceptanceReport;
@@ -277,7 +271,7 @@ namespace BetterRomance
             //Otherwise, look through all beds to see if one is usable
             //Make a list of all beds that meet basic requirements
             List<Building_Bed> bedList = (from b in first.Map.listerBuildings.AllBuildingsColonistOfClass<Building_Bed>()
-                                              //Has no owners, is for humans, has at least two sleeping spots
+                                          //Has no owners, is for humans, has at least two sleeping spots
                                           where !b.OwnersForReading.Any() && b.def.building.bed_humanlike && b.SleepingSlotsCount > 1
                                           //So they'll pick nice beds if available
                                           orderby b.GetStatValue(StatDefOf.BedRestEffectiveness) descending
@@ -314,20 +308,14 @@ namespace BetterRomance
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        private static bool CanBothUse(Building_Bed bed, Pawn first, Pawn second)
-        {
-            return RestUtility.CanUseBedEver(first, bed.def) && RestUtility.CanUseBedEver(second, bed.def);
-        }
+        private static bool CanBothUse(Building_Bed bed, Pawn first, Pawn second) => RestUtility.CanUseBedEver(first, bed.def) && RestUtility.CanUseBedEver(second, bed.def);
 
         /// <summary>
         /// Determines if the "Hook Up" button should be drawn on <paramref name="pawn"/>'s social card
         /// </summary>
         /// <param name="pawn"></param>
         /// <returns></returns>
-        public static bool CanDrawTryHookup(Pawn pawn)
-        {
-            return pawn.ageTracker.AgeBiologicalYearsFloat >= pawn.MinAgeForSex() && pawn.Spawned && pawn.IsFreeColonist && !pawn.DroneCheck();
-        }
+        public static bool CanDrawTryHookup(Pawn pawn) => pawn.ageTracker.AgeBiologicalYearsFloat >= pawn.MinAgeForSex() && pawn.Spawned && pawn.IsFreeColonist && !pawn.DroneCheck();
 
         /// <summary>
         /// Determines if <paramref name="target"/> agrees to a hookup with <paramref name="asker"/>. Takes cheating into account.
@@ -563,10 +551,7 @@ namespace BetterRomance
         /// <param name="label"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static string HookupFactorLine(string label, float value)
-        {
-            return " - " + label + ": x" + value.ToStringPercent();
-        }
+        private static string HookupFactorLine(string label, float value) => " - " + label + ": x" + value.ToStringPercent();
 
         /// <summary>
         /// Is pregnancy possible between <paramref name="first"/> and <paramref name="second"/>. To be used only if both Biotech and HAR are not active.
@@ -590,8 +575,8 @@ namespace BetterRomance
             }
             //At this point they have to be different genders.
             //This will get messed up if either pawn has Gender.None, but that should only happen with HAR, in which case this method won't be called
-            Pawn man = (first.gender == Gender.Male) ? first : second;
-            Pawn woman = (first.gender == Gender.Female) ? first : second;
+            Pawn man = first.gender == Gender.Male ? first : second;
+            Pawn woman = first.gender == Gender.Female ? first : second;
             //Check if life stage is reproductive
             bool manYoung = !man.ageTracker.CurLifeStage.reproductive;
             bool womanYoung = !woman.ageTracker.CurLifeStage.reproductive;

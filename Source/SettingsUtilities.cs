@@ -154,7 +154,7 @@ namespace BetterRomance
                     {
                         if (trait.degreeDatas.Count == 1)
                         {
-                            traitDict[thing].Add(new TraitRequirement()
+                            traitDict[thing].Add(new()
                             {
                                 def = trait,
                                 degree = 0,
@@ -164,7 +164,7 @@ namespace BetterRomance
                         {
                             foreach (TraitDegreeData data in trait.degreeDatas)
                             {
-                                traitDict[thing].Add(new TraitRequirement()
+                                traitDict[thing].Add(new()
                                 {
                                     def = trait,
                                     degree = data.degree,
@@ -176,7 +176,7 @@ namespace BetterRomance
                     {
                         foreach (int i in degrees)
                         {
-                            traitDict[thing].Add(new TraitRequirement()
+                            traitDict[thing].Add(new()
                             {
                                 def = trait,
                                 degree = i,
@@ -349,7 +349,7 @@ namespace BetterRomance
                     throw new ArgumentException("Invalid gender provided for finding parent pawnkind");
                 }
             }
-            throw new Exception("No parent pawnkind set for " + pawn.kindDef.defName + " or " + pawn.def.defName);
+            throw new("No parent pawnkind set for " + pawn.kindDef.defName + " or " + pawn.def.defName);
         }
 
         public static float MinAgeToHaveChildren(this Pawn pawn, Gender gender = Gender.None)
@@ -610,13 +610,13 @@ namespace BetterRomance
                 float declineAge = pawn.ageTracker.AgeBiologicalYearsFloat + 1f;
                 List<CurvePoint> points =
                 [
-                    new CurvePoint(minAge, 1.5f),
-                    new CurvePoint((declineAge / 5) + minAge, 1.5f),
-                    new CurvePoint(declineAge, 4f),
-                    new CurvePoint((maxAge / 4) + declineAge, 12f),
-                    new CurvePoint(maxAge, 36f)
+                    new(minAge, 1.5f),
+                    new((declineAge / 5) + minAge, 1.5f),
+                    new(declineAge, 4f),
+                    new((maxAge / 4) + declineAge, 12f),
+                    new(maxAge, 36f),
                 ];
-                return new SimpleCurve(points);
+                return new(points);
             }
             CompSettingsMisc settings = GetMiscSettings(pawn);
             return settings.lovinCurve;
@@ -668,13 +668,13 @@ namespace BetterRomance
             {
                 return
                 [
-                    new CurvePoint(1f, 1f)
+                    new CurvePoint(1f, 1f),
                 ];
             }
             SimpleCurve newCurve = new();
             foreach (CurvePoint point in oldCurve.Points)
             {
-                newCurve.Points.Add(new CurvePoint(ConvertAge(point.x, pawn), point.y));
+                newCurve.Points.Add(new(ConvertAge(point.x, pawn), point.y));
             }
             return newCurve;
         }

@@ -49,7 +49,7 @@ namespace BetterRomance.HarmonyPatches
                 recipient.needs.mood?.thoughts.memories.TryGainMemory(ThoughtDefOf.BrokeUpWithMe, initiator);
                 if (initiator.ownership.OwnedBed != null && initiator.ownership.OwnedBed == recipient.ownership.OwnedBed)
                 {
-                    ((Rand.Value < 0.5f) ? initiator : recipient).ownership.UnclaimBed();
+                    (Rand.Value < 0.5f ? initiator : recipient).ownership.UnclaimBed();
                 }
                 TaleRecorder.RecordTale(TaleDefOf.Breakup, initiator, recipient);
                 if (PawnUtility.ShouldSendNotificationAbout(initiator) || PawnUtility.ShouldSendNotificationAbout(recipient))
@@ -65,7 +65,7 @@ namespace BetterRomance.HarmonyPatches
                     letterLabel = "LetterLabelBreakup".Translate();
                     letterText = stringBuilder.ToString().TrimEndNewlines();
                     letterDef = LetterDefOf.NegativeEvent;
-                    lookTargets = new LookTargets(initiator, recipient);
+                    lookTargets = new(initiator, recipient);
                 }
                 return false;
             }

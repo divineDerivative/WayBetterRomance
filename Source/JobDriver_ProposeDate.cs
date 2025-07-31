@@ -23,20 +23,11 @@ namespace BetterRomance
         private string ActorName => Actor.Name.ToStringShort;
         private string TargetName => TargetPawn.Name.ToStringShort;
 
-        public override bool TryMakePreToilReservations(bool errorOnFailed)
-        {
-            return pawn.Reserve(TargetPawn, job, errorOnFailed: errorOnFailed);
-        }
+        public override bool TryMakePreToilReservations(bool errorOnFailed) => pawn.Reserve(TargetPawn, job, errorOnFailed: errorOnFailed);
 
-        private bool IsTargetPawnOkay()
-        {
-            return !TargetPawn.Dead && !TargetPawn.Downed;
-        }
+        private bool IsTargetPawnOkay() => !TargetPawn.Dead && !TargetPawn.Downed;
 
-        private bool DoesTargetPawnAcceptDate()
-        {
-            return IsDate ? TargetPawn.IsFree(RomanticActivityType.Date, out _) && DateUtility.IsDateAppealing(TargetPawn, Actor) : TargetPawn.IsFree(RomanticActivityType.Hangout, out _) && DateUtility.IsHangoutAppealing(TargetPawn, Actor);
-        }
+        private bool DoesTargetPawnAcceptDate() => IsDate ? TargetPawn.IsFree(RomanticActivityType.Date, out _) && DateUtility.IsDateAppealing(TargetPawn, Actor) : TargetPawn.IsFree(RomanticActivityType.Hangout, out _) && DateUtility.IsHangoutAppealing(TargetPawn, Actor);
 
         private bool TryGetDateJobs(out Job dateLeadJob, out Job dateFollowJob)
         {
@@ -149,8 +140,7 @@ namespace BetterRomance
                         }
                         //If we have at least four cells already, and the distance between the last cell and the root is less than the distance between the potential next cell and the root, super decrease the score
                         //This might be what makes it start circling around back towards the root
-                        if (cellList.Count >= 4 &&
-                            (currentCell - root).LengthManhattan < (nextCell - root).LengthManhattan)
+                        if (cellList.Count >= 4 && (currentCell - root).LengthManhattan < (nextCell - root).LengthManhattan)
                         {
                             score *= 0.00001f;
                         }
@@ -198,10 +188,7 @@ namespace BetterRomance
         }
 
         [DebugAction(category = "General", actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.PlayingOnMap, hideInSubMenu = true)]
-        private static void FlashDatePath()
-        {
-            DebugFlashDatePath(UI.MouseCell());
-        }
+        private static void FlashDatePath() => DebugFlashDatePath(UI.MouseCell());
 
         //No idea how this works either
         private bool TryFindMostBeautifulRootInDistance(int distance, Pawn p1, Pawn p2, out IntVec3 best)

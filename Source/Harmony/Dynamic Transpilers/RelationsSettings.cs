@@ -23,38 +23,38 @@ namespace BetterRomance.HarmonyPatches
                 {
                     //Male
                     yield return new CodeInstruction(maleCode).MoveLabelsFrom(code);
-                    yield return new CodeInstruction(careAboutGender ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
+                    yield return new(careAboutGender ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
                 }
                 else if (code.LoadsConstant(50f))
                 {
                     yield return new CodeInstruction(maleCode).MoveLabelsFrom(code);
-                    yield return new CodeInstruction(careAboutGender ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
+                    yield return new(careAboutGender ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren));
                 }
                 else if (code.LoadsConstant(30f))
                 {
                     yield return new CodeInstruction(maleCode).MoveLabelsFrom(code);
-                    yield return new CodeInstruction(careAboutGender ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
+                    yield return new(careAboutGender ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren));
                 }
                 else if (code.LoadsConstant(16f))
                 {
                     //Female
                     yield return new CodeInstruction(femaleCode).MoveLabelsFrom(code);
-                    yield return new CodeInstruction(careAboutGender ? OpCodes.Ldc_I4_2 : OpCodes.Ldc_I4_0);
+                    yield return new(careAboutGender ? OpCodes.Ldc_I4_2 : OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
                 }
                 else if (code.LoadsConstant(45f))
                 {
                     yield return new CodeInstruction(femaleCode).MoveLabelsFrom(code);
-                    yield return new CodeInstruction(careAboutGender ? OpCodes.Ldc_I4_2 : OpCodes.Ldc_I4_0);
+                    yield return new(careAboutGender ? OpCodes.Ldc_I4_2 : OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MaxAgeToHaveChildren));
                 }
                 else if (code.LoadsConstant(27f))
                 {
                     yield return new CodeInstruction(femaleCode).MoveLabelsFrom(code);
-                    yield return new CodeInstruction(careAboutGender ? OpCodes.Ldc_I4_2 : OpCodes.Ldc_I4_0);
+                    yield return new(careAboutGender ? OpCodes.Ldc_I4_2 : OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.UsualAgeToHaveChildren));
                 }
                 else
@@ -79,12 +79,12 @@ namespace BetterRomance.HarmonyPatches
                 {
                     if (recipe)
                     {
-                        yield return new CodeInstruction(OpCodes.Pop);
+                        yield return new(OpCodes.Pop);
                     }
-                    yield return new CodeInstruction(loadPawn);
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return new(loadPawn);
+                    yield return new(OpCodes.Ldc_I4_0);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeToHaveChildren));
-                    yield return new CodeInstruction(OpCodes.Conv_I4);
+                    yield return new(OpCodes.Conv_I4);
                 }
                 else
                 {
@@ -105,11 +105,11 @@ namespace BetterRomance.HarmonyPatches
             {
                 if (code.LoadsConstant(5f) || code.LoadsConstant(5))
                 {
-                    yield return new CodeInstruction(loadPawn);
+                    yield return new(loadPawn);
                     yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinOpinionForRomance));
                     if (code.LoadsConstant(5f))
                     {
-                        yield return new CodeInstruction(OpCodes.Conv_R4);
+                        yield return new(OpCodes.Conv_R4);
                     }
                 }
                 else

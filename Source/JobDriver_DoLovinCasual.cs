@@ -36,15 +36,9 @@ namespace BetterRomance
             return false;
         }
 
-        public override bool TryMakePreToilReservations(bool errorOnFailed)
-        {
-            return pawn.Reserve(Partner, job, errorOnFailed: errorOnFailed) && pawn.Reserve(Bed, job, maxPawns: Bed.SleepingSlotsCount, stackCount: 0, errorOnFailed: errorOnFailed);
-        }
+        public override bool TryMakePreToilReservations(bool errorOnFailed) => pawn.Reserve(Partner, job, errorOnFailed: errorOnFailed) && pawn.Reserve(Bed, job, Bed.SleepingSlotsCount, 0, errorOnFailed: errorOnFailed);
 
-        public override bool CanBeginNowWhileLyingDown()
-        {
-            return JobInBedUtility.InBedOrRestSpotNow(pawn, job.GetTarget(BedInd));
-        }
+        public override bool CanBeginNowWhileLyingDown() => JobInBedUtility.InBedOrRestSpotNow(pawn, job.GetTarget(BedInd));
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
@@ -106,10 +100,7 @@ namespace BetterRomance
             };
             wait.defaultCompleteMode = ToilCompleteMode.Delay;
             wait.AddFailCondition(() => DateUtility.FailureCheck(Partner, RomanceDefOf.DoLovinCasual, ordered));
-            wait.AddFinishAction(() =>
-            {
-                LogUtil.Message($"{ActorName} waited {debugTicksSpentThisToil} ticks", true);
-            });
+            wait.AddFinishAction(() => { LogUtil.Message($"{ActorName} waited {debugTicksSpentThisToil} ticks", true); });
             yield return wait;
 
             //Get in the bed
@@ -123,7 +114,6 @@ namespace BetterRomance
             layDown.tickAction = delegate
             {
 #if !v1_6
-
                 Actor.GainComfortFromCellIfPossible();
 #else
                 Actor.GainComfortFromCellIfPossible(1);
@@ -183,7 +173,6 @@ namespace BetterRomance
                 if (Actor.needs.joy != null)
                 {
 #if !v1_6
-
                     JoyUtility.JoyTickCheckEnd(Actor, JoyTickFullJoyAction.None);
 #else
                     JoyUtility.JoyTickCheckEnd(Actor, 1, JoyTickFullJoyAction.None);
@@ -215,10 +204,10 @@ namespace BetterRomance
                     Actor.needs.mood.thoughts.memories.TryGainMemory(thought_Memory, Partner);
                     HelperClasses.RotRFillRomanceBar?.Invoke(null, [Actor, 0.5f]);
                 }
-                Find.HistoryEventsManager.RecordEvent(new HistoryEvent(HistoryEventDefOf.GotLovin, Actor.Named(HistoryEventArgsNames.Doer)));
+                Find.HistoryEventsManager.RecordEvent(new(HistoryEventDefOf.GotLovin, Actor.Named(HistoryEventArgsNames.Doer)));
                 //Do I need to account for spouse like custom relations?
                 HistoryEventDef def = Actor.relations.DirectRelationExists(PawnRelationDefOf.Spouse, Partner) ? HistoryEventDefOf.GotLovin_Spouse : HistoryEventDefOf.GotLovin_NonSpouse;
-                Find.HistoryEventsManager.RecordEvent(new HistoryEvent(def, Actor.Named(HistoryEventArgsNames.Doer)));
+                Find.HistoryEventsManager.RecordEvent(new(def, Actor.Named(HistoryEventArgsNames.Doer)));
                 //Attempt to have hookups behave more like normal lovin, use the same cooldown period based on age
                 Actor.mindState.canLovinTick = Find.TickManager.TicksGame + GenerateRandomMinTicksToNextLovin(Actor);
                 HelperClasses.CSLLoved?.Invoke(this, [Actor, Partner, false]);
@@ -236,7 +225,7 @@ namespace BetterRomance
                         }
                         else if (PawnUtility.ShouldSendNotificationAbout(male) || PawnUtility.ShouldSendNotificationAbout(female))
                         {
-                            Messages.Message("MessagePregnancyFailed".Translate(male.Named("FATHER"), female.Named("MOTHER")) + ": " + "CombinedGenesExceedMetabolismLimits".Translate(), new LookTargets(male, female), MessageTypeDefOf.NegativeEvent);
+                            Messages.Message("MessagePregnancyFailed".Translate(male.Named("FATHER"), female.Named("MOTHER")) + ": " + "CombinedGenesExceedMetabolismLimits".Translate(), new(male, female), MessageTypeDefOf.NegativeEvent);
                         }
                     }
                     LogUtil.Message($"Pregnancy code run successfully", true);
