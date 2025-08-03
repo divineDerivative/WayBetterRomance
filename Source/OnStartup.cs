@@ -188,7 +188,11 @@ namespace BetterRomance
                 {
                     Settings.RotRActive = true;
                     HelperClasses.RotRFillRomanceBar = AccessTools.DeclaredMethod(Type.GetType("RomanceOnTheRim.RomanceUtility,RomanceOnTheRim"), "TryAffectRomanceNeedLevelForPawn");
+#if !v1_6
                     HelperClasses.RotRPreceptExplanation = AccessTools.Method(Type.GetType("RomanceOnTheRim.HarmonyPatch_SocialCardUtility_RomanceExplanation,RomanceOnTheRim"), "PreceptExplanation");
+#else
+                    HelperClasses.RotRPreceptExplanation = AccessTools.Method(Type.GetType("RomanceOnTheRim.HarmonyPatch_AddExplanationForPrecepts,RomanceOnTheRim"), "PreceptExplanation");
+#endif
                     harmony.PatchRotR();
                 }
                 catch (Exception ex)
