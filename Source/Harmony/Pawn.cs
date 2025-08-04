@@ -69,7 +69,7 @@ namespace BetterRomance.HarmonyPatches
                             foreach (Thought_Memory memory in memories)
                             {
                                 __instance.needs.mood.thoughts.memories.RemoveMemory(memory);
-                                memory.otherPawn.needs.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(memory.def, __instance);
+                                memory.otherPawn.needs?.mood.thoughts.memories.RemoveMemoriesOfDefWhereOtherPawnIs(memory.def, __instance);
                             }
                         },
                     };

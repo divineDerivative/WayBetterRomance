@@ -193,10 +193,10 @@ namespace BetterRomance.HarmonyPatches
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) => instructions.MinOpinionRomanceTranspiler(OpCodes.Ldarg_1);
 
-        //Compatibility with mods that remove mood need
-        public static bool Prefix(Pawn initiator, Pawn recipient, ref float __result)
+        //Skip dead people and those with no mood need
+        public static bool Prefix(Pawn recipient, ref float __result)
         {
-            if (recipient.needs.mood is null)
+            if (recipient.needs?.mood is null)
             {
                 __result = 0f;
                 return false;
