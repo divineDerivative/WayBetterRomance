@@ -102,6 +102,18 @@ namespace BetterRomance.HarmonyPatches
     public static class Pawn_RelationsTracker_CompatibilityWith
     {
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ilg) => instructions.MaxAgeGapTranspiler(ilg, [new CodeInstruction(OpCodes.Ldarg_0), CodeInstruction.LoadField(typeof(Pawn_RelationsTracker), "pawn")], null).DefToHumanlike(false);
+
+        //The above transpiler does not catch cases where the tooltip is for two animals, this prefix will handle that
+        public static bool Prefix(Pawn otherPawn, Pawn ___pawn, ref float __result)
+        {
+            if (!___pawn.RaceProps.Humanlike && !otherPawn.RaceProps.Humanlike)
+            {
+                __result = 0f;
+                return false;
+            }
+        
+            return true;
+        }
     }
 
     //Adjusts SecondaryLovinChanceFactor based on attractiveness
