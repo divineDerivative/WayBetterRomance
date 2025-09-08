@@ -16,10 +16,12 @@ namespace BetterRomance
         {
             CustomLoveRelationUtility.MakeAdditionalLoveRelationsLists();
             SettingsUtilities.MakeTraitList();
+
             if (ModsConfig.BiotechActive)
             {
                 SettingsUtilities.GrabBiotechStuff();
             }
+
             Harmony harmony = new(id: "rimworld.divineDerivative.romance");
             harmony.PatchAll();
 
@@ -41,6 +43,7 @@ namespace BetterRomance
                 Settings.HARActive = true;
                 harmony.PatchHAR();
             }
+
             if (ModsConfig.IsActive("tachyonite.pawnmorpherpublic"))
             {
                 try
@@ -86,6 +89,7 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching MH: Android Tiers Core: {ex}");
                 }
             }
+
             if (ModsConfig.IsActive("Neronix17.Asimov"))
             {
                 try
@@ -101,6 +105,7 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Asimov: {ex}");
                 }
             }
+
             if (ModsConfig.IsActive("vanillaracesexpanded.android"))
             {
                 try
@@ -122,18 +127,24 @@ namespace BetterRomance
             {
                 HelperClasses.CSLLoved = AccessTools.DeclaredMethod(Type.GetType("Children.MorePawnUtilities,ChildrenHelperClasses"), "Loved", [typeof(Pawn), typeof(Pawn), typeof(bool)]);
             }
+
             if (ModsConfig.IsActive("rim.job.world") || ModsConfig.IsActive("safe.job.world"))
             {
                 try
                 {
                     harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.xxx,RJW"), "is_asexual"), postfix: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.RJWAsexualPostfix)));
+#if v1_6
+                    harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.CompRJW,RJW"), "GetVanillaOrientation"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.VanillaTraitCheckTranspiler)));
+#else
                     harmony.Patch(AccessTools.DeclaredMethod(Type.GetType("rjw.CompRJW,RJW"), "VanillaTraitCheck"), transpiler: new(typeof(OtherMod_Patches), nameof(OtherMod_Patches.VanillaTraitCheckTranspiler)));
+#endif
                 }
                 catch (Exception ex)
                 {
                     LogUtil.Error($"Error encountered while patching RimJobWorld: {ex}");
                 }
             }
+
             if (ModsConfig.IsActive("vanillaracesexpanded.highmate"))
             {
                 try
@@ -146,6 +157,7 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Vanilla Races Expanded - Highmate: {ex}");
                 }
             }
+
             if (ModsConfig.IsActive("runaway.simpletrans"))
             {
                 try
@@ -159,6 +171,7 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Simple Trans: {ex}");
                 }
             }
+
             if (ModsConfig.IsActive("eth0net.AlternateFertility"))
             {
                 try
@@ -200,6 +213,7 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Romance on the Rim: {ex}");
                 }
             }
+
             if (ModsConfig.IsActive("VanillaExpanded.VanillaSocialInteractionsExpanded"))
             {
                 try
@@ -227,10 +241,12 @@ namespace BetterRomance
 #endif
 
                     harmony.Patch(GetSpouseOrLoverOrFiance, postfix: new(typeof(VSIEPatches), nameof(VSIEPatches.GetSpouseOrLoverOrFiancePostfix)));
+
                     if (prefixTarget == null)
                     {
                         LogUtil.Error("Could not find prefix delagate for Ad");
                     }
+
                     harmony.Patch(prefixTarget, transpiler: new(typeof(VSIEPatches), nameof(VSIEPatches.AddDirectRelation_PrefixTranspiler)));
                 }
                 catch (Exception ex)
@@ -238,6 +254,7 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Vanilla Social Interactions Expanded: {ex}");
                 }
             }
+
             if (ModsConfig.IsActive("RforReload.EdgesOfAcceptence"))
             {
                 try
@@ -249,6 +266,7 @@ namespace BetterRomance
                     LogUtil.Error($"Error encountered while patching Edges of Acceptance: {ex}");
                 }
             }
+
             if (ModsConfig.IsActive("Dra.RimderRomanceControl"))
             {
                 try
@@ -294,18 +312,22 @@ namespace BetterRomance
             {
                 Settings.FertilityMods.Add("ludeon.rimworld.biotech", ModLister.GetActiveModWithIdentifier("ludeon.rimworld.biotech").Name);
             }
+
             if (ModsConfig.IsActive("dylan.csl"))
             {
                 Settings.FertilityMods.Add("dylan.csl", ModLister.GetActiveModWithIdentifier("dylan.csl").Name);
             }
+
             if (ModsConfig.IsActive("rim.job.world"))
             {
                 Settings.FertilityMods.Add("rim.job.world", ModLister.GetActiveModWithIdentifier("rim.job.world").Name);
             }
+
             if (ModsConfig.IsActive("safe.job.world"))
             {
                 Settings.FertilityMods.Add("safe.job.world", ModLister.GetActiveModWithIdentifier("safe.job.world").Name);
             }
+
             Settings.AutoDetectFertilityMod();
         }
     }
