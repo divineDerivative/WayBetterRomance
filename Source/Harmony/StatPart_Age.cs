@@ -10,9 +10,9 @@ namespace BetterRomance.HarmonyPatches
     [HarmonyAfter(["rimworld.erdelf.alien_race.main"])]
     public static class StatPart_Age_AgeEffect
     {
-        public static bool Prefix(Pawn pawn, ref float __result, bool ___humanlikeOnly, bool ___useBiologicalYears, SimpleCurve ___curve)
+        public static bool Prefix(Pawn pawn, ref float __result, bool ___humanlikeOnly, bool ___useBiologicalYears, SimpleCurve ___curve, StatPart __instance)
         {
-            if (___humanlikeOnly && ___useBiologicalYears)
+            if (__instance.parentStat.modContentPack.IsOfficialMod && ___humanlikeOnly && ___useBiologicalYears)
             {
                 SimpleCurve curve = SettingsUtilities.ConvertCurve(___curve, pawn);
                 __result = curve.Evaluate(pawn.ageTracker.AgeBiologicalYears);
