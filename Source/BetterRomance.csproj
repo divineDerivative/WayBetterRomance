@@ -115,7 +115,7 @@
         </When>
         <When Condition="'$(Configuration)|$(Platform)' == '1.6|AnyCPU'">
             <ItemGroup>
-                <PackageReference Include="Lib.Harmony" Version="2.3.*">
+                <PackageReference Include="Lib.Harmony" Version="2.*">
                     <ExcludeAssets>runtime</ExcludeAssets>
                 </PackageReference>
                 <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.*">
