@@ -23,21 +23,25 @@ namespace BetterRomance
                 {
                     return 0f;
                 }
+
                 if (pawn.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Discouraged))
                 {
                     return 0.5f;
                 }
+
                 if (pawn.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Encouraged))
                 {
                     return 1.5f;
                 }
             }
+
             return 1f;
         }
 
         public static string RotRCheatingPreceptExplanation(Pawn pawn)
         {
             string result = string.Empty;
+
             if (pawn.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Forbidden))
             {
                 result = PreceptExplanation(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Forbidden, 0f);
@@ -50,6 +54,7 @@ namespace BetterRomance
             {
                 result = PreceptExplanation(CustomPreceptDefOf.RomanceOnTheRim_Cheat_Encouraged, 1.5f);
             }
+
             return result;
         }
 
@@ -122,6 +127,7 @@ namespace BetterRomance
                 {
                     return;
                 }
+
                 if (initiator.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Arranged))
                 {
                     __result = 0f;
@@ -138,6 +144,7 @@ namespace BetterRomance
                 {
                     __result = Mathf.Clamp01(__result * 1.5f);
                 }
+
                 __result *= RotR_Integration.RotRCheatChanceModifier(initiator);
             }
 
@@ -161,6 +168,7 @@ namespace BetterRomance
                         return;
                     }
                 }
+
                 if (recipient.Ideo.HasPrecept(CustomPreceptDefOf.RomanceOnTheRim_RomanceAttempt_Forbidden))
                 {
                     __result = 0f;
@@ -177,6 +185,7 @@ namespace BetterRomance
                 {
                     __result = 0f;
                 }
+
                 __result *= RotR_Integration.RotRCheatChanceModifier(recipient);
             }
 
@@ -184,6 +193,7 @@ namespace BetterRomance
             public static IEnumerable<CodeInstruction> AddPreceptExplanationTranspiler(IEnumerable<CodeInstruction> instructions)
             {
                 bool skip = false;
+
                 foreach (CodeInstruction code in instructions)
                 {
                     if (code.IsLdarg(1))
@@ -205,18 +215,25 @@ namespace BetterRomance
 
             //Use age settings
             public static IEnumerable<CodeInstruction> QuestNode_Root_CrushTranspiler(IEnumerable<CodeInstruction> instructions) => instructions.MinAgeForSexTranspiler(OpCodes.Ldloc_2);
+
             public static IEnumerable<CodeInstruction> QuestNode_Root_Crush_GetSinglePawnsTranspiler(IEnumerable<CodeInstruction> instructions)
             {
                 foreach (CodeInstruction code in instructions)
                 {
                     if (code.Calls(AccessTools.Method(typeof(QuestNode_Root_Crush), "GetMinAge")))
                     {
+#if v1_6
+                        yield return new(OpCodes.Ldloc_2);
+#endif
                         yield return CodeInstruction.Call(typeof(SettingsUtilities), nameof(SettingsUtilities.MinAgeForSex));
                     }
+#if !v1_6
                     else if (code.opcode == OpCodes.Ldarg_0)
                     {
                         yield return new(OpCodes.Ldloc_2);
                     }
+#endif
+
                     else
                     {
                         yield return code;
@@ -234,6 +251,7 @@ namespace BetterRomance
                     ___settlement.previouslyGeneratedInhabitants.Add(___suitor);
                 }
             }
+
             public static void SpawnSuitorPostfix(ref Pawn ___suitor)
             {
                 if (CheckAndRegenerate(ref ___suitor))
@@ -241,21 +259,26 @@ namespace BetterRomance
                     PawnComponentsUtility.AddAndRemoveDynamicComponents(___suitor, true);
                 }
             }
+
             private static bool CheckAndRegenerate(ref Pawn suitor)
             {
                 //This really only helps for a race that has supplied their own settings, since otherwise it defaults to human ages, which will give the same result as the original
                 FloatRange range = new(suitor.MinAgeForSex(), suitor.DeclineAtAge() + (suitor.DeclineAtAge() / 6));
+
                 if (!range.Includes(suitor.ageTracker.AgeBiologicalYearsFloat))
                 {
                     RotR_Integration.DiscardPawn(suitor);
                     SuitorRequest.BiologicalAgeRange = range;
                     suitor = PawnGenerator.GeneratePawn(SuitorRequest);
+
                     if (!suitor.IsWorldPawn())
                     {
                         Find.WorldPawns.PassToWorld(suitor);
                     }
+
                     return true;
                 }
+
                 return false;
             }
 
@@ -265,6 +288,7 @@ namespace BetterRomance
                 foreach (CodeInstruction code in instructions)
                 {
                     yield return code;
+
                     if (code.opcode == OpCodes.Ldloc_0)
                     {
                         yield return CodeInstruction.StoreField(typeof(RotRPatches), nameof(SuitorRequest));
@@ -281,6 +305,7 @@ namespace BetterRomance
             {
                 FieldInfo[] fields = AddRejectAndAcceptButtonsCompilerType.GetFields();
                 FieldInfo thisField = null;
+
                 foreach (FieldInfo field in fields)
                 {
                     if (field.Name.Contains("this"))
@@ -289,6 +314,7 @@ namespace BetterRomance
                         break;
                     }
                 }
+
                 foreach (CodeInstruction code in instructions)
                 {
                     if (code.opcode == OpCodes.Stloc_0)
@@ -301,6 +327,7 @@ namespace BetterRomance
                         yield return CodeInstruction.LoadField(thisField.FieldType, "betrothed");
                         yield return CodeInstruction.Call(typeof(RotRPatches), nameof(MarriageDialogHelper));
                     }
+
                     yield return code;
                 }
             }
@@ -334,9 +361,11 @@ namespace BetterRomance
                         if (CustomLoveRelationUtility.CheckCustomLoveRelations(___lover, ___slave) is DirectPawnRelation relation)
                         {
                             ___lover.relations.RemoveDirectRelation(relation);
+
                             if (relation.def.GetModExtension<LoveRelations>().exLoveRelation is PawnRelationDef exRelation)
                             {
                                 ___lover.relations.AddDirectRelation(exRelation, ___slave);
+
                                 //Remove ex lover if it shouldn't have been added
                                 if (!__state)
                                 {
