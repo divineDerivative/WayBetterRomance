@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Misstall's Vigil Race</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class="PatchOperationRemove">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="Vigil_race"]/alienRace/generalSettings/forcedRaceTraitEntries/li[defName="Bisexual"]</xpath>
+				</li>
+				<li Class="PatchOperationAddModExtension">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="Vigil_race"]</xpath>
+					<value>
+						<li Class="BetterRomance.SexualityChances">
+							<sexual>
+								<hetero>10</hetero>
+								<homo>10</homo>
+								<bi>75</bi>
+								<none>5</none>
+							</sexual>
+							<asexual>
+								<hetero>10</hetero>
+								<homo>10</homo>
+								<bi>75</bi>
+								<none>5</none>
+							</asexual>
+						</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+
+	<Operation Class="PatchOperationFindMod">
+		<mods>
+			<li>Aliaile Race</li>
+		</mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class="PatchOperationRemove">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="Aliaile_race"]/alienRace/generalSettings/forcedRaceTraitEntries/li[defName="Bisexual"]</xpath>
+				</li>
+				<li Class="PatchOperationAddModExtension">
+					<xpath>Defs/AlienRace.ThingDef_AlienRace[defName="Aliaile_race"]</xpath>
+					<value>
+						<li Class="BetterRomance.SexualityChances">
+							<sexual>
+								<hetero>0</hetero>
+								<homo>0</homo>
+								<bi>100</bi>
+								<none>0</none>
+							</sexual>
+							<asexual>
+								<hetero>0</hetero>
+								<homo>0</homo>
+								<bi>100</bi>
+								<none>0</none>
+							</asexual>
+						</li>
+					</value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+
+</Patch>
