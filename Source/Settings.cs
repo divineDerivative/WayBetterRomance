@@ -286,10 +286,10 @@ namespace BetterRomance
                 .RoundTo(0)
                 .RegisterResettable(handler, 100f), "CheatChanceSlider");
             //Cheat opinion range
-            section.AddLabel("WBR.CheatingOpinionRange".Translate)
-                .WithTooltip("WBR.CheatingOpinionRangeTip".Translate)
-                .HideWhen(() => cheatChance == 0f);
-            section.Add(NewElement.Range<IntRange, int>(5)
+            var column = section.AddColumn().HideWhen(() => cheatChance == 0f);
+            column.AddLabel("WBR.CheatingOpinionRange".Translate)
+                .WithTooltip("WBR.CheatingOpinionRangeTip".Translate);
+            column.Add(NewElement.Range<IntRange, int>(5)
                 .WithReference(this, nameof(cheatingOpinion), cheatingOpinion)
                 .MinMax(-100, 100)
                 .RegisterResettable(handler, new IntRange(-75, 75)), "CheatOpinionRange");
