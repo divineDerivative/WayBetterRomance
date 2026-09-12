@@ -94,7 +94,7 @@ namespace BetterRomance.HarmonyPatches
         }
 
         /// <summary>
-        /// Transpiler to convert a hard codded 5 or 5f to MinOpinionForRomance
+        /// Transpiler to convert a hard coded 5 or 5f to MinOpinionForRomance
         /// </summary>
         /// <param name="instructions">Instructions from the original transpiler</param>
         /// <param name="loadPawn">OpCode needed to load the pawn on the stack</param>

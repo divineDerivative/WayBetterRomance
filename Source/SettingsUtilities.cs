@@ -358,6 +358,11 @@ namespace BetterRomance
             {
                 gender = pawn.gender;
             }
+            // Guard against animals
+            if (!pawn.IsHumanlike())
+            {
+                return gender == Gender.Female ? 16f : 14f;
+            }
             CompSettingsRelationsPawn settings = GetRelationSettings(pawn);
             if (gender == Gender.Female)
             {
